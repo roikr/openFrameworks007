@@ -1,0 +1,1388 @@
+// !$*UTF8*$!
+{
+	E40191E811E536C70084ADD7 /* drm.pd */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = drm.pd;
+		path = "/Users/roikr/Developer/openFrameworks/apps/My Works/zenGardenExample/bin/data/pd-patches/drm.pd";
+		sourceTree = "<absolute>";
+	};
+	E401920911E5392A0084ADD7 /* route8.pd */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = route8.pd;
+		path = "/Users/roikr/Developer/openFrameworks/apps/My Works/zenGardenExample/bin/data/pd-patches/route8.pd";
+		sourceTree = "<absolute>";
+	};
+	E40A550B11EAF8E5009DC356 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E40191E811E536C70084ADD7 /* drm.pd */;
+		name = "drm.pd: 58";
+		rLen = 0;
+		rLoc = 1313;
+		rType = 0;
+		vrLen = 1040;
+		vrLoc = 0;
+	};
+	E40A550C11EAF8E5009DC356 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E40A550D11EAF8E5009DC356 /* drm-test.pd */;
+		name = "drm-test.pd: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 285;
+		vrLoc = 0;
+	};
+	E40A550D11EAF8E5009DC356 /* drm-test.pd */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = "drm-test.pd";
+		path = "/Users/roikr/Developer/openFrameworks/apps/My Works/zenGardenExample/bin/data/pd-patches/drm-test.pd";
+		sourceTree = "<absolute>";
+	};
+	E40A550E11EAF8E5009DC356 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E401920911E5392A0084ADD7 /* route8.pd */;
+		name = "route8.pd: 64";
+		rLen = 0;
+		rLoc = 1410;
+		rType = 0;
+		vrLen = 980;
+		vrLoc = 0;
+	};
+	E422B8DB11BE27340093DBD3 /* zenGardenExample */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = zenGardenExample;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	E422B90111BE27380093DBD3 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	E422B90211BE27380093DBD3 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	E47B64DB11DA92DA00406ABD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4A3DF6A11D94F2A007FE6FC /* boy3.pd */;
+		name = "boy3.pd: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 451;
+		vrLoc = 0;
+	};
+	E481BDF211D53F3A000D9286 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775511D3E4D300E4DEE2 /* PdFileParser.cpp */;
+		name = "PdFileParser.cpp: 51";
+		rLen = 0;
+		rLoc = 1498;
+		rType = 0;
+		vrLen = 1099;
+		vrLoc = 1060;
+	};
+	E481BE6B11D55E7B000D9286 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6774811D3E4D300E4DEE2 /* MessageToggle.cpp */;
+		name = "MessageToggle.cpp: 44";
+		rLen = 10;
+		rLoc = 1493;
+		rType = 0;
+		vrLen = 1048;
+		vrLoc = 1038;
+	};
+	E493D8F211EB05C800C314DA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 54";
+		rLen = 0;
+		rLoc = 1334;
+		rType = 0;
+		vrLen = 947;
+		vrLoc = 819;
+	};
+	E4978BDD11D75C3900E3AA39 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4978BDE11D75C3900E3AA39 /* ofBaseApp.h */;
+		name = "ofBaseApp.h: 23";
+		rLen = 36;
+		rLoc = 333;
+		rType = 0;
+		vrLen = 800;
+		vrLoc = 83;
+	};
+	E4978BDE11D75C3900E3AA39 /* ofBaseApp.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = ofBaseApp.h;
+		path = /Users/roikr/Developer/openFrameworks/libs/openFrameworks/app/ofBaseApp.h;
+		sourceTree = "<absolute>";
+	};
+	E4978C0B11D7636400E3AA39 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6771111D3E4D300E4DEE2 /* MessageOutlet.h */;
+		name = "MessageOutlet.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 988;
+		vrLoc = 0;
+	};
+	E4978C0C11D7636400E3AA39 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6771B11D3E4D300E4DEE2 /* MessagePrint.h */;
+		name = "MessagePrint.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 744;
+		vrLoc = 481;
+	};
+	E4978C0D11D7636400E3AA39 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6771A11D3E4D300E4DEE2 /* MessagePrint.cpp */;
+		name = "MessagePrint.cpp: 52";
+		rLen = 8;
+		rLoc = 1643;
+		rType = 0;
+		vrLen = 787;
+		vrLoc = 1025;
+	};
+	E4978C0F11D7636400E3AA39 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775811D3E4D300E4DEE2 /* PdGraph.h */;
+		name = "PdGraph.h: 110";
+		rLen = 19;
+		rLoc = 3695;
+		rType = 0;
+		vrLen = 1125;
+		vrLoc = 3554;
+	};
+	E4978C1011D7636400E3AA39 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676BB11D3E4D300E4DEE2 /* MessageAdd.cpp */;
+		name = "MessageAdd.cpp: 41";
+		rLen = 275;
+		rLoc = 1286;
+		rType = 0;
+		vrLen = 717;
+		vrLoc = 1027;
+	};
+	E4A3DCC411D92FD9007FE6FC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676B711D3E4D300E4DEE2 /* List.h */;
+		name = "List.h: 52";
+		rLen = 0;
+		rLoc = 1446;
+		rType = 0;
+		vrLen = 824;
+		vrLoc = 1079;
+	};
+	E4A3DCC511D92FD9007FE6FC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6773311D3E4D300E4DEE2 /* MessageSoundfiler.h */;
+		name = "MessageSoundfiler.h: 22";
+		rLen = 0;
+		rLoc = 835;
+		rType = 0;
+		vrLen = 1000;
+		vrLoc = 0;
+	};
+	E4A3DCE011D9379B007FE6FC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6774011D3E4D300E4DEE2 /* MessageTable.cpp */;
+		name = "MessageTable.cpp: 61";
+		rLen = 0;
+		rLoc = 1955;
+		rType = 0;
+		vrLen = 1252;
+		vrLoc = 378;
+	};
+	E4A3DCEF11D93E5A007FE6FC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6768D11D3E4D300E4DEE2 /* DspLine.cpp */;
+		name = "DspLine.cpp: 43";
+		rLen = 0;
+		rLoc = 1302;
+		rType = 0;
+		vrLen = 1004;
+		vrLoc = 757;
+	};
+	E4A3DF6711D94F2A007FE6FC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4A3DF6811D94F2A007FE6FC /* yp_sample.pd */;
+		name = "yp_sample.pd: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 860;
+		vrLoc = 0;
+	};
+	E4A3DF6811D94F2A007FE6FC /* yp_sample.pd */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = yp_sample.pd;
+		path = "/Users/roikr/Developer/openFrameworks/apps/My Works/zenGardenExample/bin/data/pd-patches/yp_sample.pd";
+		sourceTree = "<absolute>";
+	};
+	E4A3DF6A11D94F2A007FE6FC /* boy3.pd */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = boy3.pd;
+		path = "/Users/roikr/Developer/openFrameworks/apps/My Works/zenGardenExample/bin/data/pd-patches/boy3.pd";
+		sourceTree = "<absolute>";
+	};
+	E4B69B4C0A3A1720003C02F2 /* Project object */ = {
+		activeArchitecturePreference = x86_64;
+		activeBuildConfigurationName = Debug;
+		activeExecutable = E4C86F4011EAFC98000FE063 /* zenGardenExampleFromSrc */;
+		activeTarget = E4C86F1611EAFC98000FE063 /* zenGardenExampleFromSrc */;
+		addToTargets = (
+			E4C86F1611EAFC98000FE063 /* zenGardenExampleFromSrc */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = E422B90211BE27380093DBD3 /* Code sense */;
+		executables = (
+			E422B8DB11BE27340093DBD3 /* zenGardenExample */,
+			E4C86F4011EAFC98000FE063 /* zenGardenExampleFromSrc */,
+		);
+		perUserDictionary = {
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					198,
+					20,
+					99,
+					99,
+					29,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_IgnoreCountID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXBookmarksDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBookmarksDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					200,
+					200,
+					451.58349609375,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBookmarksDataSource_LocationID,
+					PBXBookmarksDataSource_NameID,
+					PBXBookmarksDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					746,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					706,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 300615018;
+			PBXWorkspaceStateSaveDate = 300615018;
+		};
+		perUserProjectItems = {
+			E40A550B11EAF8E5009DC356 /* PBXTextBookmark */ = E40A550B11EAF8E5009DC356 /* PBXTextBookmark */;
+			E40A550C11EAF8E5009DC356 /* PBXTextBookmark */ = E40A550C11EAF8E5009DC356 /* PBXTextBookmark */;
+			E40A550E11EAF8E5009DC356 /* PBXTextBookmark */ = E40A550E11EAF8E5009DC356 /* PBXTextBookmark */;
+			E47B64DB11DA92DA00406ABD /* PBXTextBookmark */ = E47B64DB11DA92DA00406ABD /* PBXTextBookmark */;
+			E481BDF211D53F3A000D9286 /* PBXTextBookmark */ = E481BDF211D53F3A000D9286 /* PBXTextBookmark */;
+			E481BE6B11D55E7B000D9286 /* PBXTextBookmark */ = E481BE6B11D55E7B000D9286 /* PBXTextBookmark */;
+			E493D8F211EB05C800C314DA /* PBXTextBookmark */ = E493D8F211EB05C800C314DA /* PBXTextBookmark */;
+			E4978BDD11D75C3900E3AA39 /* PBXTextBookmark */ = E4978BDD11D75C3900E3AA39 /* PBXTextBookmark */;
+			E4978C0B11D7636400E3AA39 /* PBXTextBookmark */ = E4978C0B11D7636400E3AA39 /* PBXTextBookmark */;
+			E4978C0C11D7636400E3AA39 /* PBXTextBookmark */ = E4978C0C11D7636400E3AA39 /* PBXTextBookmark */;
+			E4978C0D11D7636400E3AA39 /* PBXTextBookmark */ = E4978C0D11D7636400E3AA39 /* PBXTextBookmark */;
+			E4978C0F11D7636400E3AA39 /* PBXTextBookmark */ = E4978C0F11D7636400E3AA39 /* PBXTextBookmark */;
+			E4978C1011D7636400E3AA39 /* PBXTextBookmark */ = E4978C1011D7636400E3AA39 /* PBXTextBookmark */;
+			E4A3DCC411D92FD9007FE6FC /* PBXTextBookmark */ = E4A3DCC411D92FD9007FE6FC /* PBXTextBookmark */;
+			E4A3DCC511D92FD9007FE6FC /* PBXTextBookmark */ = E4A3DCC511D92FD9007FE6FC /* PBXTextBookmark */;
+			E4A3DCE011D9379B007FE6FC /* PBXTextBookmark */ = E4A3DCE011D9379B007FE6FC /* PBXTextBookmark */;
+			E4A3DCEF11D93E5A007FE6FC /* PBXTextBookmark */ = E4A3DCEF11D93E5A007FE6FC /* PBXTextBookmark */;
+			E4A3DF6711D94F2A007FE6FC /* PBXTextBookmark */ = E4A3DF6711D94F2A007FE6FC /* PBXTextBookmark */;
+			E4C870FD11EAFE93000FE063 /* PBXTextBookmark */ = E4C870FD11EAFE93000FE063 /* PBXTextBookmark */;
+			E4C8713611EB017D000FE063 /* PBXTextBookmark */ = E4C8713611EB017D000FE063 /* PBXTextBookmark */;
+			E4C8713711EB017D000FE063 /* PBXTextBookmark */ = E4C8713711EB017D000FE063 /* PBXTextBookmark */;
+			E4C8717111EB0335000FE063 /* PBXTextBookmark */ = E4C8717111EB0335000FE063 /* PBXTextBookmark */;
+			E4C8719011EB03B6000FE063 /* PBXTextBookmark */ = E4C8719011EB03B6000FE063 /* PBXTextBookmark */;
+			E4C871A311EB03D8000FE063 /* PBXTextBookmark */ = E4C871A311EB03D8000FE063 /* PBXTextBookmark */;
+			E4D8725911D51A5400D13D52 /* PBXTextBookmark */ = E4D8725911D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8725A11D51A5400D13D52 /* PBXTextBookmark */ = E4D8725A11D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8725C11D51A5400D13D52 /* PBXTextBookmark */ = E4D8725C11D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8725D11D51A5400D13D52 /* PBXTextBookmark */ = E4D8725D11D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8725E11D51A5400D13D52 /* PBXTextBookmark */ = E4D8725E11D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8725F11D51A5400D13D52 /* PBXTextBookmark */ = E4D8725F11D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726011D51A5400D13D52 /* PBXTextBookmark */ = E4D8726011D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726111D51A5400D13D52 /* PBXTextBookmark */ = E4D8726111D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726311D51A5400D13D52 /* PBXTextBookmark */ = E4D8726311D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726411D51A5400D13D52 /* PBXTextBookmark */ = E4D8726411D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726511D51A5400D13D52 /* PBXTextBookmark */ = E4D8726511D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726611D51A5400D13D52 /* PBXTextBookmark */ = E4D8726611D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726711D51A5400D13D52 /* PBXTextBookmark */ = E4D8726711D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726811D51A5400D13D52 /* PBXTextBookmark */ = E4D8726811D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726C11D51A5400D13D52 /* PBXTextBookmark */ = E4D8726C11D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8726D11D51A5400D13D52 /* PBXTextBookmark */ = E4D8726D11D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727011D51A5400D13D52 /* PBXTextBookmark */ = E4D8727011D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727111D51A5400D13D52 /* PBXTextBookmark */ = E4D8727111D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727311D51A5400D13D52 /* PBXTextBookmark */ = E4D8727311D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727411D51A5400D13D52 /* PBXTextBookmark */ = E4D8727411D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727511D51A5400D13D52 /* PBXTextBookmark */ = E4D8727511D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727611D51A5400D13D52 /* PBXTextBookmark */ = E4D8727611D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727711D51A5400D13D52 /* PBXTextBookmark */ = E4D8727711D51A5400D13D52 /* PBXTextBookmark */;
+			E4D8727B11D51A5400D13D52 /* PBXTextBookmark */ = E4D8727B11D51A5400D13D52 /* PBXTextBookmark */;
+			E4EE6F8811D785450087F941 /* PBXTextBookmark */ = E4EE6F8811D785450087F941 /* PBXTextBookmark */;
+			E4EE6FA311D786C90087F941 /* PBXTextBookmark */ = E4EE6FA311D786C90087F941 /* PBXTextBookmark */;
+			E4EF7A8B11DE345C0046281B /* PBXTextBookmark */ = E4EF7A8B11DE345C0046281B /* PBXTextBookmark */;
+			E4EF7AEA11DE41870046281B /* PBXTextBookmark */ = E4EF7AEA11DE41870046281B /* PBXTextBookmark */;
+			E4EF7AEB11DE41870046281B /* PBXTextBookmark */ = E4EF7AEB11DE41870046281B /* PBXTextBookmark */;
+			E4EF7AEC11DE41870046281B /* PBXTextBookmark */ = E4EF7AEC11DE41870046281B /* PBXTextBookmark */;
+			E4EF7B1611DE42650046281B /* PBXTextBookmark */ = E4EF7B1611DE42650046281B /* PBXTextBookmark */;
+			E4EF7B2A11DE42CD0046281B /* PBXTextBookmark */ = E4EF7B2A11DE42CD0046281B /* PBXTextBookmark */;
+			E4EF7B3111DE430C0046281B /* PBXTextBookmark */ = E4EF7B3111DE430C0046281B /* PBXTextBookmark */;
+			E4EF7BA311DE4EC50046281B /* PBXTextBookmark */ = E4EF7BA311DE4EC50046281B /* PBXTextBookmark */;
+			E4EF7BBE11DE547A0046281B /* PBXTextBookmark */ = E4EF7BBE11DE547A0046281B /* PBXTextBookmark */;
+			E4EF7BBF11DE547A0046281B /* PBXTextBookmark */ = E4EF7BBF11DE547A0046281B /* PBXTextBookmark */;
+			E4EF7C3411DE5C460046281B /* PBXTextBookmark */ = E4EF7C3411DE5C460046281B /* PBXTextBookmark */;
+		};
+		sourceControlManager = E422B90111BE27380093DBD3 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	E4B69B5A0A3A1756003C02F2 /* zenGardenExample */ = {
+		activeExec = 0;
+		executables = (
+			E422B8DB11BE27340093DBD3 /* zenGardenExample */,
+		);
+	};
+	E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {924, 579}}";
+			sepNavSelRange = "{113, 0}";
+			sepNavVisRange = "{0, 179}";
+		};
+	};
+	E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {924, 1443}}";
+			sepNavSelRange = "{1334, 0}";
+			sepNavVisRange = "{819, 947}";
+			sepNavWindowFrame = "{{508, 217}, {1049, 677}}";
+		};
+	};
+	E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {924, 573}}";
+			sepNavSelRange = "{515, 0}";
+			sepNavVisRange = "{0, 529}";
+		};
+	};
+	E4C86F1611EAFC98000FE063 /* zenGardenExampleFromSrc */ = {
+		activeExec = 0;
+		executables = (
+			E4C86F4011EAFC98000FE063 /* zenGardenExampleFromSrc */,
+		);
+	};
+	E4C86F4011EAFC98000FE063 /* zenGardenExampleFromSrc */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = zenGardenExampleFromSrc;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	E4C86F4611EAFCDF000FE063 /* ArrayArithmetic.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1004, 4563}}";
+			sepNavSelRange = "{10535, 0}";
+			sepNavVisRange = "{10027, 1002}";
+		};
+	};
+	E4C86F6C11EAFCDF000FE063 /* DspMultiply.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1004, 962}}";
+			sepNavSelRange = "{1942, 0}";
+			sepNavVisRange = "{1341, 778}";
+		};
+	};
+	E4C86F7011EAFCDF000FE063 /* DspObject.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1004, 3692}}";
+			sepNavSelRange = "{6853, 0}";
+			sepNavVisRange = "{6394, 886}";
+		};
+	};
+	E4C86F9011EAFCDF000FE063 /* main.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {924, 1183}}";
+			sepNavSelRange = "{1484, 5}";
+			sepNavVisRange = "{975, 1407}";
+		};
+	};
+	E4C8701411EAFCE0000FE063 /* MessageSamplerate.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {979, 598}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{114, 1398}";
+		};
+	};
+	E4C8701511EAFCE0000FE063 /* MessageSamplerate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {979, 546}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{3, 1244}";
+		};
+	};
+	E4C8704311EAFCE0000FE063 /* PdGraph.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {979, 14833}}";
+			sepNavSelRange = "{3711, 10}";
+			sepNavVisRange = "{4365, 1519}";
+		};
+	};
+	E4C8704C11EAFCE0000FE063 /* StaticUtils.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {979, 689}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{416, 1392}";
+		};
+	};
+	E4C8704F11EAFCE0000FE063 /* ZenGarden.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {924, 1352}}";
+			sepNavSelRange = "{1002, 10}";
+			sepNavVisRange = "{0, 1632}";
+		};
+	};
+	E4C870FD11EAFE93000FE063 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */;
+		name = "main.cpp: 7";
+		rLen = 0;
+		rLoc = 113;
+		rType = 0;
+		vrLen = 179;
+		vrLoc = 0;
+	};
+	E4C8713611EB017D000FE063 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4C86F9011EAFCDF000FE063 /* main.cpp */;
+		name = "main.cpp: 54";
+		rLen = 5;
+		rLoc = 1484;
+		rType = 0;
+		vrLen = 1407;
+		vrLoc = 975;
+	};
+	E4C8713711EB017D000FE063 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4C8704F11EAFCE0000FE063 /* ZenGarden.cpp */;
+		name = "ZenGarden.cpp: 27";
+		rLen = 10;
+		rLoc = 1002;
+		rType = 0;
+		vrLen = 1632;
+		vrLoc = 0;
+	};
+	E4C8717111EB0335000FE063 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4C8717211EB0335000FE063 /* drms-test.pd */;
+		name = "drms-test.pd: 5";
+		rLen = 0;
+		rLoc = 91;
+		rType = 0;
+		vrLen = 91;
+		vrLoc = 0;
+	};
+	E4C8717211EB0335000FE063 /* drms-test.pd */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = "drms-test.pd";
+		path = "/Users/roikr/Developer/openFrameworks/apps/My Works/zenGardenExample/bin/data/pd-patches/drms-test.pd";
+		sourceTree = "<absolute>";
+	};
+	E4C8719011EB03B6000FE063 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1F0A3A1BDC003C02F2 /* testApp.h */;
+		name = "testApp.h: 33";
+		rLen = 0;
+		rLoc = 515;
+		rType = 0;
+		vrLen = 529;
+		vrLoc = 0;
+	};
+	E4C871A311EB03D8000FE063 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 27";
+		rLen = 0;
+		rLoc = 559;
+		rType = 0;
+		vrLen = 1098;
+		vrLoc = 334;
+	};
+	E4D6766D11D3E4D300E4DEE2 /* ArrayArithmetic.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = ArrayArithmetic.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/ArrayArithmetic.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6766E11D3E4D300E4DEE2 /* ArrayArithmetic.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = ArrayArithmetic.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/ArrayArithmetic.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6767411D3E4D300E4DEE2 /* DspAdd.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = DspAdd.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/DspAdd.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6768111D3E4D300E4DEE2 /* DspDelayRead.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = DspDelayRead.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/DspDelayRead.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6768D11D3E4D300E4DEE2 /* DspLine.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = DspLine.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/DspLine.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6769911D3E4D300E4DEE2 /* DspObject.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = DspObject.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/DspObject.h;
+		sourceTree = "<absolute>";
+	};
+	E4D676A011D3E4D300E4DEE2 /* DspReceive.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = DspReceive.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/DspReceive.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D676AC11D3E4D300E4DEE2 /* DspTableRead.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = DspTableRead.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/DspTableRead.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D676AD11D3E4D300E4DEE2 /* DspTableRead.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = DspTableRead.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/DspTableRead.h;
+		sourceTree = "<absolute>";
+	};
+	E4D676B711D3E4D300E4DEE2 /* List.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = List.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/List.h;
+		sourceTree = "<absolute>";
+	};
+	E4D676BB11D3E4D300E4DEE2 /* MessageAdd.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageAdd.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageAdd.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D676BC11D3E4D300E4DEE2 /* MessageAdd.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageAdd.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageAdd.h;
+		sourceTree = "<absolute>";
+	};
+	E4D676D411D3E4D300E4DEE2 /* MessageElement.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageElement.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageElement.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D676ED11D3E4D300E4DEE2 /* MessageLine.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageLine.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageLine.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6770E11D3E4D300E4DEE2 /* MessageObject.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageObject.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageObject.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6770F11D3E4D300E4DEE2 /* MessageObject.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageObject.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageObject.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6771111D3E4D300E4DEE2 /* MessageOutlet.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageOutlet.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageOutlet.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6771A11D3E4D300E4DEE2 /* MessagePrint.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessagePrint.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessagePrint.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6771B11D3E4D300E4DEE2 /* MessagePrint.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessagePrint.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessagePrint.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6771C11D3E4D300E4DEE2 /* MessageQueue.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageQueue.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageQueue.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6772011D3E4D300E4DEE2 /* MessageReceive.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageReceive.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageReceive.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6772111D3E4D300E4DEE2 /* MessageReceive.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageReceive.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageReceive.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6773311D3E4D300E4DEE2 /* MessageSoundfiler.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageSoundfiler.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageSoundfiler.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6773F11D3E4D300E4DEE2 /* MessageSymbol.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageSymbol.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageSymbol.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6774011D3E4D300E4DEE2 /* MessageTable.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageTable.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageTable.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6774111D3E4D300E4DEE2 /* MessageTable.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageTable.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageTable.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6774811D3E4D300E4DEE2 /* MessageToggle.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageToggle.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/MessageToggle.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6775511D3E4D300E4DEE2 /* PdFileParser.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = PdFileParser.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/PdFileParser.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6775811D3E4D300E4DEE2 /* PdGraph.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = PdGraph.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/PdGraph.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6775911D3E4D300E4DEE2 /* PdMessage.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = PdMessage.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/PdMessage.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6775A11D3E4D300E4DEE2 /* PdMessage.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = PdMessage.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/PdMessage.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6775B11D3E4D300E4DEE2 /* RemoteMessageReceiver.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = RemoteMessageReceiver.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/RemoteMessageReceiver.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6775C11D3E4D300E4DEE2 /* RemoteMessageReceiver.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = RemoteMessageReceiver.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/RemoteMessageReceiver.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6775D11D3E4D300E4DEE2 /* StaticUtils.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = StaticUtils.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/StaticUtils.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6775E11D3E4D300E4DEE2 /* StaticUtils.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = StaticUtils.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/StaticUtils.h;
+		sourceTree = "<absolute>";
+	};
+	E4D6775F11D3E4D300E4DEE2 /* TableReceiver.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = TableReceiver.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/TableReceiver.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4D6776011D3E4D300E4DEE2 /* TableReceiver.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = TableReceiver.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGarden/src/TableReceiver.h;
+		sourceTree = "<absolute>";
+	};
+	E4D8725911D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775A11D3E4D300E4DEE2 /* PdMessage.h */;
+		name = "PdMessage.h: 35";
+		rLen = 18;
+		rLoc = 1040;
+		rType = 0;
+		vrLen = 2199;
+		vrLoc = 1071;
+	};
+	E4D8725A11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676BC11D3E4D300E4DEE2 /* MessageAdd.h */;
+		name = "MessageAdd.h: 32";
+		rLen = 9;
+		rLoc = 1000;
+		rType = 0;
+		vrLen = 1216;
+		vrLoc = 3;
+	};
+	E4D8725C11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6769911D3E4D300E4DEE2 /* DspObject.h */;
+		name = "DspObject.h: 37";
+		rLen = 13;
+		rLoc = 1297;
+		rType = 0;
+		vrLen = 1487;
+		vrLoc = 0;
+	};
+	E4D8725D11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6776011D3E4D300E4DEE2 /* TableReceiver.h */;
+		name = "TableReceiver.h: 34";
+		rLen = 9;
+		rLoc = 1188;
+		rType = 0;
+		vrLen = 1405;
+		vrLoc = 110;
+	};
+	E4D8725E11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6772111D3E4D300E4DEE2 /* MessageReceive.h */;
+		name = "MessageReceive.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1241;
+		vrLoc = 0;
+	};
+	E4D8725F11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6772011D3E4D300E4DEE2 /* MessageReceive.cpp */;
+		name = "MessageReceive.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1298;
+		vrLoc = 0;
+	};
+	E4D8726011D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775C11D3E4D300E4DEE2 /* RemoteMessageReceiver.h */;
+		name = "RemoteMessageReceiver.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1434;
+		vrLoc = 75;
+	};
+	E4D8726111D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775B11D3E4D300E4DEE2 /* RemoteMessageReceiver.cpp */;
+		name = "RemoteMessageReceiver.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1230;
+		vrLoc = 0;
+	};
+	E4D8726311D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6768111D3E4D300E4DEE2 /* DspDelayRead.h */;
+		name = "DspDelayRead.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1345;
+		vrLoc = 0;
+	};
+	E4D8726411D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676ED11D3E4D300E4DEE2 /* MessageLine.cpp */;
+		name = "MessageLine.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1258;
+		vrLoc = 553;
+	};
+	E4D8726511D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775F11D3E4D300E4DEE2 /* TableReceiver.cpp */;
+		name = "TableReceiver.cpp: 23";
+		rLen = 13;
+		rLoc = 841;
+		rType = 0;
+		vrLen = 1330;
+		vrLoc = 0;
+	};
+	E4D8726611D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6766D11D3E4D300E4DEE2 /* ArrayArithmetic.cpp */;
+		name = "ArrayArithmetic.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1062;
+		vrLoc = 0;
+	};
+	E4D8726711D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6766E11D3E4D300E4DEE2 /* ArrayArithmetic.h */;
+		name = "ArrayArithmetic.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1694;
+		vrLoc = 10978;
+	};
+	E4D8726811D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676A011D3E4D300E4DEE2 /* DspReceive.cpp */;
+		name = "DspReceive.cpp: 36";
+		rLen = 0;
+		rLoc = 1243;
+		rType = 0;
+		vrLen = 1161;
+		vrLoc = 613;
+	};
+	E4D8726C11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6771C11D3E4D300E4DEE2 /* MessageQueue.cpp */;
+		name = "MessageQueue.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 866;
+		vrLoc = 548;
+	};
+	E4D8726D11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6773F11D3E4D300E4DEE2 /* MessageSymbol.h */;
+		name = "MessageSymbol.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1110;
+		vrLoc = 0;
+	};
+	E4D8727011D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676AC11D3E4D300E4DEE2 /* DspTableRead.cpp */;
+		name = "DspTableRead.cpp: 27";
+		rLen = 13;
+		rLoc = 982;
+		rType = 0;
+		vrLen = 1192;
+		vrLoc = 2379;
+	};
+	E4D8727111D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6767411D3E4D300E4DEE2 /* DspAdd.cpp */;
+		name = "DspAdd.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 924;
+		vrLoc = 1168;
+	};
+	E4D8727311D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775D11D3E4D300E4DEE2 /* StaticUtils.cpp */;
+		name = "StaticUtils.cpp: 81";
+		rLen = 121;
+		rLoc = 2113;
+		rType = 0;
+		vrLen = 674;
+		vrLoc = 3627;
+	};
+	E4D8727411D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775E11D3E4D300E4DEE2 /* StaticUtils.h */;
+		name = "StaticUtils.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 977;
+		vrLoc = 831;
+	};
+	E4D8727511D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6770F11D3E4D300E4DEE2 /* MessageObject.h */;
+		name = "MessageObject.h: 33";
+		rLen = 22;
+		rLoc = 1011;
+		rType = 0;
+		vrLen = 1049;
+		vrLoc = 4014;
+	};
+	E4D8727611D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6770E11D3E4D300E4DEE2 /* MessageObject.cpp */;
+		name = "MessageObject.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1112;
+		vrLoc = 4107;
+	};
+	E4D8727711D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6774111D3E4D300E4DEE2 /* MessageTable.h */;
+		name = "MessageTable.h: 39";
+		rLen = 30;
+		rLoc = 1176;
+		rType = 0;
+		vrLen = 678;
+		vrLoc = 680;
+	};
+	E4D8727B11D51A5400D13D52 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676AD11D3E4D300E4DEE2 /* DspTableRead.h */;
+		name = "DspTableRead.h: 29";
+		rLen = 13;
+		rLoc = 971;
+		rType = 0;
+		vrLen = 1270;
+		vrLoc = 0;
+	};
+	E4EE6F8811D785450087F941 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D676D411D3E4D300E4DEE2 /* MessageElement.cpp */;
+		name = "MessageElement.cpp: 52";
+		rLen = 0;
+		rLoc = 1334;
+		rType = 0;
+		vrLen = 453;
+		vrLoc = 1046;
+	};
+	E4EE6FA311D786C90087F941 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D6775911D3E4D300E4DEE2 /* PdMessage.cpp */;
+		name = "PdMessage.cpp: 244";
+		rLen = 0;
+		rLoc = 7290;
+		rType = 0;
+		vrLen = 832;
+		vrLoc = 6949;
+	};
+	E4EF78CF11DE0D040046281B /* List.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = List.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/List.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF78E611DE0D040046281B /* MessageAbsoluteValue.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageAbsoluteValue.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/MessageAbsoluteValue.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF793911DE0D040046281B /* MessageNotEquals.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageNotEquals.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/MessageNotEquals.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF793F11DE0D040046281B /* MessagePack.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessagePack.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/MessagePack.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF794711DE0D040046281B /* MessagePrint.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessagePrint.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/MessagePrint.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF797711DE0D040046281B /* MessageTrigger.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageTrigger.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/MessageTrigger.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF797811DE0D040046281B /* MessageTrigger.h */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.c.h;
+		name = MessageTrigger.h;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/MessageTrigger.h;
+		sourceTree = "<absolute>";
+	};
+	E4EF797911DE0D040046281B /* MessageUnpack.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = MessageUnpack.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/MessageUnpack.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF798211DE0D040046281B /* PdFileParser.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = PdFileParser.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/PdFileParser.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF798611DE0D040046281B /* PdMessage.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = PdMessage.cpp;
+		path = /Users/roikr/Developer/OpenSource/ZenGardenFix/src/PdMessage.cpp;
+		sourceTree = "<absolute>";
+	};
+	E4EF7A8B11DE345C0046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF798611DE0D040046281B /* PdMessage.cpp */;
+		name = "PdMessage.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1863;
+		vrLoc = 0;
+	};
+	E4EF7AEA11DE41870046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF794711DE0D040046281B /* MessagePrint.cpp */;
+		name = "MessagePrint.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1812;
+		vrLoc = 0;
+	};
+	E4EF7AEB11DE41870046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF793911DE0D040046281B /* MessageNotEquals.cpp */;
+		name = "MessageNotEquals.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1945;
+		vrLoc = 0;
+	};
+	E4EF7AEC11DE41870046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF793F11DE0D040046281B /* MessagePack.cpp */;
+		name = "MessagePack.cpp: 29";
+		rLen = 22;
+		rLoc = 1108;
+		rType = 0;
+		vrLen = 2143;
+		vrLoc = 3;
+	};
+	E4EF7B1611DE42650046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF78E611DE0D040046281B /* MessageAbsoluteValue.cpp */;
+		name = "MessageAbsoluteValue.cpp: 44";
+		rLen = 22;
+		rLoc = 1401;
+		rType = 0;
+		vrLen = 1594;
+		vrLoc = 0;
+	};
+	E4EF7B2A11DE42CD0046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF78CF11DE0D040046281B /* List.cpp */;
+		name = "List.cpp: 42";
+		rLen = 0;
+		rLoc = 1135;
+		rType = 0;
+		vrLen = 1265;
+		vrLoc = 826;
+	};
+	E4EF7B3111DE430C0046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF798211DE0D040046281B /* PdFileParser.cpp */;
+		name = "PdFileParser.cpp: 63";
+		rLen = 0;
+		rLoc = 1905;
+		rType = 0;
+		vrLen = 1491;
+		vrLoc = 670;
+	};
+	E4EF7BA311DE4EC50046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF7BA411DE4EC50046281B /* boy4.pd */;
+		name = "boy4.pd: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1882;
+		vrLoc = 30;
+	};
+	E4EF7BA411DE4EC50046281B /* boy4.pd */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = boy4.pd;
+		path = "/Users/roikr/Developer/openFrameworks/apps/My Works/zenGardenExample/bin/data/pd-patches/boy4.pd";
+		sourceTree = "<absolute>";
+	};
+	E4EF7BBE11DE547A0046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF797811DE0D040046281B /* MessageTrigger.h */;
+		name = "MessageTrigger.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1487;
+		vrLoc = 0;
+	};
+	E4EF7BBF11DE547A0046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF797711DE0D040046281B /* MessageTrigger.cpp */;
+		name = "MessageTrigger.cpp: 40";
+		rLen = 0;
+		rLoc = 1377;
+		rType = 0;
+		vrLen = 2103;
+		vrLoc = 308;
+	};
+	E4EF7C3411DE5C460046281B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4EF797911DE0D040046281B /* MessageUnpack.cpp */;
+		name = "MessageUnpack.cpp: 46";
+		rLen = 0;
+		rLoc = 1585;
+		rType = 0;
+		vrLen = 2215;
+		vrLoc = 953;
+	};
+}

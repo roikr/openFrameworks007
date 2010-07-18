@@ -1,0 +1,5 @@
+things to do (ihpone->osx):
+1. copy all iPhone addons + apps
+2. copy all libs (openframeworks compiled + project, freetype and freeimage libs)
+3. overwrite ofConstants.h, ofTexture.cpp, ofBitmapFont.h+cpp, ofGraphics.cpp
+
