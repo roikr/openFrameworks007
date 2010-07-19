@@ -28,13 +28,15 @@ class ofxMidiLooper {
 	
 public:
 	
-	
-	void setup(int blockLength,int sampleRate=44100); // call after all samples loaded 
-		
+	void clear();
+	void setup(int blockLength=256,int sampleRate=44100,int bpm=120); 	
 	void loadLoop(string filename);
-	void start();
 	
-	void stop();
+	void sync(); // sync to other loops
+	
+	void play();
+	void pause();
+	
 	void playLoop(int i);
 	
 	void process(vector<event> &events);
@@ -42,11 +44,6 @@ public:
 	void stopLoop();
 	
 	void setBPM(int bpm);
-	
-	
-	
-
-	void exit() {}; //TODO: implement exit
 	
 	
 private:
@@ -61,7 +58,8 @@ private:
 	
 	vector<loop> loops;
 	
-	bool bStarted;
+	
+	bool bPlaying;
 	
 	int bpm;
 	float ticksPerBlock;

@@ -10,6 +10,34 @@
 #include "ofxMidiLooper.h"
 #include <iostream>
 
+
+	
+
+void ofxMidiLooper::setup(int blockLength,int sampleRate,int bpm) { // call after all samples loaded 
+	
+	this->blockLength = blockLength;
+	this->sampleRate = sampleRate;
+	this->bpm = bpm;
+	blockIndex = 0;
+	bPlaying = false;
+	
+	bNewLoop = false;
+	bLoopPlaying = false;
+	bChangeBPM = false;
+	currentLoop = 0;
+	
+}
+
+
+void ofxMidiLooper::clear() {
+	bPlaying = false; // TODO: a litter sleep after ?
+	for (vector<loop>::iterator iter=loops.begin();iter!=loops.end();iter++) {
+		delete iter->midiFile; // TODO: destructor ?
+	}
+	loops.clear();
+	
+}
+
 int nextPow2(int a){
 	// from nehe.gamedev.net lesson 43
 	int rval=1;
@@ -33,40 +61,36 @@ void ofxMidiLooper::loadLoop(string filename) {
 	l.midiFile = midiFile;
 	l.numTicks = bar * 4 * midiFile->getTicksPerBeat();
 	
-	cout << filename << " loaded and has " << l.numTicks << " ticks("<< midiFile->getLastTick() << "), " << beats << " beats and "  << bar << " bars" << endl;
+	//cout << filename << " loaded and has " << l.numTicks << " ticks("<< midiFile->getLastTick() << "), " << beats << " beats and "  << bar << " bars" << endl;
 	
 	
 	loops.push_back(l);
+	
+	if (loops.size() == 1) {
+		float blocksPerMinutes = sampleRate * 60.0 / blockLength;
+		ticksPerBlock =  loops.front().midiFile->getTicksPerBeat() * bpm / blocksPerMinutes ;
+		currentLoop = 0; // reseting currentLoop
+	}
 	 
 }
 
 
-void ofxMidiLooper::setup(int blockLength,int sampleRate) { // call after all samples loaded 
-	this->blockLength = blockLength;
-	this->sampleRate = sampleRate;
-	bpm = 120;
-	bStarted = false;
-	blockIndex = 0;
-}
-
-void ofxMidiLooper::start() {
+void ofxMidiLooper::sync() {
 	if (!loops.size())
 		return;
-	
-	bStarted = true;
 	
 	startBlock = blockIndex;
 	startTick = 0;
 	
-	bNewLoop = false;
-	bLoopPlaying = false;
-	bChangeBPM = false;
-	bpm = 120;
-	currentLoop = 0;
 	
-	float blocksPerMinutes = sampleRate * 60.0 / blockLength;
-	ticksPerBlock =  loops.front().midiFile->getTicksPerBeat() * bpm / blocksPerMinutes ;
-	
+}
+
+void ofxMidiLooper::play() {
+	bPlaying = true;
+}
+
+void ofxMidiLooper::pause() {
+	bPlaying = false;
 }
 
 void ofxMidiLooper::setBPM(int bpm) {
@@ -74,9 +98,6 @@ void ofxMidiLooper::setBPM(int bpm) {
 	bChangeBPM = true;
 	nextBPM = bpm;
 }
-
-
-
 
 
 void ofxMidiLooper::playLoop(int i) {
@@ -95,70 +116,70 @@ void ofxMidiLooper::stopLoop() {
 
 void ofxMidiLooper::process(vector<event> &events) {
 	
-	if (!bStarted) {
-		return;
-	}
+	if (bPlaying) {
+		
 	
-	ofxMidi *midiFile;
-	
-	int currentTick =(int)(startTick+ticksPerBlock * (blockIndex-startBlock)) % loops.at(currentLoop).numTicks;
-	
-	if (bChangeBPM) {
-		cout << "bpm: " << bpm << " to " << nextBPM << endl;
+		ofxMidi *midiFile;
 		
-		bChangeBPM = false;
+		int currentTick =(int)(startTick+ticksPerBlock * (blockIndex-startBlock)) % loops.at(currentLoop).numTicks;
 		
-		bpm = nextBPM;
-		
-		startTick = currentTick;
-		startBlock = blockIndex;
-		float blocksPerMinutes = sampleRate * 60.0 / blockLength;
-		ticksPerBlock =  loops.front().midiFile->getTicksPerBeat() * bpm / blocksPerMinutes ;
-		cout << "ticksPerBlock: " << ticksPerBlock << endl;
-		
-	}
-	
-	if (bNewLoop) {
-		currentLoop = nextLoop;
-		bNewLoop = false;
-		bLoopPlaying = true;
-		
-		midiFile = loops.at(currentLoop).midiFile;
-		
-		cout << "seekPlayhead - block: " << blockIndex << ", start: " << startBlock << ", currentTick: " << currentTick << endl;
-		midiFile->firstEvent();
-		
-		event e;
-		while (midiFile->getCurrentEvent(e) && e.absolute<=currentTick) {
-			midiFile->nextEvent();
+		if (bChangeBPM) {
+			//cout << "bpm: " << bpm << " to " << nextBPM << endl;
+			
+			bChangeBPM = false;
+			
+			bpm = nextBPM;
+			
+			startTick = currentTick;
+			startBlock = blockIndex;
+			float blocksPerMinutes = sampleRate * 60.0 / blockLength;
+			ticksPerBlock =  loops.front().midiFile->getTicksPerBeat() * bpm / blocksPerMinutes ;
+			//cout << "ticksPerBlock: " << ticksPerBlock << endl;
+			
 		}
 		
-	}
-	if (bLoopPlaying) {
-	
-		midiFile = loops.at(currentLoop).midiFile;
+		if (bNewLoop) {
+			currentLoop = nextLoop;
+			bNewLoop = false;
+			bLoopPlaying = true;
+			
+			midiFile = loops.at(currentLoop).midiFile;
+			
+			//cout << "seekPlayhead - block: " << blockIndex << ", start: " << startBlock << ", currentTick: " << currentTick << endl;
+			midiFile->firstEvent();
+			
+			event e;
+			while (midiFile->getCurrentEvent(e) && e.absolute<=currentTick) {
+				midiFile->nextEvent();
+			}
+			
+		}
+		if (bLoopPlaying) {
 		
-		int nextTick = (int)(startTick+ticksPerBlock * (blockIndex-startBlock+1)) % loops.at(currentLoop).numTicks;
-		//cout << "process - block: " << blockIndex << ", start: " << startBlock << ", currentTick: " << currentTick << ", nextTick: " << nextTick << endl;
-		
-		event e;
-		
-		if (nextTick<currentTick) {
-			while (midiFile->getCurrentEvent(e) && e.absolute >= currentTick ) {
+			midiFile = loops.at(currentLoop).midiFile;
+			
+			int nextTick = (int)(startTick+ticksPerBlock * (blockIndex-startBlock+1)) % loops.at(currentLoop).numTicks;
+			//cout << "process - block: " << blockIndex << ", start: " << startBlock << ", currentTick: " << currentTick << ", nextTick: " << nextTick << endl;
+			
+			event e;
+			
+			if (nextTick<currentTick) {
+				while (midiFile->getCurrentEvent(e) && e.absolute >= currentTick ) {
+					midiFile->nextEvent();
+					events.push_back(e);
+					//cout << e.absolute << "\t";
+				}
+				
+				midiFile->firstEvent();
+			}
+			
+			while (midiFile->getCurrentEvent(e) && e.absolute < nextTick ) {
 				midiFile->nextEvent();
 				events.push_back(e);
 				//cout << e.absolute << "\t";
 			}
 			
-			midiFile->firstEvent();
 		}
-		
-		while (midiFile->getCurrentEvent(e) && e.absolute < nextTick ) {
-			midiFile->nextEvent();
-			events.push_back(e);
-			//cout << e.absolute << "\t";
-		}
-		
 	}
 	blockIndex++;
 	

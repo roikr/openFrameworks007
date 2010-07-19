@@ -42,6 +42,7 @@ public:
 	void setup(int blockLength,int sampleRate=44100); // call after all samples loaded 
 	void noteOn(int midi,int velocity);
 	void noteOff(int midi);
+	void noteOffAll();
 	
 	void preProcess();
 	void mixWithBlocks(float *left,float *right,float volume=1.0f);
@@ -62,7 +63,7 @@ private:
 	int blockLength;
 	
 	
-	
+	bool bNoteOffAll;
 	
 	
 };

@@ -35,6 +35,7 @@ void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
 	for (map<int,ofxSndFile*>::iterator iter=samples.begin() ; iter!=samples.end();iter++)
 		iter->second->setup(blockLength);
 	
+	bNoteOffAll = false;
 }
 
 
@@ -56,6 +57,9 @@ void ofxMidiInstrument::noteOff(int midi) {
 	stop.push_back(midi);
 }
 
+void ofxMidiInstrument::noteOffAll() {
+	bNoteOffAll = true;
+}
 
 
 
@@ -63,6 +67,11 @@ void ofxMidiInstrument::preProcess() {
 	
 	map<int,ofxSndFile*>::iterator siter;
 	vector<note>::iterator piter;
+	
+	if (bNoteOffAll) {
+		bNoteOffAll = false;
+		playing.clear();
+	}
 	
 	for(vector<int>::iterator iter1 = stop.begin();iter1!=stop.end();iter1++) {
 		

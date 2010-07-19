@@ -56,7 +56,7 @@ bool ofxSndFile::load(string filename) {
 			break;
 		case 2:
 			tableBuffer = (float *) malloc(bufferLength * sizeof(float));
-			for (int i = 0, j = 0; i < samplesPerChannel; i+=sfInfo.channels, j++) {
+			for (int i = 0, j = 0; i < bufferLength; i+=sfInfo.channels, j++) {
 				tableBuffer[j] = buffer[i];
 				tableBuffer[j+samplesPerChannel] = buffer[i+1];
 			}

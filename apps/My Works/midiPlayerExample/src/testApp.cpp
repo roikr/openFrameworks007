@@ -6,14 +6,14 @@
 void testApp::setup(){
 	
 	
-	
+	looper.setup(256, 44100);
 	for (int i=0; i<8; i++) {
 		string filename = ofToDataPath("DRM_BOY_"+ofToString(i+1)+".xml");
 		looper.loadLoop(filename);
 	}
 	
-	looper.setup(256, 44100);
-	looper.start();
+	looper.sync();
+	looper.play();
 	
 	int midiNotes[] = {36,38,40,41,43,45,57};
 	
