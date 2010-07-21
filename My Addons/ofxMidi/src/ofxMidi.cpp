@@ -11,6 +11,7 @@
 #include "ofxXmlSettings.h"
 
 
+
 bool ofxMidi::loadFromXml(string filename) {
 	ofxXmlSettings xml;
 	
@@ -66,6 +67,46 @@ bool ofxMidi::loadFromXml(string filename) {
 	
 	return true;
 }
+
+
+void ofxMidi::saveToXml(string filename) {
+	ofxXmlSettings xml;
+		
+	
+	printf("ofxMidi::saveToXml: %s\n",filename.c_str());
+	
+	xml.addTag("MIDIFile");
+	xml.pushTag("MIDIFile");
+	
+		xml.addValue("TicksPerBeat", 96);
+		
+		for(vector<midiTrack>::iterator trackIter=tracks.begin(); trackIter!=tracks.end();trackIter++) {
+			int which = xml.addTag("Track");
+			xml.addAttribute("Track", "Number", distance(tracks.begin(), trackIter),which);
+			xml.pushTag("Track", which);
+			
+				for (vector<event>::iterator iter = trackIter->events.begin() ; iter!=trackIter->events.end() ; iter++) {
+					int which = xml.addTag("Event");
+					xml.pushTag("Event", which);
+					xml.addValue("Absolute", iter->absolute);
+					string message = iter->bNoteOn ? "NoteOn" : "NoteOff";
+					xml.addTag(message);
+					xml.addAttribute(message, "Channel", iter->channel,0);
+					xml.addAttribute(message, "Note", iter->note,0);
+					xml.addAttribute(message, "Velocity", iter->bNoteOn ? iter->velocity : 64,0);
+					xml.popTag();
+				}
+			xml.popTag();
+		}
+	
+	xml.popTag();
+	
+	string test;
+	xml.copyXmlToString(test);
+	cout << test << endl;
+	
+}
+
 
 
 /*
@@ -148,9 +189,24 @@ int ofxMidi::getLastTick(int trackNum) {
 	if (getNumTracks()) {
 		return tracks.at(trackNum).events.back().absolute;
 	}
+	return 0;
 }
 
 int ofxMidi::getTicksPerBeat() {
 	return ticksPerBeat;
 }
+
+void ofxMidi::clear() {
+	tracks.clear();
+}
+
+void ofxMidi::addTrack() {
+	midiTrack t;
+	tracks.push_back(t);
+}
+
+void ofxMidi::addEvent(event &e,int trackNum) {
+	tracks.at(trackNum).events.push_back(e);
+}
+
 

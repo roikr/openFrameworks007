@@ -31,7 +31,10 @@ class ofxMidi {
 	
 public:
 	
+	
+	
 	bool loadFromXml(string filename);
+	void saveToXml(string filename);
 	int getNumTracks();
 	
 	bool getCurrentEvent(event &e,int trackNum=0);
@@ -41,6 +44,10 @@ public:
 	int getLastTick(int trackNum=0);
 	
 	int getTicksPerBeat();
+	
+	void clear();
+	void addTrack();
+	void addEvent(event &e,int trackNum=0);
 	
 	
 private:
