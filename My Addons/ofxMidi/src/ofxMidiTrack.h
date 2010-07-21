@@ -26,6 +26,7 @@ public:
 	//void clear();
 	void setup(int blockLength=256,int sampleRate=44100,int bpm=120); 	
 	void loadTrack(string filename);
+	void saveTrack(string filename);
 	
 	void play();
 	void record();

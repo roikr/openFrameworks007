@@ -41,6 +41,11 @@ void ofxMidiTrack::loadTrack(string filename) {
 	}
 }
 
+void ofxMidiTrack::saveTrack(string filename) {
+	track.saveToXml(filename);
+}
+
+
 
 
 
@@ -66,9 +71,9 @@ void ofxMidiTrack::record() {
 void ofxMidiTrack::stop() {
 	bPlaying = false;
 	
-	if (bRecording) {
-		track.saveToXml("test");
-	}
+	//if (bRecording) {
+//		track.saveToXml("test");
+//	}
 	bRecording = false;
 }
 

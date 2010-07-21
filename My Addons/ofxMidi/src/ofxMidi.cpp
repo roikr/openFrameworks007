@@ -78,7 +78,11 @@ void ofxMidi::saveToXml(string filename) {
 	xml.addTag("MIDIFile");
 	xml.pushTag("MIDIFile");
 	
+		
+		xml.addValue("Format", 0);
+		xml.addValue("TrackCount", 1);
 		xml.addValue("TicksPerBeat", 96);
+		xml.addValue("TimestampType", "Absolute");
 		
 		for(vector<midiTrack>::iterator trackIter=tracks.begin(); trackIter!=tracks.end();trackIter++) {
 			int which = xml.addTag("Track");
@@ -101,9 +105,10 @@ void ofxMidi::saveToXml(string filename) {
 	
 	xml.popTag();
 	
-	string test;
-	xml.copyXmlToString(test);
-	cout << test << endl;
+	xml.saveFile(filename);
+	//string test;
+//	xml.copyXmlToString(test);
+//	cout << test << endl;
 	
 }
 
