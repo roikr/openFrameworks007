@@ -68,6 +68,24 @@ void testApp::mouseMoved(int x, int y ){
 	
 }
 
+
+
+//--------------------------------------------------------------
+void testApp::mousePressed(int x, int y, int button){
+	
+	curve.push_back(ofPoint(x,y));
+	
+	length = 0;
+	lastPoint = ofPoint(x,y);
+	
+	
+	detector.setup();
+	detector.addPoint(lastPoint);
+	
+	currentCorner = 0;
+	
+}
+
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
 	curve.push_back(ofPoint(x,y));
@@ -81,18 +99,16 @@ void testApp::mouseDragged(int x, int y, int button){
 	
 	detector.addPoint(p2);
 	detector.update();
-}
-
-//--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
 	
-	curve.push_back(ofPoint(x,y));
 	
-	length = 0;
-	lastPoint = ofPoint(x,y);
+	if (detector.getNumCorners() > currentCorner) {
+		printf("currentCorner: %i\n", currentCorner );
+		cout << "corner index: " << detector.getCornerIndex(currentCorner) << endl;
+		cout << "path to corner: " << detector.getPathLength(0, detector.getCornerIndex(currentCorner)) << endl;
+		cout << "current length" << length << endl;
+		currentCorner = detector.getNumCorners();
+	}
 	
-	detector.setup();
-	detector.addPoint(lastPoint);
 }
 
 //--------------------------------------------------------------

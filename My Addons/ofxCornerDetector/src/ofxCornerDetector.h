@@ -32,21 +32,35 @@ struct candidate {
 class ofxCornerDetector {
 	
 public:
-	void setup();
+	void setup(int min_dist=MIN_DIST,int max_dist=MAX_DIST,int max_alpha=MAX_ALPHA);
 	void update();
 	
 	void addPoint(ofPoint &point);
-	vector<corner> &getCorners();
+	
+	int getNumCorners();
+	int getCornerIndex(int cornerNum);
+	float getPathLength(int index1,int index2);
+	
+	float getTotalPathLength();
 	
 	
 private:
 	
-	void checkCandidate(vector<ofPoint>::iterator iter);
+	void checkPoint(vector<ofPoint>::iterator iter);
+	int firstPass();
+	bool areNeighbors(candidate &c1,candidate &c2);
+	void addCorner(vector<candidate>::iterator citer);
+	int secondPass();
+	
 	bool isCorner(int index);
+	vector<corner> &getCorners();
 	
 	vector<ofPoint> curve;
 	vector<corner> corners;
 	vector<candidate> candidates;
 	
+	int min_dist;
+	int max_dist;
+	int max_alpha;
 	
 };
