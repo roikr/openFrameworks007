@@ -27,7 +27,8 @@ void ofxMidiInstrument::loadSample(string filename,int midi) {
 	}
 }
 
-void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
+void ofxMidiInstrument::setup(int blockLength,int bMulti,int sampleRate) {
+	this->bMulti = bMulti;
 	this->blockLength = blockLength;
 	this->sampleRate = sampleRate;
 	blockIndex = 0;
@@ -40,6 +41,9 @@ void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
 
 
 void ofxMidiInstrument::noteOn(int midi,int velocity) {
+	if (!bMulti)
+		noteOffAll();
+	
 	note n;
 	n.midi = midi;
 	n.volume = (float)(velocity)/127;

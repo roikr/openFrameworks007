@@ -30,14 +30,14 @@ vector<string> ofListFolders(string directory){
 	struct dirent *entry;
 	
     //open the directory
-    ofLog(OF_LOG_VERBOSE, "ofListFolders - attempting to open %s", directory.c_str());
+   // ofLog(OF_LOG_VERBOSE, "ofListFolders - attempting to open %s", directory.c_str());
     dir = opendir(directory.c_str());
 	
 	if(dir == NULL){
 		ofLog(OF_LOG_ERROR, "ofListFolders - error opening directory");
 		return folders;
 	}else{
-		ofLog(OF_LOG_VERBOSE, "ofListFolders - success opening directory");
+		//ofLog(OF_LOG_VERBOSE, "ofListFolders - success opening directory");
 	}
 	
     string entry_name = "";
@@ -55,14 +55,14 @@ vector<string> ofListFolders(string directory){
 			if(entry_name[0] == '.')continue; //ignore invisible files, ./ and ../
 			
 			folders.push_back(entry_name);
-			ofLog(OF_LOG_VERBOSE, "ofListFolders - listing %s ", folders.back().c_str());
+			//ofLog(OF_LOG_VERBOSE, "ofListFolders - listing %s ", folders.back().c_str());
 		}
         
 		
 		
 	}
 	
-	ofLog(OF_LOG_VERBOSE, "ofListFolders - listed %i files in %s", folders.size(), directory.c_str());
+	//ofLog(OF_LOG_VERBOSE, "ofListFolders - listed %i files in %s", folders.size(), directory.c_str());
 	return folders;
 }
 

@@ -39,7 +39,7 @@ class ofxMidiInstrument {
 public:
 	
 	void loadSample(string filename,int midi);
-	void setup(int blockLength,int sampleRate=44100); // call after all samples loaded 
+	void setup(int blockLength,int bMulti,int sampleRate = 44100); // call after all samples loaded 
 	void noteOn(int midi,int velocity);
 	void noteOff(int midi);
 	void noteOffAll();
@@ -64,6 +64,7 @@ private:
 	
 	
 	bool bNoteOffAll;
+	bool bMulti;
 	
 	
 };
