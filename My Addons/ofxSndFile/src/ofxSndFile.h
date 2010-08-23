@@ -22,7 +22,7 @@ public:
 	float *getTableBuffer();
 	int getSamplesPerChannel();
 	
-	void setup(int blockLength);
+	void setup(int blockLength,bool write=false);
 	void play();
 	bool getIsPlaying();
 	bool getIsLastBlock();
@@ -31,6 +31,9 @@ public:
 	void mixWithBlocks(float *left,float *right,float volume=1.0f);
 	void postProcess(); // to call after processing
 
+	void open(string filename);
+	void saveWithBlocks(float *left,float*right);
+	void close();
 	
 private:
 	
@@ -44,6 +47,8 @@ private:
 	bool bLoaded;
 	bool bIsPlaying;
 	int currentBlock;
+	void *sndFilePtr;
+	float *buffer;
 	
 };
 

@@ -78,9 +78,16 @@ int ofxSndFile::getSamplesPerChannel() {
 	return samplesPerChannel;
 }
 
-void ofxSndFile::setup(int blockLength) {
+void ofxSndFile::setup(int blockLength,bool write) {
 	this->blockLength = blockLength;
 	bIsPlaying = false;
+	
+	if (write) {
+		buffer = (float *) malloc(bufferLength * sizeof(float)*2);
+	} else {
+		buffer = 0;
+	}
+
 }
 
 void ofxSndFile::play() {
@@ -134,8 +141,43 @@ void ofxSndFile::postProcess() {
 	
 }
 
+
+void ofxSndFile::open(string filename) {
+	SF_INFO sfInfo;
+	sfInfo.samplerate = 44100;
+	sfInfo.channels = 2;
+	sfInfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+		
+	
+	sndFilePtr = sf_open(filename.c_str(), SFM_WRITE, &sfInfo);
+	
+	
+}
+
+void ofxSndFile::saveWithBlocks(float *left,float*right) {
+	SNDFILE *sndFile = (SNDFILE*)sndFilePtr;
+	int i;
+	int j;
+	
+	for (i = 0, j = 0; i < blockLength; j+=2, i++) {
+		buffer[j] = left[i];
+		buffer[j+1] = right[i];
+	}
+	
+	sf_count_t res = sf_writef_float(sndFile, buffer, blockLength); // read the whole file into memory
+	
+}
+
+void ofxSndFile::close() {
+	
+	
+	sf_close((SNDFILE*)sndFilePtr); // release the handle to the file
+}
+
 void ofxSndFile::exit() {
 	free(tableBuffer);
+	if (buffer)
+		free(buffer);
 }
 	
 	

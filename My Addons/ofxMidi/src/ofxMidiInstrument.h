@@ -50,6 +50,8 @@ public:
 	
 	void exit();
 	
+	bool getIsPlaying();
+	
 	
 private:
 	map<int,ofxSndFile*> samples;

@@ -148,6 +148,9 @@ void ofxMidiInstrument::postProcess() {
 	blockIndex++;
 }
 
+bool ofxMidiInstrument::getIsPlaying() {
+	return !playing.empty();
+}
 
 void ofxMidiInstrument::exit() {
 	//TODO: add check to ensure nothing is playing
