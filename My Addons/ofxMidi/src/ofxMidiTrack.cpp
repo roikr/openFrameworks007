@@ -77,6 +77,12 @@ void ofxMidiTrack::stop() {
 	bRecording = false;
 }
 
+void ofxMidiTrack::clear() {
+	track.clear();
+	track.addTrack();
+}
+
+
 void ofxMidiTrack::setBPM(int bpm) {
 	
 	bChangeBPM = true;
@@ -160,4 +166,8 @@ float ofxMidiTrack::getPlayhead() {
 	}
 	return  0.0f;
 	
+}
+
+float ofxMidiTrack::getProgress() {
+	return track.getProgress();
 }

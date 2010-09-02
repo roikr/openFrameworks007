@@ -49,8 +49,11 @@ public:
 	void addTrack();
 	void addEvent(event &e,int trackNum=0);
 	
+	float getProgress();
 	
 private:
+	float progress;
+	
 	vector<midiTrack> tracks;
 	
 	

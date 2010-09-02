@@ -31,6 +31,7 @@ public:
 	void play();
 	void record();
 	void stop();
+	void clear();
 	
 	void process(vector<event> &events);
 	
@@ -40,6 +41,7 @@ public:
 	bool getIsRecording();
 	
 	float getPlayhead();
+	float getProgress();
 	
 	
 private:

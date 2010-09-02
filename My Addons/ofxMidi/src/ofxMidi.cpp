@@ -14,7 +14,7 @@
 
 bool ofxMidi::loadFromXml(string filename) {
 	ofxXmlSettings xml;
-	
+	progress = 0;
 	tracks.clear();
 	//events.clear();
 	//iter = events.end();
@@ -27,12 +27,15 @@ bool ofxMidi::loadFromXml(string filename) {
 	xml.pushTag("MIDIFile");
 	ticksPerBeat = xml.getValue("TicksPerBeat", 96);
 	
-	for (int j=0;j<xml.getNumTags("Track");j++) {
+	
+	int numTracks = xml.getNumTags("Track");
+	for (int j=0;j<numTracks;j++) {
 	
 		xml.pushTag("Track");
 		midiTrack t;
 		
 		for (int i=0; i<xml.getNumTags("Event"); i++) {
+			progress = ((float)j + ((float)i/(float)xml.getNumTags("Event"))) / (float)numTracks;
 			xml.pushTag("Event", i);
 			event e;
 			e.absolute = xml.getValue("Absolute", 0);
@@ -214,4 +217,7 @@ void ofxMidi::addEvent(event &e,int trackNum) {
 	tracks.at(trackNum).events.push_back(e);
 }
 
+float ofxMidi::getProgress() {
+	return progress;
+}
 
