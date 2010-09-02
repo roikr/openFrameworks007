@@ -39,6 +39,8 @@ public:
 	bool getIsPlaying();
 	bool getIsRecording();
 	
+	float getPlayhead();
+	
 	
 private:
 	

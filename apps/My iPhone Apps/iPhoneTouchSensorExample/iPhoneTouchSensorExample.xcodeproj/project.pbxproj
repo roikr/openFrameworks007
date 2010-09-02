@@ -826,7 +826,7 @@
 					"-w",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "26312609-D4DC-4334-B323-DE45B09A7C83";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "62D69DEA-7DF7-4B36-8C3C-A3432F096E5A";
 				SDKROOT = iphoneos4.1;
 			};
 			name = Debug;
@@ -887,7 +887,7 @@
 					"-w",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "26312609-D4DC-4334-B323-DE45B09A7C83";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "62D69DEA-7DF7-4B36-8C3C-A3432F096E5A";
 				SDKROOT = iphoneos4.1;
 			};
 			name = Release;
@@ -959,7 +959,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "26312609-D4DC-4334-B323-DE45B09A7C83";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "62D69DEA-7DF7-4B36-8C3C-A3432F096E5A";
 				SDKROOT = iphoneos4.1;
 			};
 			name = Distribution;

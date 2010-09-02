@@ -53,6 +53,7 @@ bool ofxSndFile::load(string filename) {
 	switch (channels) {
 		case 1:
 			tableBuffer = buffer;
+			buffer = 0; // TODO: not a leak
 			break;
 		case 2:
 			tableBuffer = (float *) malloc(bufferLength * sizeof(float));
@@ -83,9 +84,9 @@ void ofxSndFile::setup(int blockLength,bool write) {
 	bIsPlaying = false;
 	
 	if (write) {
-		buffer = (float *) malloc(bufferLength * sizeof(float)*2);
+		saveBuffer = (float *) malloc(bufferLength * sizeof(float)*2);
 	} else {
-		buffer = 0;
+		saveBuffer = 0;
 	}
 
 }
@@ -151,7 +152,6 @@ void ofxSndFile::open(string filename) {
 	
 	sndFilePtr = sf_open(filename.c_str(), SFM_WRITE, &sfInfo);
 	
-	
 }
 
 void ofxSndFile::saveWithBlocks(float *left,float*right) {
@@ -160,11 +160,11 @@ void ofxSndFile::saveWithBlocks(float *left,float*right) {
 	int j;
 	
 	for (i = 0, j = 0; i < blockLength; j+=2, i++) {
-		buffer[j] = left[i];
-		buffer[j+1] = right[i];
+		saveBuffer[j] = left[i];
+		saveBuffer[j+1] = right[i];
 	}
 	
-	sf_count_t res = sf_writef_float(sndFile, buffer, blockLength); // read the whole file into memory
+	sf_count_t res = sf_writef_float(sndFile, saveBuffer, blockLength); // read the whole file into memory
 	
 }
 
@@ -172,12 +172,17 @@ void ofxSndFile::close() {
 	
 	
 	sf_close((SNDFILE*)sndFilePtr); // release the handle to the file
+	
+	
 }
 
 void ofxSndFile::exit() {
 	free(tableBuffer);
-	if (buffer)
-		free(buffer);
+	if (saveBuffer) {
+		free(saveBuffer);
+		saveBuffer = 0;
+	}
+
 }
 	
 	

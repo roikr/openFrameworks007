@@ -151,3 +151,13 @@ bool ofxMidiTrack::getIsRecording() {
 	return bRecording;
 }
 
+float ofxMidiTrack::getPlayhead() {
+	int lastTick = track.getLastTick();
+	if (lastTick) {
+		event e;
+		track.getCurrentEvent(e);
+		return (float)e.absolute / (float)lastTick;
+	}
+	return  0.0f;
+	
+}

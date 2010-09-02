@@ -19,7 +19,7 @@ bool ofxMidi::loadFromXml(string filename) {
 	//events.clear();
 	//iter = events.end();
 	
-	printf("ofxMidi::loadFromXml: %s\n",filename.c_str());
+	//printf("ofxMidi::loadFromXml: %s\n",filename.c_str());
 	
 	if (!xml.loadFile(filename)) 
 		return false;
@@ -73,7 +73,7 @@ void ofxMidi::saveToXml(string filename) {
 	ofxXmlSettings xml;
 		
 	
-	printf("ofxMidi::saveToXml: %s\n",filename.c_str());
+	//printf("ofxMidi::saveToXml: %s\n",filename.c_str());
 	
 	xml.addTag("MIDIFile");
 	xml.pushTag("MIDIFile");

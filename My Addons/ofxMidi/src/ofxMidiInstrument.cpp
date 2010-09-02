@@ -20,7 +20,7 @@ void ofxMidiInstrument::loadSample(string filename,int midi) {
 	ofxSndFile *sndFile = new ofxSndFile();
 	if (sndFile->load(filename)) {
 		samples[midi] = sndFile;
-		cout << filename << " loaded as midi note: " << midi << endl;
+		//cout << filename << " loaded as midi note: " << midi << endl;
 	}
 	else {
 		delete sndFile;

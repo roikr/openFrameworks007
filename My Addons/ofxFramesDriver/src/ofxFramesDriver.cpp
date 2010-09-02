@@ -20,13 +20,14 @@ void ofxFramesDriver::loadVectors(string filename) {
 	
 	
 
-	//assert(loaded);
-	if (loaded) {
-		cout << "loaded" << endl;
-		loadVectors(&xml);
-	} else {
-		cout << "didn't loaded" << endl;
-	}
+	assert(loaded);
+	loadVectors(&xml);
+//	if (loaded) {
+//		cout << "loaded" << endl;
+//		
+//	} else {
+//		cout << "didn't loaded" << endl;
+//	}
 
 }
 

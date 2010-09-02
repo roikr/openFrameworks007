@@ -48,7 +48,7 @@ private:
 	bool bIsPlaying;
 	int currentBlock;
 	void *sndFilePtr;
-	float *buffer;
+	float *saveBuffer;
 	
 };
 
