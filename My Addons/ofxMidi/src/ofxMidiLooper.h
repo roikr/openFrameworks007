@@ -45,6 +45,8 @@ public:
 	
 	void setBPM(int bpm);
 	
+	bool isPlayingLoop();
+	
 	
 private:
 	

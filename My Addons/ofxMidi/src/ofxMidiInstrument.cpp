@@ -13,13 +13,19 @@
 #include <iostream>
 
 
-void ofxMidiInstrument::loadSample(string filename,int midi) {
+void ofxMidiInstrument::loadSample(string filename,int midi,bool bChokeGroup) {
 	
 	//TODO: add check for existing midi note
 	
 	ofxSndFile *sndFile = new ofxSndFile();
 	if (sndFile->load(filename)) {
 		samples[midi] = sndFile;
+		
+		if (bChokeGroup) {
+			//cout << midi << " is in chokeGroup" << endl; // DEBUG
+			chokeGroup.insert(midi);
+		}
+				
 		//cout << filename << " loaded as midi note: " << midi << endl;
 	}
 	else {
@@ -27,8 +33,8 @@ void ofxMidiInstrument::loadSample(string filename,int midi) {
 	}
 }
 
-void ofxMidiInstrument::setup(int blockLength,int bMulti,int sampleRate) {
-	this->bMulti = bMulti;
+void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
+	
 	this->blockLength = blockLength;
 	this->sampleRate = sampleRate;
 	blockIndex = 0;
@@ -41,9 +47,7 @@ void ofxMidiInstrument::setup(int blockLength,int bMulti,int sampleRate) {
 
 
 void ofxMidiInstrument::noteOn(int midi,int velocity) {
-	if (!bMulti)
-		noteOffAll();
-	
+
 	note n;
 	n.midi = midi;
 	n.volume = (float)(velocity)/127;
@@ -75,15 +79,28 @@ void ofxMidiInstrument::preProcess() {
 	if (bNoteOffAll) {
 		bNoteOffAll = false;
 		playing.clear();
-	}
-	
-	for(vector<int>::iterator iter1 = stop.begin();iter1!=stop.end();iter1++) {
-		
-		for (piter = playing.begin(); piter!=playing.end() ; piter++) {
-			if (piter->midi==*iter1) {
-				playing.erase(piter);
-				cout << "note off: " << piter->midi << endl;
+		stop.clear(); // we don't need to stop because there is nothing to 
+	} else {
+		for(vector<note>::iterator iter2 = start.begin();iter2!=start.end();iter2++) {
+			if (chokeGroup.find(iter2->midi)!=chokeGroup.end()) {
+				for (set<int>::iterator iter3 = chokeGroup.begin(); iter3!=chokeGroup.end(); iter3++) {
+					if (*iter3!=iter2->midi) {
+						noteOff(*iter3);
+					}
+				}
 				break;
+			}
+			
+		}
+	
+		for(vector<int>::iterator iter1 = stop.begin();iter1!=stop.end();iter1++) {
+			
+			for (piter = playing.begin(); piter!=playing.end() ; piter++) {
+				if (piter->midi==*iter1) {
+					playing.erase(piter);
+					cout << "note off: " << piter->midi << endl;
+					break;
+				}
 			}
 		}
 	}
@@ -97,14 +114,14 @@ void ofxMidiInstrument::preProcess() {
 			}
 		}
 		
-		if (piter == playing.end()) {
+		if (piter == playing.end()) { // note is not playing, add it
 			playing.push_back(*iter2);
 			playing.back().sample->play();
 			cout << "note on: " << playing.back().midi << endl;
-		} else {
+		} else {                     // retrigger
 			piter->volume = iter2->volume;
 			piter->sample->play();
-			cout << "note on: " << piter->midi << endl;
+			cout << "retrigger: " << piter->midi << endl;
 		}
 
 			

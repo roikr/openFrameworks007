@@ -121,7 +121,31 @@ void ofxMidiLooper::process(vector<event> &events) {
 	
 		ofxMidi *midiFile;
 		
-		int currentTick =(int)(startTick+ticksPerBlock * (blockIndex-startBlock)) % loops.at(currentLoop).numTicks;
+		int currentTick;
+		
+		if (bNewLoop) {
+			currentLoop = nextLoop;
+			bLoopPlaying = true;
+			bNewLoop = false;
+			
+			midiFile = loops.at(currentLoop).midiFile;
+			
+			//cout << "seekPlayhead - block: " << blockIndex << ", start: " << startBlock << ", currentTick: " << currentTick << endl;
+			midiFile->firstEvent();
+		
+		
+			currentTick =(int)(startTick+ticksPerBlock * (blockIndex-startBlock)) % loops.at(currentLoop).numTicks;
+			// we should calculate current tick before using searching for playhead
+			event e;
+			cout << "new loop: " << currentLoop <<", current tick: " << currentTick << endl;
+			while (midiFile->getCurrentEvent(e) && e.absolute<currentTick) { // roikr: was <= before I don't know why, but it skipped firsts event on loop start
+				midiFile->nextEvent();
+			}
+			
+		} else {
+			currentTick =(int)(startTick+ticksPerBlock * (blockIndex-startBlock)) % loops.at(currentLoop).numTicks;
+		}
+
 		
 		if (bChangeBPM) {
 			//cout << "bpm: " << bpm << " to " << nextBPM << endl;
@@ -138,22 +162,8 @@ void ofxMidiLooper::process(vector<event> &events) {
 			
 		}
 		
-		if (bNewLoop) {
-			currentLoop = nextLoop;
-			bNewLoop = false;
-			bLoopPlaying = true;
-			
-			midiFile = loops.at(currentLoop).midiFile;
-			
-			//cout << "seekPlayhead - block: " << blockIndex << ", start: " << startBlock << ", currentTick: " << currentTick << endl;
-			midiFile->firstEvent();
-			
-			event e;
-			while (midiFile->getCurrentEvent(e) && e.absolute<=currentTick) {
-				midiFile->nextEvent();
-			}
-			
-		}
+		
+		
 		if (bLoopPlaying) {
 		
 			midiFile = loops.at(currentLoop).midiFile;
@@ -186,5 +196,8 @@ void ofxMidiLooper::process(vector<event> &events) {
 }
 
 
+bool ofxMidiLooper::isPlayingLoop() {
+	return bLoopPlaying;
+}
 
 

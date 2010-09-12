@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 #include <map>
-
+#include <set>
 using namespace std;
 
 
@@ -38,8 +38,8 @@ class ofxMidiInstrument {
 	
 public:
 	
-	void loadSample(string filename,int midi);
-	void setup(int blockLength,int bMulti,int sampleRate = 44100); // call after all samples loaded 
+	void loadSample(string filename,int midi,bool bChokeGroup = false);
+	void setup(int blockLength,int sampleRate = 44100); // call after all samples loaded 
 	void noteOn(int midi,int velocity);
 	void noteOff(int midi);
 	void noteOffAll();
@@ -55,6 +55,7 @@ public:
 	
 private:
 	map<int,ofxSndFile*> samples;
+	set<int> chokeGroup;
 	vector<note> start;
 	vector<note> playing;
 	vector<int> stop;
@@ -66,9 +67,7 @@ private:
 	
 	
 	bool bNoteOffAll;
-	bool bMulti;
-	
-	
+		
 };
 	/*
 	
