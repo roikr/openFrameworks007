@@ -115,6 +115,8 @@ void testApp::keyPressed  (int key){
 		looper.stopLoop();
 	} else if (key-'0' >=0 && key-'0'<=7) {
 		//instrument.noteOn(key-'0',127);
+		if (!looper.isPlayingLoop())
+			looper.sync();
 		looper.playLoop(key-'0');
 	}
 }
