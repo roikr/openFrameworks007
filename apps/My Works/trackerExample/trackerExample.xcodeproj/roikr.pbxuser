@@ -1,0 +1,243 @@
+// !$*UTF8*$!
+{
+	E470EDF3124255CA007A4532 /* trackerExample */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = trackerExample;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	E470EE19124255CC007A4532 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	E470EE1A124255CC007A4532 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	E470EE541242561B007A4532 /* ofxXmlSettings.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {753, 9009}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 959}";
+		};
+	};
+	E470EE551242561B007A4532 /* ofxXmlSettings.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {943, 2158}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{4140, 2113}";
+		};
+	};
+	E470EE5C124257AB007A4532 /* ofxAEMotionTrackers.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {558, 1573}}";
+			sepNavSelRange = "{1794, 0}";
+			sepNavVisRange = "{1773, 409}";
+		};
+	};
+	E470EE5D124257AB007A4532 /* ofxAEMotionTrackers.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1215, 600}}";
+			sepNavSelRange = "{361, 12}";
+			sepNavVisRange = "{0, 677}";
+		};
+	};
+	E470EE7D12425F93007A4532 /* pictureIphone.xml */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.xml;
+		name = pictureIphone.xml;
+		path = "/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/apps/My Works/trackerExample/bin/data/pictureIphone.xml";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavFolds = "{\n    c =     (\n                {\n            r = \"{806, 13483}\";\n            s = 0;\n        },\n                {\n            r = \"{14678, 11745}\";\n            s = 0;\n        },\n                {\n            r = \"{26477, 14022}\";\n            s = 0;\n        },\n                {\n            r = \"{40778, 13791}\";\n            s = 0;\n        }\n    );\n    r = \"{0, 162836}\";\n    s = 0;\n}";
+			sepNavIntBoundsRect = "{{0, 0}, {1629, 7202}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 3681}";
+		};
+	};
+	E470EEBF1242688C007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E470EE551242561B007A4532 /* ofxXmlSettings.h */;
+		name = "ofxXmlSettings.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2113;
+		vrLoc = 4140;
+	};
+	E470EEC01242688C007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E470EE541242561B007A4532 /* ofxXmlSettings.cpp */;
+		name = "ofxXmlSettings.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 959;
+		vrLoc = 0;
+	};
+	E470EEDD12426C36007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E470EE5D124257AB007A4532 /* ofxAEMotionTrackers.h */;
+		name = "ofxAEMotionTrackers.h: 23";
+		rLen = 12;
+		rLoc = 361;
+		rType = 0;
+		vrLen = 677;
+		vrLoc = 0;
+	};
+	E470EEE412426CCF007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E470EE7D12425F93007A4532 /* pictureIphone.xml */;
+		name = "pictureIphone.xml: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 56718;
+		vrLoc = 0;
+	};
+	E470EEEE12426DE8007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E470EE5C124257AB007A4532 /* ofxAEMotionTrackers.cpp */;
+		name = "ofxAEMotionTrackers.cpp: 65";
+		rLen = 0;
+		rLoc = 1678;
+		rType = 0;
+		vrLen = 1276;
+		vrLoc = 454;
+	};
+	E470EF1C124271C0007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1F0A3A1BDC003C02F2 /* testApp.h */;
+		name = "testApp.h: 29";
+		rLen = 0;
+		rLoc = 550;
+		rType = 0;
+		vrLen = 563;
+		vrLoc = 0;
+	};
+	E470EF1D124271C0007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 10";
+		rLen = 0;
+		rLoc = 295;
+		rType = 0;
+		vrLen = 1247;
+		vrLoc = 0;
+	};
+	E470EF2912427201007A4532 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 18";
+		rLen = 0;
+		rLoc = 442;
+		rType = 0;
+		vrLen = 1293;
+		vrLoc = 0;
+	};
+	E4B69B4C0A3A1720003C02F2 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = E470EDF3124255CA007A4532 /* trackerExample */;
+		activeTarget = E4B69B5A0A3A1756003C02F2 /* trackerExample */;
+		addToTargets = (
+			E4B69B5A0A3A1756003C02F2 /* trackerExample */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = E470EE1A124255CC007A4532 /* Code sense */;
+		executables = (
+			E470EDF3124255CA007A4532 /* trackerExample */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1037,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 306337257;
+			PBXWorkspaceStateSaveDate = 306337257;
+		};
+		perUserProjectItems = {
+			E470EEBF1242688C007A4532 /* PBXTextBookmark */ = E470EEBF1242688C007A4532 /* PBXTextBookmark */;
+			E470EEC01242688C007A4532 /* PBXTextBookmark */ = E470EEC01242688C007A4532 /* PBXTextBookmark */;
+			E470EEDD12426C36007A4532 /* PBXTextBookmark */ = E470EEDD12426C36007A4532 /* PBXTextBookmark */;
+			E470EEE412426CCF007A4532 /* PBXTextBookmark */ = E470EEE412426CCF007A4532 /* PBXTextBookmark */;
+			E470EEEE12426DE8007A4532 /* PBXTextBookmark */ = E470EEEE12426DE8007A4532 /* PBXTextBookmark */;
+			E470EF1C124271C0007A4532 /* PBXTextBookmark */ = E470EF1C124271C0007A4532 /* PBXTextBookmark */;
+			E470EF1D124271C0007A4532 /* PBXTextBookmark */ = E470EF1D124271C0007A4532 /* PBXTextBookmark */;
+			E470EF2912427201007A4532 /* PBXTextBookmark */ = E470EF2912427201007A4532 /* PBXTextBookmark */;
+		};
+		sourceControlManager = E470EE19124255CC007A4532 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	E4B69B5A0A3A1756003C02F2 /* trackerExample */ = {
+		activeExec = 0;
+		executables = (
+			E470EDF3124255CA007A4532 /* trackerExample */,
+		);
+	};
+	E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1215, 1118}}";
+			sepNavSelRange = "{442, 0}";
+			sepNavVisRange = "{0, 1293}";
+		};
+	};
+	E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1215, 600}}";
+			sepNavSelRange = "{550, 0}";
+			sepNavVisRange = "{0, 563}";
+		};
+	};
+}
