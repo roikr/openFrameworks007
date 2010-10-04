@@ -12,11 +12,11 @@
 #include <sndfile.h>
 #include <iostream>
 
-bool ofxSndFile::load(string filename) {
+bool ofxSndFile::load(string filename,int blockLength) {
 	
-	
-	
-		   
+	bIsPlaying = false;
+	this->blockLength = blockLength;
+		
 	//char *newStr = (char *) malloc((filename.size()+1) * sizeof(char));
 	//strcpy(newStr, filename.c_str());
 
@@ -71,6 +71,14 @@ bool ofxSndFile::load(string filename) {
 	return true;
 }	
 
+void ofxSndFile::setupForSave(int blockLength) {
+	this->blockLength = blockLength;
+	this->samplesPerChannel = 0;
+	bIsPlaying = false;
+	bufferLength = blockLength * 2;
+	tableBuffer = (float *) malloc(bufferLength * sizeof(float));
+}
+
 float *ofxSndFile::getTableBuffer() {
 	return tableBuffer;
 }
@@ -79,17 +87,6 @@ int ofxSndFile::getSamplesPerChannel() {
 	return samplesPerChannel;
 }
 
-void ofxSndFile::setup(int blockLength,bool write) {
-	this->blockLength = blockLength;
-	bIsPlaying = false;
-	
-	if (write) {
-		saveBuffer = (float *) malloc(bufferLength * sizeof(float)*2);
-	} else {
-		saveBuffer = 0;
-	}
-
-}
 
 void ofxSndFile::play() {
 	currentBlock = 0;
@@ -152,6 +149,7 @@ void ofxSndFile::open(string filename) {
 	
 	sndFilePtr = sf_open(filename.c_str(), SFM_WRITE, &sfInfo);
 	
+		
 }
 
 void ofxSndFile::saveWithBlocks(float *left,float*right) {
@@ -160,11 +158,11 @@ void ofxSndFile::saveWithBlocks(float *left,float*right) {
 	int j;
 	
 	for (i = 0, j = 0; i < blockLength; j+=2, i++) {
-		saveBuffer[j] = left[i];
-		saveBuffer[j+1] = right[i];
+		tableBuffer[j] = left[i];
+		tableBuffer[j+1] = right[i];
 	}
 	
-	sf_count_t res = sf_writef_float(sndFile, saveBuffer, blockLength); // read the whole file into memory
+	sf_count_t res = sf_writef_float(sndFile, tableBuffer, blockLength); // save buffer
 	
 }
 
@@ -178,10 +176,7 @@ void ofxSndFile::close() {
 
 void ofxSndFile::exit() {
 	free(tableBuffer);
-	if (saveBuffer) {
-		free(saveBuffer);
-		saveBuffer = 0;
-	}
+	tableBuffer = 0;
 
 }
 	

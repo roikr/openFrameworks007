@@ -17,12 +17,13 @@ using namespace std;
 class ofxSndFile {
 public:
 	
-	bool load(string filename);
+	bool load(string filename,int blockLength);
+	void setupForSave(int blockLength); // allocate memory just for current block
 	void exit();
 	float *getTableBuffer();
 	int getSamplesPerChannel();
 	
-	void setup(int blockLength,bool write=false);
+	
 	void play();
 	bool getIsPlaying();
 	bool getIsLastBlock();
@@ -48,7 +49,7 @@ private:
 	bool bIsPlaying;
 	int currentBlock;
 	void *sndFilePtr;
-	float *saveBuffer;
+	
 	
 };
 

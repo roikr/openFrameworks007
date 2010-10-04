@@ -13,12 +13,27 @@
 #include <iostream>
 
 
+void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
+	
+	this->blockLength = blockLength;
+	this->sampleRate = sampleRate;
+	blockIndex = 0;
+	
+	/*
+	for (map<int,ofxSndFile*>::iterator iter=samples.begin() ; iter!=samples.end();iter++)
+		iter->second->setup(blockLength);
+	 */
+	
+	bNoteOffAll = false;
+}
+
+
 void ofxMidiInstrument::loadSample(string filename,int midi,bool bChokeGroup) {
 	
 	//TODO: add check for existing midi note
 	
 	ofxSndFile *sndFile = new ofxSndFile();
-	if (sndFile->load(filename)) {
+	if (sndFile->load(filename,blockLength)) {
 		samples[midi] = sndFile;
 		
 		if (bChokeGroup) {
@@ -33,17 +48,6 @@ void ofxMidiInstrument::loadSample(string filename,int midi,bool bChokeGroup) {
 	}
 }
 
-void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
-	
-	this->blockLength = blockLength;
-	this->sampleRate = sampleRate;
-	blockIndex = 0;
-	
-	for (map<int,ofxSndFile*>::iterator iter=samples.begin() ; iter!=samples.end();iter++)
-		iter->second->setup(blockLength);
-	
-	bNoteOffAll = false;
-}
 
 
 void ofxMidiInstrument::noteOn(int midi,int velocity) {
