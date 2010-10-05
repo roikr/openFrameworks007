@@ -31,9 +31,7 @@ class ofxMidi {
 	
 public:
 	
-	
-	
-	bool loadFromXml(string filename);
+	bool loadMidi(string filename);
 	void saveToXml(string filename);
 	int getNumTracks();
 	
@@ -51,7 +49,14 @@ public:
 	
 	float getProgress();
 	
+	void dumpTracks();
+	
 private:
+	
+	bool loadFromMidiFile(string filename);
+	bool loadFromXml(string filename);
+
+	
 	float progress;
 	
 	vector<midiTrack> tracks;

@@ -34,7 +34,7 @@ void ofxMidiTrack::setup(int blockLength,int sampleRate,int bpm) { // call after
 
 void ofxMidiTrack::loadTrack(string filename) {
 	
-	bLoaded = track.loadFromXml(filename);
+	bLoaded = track.loadMidi(filename);
 	if (bLoaded) {
 		float blocksPerMinutes = sampleRate * 60.0 / blockLength;
 		ticksPerBlock =  track.getTicksPerBeat() * bpm / blocksPerMinutes ;

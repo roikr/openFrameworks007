@@ -48,7 +48,7 @@ int nextPow2(int a){
 void ofxMidiLooper::loadLoop(string filename) {
 	
 	ofxMidi *midiFile = new ofxMidi;
-	if (!midiFile->loadFromXml(filename)) {
+	if (!midiFile->loadMidi(filename)) {
 		delete midiFile;
 		return;
 	}
@@ -180,7 +180,7 @@ void ofxMidiLooper::process(vector<event> &events) {
 					//cout << e.absolute << "\t";
 				}
 				
-				midiFile->firstEvent();
+				midiFile->firstEvent(); 
 			}
 			
 			while (midiFile->getCurrentEvent(e) && e.absolute < nextTick ) {
