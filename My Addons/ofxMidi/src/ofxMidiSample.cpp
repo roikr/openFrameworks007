@@ -19,35 +19,41 @@ bool ofxMidiSample::loadSample(string filename,int blockLength) {
 	return sample.load(filename,blockLength);
 }
 
+
 void ofxMidiSample::trigger(int velocity) {
-	bStop = false;
-	instances.push_front(make_pair(0, (float)velocity/127.0));
-	cout << "trigger: " << instances.size() << ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
+	instance i;
+	i.block = 0;
+	i.volume = (float)velocity/127.0;
+	i.bStop = false;
+	instances.push_front(i);
+	cout << "retrigger: " << instances.size() << ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
 }
 
 void ofxMidiSample::stop() {
-	bStop = true;
+	for (deque<instance >::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+		iter->bStop = true;
+	}
 }
 
 void ofxMidiSample::mixWithBlocks(float *left,float *right) {
-	for (deque<pair<int,float> >::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
-		sample.mix(left,right,iter->first,iter->second,bStop);
+	for (deque<instance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+		sample.mix(left,right,iter->block,iter->volume,iter->bStop);
 	}
 }
 
 void ofxMidiSample::postProcess() { // to call after processing
-	if (bStop) {
-		instances.clear();
-	} else {
-		deque<pair<int,float> >::iterator iter=instances.begin();
-		while (iter!=instances.end() && !sample.getIsLastBlock(iter->first) ) {
-			iter->first++;
+	
+	deque<instance>::iterator iter=instances.begin();
+	while (iter!=instances.end()) {
+		if (sample.getIsLastBlock(iter->block) || iter->bStop) {
+			iter = instances.erase(iter);
+		} else {
+			iter->block++;
 			iter++;
 		}
-		if (iter!=instances.end()) {
-			instances.erase(iter,instances.end()); // remove all that are not playing !
-		}
 	}
+	
+	
 }
 
 void ofxMidiSample::exit() {

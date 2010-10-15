@@ -14,7 +14,11 @@
 #include "ofxSndFile.h"
 using namespace std;
 
-
+struct instance {
+	int block;
+	float volume;
+	bool bStop;
+};
 
 class ofxMidiSample {
 	
@@ -23,6 +27,7 @@ public:
 		
 	bool loadSample(string filename,int blockLength);
 	void trigger(int velocity);
+	void retrigger(int velocity);
 	void stop();
 	
 	void mixWithBlocks(float *left,float *right);
@@ -36,8 +41,6 @@ public:
 	
 private:
 	ofxSndFile sample;
-	deque<pair<int,float> > instances;
+	deque<instance > instances;
 	int blockLength;
-	bool bStop;
-	
 };

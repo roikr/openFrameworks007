@@ -92,13 +92,15 @@ void ofxMidiInstrument::preProcess() {
 			playing.back().sample->trigger(siter->velocity);
 			cout << "note on: " << playing.back().midi << endl;
 		} else {                     // retrigger
-			if (piter->sample->getNumPlaying() < retriggers) {
-				piter->velocity = siter->velocity;
-				piter->sample->trigger(piter->velocity);
-				cout << "retrigger: " << piter->midi << endl;
-			} else {
-				cout << "can't retrigger " << piter->midi << ", " << piter->sample->getNumPlaying() << " == " << retriggers<<endl;
+			if (piter->sample->getNumPlaying() >= retriggers) {
+				piter->sample->stop();
 			}
+			
+			piter->velocity = siter->velocity;
+			piter->sample->trigger(piter->velocity);
+			
+			cout << "retrigger " << piter->midi << ", " << piter->sample->getNumPlaying() << " == " << retriggers<<endl;
+			
 
 			
 		}
