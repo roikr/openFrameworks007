@@ -7,17 +7,17 @@
  *
  */
 
+
 #include "ofxMidiInstrument.h"
-#include "ofxSndFile.h"
+#include "ofxMidiSample.h"
 #include <algorithm> // for find
 #include <iostream>
 
 
-void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
+void ofxMidiInstrument::setup(int blockLength,int retriggers) {
 	
 	this->blockLength = blockLength;
-	this->sampleRate = sampleRate;
-	blockIndex = 0;
+	this->retriggers = retriggers;
 	
 	/*
 	for (map<int,ofxSndFile*>::iterator iter=samples.begin() ; iter!=samples.end();iter++)
@@ -31,10 +31,10 @@ void ofxMidiInstrument::setup(int blockLength,int sampleRate) {
 void ofxMidiInstrument::loadSample(string filename,int midi,bool bChokeGroup) {
 	
 	//TODO: add check for existing midi note
-	
-	ofxSndFile *sndFile = new ofxSndFile();
-	if (sndFile->load(filename,blockLength)) {
-		samples[midi] = sndFile;
+	ofxMidiSample *sample = new ofxMidiSample();
+		
+	if (sample->loadSample(filename,blockLength)) {
+		samples[midi] = sample;
 		
 		if (bChokeGroup) {
 			//cout << midi << " is in chokeGroup" << endl; // DEBUG
@@ -44,7 +44,7 @@ void ofxMidiInstrument::loadSample(string filename,int midi,bool bChokeGroup) {
 		//cout << filename << " loaded as midi note: " << midi << endl;
 	}
 	else {
-		delete sndFile;
+		delete sample;
 	}
 }
 
@@ -54,8 +54,8 @@ void ofxMidiInstrument::noteOn(int midi,int velocity) {
 
 	note n;
 	n.midi = midi;
-	n.volume = (float)(velocity)/127;
-	map<int,ofxSndFile*>::iterator iter = samples.find(midi);
+	n.velocity = velocity;
+	map<int,ofxMidiSample*>::iterator iter = samples.find(midi);
 	
 	if (iter!=samples.end()) {
 		n.sample = iter->second;
@@ -77,42 +77,41 @@ void ofxMidiInstrument::noteOffAll() {
 
 void ofxMidiInstrument::preProcess() {
 	
-	map<int,ofxSndFile*>::iterator siter;
-	vector<note>::iterator piter;
-	
-	if (bNoteOffAll) {
-		bNoteOffAll = false;
-		playing.clear();
-		stop.clear(); // we don't need to stop because there is nothing to 
-	} else {
-		for(vector<note>::iterator iter2 = start.begin();iter2!=start.end();iter2++) {
-			if (chokeGroup.find(iter2->midi)!=chokeGroup.end()) {
-				for (set<int>::iterator iter3 = chokeGroup.begin(); iter3!=chokeGroup.end(); iter3++) {
-					if (*iter3!=iter2->midi) {
-						noteOff(*iter3);
-					}
-				}
+	// for notes to start
+	vector<note>::iterator siter;
+	for(siter = start.begin();siter!=start.end();siter++) {
+		vector<note>::iterator piter;
+		for (piter = playing.begin(); piter!=playing.end() ; piter++) { // check if allready playing
+			if (piter->midi==siter->midi) {
 				break;
 			}
-			
 		}
-	
-		for(vector<int>::iterator iter1 = stop.begin();iter1!=stop.end();iter1++) {
-			
-			for (piter = playing.begin(); piter!=playing.end() ; piter++) {
-				if (piter->midi==*iter1) {
-					playing.erase(piter);
-					cout << "note off: " << piter->midi << endl;
-					break;
-				}
+		
+		if (piter == playing.end()) { // note is not playing, add it
+			playing.push_back(*siter);
+			playing.back().sample->trigger(siter->velocity);
+			cout << "note on: " << playing.back().midi << endl;
+		} else {                     // retrigger
+			if (piter->sample->getNumPlaying() < retriggers) {
+				piter->velocity = siter->velocity;
+				piter->sample->trigger(piter->velocity);
+				cout << "retrigger: " << piter->midi << endl;
+			} else {
+				cout << "can't retrigger " << piter->midi << ", " << piter->sample->getNumPlaying() << " == " << retriggers<<endl;
 			}
+
+			
 		}
+		
+		
 	}
 	
-	stop.clear();
 	
+	/*
+	// for notes to start
 	for(vector<note>::iterator iter2 = start.begin();iter2!=start.end();iter2++) {
-		for (piter = playing.begin(); piter!=playing.end() ; piter++) {
+		
+		for (piter = playing.begin(); piter!=playing.end() ; piter++) { // check if allready playing
 			if (piter->midi==iter2->midi) {
 				break;
 			}
@@ -130,43 +129,78 @@ void ofxMidiInstrument::preProcess() {
 
 			
 	}
+	 
+	 */
+	
+	if (bNoteOffAll) {
+		bNoteOffAll = false;
+		
+		stop.clear(); // we don't need to stop because there is nothing to 
+		for (vector<note>::iterator piter=playing.begin() ; piter!=playing.end();piter++) {
+			for (siter = start.begin();siter!=start.end();siter++) {
+				if (siter->midi == piter->midi) {
+					break;
+				}
+			}
+			if (siter==start.end()) {
+				piter->sample->stop();
+				stop.push_back(piter->midi);
+			}
+			
+		}
+	} 
+	else 
+	{
+		// note off for choke group
+		for(vector<note>::iterator iter2 = start.begin();iter2!=start.end();iter2++) {
+			if (chokeGroup.find(iter2->midi)!=chokeGroup.end()) {
+				for (set<int>::iterator iter3 = chokeGroup.begin(); iter3!=chokeGroup.end(); iter3++) {
+					if (*iter3!=iter2->midi) {
+						noteOff(*iter3);
+					}
+				}
+				break;
+			}
+			
+		}
+		// remove note off notes from playing vector - should moved to post
+		
+	}
+	
 	start.clear();
 	
 }
 
-void ofxMidiInstrument::mixWithBlocks(float *left,float *right,float volume) {
+void ofxMidiInstrument::mixWithBlocks(float *left,float *right) {
 	for (vector<note>::iterator iter=playing.begin() ; iter!=playing.end();iter++) {
-		iter->sample->mixWithBlocks(left,right,iter->volume);
+		iter->sample->mixWithBlocks(left,right);
 	}
 }
 
 void ofxMidiInstrument::postProcess() { 
+	
+	
+	
 	for (vector<note>::iterator iter=playing.begin() ; iter!=playing.end();iter++) {
 		iter->sample->postProcess();
-		if (!iter->sample->getIsPlaying()) {
+		if (!iter->sample->getNumPlaying()) {
 			stop.push_back(iter->midi);
+			cout << "finish playing: " << iter->midi << endl;
 		}
 	}
 	
-	
-	vector<note>::iterator piter;
-	
 	for(vector<int>::iterator iter1 = stop.begin();iter1!=stop.end();iter1++) {
-		
-		for (piter = playing.begin(); piter!=playing.end() ; piter++) {
+		for (vector<note>::iterator piter = playing.begin(); piter!=playing.end() ; piter++) {
 			if (piter->midi==*iter1) {
-				cout << "finish playing: " << piter->midi << endl;
 				playing.erase(piter);
-				
-
+				cout << "note off: " << piter->midi << endl;
 				break;
 			}
 		}
 	}
-	
 	stop.clear();
 	
-	blockIndex++;
+	
 }
 
 bool ofxMidiInstrument::getIsPlaying() {
@@ -175,7 +209,7 @@ bool ofxMidiInstrument::getIsPlaying() {
 
 void ofxMidiInstrument::exit() {
 	//TODO: add check to ensure nothing is playing
-	for(map<int,ofxSndFile*>::iterator iter = samples.begin();iter!=samples.end();iter++) {
+	for(map<int,ofxMidiSample*>::iterator iter = samples.begin();iter!=samples.end();iter++) {
 		iter->second->exit();
 		delete iter->second;
 	}

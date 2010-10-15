@@ -19,18 +19,13 @@ using namespace std;
 #include "ofxMidi.h"
 
 
-class ofxSndFile;
 
-//enum {
-//	SAMPLE_STATUS_START,
-//	SAMPLE_STATUS_PLAYING,
-//	SAMPLE_STATUS_STOP
-//};
+class ofxMidiSample;
 
 struct note {
 	int midi;
-	float volume;
-	ofxSndFile *sample;
+	int velocity;
+	ofxMidiSample *sample;
 };
 
 class ofxMidiInstrument {
@@ -38,7 +33,7 @@ class ofxMidiInstrument {
 	
 public:
 	
-	void setup(int blockLength,int sampleRate = 44100); // call before loading samples loaded 
+	void setup(int blockLength,int retriggers); // call before loading samples loaded 
 	
 	void loadSample(string filename,int midi,bool bChokeGroup = false);
 	void noteOn(int midi,int velocity);
@@ -46,7 +41,7 @@ public:
 	void noteOffAll();
 	
 	void preProcess();
-	void mixWithBlocks(float *left,float *right,float volume=1.0f);
+	void mixWithBlocks(float *left,float *right);
 	void postProcess(); // to call after each step to process next
 	
 	void exit();
@@ -55,19 +50,18 @@ public:
 	
 	
 private:
-	map<int,ofxSndFile*> samples;
+	map<int,ofxMidiSample*> samples;
 	set<int> chokeGroup;
 	vector<note> start;
 	vector<note> playing;
 	vector<int> stop;
 	
-	int sampleRate;
-	int blockIndex;
-	
+		
 	int blockLength;
 	
 	
 	bool bNoteOffAll;
+	int retriggers;
 		
 };
 	/*

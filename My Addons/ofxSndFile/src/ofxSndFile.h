@@ -27,9 +27,12 @@ public:
 	void play();
 	bool getIsPlaying();
 	bool getIsLastBlock();
+	bool getIsLastBlock(int block);
 	float* getCurrentBlock(int channel);
+	float* getBlock(int block,int channel);
 	
 	void mixWithBlocks(float *left,float *right,float volume=1.0f);
+	void mix(float *left,float *right,int block,float volume,bool ramp);
 	void postProcess(); // to call after processing
 
 	void open(string filename);

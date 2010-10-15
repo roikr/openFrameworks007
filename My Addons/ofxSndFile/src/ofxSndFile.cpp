@@ -101,8 +101,17 @@ bool ofxSndFile::getIsLastBlock() {
 	return (currentBlock+1) * blockLength >= samplesPerChannel;
 }
 
+bool ofxSndFile::getIsLastBlock(int block) {
+	
+	return (block+1) * blockLength >= samplesPerChannel;;
+}
+
 float* ofxSndFile::getCurrentBlock(int channel) {
 	return (tableBuffer+samplesPerChannel*channel+currentBlock*blockLength);
+}
+
+float* ofxSndFile::getBlock(int block,int channel) {
+	return (tableBuffer+samplesPerChannel*channel+block*blockLength);
 }
 
 
@@ -123,6 +132,27 @@ void ofxSndFile::mixWithBlocks(float *left,float *right,float volume) {
 			right[i]+=channel1[i]*volume;
 		}
 		
+	}
+}
+
+void ofxSndFile::mix(float *left,float *right,int block,float volume,bool ramp) {
+	int n = getIsLastBlock(block) ? (block+1) * blockLength - samplesPerChannel : blockLength;
+	
+	float *channel0 = getBlock(block,0);
+	float *channel1 = channels == 2 ? getBlock(block,1) : channel0;
+	
+	if (ramp) {
+		float step = 1.0/(n-1);
+		cout << "ramp " << step << endl;
+		for (int i=0; i<n; i++) {
+			left[i]+=channel0[i]*volume*((n-1-i)*step);
+			right[i]+=channel1[i]*volume*((n-1-i)*step);
+		}
+	} else {
+		for (int i=0; i<n; i++) {
+			left[i]+=channel0[i]*volume;
+			right[i]+=channel1[i]*volume;
+		}
 	}
 }
 
