@@ -38,8 +38,9 @@ class ofxMidiInstrument {
 	
 public:
 	
+	void setup(int blockLength,int sampleRate = 44100); // call before loading samples loaded 
+	
 	void loadSample(string filename,int midi,bool bChokeGroup = false);
-	void setup(int blockLength,int sampleRate = 44100); // call after all samples loaded 
 	void noteOn(int midi,int velocity);
 	void noteOff(int midi);
 	void noteOffAll();

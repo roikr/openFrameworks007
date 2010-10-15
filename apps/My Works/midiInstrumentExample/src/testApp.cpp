@@ -5,12 +5,14 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
+	instrument.setup(256);
+	
 	for (int i=0; i<8; i++) {
 		string filename = ofToDataPath("DRM_BOY_"+ofToString(i+1)+".aif");
 		instrument.loadSample(filename,i);
 	}
 	
-	instrument.setup(256);
+	
 	
 	ofBackground(255,255,255);
 

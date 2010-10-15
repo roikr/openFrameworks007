@@ -9,9 +9,9 @@ void testApp::setup(){
 	ofxXmlSettings lips;
 	ofxXmlSettings player;
 	
-	string prefix = "VOC_PACIFIST";
+	string prefix = "VOC_PLASTIC";
 	
-	if (!videos.loadFile(prefix+"_VIDEOS.xml"))
+	if (!videos.loadFile(prefix+"_ANIMATIONS.xml"))
 		std::exit(0);
 	
 	if (!lips.loadFile(prefix+"_LIPS.xml"))
@@ -38,8 +38,9 @@ void testApp::setup(){
 		player.addTag("lipsync");
 		
 		for (j=0; j<lips.getNumTags("sample"); j++) {
-			if (lips.getAttribute("sample", "name", "", j) == name) 
+			if (lips.getAttribute("sample", "name", "", j) == name) {
 				break;
+			}
 		}
 		
 		if (j<lips.getNumTags("sample")) {
@@ -67,7 +68,7 @@ void testApp::setup(){
 	}
 	
 	
-	player.saveFile(prefix+".xml");
+	player.saveFile(prefix+"_VIDEO.xml");
 	std::exit(0);
 }
 
