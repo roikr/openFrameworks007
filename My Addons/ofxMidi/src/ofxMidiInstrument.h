@@ -33,7 +33,7 @@ class ofxMidiInstrument {
 	
 public:
 	
-	void setup(int blockLength,int retriggers); // call before loading samples loaded 
+	void setup(int blockLength,int sampleTriggers); // call before loading samples loaded 
 	
 	void loadSample(string filename,int midi,bool bChokeGroup = false);
 	void noteOn(int midi,int velocity);
@@ -61,7 +61,7 @@ private:
 	
 	
 	bool bNoteOffAll;
-	int retriggers;
+	int sampleTriggers;
 		
 };
 	/*

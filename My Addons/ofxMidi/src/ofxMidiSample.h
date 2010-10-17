@@ -26,8 +26,7 @@ class ofxMidiSample {
 public:
 		
 	bool loadSample(string filename,int blockLength);
-	void trigger(int velocity);
-	void retrigger(int velocity);
+	void trigger(int velocity,bool retrigger);
 	void stop();
 	
 	void mixWithBlocks(float *left,float *right);

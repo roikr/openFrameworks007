@@ -20,13 +20,18 @@ bool ofxMidiSample::loadSample(string filename,int blockLength) {
 }
 
 
-void ofxMidiSample::trigger(int velocity) {
+void ofxMidiSample::trigger(int velocity,bool retrigger) {
+	if (retrigger && !instances.empty()) {
+		instances.back().bStop = true;
+		cout << "retrigger, ";
+	}
 	instance i;
 	i.block = 0;
 	i.volume = (float)velocity/127.0;
 	i.bStop = false;
 	instances.push_front(i);
-	cout << "retrigger: " << instances.size() << ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
+	cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
+	
 }
 
 void ofxMidiSample::stop() {

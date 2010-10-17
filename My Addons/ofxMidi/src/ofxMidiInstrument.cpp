@@ -14,10 +14,10 @@
 #include <iostream>
 
 
-void ofxMidiInstrument::setup(int blockLength,int retriggers) {
+void ofxMidiInstrument::setup(int blockLength,int sampleTriggers) {
 	
 	this->blockLength = blockLength;
-	this->retriggers = retriggers;
+	this->sampleTriggers = sampleTriggers;
 	
 	/*
 	for (map<int,ofxSndFile*>::iterator iter=samples.begin() ; iter!=samples.end();iter++)
@@ -67,6 +67,10 @@ void ofxMidiInstrument::noteOn(int midi,int velocity) {
 
 void ofxMidiInstrument::noteOff(int midi) {
 	stop.push_back(midi);
+	map<int,ofxMidiSample*>::iterator iter = samples.find(midi);
+	if (iter!=samples.end()) {
+		iter->second->stop();
+	}
 }
 
 void ofxMidiInstrument::noteOffAll() {
@@ -87,52 +91,18 @@ void ofxMidiInstrument::preProcess() {
 			}
 		}
 		
+		cout << "note on: " << siter->midi << endl;
+		
 		if (piter == playing.end()) { // note is not playing, add it
 			playing.push_back(*siter);
-			playing.back().sample->trigger(siter->velocity);
-			cout << "note on: " << playing.back().midi << endl;
+			playing.back().sample->trigger(siter->velocity,false);
 		} else {                     // retrigger
-			if (piter->sample->getNumPlaying() >= retriggers) {
-				piter->sample->stop();
-			}
-			
 			piter->velocity = siter->velocity;
-			piter->sample->trigger(piter->velocity);
-			
-			cout << "retrigger " << piter->midi << ", " << piter->sample->getNumPlaying() << " == " << retriggers<<endl;
-			
-
-			
+			bool retrigger = piter->sample->getNumPlaying() >= sampleTriggers;
+			piter->sample->trigger(piter->velocity,retrigger);
 		}
-		
-		
 	}
 	
-	
-	/*
-	// for notes to start
-	for(vector<note>::iterator iter2 = start.begin();iter2!=start.end();iter2++) {
-		
-		for (piter = playing.begin(); piter!=playing.end() ; piter++) { // check if allready playing
-			if (piter->midi==iter2->midi) {
-				break;
-			}
-		}
-		
-		if (piter == playing.end()) { // note is not playing, add it
-			playing.push_back(*iter2);
-			playing.back().sample->play();
-			cout << "note on: " << playing.back().midi << endl;
-		} else {                     // retrigger
-			piter->volume = iter2->volume;
-			piter->sample->play();
-			cout << "retrigger: " << piter->midi << endl;
-		}
-
-			
-	}
-	 
-	 */
 	
 	if (bNoteOffAll) {
 		bNoteOffAll = false;

@@ -143,7 +143,7 @@ void ofxSndFile::mix(float *left,float *right,int block,float volume,bool ramp) 
 	
 	if (ramp) {
 		float step = 1.0/(n-1);
-		cout << "ramp " << step << endl;
+		cout << "ramp" << endl; //<< step << endl;
 		for (int i=0; i<n; i++) {
 			left[i]+=channel0[i]*volume*((n-1-i)*step);
 			right[i]+=channel1[i]*volume*((n-1-i)*step);
