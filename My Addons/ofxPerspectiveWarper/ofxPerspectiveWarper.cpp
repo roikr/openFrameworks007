@@ -24,6 +24,8 @@ ofxPerspectiveWarper::ofxPerspectiveWarper()
 	
 	editOffset.set(0,0);
 	editScale = 1;
+	
+	
 }
 
 ofxPerspectiveWarper::~ofxPerspectiveWarper()
@@ -36,6 +38,8 @@ ofxPerspectiveWarper::~ofxPerspectiveWarper()
 	
 	delete [] u;
 	delete [] v;
+	delete [] tex_coords;
+	delete [] verts;
 }
 
 void ofxPerspectiveWarper::initWarp( float _orig_width, float _orig_height, int nx, int ny )
@@ -46,6 +50,10 @@ void ofxPerspectiveWarper::initWarp( float _orig_width, float _orig_height, int 
 	// allocate array num_y_sections+1 x num_x_sections+1
 	u = new float[ (num_y_sections+1)*(num_x_sections+1)];
 	v = new float[ (num_y_sections+1)*(num_x_sections+1)];
+	
+	tex_coords = new float[ 8* (num_y_sections)*(num_x_sections)];
+	verts = new float[ 8 * (num_y_sections)*(num_x_sections)];
+	
 	/*u.resize( num_y_sections + 1 );
 	v.resize( num_y_sections + 1 );
 	for ( int i=0; i<num_y_sections + 1; i++ )
@@ -451,11 +459,7 @@ void ofxPerspectiveWarper::drawTexture(ofTexture &tex,int x, int y, int w, int h
 	
 	
 	
-	GLfloat tx0 = 0+offsetw;
-	GLfloat ty0 = 0+offseth;
-	GLfloat tx1 = texData.tex_t - offsetw;
-	GLfloat ty1 = texData.tex_u - offseth;
-	
+		
 	glPushMatrix(); 
 	
 	glTranslatef(x,y,0.0f);
@@ -466,6 +470,70 @@ void ofxPerspectiveWarper::drawTexture(ofTexture &tex,int x, int y, int w, int h
 	
 	float curr_y = py0;
 	float next_y = py0+y_step;
+	
+	GLfloat tx0 = 0+offsetw;
+	GLfloat ty0 = 0+offseth;
+	GLfloat tx1 = texData.tex_t - offsetw;
+	GLfloat ty1 = texData.tex_u - offseth;	
+	
+	
+#ifdef TARGET_OPENGLES
+	
+	for ( int i=0; i<nY; i++ )
+	{
+		float curr_x = px0;
+		float next_x = px0+x_step;
+		
+		int curr_i = texData.bFlipTexture?(nY-i):i;
+		int next_i = texData.bFlipTexture?(nY-1-i):i+1;
+		
+		
+		for ( int j=0; j<nX; j++ )
+		{
+			
+			int p  = curr_i * (nX+1) + j;
+			int p1 = curr_i * (nX+1) + (j+1);
+			int p2 = next_i * (nX+1) + (j+1);
+			int p3 = next_i * (nX+1) + j;
+			
+			int k = i*nX +j;
+			int l = 8*k;
+			
+			tex_coords[l] = curr_x;
+			tex_coords[l+1] = h-curr_y;
+			tex_coords[l+2] = next_x;
+			tex_coords[l+3] = h-curr_y;
+			tex_coords[l+4] = next_x;
+			tex_coords[l+5] = h-next_y;
+			tex_coords[l+6] = curr_x;
+			tex_coords[l+7] = h-next_y;
+			
+			verts[l] = u[p];
+			verts[l+1] = v[p] ;
+			verts[l+2] = u[p1];
+			verts[l+3] = v[p1];
+			verts[l+4] = u[p2];
+			verts[l+5] = v[p2];
+			verts[l+6] = u[p3];
+			verts[l+7] = v[p3];
+			
+			curr_x = next_x;
+			next_x += x_step;
+		}
+		
+		curr_y = next_y;
+		next_y += y_step;
+	}
+	
+	
+	 glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	 glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	 glEnableClientState(GL_VERTEX_ARRAY);		
+	 glVertexPointer(2, GL_FLOAT, 0, verts );
+	 glDrawArrays( GL_TRIANGLE_FAN, 0, nX*nY*4 );
+	 glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
+#else
 	
 	glBegin(GL_QUADS);
 	
@@ -500,15 +568,6 @@ void ofxPerspectiveWarper::drawTexture(ofTexture &tex,int x, int y, int w, int h
 			glVertex2f( u[p3], v[p3] );
 			
 			
-			/*glTexCoord2f( u[p], v[p] );
-			 glVertex3f( curr_x, curr_y, 0.0f );
-			 glTexCoord2f( u[p1], v[p1] );
-			 glVertex3f( next_x, curr_y, 0.0f );
-			 glTexCoord2f( u[p2], v[p2] );
-			 glVertex3f( next_x, next_y, 0.0f );
-			 glTexCoord2f( u[p3], v[p3] );
-			 glVertex3f( curr_x, next_y, 0.0f );*/
-			
 			curr_x = next_x;
 			next_x += x_step;
 		}
@@ -519,27 +578,10 @@ void ofxPerspectiveWarper::drawTexture(ofTexture &tex,int x, int y, int w, int h
 	
 	glEnd();
 	
+#endif
 	
-	/*GLfloat tex_coords[] = {
-	 tx0,ty0,
-	 tx1,ty0,
-	 tx1,ty1,
-	 tx0,ty1
-	 };
-	 GLfloat verts[] = {
-	 px0,py0,
-	 px1,py0,
-	 px1,py1,
-	 px0,py1
-	 };
-	 
-	 glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-	 glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
-	 glEnableClientState(GL_VERTEX_ARRAY);		
-	 glVertexPointer(2, GL_FLOAT, 0, verts );
-	 glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
-	 glDisableClientState( GL_TEXTURE_COORD_ARRAY );*/
 	
+		
 	glPopMatrix();
 	glDisable(texData.textureTarget);
 }

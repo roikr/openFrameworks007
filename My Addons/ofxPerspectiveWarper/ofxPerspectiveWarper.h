@@ -100,6 +100,9 @@ class ofxPerspectiveWarper
 		// for editable interface
 		ofPoint editOffset;
 		float editScale;
+	
+	float * tex_coords;
+	float * verts;
 		
 };
 

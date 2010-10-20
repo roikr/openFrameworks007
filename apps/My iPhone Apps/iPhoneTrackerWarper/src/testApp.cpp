@@ -24,12 +24,7 @@ void testApp::setup()
 	
 	pWarper.initWarp( screenW,screenH,screenW*WARP_DIV,screenH*WARP_DIV );
 		
-	fbo.allocate(screenW,screenH );
-	fbo.clear();
-	fbo.begin();
-	ofScale(0.5, 0.5,1.0);
-	image.draw(0, 0);
-	fbo.end();
+	
 	
 }
 
@@ -87,8 +82,7 @@ void testApp::draw()
 	ofSetColor(255, 255, 255);
 	
 	pWarper.recalculateWarp( points );
-	fbo.drawWarped(0, 0,screenW, screenH,pWarper.u,pWarper.v,pWarper.num_x_sections,pWarper.num_y_sections);
-	
+	pWarper.drawTexture(image.getTextureReference(),0, 0,screenW, screenH);
 }
 
 ///////////////////////////////////////////

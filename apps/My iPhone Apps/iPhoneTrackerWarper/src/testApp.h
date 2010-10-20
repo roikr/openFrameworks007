@@ -4,8 +4,7 @@
 
 #include "ofMain.h"
 #include "ofxAEMotionTrackers.h"
-#include "ofxFBOTexture.h"
-#include "perspectiveWarper.h"
+#include "ofxPerspectiveWarper.h"
 
 class testApp : public ofBaseApp
 {
@@ -33,10 +32,10 @@ public:
 	float pos;
 	
 	ofImage image;
-	ofxFBOTexture fbo;
+
 	
 	int screenW,screenH;
-	PerspectiveWarper pWarper;
+	ofxPerspectiveWarper pWarper;
 };
 
 #endif

@@ -51,10 +51,9 @@
 		E4BA8151126ECB7F0080AAFC /* ofxCvGrayscaleImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BA813B126ECB7E0080AAFC /* ofxCvGrayscaleImage.cpp */; };
 		E4BA8152126ECB7F0080AAFC /* ofxCvImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BA813D126ECB7E0080AAFC /* ofxCvImage.cpp */; };
 		E4BA8153126ECB7F0080AAFC /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BA8140126ECB7E0080AAFC /* ofxCvShortImage.cpp */; };
-		E4BA815A126ECB960080AAFC /* perspectiveWarper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BA8155126ECB960080AAFC /* perspectiveWarper.cpp */; };
-		E4BA815B126ECB960080AAFC /* ofxFBOTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BA8158126ECB960080AAFC /* ofxFBOTexture.cpp */; };
 		E4BA8160126ECBA90080AAFC /* ofxAEMotionTrackers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BA815E126ECBA90080AAFC /* ofxAEMotionTrackers.cpp */; };
 		E4D8928811527878007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8928511527878007E1F53 /* main.mm */; };
+		E4EB8960126F86C5003A18CA /* ofxPerspectiveWarper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EB895E126F86C5003A18CA /* ofxPerspectiveWarper.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,7 +75,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* iPhoneFBOTexture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iPhoneFBOTexture.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* iPhoneTrackerWarper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iPhoneTrackerWarper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
@@ -207,14 +206,12 @@
 		E4BA8140126ECB7E0080AAFC /* ofxCvShortImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxCvShortImage.cpp; sourceTree = "<group>"; };
 		E4BA8141126ECB7E0080AAFC /* ofxCvShortImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCvShortImage.h; sourceTree = "<group>"; };
 		E4BA8142126ECB7E0080AAFC /* ofxOpenCv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOpenCv.h; sourceTree = "<group>"; };
-		E4BA8155126ECB960080AAFC /* perspectiveWarper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perspectiveWarper.cpp; sourceTree = "<group>"; };
-		E4BA8156126ECB960080AAFC /* perspectiveWarper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perspectiveWarper.h; sourceTree = "<group>"; };
-		E4BA8158126ECB960080AAFC /* ofxFBOTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFBOTexture.cpp; sourceTree = "<group>"; };
-		E4BA8159126ECB960080AAFC /* ofxFBOTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFBOTexture.h; sourceTree = "<group>"; };
 		E4BA815E126ECBA90080AAFC /* ofxAEMotionTrackers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAEMotionTrackers.cpp; sourceTree = "<group>"; };
 		E4BA815F126ECBA90080AAFC /* ofxAEMotionTrackers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAEMotionTrackers.h; sourceTree = "<group>"; };
 		E4D8928511527878007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8928611527878007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
+		E4EB895E126F86C5003A18CA /* ofxPerspectiveWarper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPerspectiveWarper.cpp; sourceTree = "<group>"; };
+		E4EB895F126F86C5003A18CA /* ofxPerspectiveWarper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPerspectiveWarper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,7 +252,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* iPhoneFBOTexture.app */,
+				1D6058910D05DD3D006BFB54 /* iPhoneTrackerWarper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -352,9 +349,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4EB895D126F86C5003A18CA /* ofxPerspectiveWarper */,
 				E4BA815C126ECBA90080AAFC /* ofxAEMotionTrackers */,
-				E4BA8154126ECB960080AAFC /* perspectiveWarper */,
-				E4BA8157126ECB960080AAFC /* ofxFBOTexture_GA */,
 				E4BA8100126ECB7E0080AAFC /* ofxXmlSettings */,
 				E4BA810A126ECB7E0080AAFC /* ofxVectorMath */,
 				E4BA811A126ECB7E0080AAFC /* ofxOpenCv */,
@@ -732,26 +728,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		E4BA8154126ECB960080AAFC /* perspectiveWarper */ = {
-			isa = PBXGroup;
-			children = (
-				E4BA8155126ECB960080AAFC /* perspectiveWarper.cpp */,
-				E4BA8156126ECB960080AAFC /* perspectiveWarper.h */,
-			);
-			name = perspectiveWarper;
-			path = ../../../moreAddons/perspectiveWarper;
-			sourceTree = SOURCE_ROOT;
-		};
-		E4BA8157126ECB960080AAFC /* ofxFBOTexture_GA */ = {
-			isa = PBXGroup;
-			children = (
-				E4BA8158126ECB960080AAFC /* ofxFBOTexture.cpp */,
-				E4BA8159126ECB960080AAFC /* ofxFBOTexture.h */,
-			);
-			name = ofxFBOTexture_GA;
-			path = ../../../moreAddons/ofxFBOTexture_GA;
-			sourceTree = SOURCE_ROOT;
-		};
 		E4BA815C126ECBA90080AAFC /* ofxAEMotionTrackers */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,12 +756,22 @@
 			path = src;
 			sourceTree = SOURCE_ROOT;
 		};
+		E4EB895D126F86C5003A18CA /* ofxPerspectiveWarper */ = {
+			isa = PBXGroup;
+			children = (
+				E4EB895E126F86C5003A18CA /* ofxPerspectiveWarper.cpp */,
+				E4EB895F126F86C5003A18CA /* ofxPerspectiveWarper.h */,
+			);
+			name = ofxPerspectiveWarper;
+			path = "../../../My Addons/ofxPerspectiveWarper";
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* iPhoneFBOTexture */ = {
+		1D6058900D05DD3D006BFB54 /* iPhoneTrackerWarper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iPhoneFBOTexture" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iPhoneTrackerWarper" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -797,9 +783,9 @@
 			dependencies = (
 				BB24E23E10DAA93400E9C588 /* PBXTargetDependency */,
 			);
-			name = iPhoneFBOTexture;
+			name = iPhoneTrackerWarper;
 			productName = iPhone;
-			productReference = 1D6058910D05DD3D006BFB54 /* iPhoneFBOTexture.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* iPhoneTrackerWarper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -807,7 +793,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iPhoneFBOTexture" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iPhoneTrackerWarper" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -827,7 +813,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* iPhoneFBOTexture */,
+				1D6058900D05DD3D006BFB54 /* iPhoneTrackerWarper */,
 			);
 		};
 /* End PBXProject section */
@@ -894,9 +880,8 @@
 				E4BA8151126ECB7F0080AAFC /* ofxCvGrayscaleImage.cpp in Sources */,
 				E4BA8152126ECB7F0080AAFC /* ofxCvImage.cpp in Sources */,
 				E4BA8153126ECB7F0080AAFC /* ofxCvShortImage.cpp in Sources */,
-				E4BA815A126ECB960080AAFC /* perspectiveWarper.cpp in Sources */,
-				E4BA815B126ECB960080AAFC /* ofxFBOTexture.cpp in Sources */,
 				E4BA8160126ECBA90080AAFC /* ofxAEMotionTrackers.cpp in Sources */,
+				E4EB8960126F86C5003A18CA /* ofxPerspectiveWarper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1153,7 +1138,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iPhoneFBOTexture" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iPhoneTrackerWarper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
@@ -1163,7 +1148,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iPhoneFBOTexture" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iPhoneTrackerWarper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
