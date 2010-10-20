@@ -1,0 +1,6 @@
+using ofxAEMotionTrackers
+
+1. track an in AE quadangle using 4 points - perspective track
+2. export the composition to xml using gibson XML
+3. the order of the track points is not clockwise, but by lines so you have to switch 3 and 4. that is for now
+ 
