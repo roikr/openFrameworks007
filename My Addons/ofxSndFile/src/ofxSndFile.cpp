@@ -41,7 +41,8 @@ bool ofxSndFile::load(string filename,int blockLength) {
 	float *buffer = (float *) malloc(bufferLength * sizeof(float));
 	
 	
-	sf_count_t res = sf_read_float(sndFile, buffer, bufferLength); // read the whole file into memory
+	//sf_count_t res = 
+	sf_read_float(sndFile, buffer, bufferLength); // read the whole file into memory
 	sf_close(sndFile); // release the handle to the file
 	
 	//for (int k=0; k<samplesPerChannel; k++) {
@@ -192,7 +193,8 @@ void ofxSndFile::saveWithBlocks(float *left,float*right) {
 		tableBuffer[j+1] = right[i];
 	}
 	
-	sf_count_t res = sf_writef_float(sndFile, tableBuffer, blockLength); // save buffer
+	//sf_count_t res = 
+	sf_writef_float(sndFile, tableBuffer, blockLength); // save buffer
 	
 }
 

@@ -30,7 +30,7 @@ void ofxMidiLooper::setup(int blockLength,int sampleRate,int bpm) { // call afte
 
 
 void ofxMidiLooper::clear() {
-	bPlaying = false; // TODO: a litter sleep after ?
+	//bPlaying = false; // no need, for not losing sync while changing loops
 	for (vector<loop>::iterator iter=loops.begin();iter!=loops.end();iter++) {
 		delete iter->midiFile; // TODO: destructor ?
 	}
