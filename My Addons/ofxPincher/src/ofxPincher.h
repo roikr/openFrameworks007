@@ -8,13 +8,14 @@
  */
 
 #include "ofMain.h"
+#include "ofMath.h"
 
 class ofxPincher {
 	
 public:
 	void setup(ofPoint translate, float scale,ofRectangle box=ofRectangle(0,0,0,0),ofPoint view=ofPoint(480,320));
 	void transform();
-	void draw();
+	//void draw();
 	
 	void touchDown(int x, int y, int id);
 	void touchMoved(int x, int y, int id);

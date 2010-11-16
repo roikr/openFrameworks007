@@ -8,6 +8,7 @@
  */
 
 #include "ofxPincher.h"
+#include <math.h>
 
 void ofxPincher::setup(ofPoint translate, float scale,ofRectangle boundry,ofPoint port) {
 	numActive = 0;
@@ -22,6 +23,7 @@ void ofxPincher::transform() {
 	ofScale(scale, scale, 1.0);
 }
 
+/*
 void ofxPincher::draw() {
 	for (int i=0; i<2; i++) {
 		if (active[i]) {
@@ -45,6 +47,7 @@ void ofxPincher::draw() {
 		
 	}
 }
+ */
 
 void ofxPincher::touchDown(int x, int y, int id) {
 	
