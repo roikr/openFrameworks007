@@ -41,7 +41,7 @@ void ofxFramesDriver::loadVectors(ofxXmlSettings *xml) {
 		//int num = xml->getAttribute("sample","number",0,i);
 		//sampleByNum[num] = i;
 		
-		cout << "sample " << i << ": " << name  << endl; // << ", " << num
+		//cout << "ofxFramesDriver::loadVectors sample " << i << ": " << name  << endl; // << ", " << num
 		xml->pushTag("sample",i);
 		
 		sampleData sd;
