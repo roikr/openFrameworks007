@@ -595,7 +595,7 @@ bool ofxMidi::getIsMidiDone(int trackNum) {
 }
 
 int ofxMidi::getLastTick(int trackNum) {
-	if (getNumTracks()) {
+	if (getNumTracks() && tracks.at(trackNum).events.size() ) {
 		return tracks.at(trackNum).events.back().absolute;
 	}
 	return 0;

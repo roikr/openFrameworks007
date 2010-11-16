@@ -158,16 +158,25 @@ bool ofxMidiTrack::getIsRecording() {
 }
 
 float ofxMidiTrack::getPlayhead() {
-	int lastTick = track.getLastTick();
-	if (lastTick) {
-		event e;
-		track.getCurrentEvent(e);
-		return (float)e.absolute / (float)lastTick;
-	}
-	return  0.0f;
+//	int lastTick = track.getLastTick();
+//	if (lastTick) {
+//		event e;
+//		track.getCurrentEvent(e);
+//		return (float)e.absolute / (float)lastTick;
+//	}
 	
+	event e;
+	track.getCurrentEvent(e);
+	return (float)e.absolute / (float)track.getTicksPerBeat() / (float)bpm * 60;
+	
+}
+
+float ofxMidiTrack::getDuration() {
+	return(float)track.getLastTick() / (float)track.getTicksPerBeat() / (float)bpm * 60;
 }
 
 float ofxMidiTrack::getProgress() {
 	return track.getProgress();
 }
+
+

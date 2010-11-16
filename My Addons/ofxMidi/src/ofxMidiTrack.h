@@ -43,6 +43,7 @@ public:
 	float getPlayhead();
 	float getProgress();
 	
+	float getDuration();
 	
 private:
 	
