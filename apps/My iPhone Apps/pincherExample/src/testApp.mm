@@ -16,7 +16,7 @@ void testApp::setup(){
 	
 	
 	
-	pincher.setup(ofPoint(0,-140),0.7);
+	pincher.setup(ofPoint(0,-140),0.7,pincherPrefs(480,320,ofRectangle(0,0,700,700),0.5,1.5));
 	
 }
 
@@ -37,7 +37,7 @@ void testApp::draw(){
 	ofFill();
 	for (int i = 0; i < 200; i++){
 		ofSetColor((int)ofRandom(0,255),(int)ofRandom(0,255),(int)ofRandom(0,255));
-		ofRect(ofRandom(250,350),ofRandom(350,450),ofRandom(10,20),ofRandom(10,20));
+		ofRect(ofRandom(250,350),ofRandom(250,350),ofRandom(10,20),ofRandom(10,20));
 	}
 	ofSetColor(0x000000);
 	ofDrawBitmapString("rectangles", 275,500);
