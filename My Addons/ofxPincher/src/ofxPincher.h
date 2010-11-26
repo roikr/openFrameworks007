@@ -40,6 +40,7 @@ class ofxPincher {
 	
 public:
 	void setup(ofPoint translate, float scale,pincherPrefs prefs = pincherPrefs());
+	void update(float t);
 	void transform();
 	
 #ifdef OF_DEBUG
@@ -49,13 +50,17 @@ public:
 	void touchDown(int x, int y, int id);
 	void touchMoved(int x, int y, int id);
 	void touchUp(int x, int y, int id);
-	
+	void touchDoubleTap(int x, int y, int id);
+	bool getIsAnimating();
 	
 	
 	
 private:
 	
+	void applyTranslation(ofPoint trns,float scl);
+	
 	float distance(ofPoint pnt);
+	float easeInOutQuad(float t, float b, float e);
 	
 	ofPoint pos[2];
 	bool active[2];
@@ -67,6 +72,8 @@ private:
 	
 	pincherPrefs prefs;
 	
-	
+	bool bAnimating;
+	int animStart;
+	int animMode;
 	
 };

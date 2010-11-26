@@ -23,6 +23,9 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 	counter = counter + 0.033f;
+	if (pincher.getIsAnimating()) {
+		pincher.update((float)(ofGetElapsedTimeMillis() - animStart)/250.0);
+	}
 }
 
 //--------------------------------------------------------------
@@ -74,6 +77,11 @@ void testApp::touchUp(int x, int y, int id) {
 }
 
 void testApp::touchDoubleTap(int x, int y, int id) {
+	if (!pincher.getIsAnimating()) {
+		animStart = ofGetElapsedTimeMillis();
+		pincher.touchDoubleTap(x,y,id);
+	}
+	
 }
 
 

@@ -20,8 +20,9 @@ public:
 	bool			bSmooth;
 	float 			counter;
 	
-	ofxPincher pincher;
 	
+	ofxPincher pincher;
+	int animStart;
 	
 
 };
