@@ -11,8 +11,7 @@
 #include <math.h>
 
 enum {
-	ANIMATION_ZOOM_IN,
-	ANIMATION_ZOOM_OUT
+	ANIMATION_ZOOM
 };
 
 void ofxPincher::setup(ofPoint translate, float scale,pincherPrefs prefs) {
@@ -33,19 +32,47 @@ float ofxPincher::easeInOutQuad(float t, float b, float e) {
 }
 
 
+void ofxPincher::applyTranslation(ofPoint trns,float scl) {
+	if (prefs.width ) {
+		
+		
+		if (-trns.x < prefs.boundaryBox.x) {
+			trns.x = - prefs.boundaryBox.x;
+		} else if (-trns.x>prefs.boundaryBox.x + prefs.boundaryBox.width * scl -prefs.width) {
+			trns.x= -(prefs.boundaryBox.x + prefs.boundaryBox.width * scl -prefs.width);
+		}
+		
+		if (-trns.y < prefs.boundaryBox.y) {
+			trns.y = - prefs.boundaryBox.y;
+		} else if (-trns.y>prefs.boundaryBox.y + prefs.boundaryBox.height * scl -prefs.height) {
+			trns.y= -(prefs.boundaryBox.y + prefs.boundaryBox.height * scl -prefs.height);
+		}
+		
+	}
+	
+	
+	translate = trns;
+	
+	
+}
+
+
 void ofxPincher::update(float t) {
 	if (bAnimating) {
-		
-		if (t >= 1) {
+		if (t > 1) {
 			bAnimating = false;
-		} else {
-			ofPoint center = pos[0];
-			float scl = animMode == ANIMATION_ZOOM_IN ? easeInOutQuad(t,scale,prefs.maxScale) : easeInOutQuad(t,scale,prefs.minScale);
-			float factor = scl/scale;
-			scale = scl;
-			ofPoint trns =center*(1-factor) + translate * factor;
-			applyTranslation(trns, scl);
+			t=1;
 		}
+
+			
+		scale = easeInOutQuad(t,scale,tgtScl);
+		
+		ofPoint trns;
+		trns.x = easeInOutQuad(t,translate.x,tgtTrns.x);
+		trns.y = easeInOutQuad(t,translate.y,tgtTrns.y);
+		
+		applyTranslation(trns, scale);
+		
 	}
 }
 
@@ -118,29 +145,6 @@ float ofxPincher::distance(ofPoint pnt) {
 }
 
 
-void ofxPincher::applyTranslation(ofPoint trns,float scl) {
-	if (prefs.width ) {
-		
-		
-		if (-trns.x < prefs.boundaryBox.x) {
-			trns.x = - prefs.boundaryBox.x;
-		} else if (-trns.x>prefs.boundaryBox.x + prefs.boundaryBox.width * scl -prefs.width) {
-			trns.x= -(prefs.boundaryBox.x + prefs.boundaryBox.width * scl -prefs.width);
-		}
-		
-		if (-trns.y < prefs.boundaryBox.y) {
-			trns.y = - prefs.boundaryBox.y;
-		} else if (-trns.y>prefs.boundaryBox.y + prefs.boundaryBox.height * scl -prefs.height) {
-			trns.y= -(prefs.boundaryBox.y + prefs.boundaryBox.height * scl -prefs.height);
-		}
-		
-	}
-	
-	
-	translate = trns;
-	scale = scl;
-	
-}
 
 void ofxPincher::touchMoved(int x, int y, int id) {
 	if (bAnimating)
@@ -190,7 +194,7 @@ void ofxPincher::touchMoved(int x, int y, int id) {
 		}
 		
 		applyTranslation(trns, scl);
-		
+		scale = scl;
 		
 	}
 	
@@ -214,8 +218,12 @@ void ofxPincher::touchUp(int x, int y, int id) {
 void ofxPincher::touchDoubleTap(int x, int y, int id) {
 	if (!bAnimating && id == 0) {
 		bAnimating = true;
-		animMode = scale < (prefs.minScale + prefs.maxScale)/2 ? ANIMATION_ZOOM_IN : ANIMATION_ZOOM_OUT; 
-		pos[0]= ofPoint(x,y,0);
+		
+	
+		tgtScl = scale < (prefs.minScale + prefs.maxScale)/2 ? prefs.maxScale : prefs.minScale; 
+		tgtTrns = - ((ofPoint(x,y,0)-translate)/scale)*tgtScl +ofPoint(prefs.width/2,prefs.height/2); // ;
+		//cout << tgtTrns.x << " " << tgtTrns.y << endl;
+		
 	}
 }
 

@@ -73,7 +73,10 @@ private:
 	pincherPrefs prefs;
 	
 	bool bAnimating;
-	int animStart;
-	int animMode;
+	
+	//int animMode;
+	
+	float tgtScl;
+	ofPoint tgtTrns;
 	
 };
