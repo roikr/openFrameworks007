@@ -77,10 +77,13 @@ using namespace std;
 	CMVideoDimensions videoDimensions;
 	CMVideoCodecType videoType;
 	
-	uint m_numTextures;
+	
 	uint m_textureHandle;
-	bool bRecording;
-	vector<int>::iterator currentTexture;
+	bool bIsCapturing;
+	
+	
+	int currentFrame;
+	int firstFrame;
 	
 	//AVCaptureConnection *audioConnection;
 	AVCaptureInputPort *audioInputPort;
@@ -102,8 +105,10 @@ using namespace std;
 - (void)	renderCameraToSprite:(uint)text;
 - (GLuint)	createVideoTextuerUsingWidth:(GLuint)w Height:(GLuint)h;
 - (void)	resetWithSize:(GLuint)w Height:(GLuint)h;
+- (void) capture;
 - (void) record;
-- (bool) isRecording;
+
+
 
 
 @end

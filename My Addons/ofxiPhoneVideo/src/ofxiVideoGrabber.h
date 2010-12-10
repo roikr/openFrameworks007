@@ -16,25 +16,37 @@ using namespace std;
 @class MyVideoBuffer;
 class ofxiPhoneVideo;
 
+enum {
+	CAMERA_IDLE,
+	CAMERA_RUNNING,
+	CAMERA_CAPTURING,
+	CAMERA_RECORDING
+};
+
 class ofxiVideoGrabber {
 	
 public:
 	
-	//ofxiPhoneClipper();
+	ofxiVideoGrabber();
 	//~ofxiPhoneClipper();
 	
 	void setup(ofxiPhoneVideo *video);
 	void update();
 	void draw();
-	void drawAudio();
+	
 	void exit();
 	
-	void startSession();
-	void stopSession();
-	bool getIsSessionRunning();
-	void startRecording();
-	void stopRecording();
-	bool getIsRecording();
+	void setTrigger(float thresh);
+	bool getIsTriggered();
+	float getMeter();
+	
+	void startCamera();
+	void stopCamera();
+	
+	void startCapture();
+	void record();
+	
+	int getState();
 	
 	void audioReceived( float * input, int bufferSize);
 	
@@ -44,16 +56,13 @@ protected:
 	//int		drawCounter, bufferCounter;
 	int		currentBuffer;
 	
-	bool bIsSessionRunning;
-	bool bIsRecording;
-	
 	MyVideoBuffer *	videoTexture;
-	int start;
-	
 	
 	float *buffer;
 	
-	deque<float> scaledSamples;
+	//deque<float> scaledSamples;
+	
+	int state;
 	
 	ofxiPhoneVideo *video;
 	

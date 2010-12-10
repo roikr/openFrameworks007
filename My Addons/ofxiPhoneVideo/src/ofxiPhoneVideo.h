@@ -13,14 +13,19 @@
 using namespace std;
 
 struct ofxiPhoneVideo {
+	
+	int		numFrames;
+	int		numIntroFrames;
+	
 	int		fps;
 	int		sampleRate;
-	int		sampleLength; // ms
-	int		numFrames;
+	int		sampleLength; // in millis -  make sure that there are more frames than needed
+	
 	int		numBuffers;
 	int		bufferSize;
 	
 	vector<int> textures;
+	int firstFrame;
 	float	*sample;
 	
 	int width;

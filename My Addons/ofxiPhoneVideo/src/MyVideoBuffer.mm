@@ -81,7 +81,6 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	if ((self = [super init]))
 	{
 		video = theVideo;
-		m_numTextures = video->numFrames;
 		
 		NSError * error;
 		
@@ -137,7 +136,8 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		//-- Pre create our texture, instead of inside of CaptureOutput.
 		//m_textureHandle = [self createVideoTextuerUsingWidth:1280 Height:720];
 		//m_textureHandle = [self createVideoTextuerUsingWidth:640 Height:480];
-		bRecording = false;
+		
+		bIsCapturing = false;
 		
 	}
 	return self;
@@ -213,7 +213,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		//-- If we haven't created the video texture, do so now.
 		m_textureHandle = [self createVideoTextuerUsingWidth:videoDimensions.width Height:videoDimensions.height];
 		
-		for (int i=0; i<m_numTextures; i++) {
+		for (int i=0; i<video->numFrames; i++) {
 			video->textures.push_back([self createVideoTextuerUsingWidth:videoDimensions.width Height:videoDimensions.height]);
 		}
 	}
@@ -237,12 +237,15 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
 	
 	
-	if (bRecording) {
-		glBindTexture(GL_TEXTURE_2D, *currentTexture);
+	if (bIsCapturing ) {
+		glBindTexture(GL_TEXTURE_2D, video->textures[currentFrame % video->numFrames]);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
-		currentTexture++;
-		if (currentTexture==video->textures.end()) {
-			bRecording = false;
+		currentFrame++;
+		
+		if (firstFrame) {
+			if ( currentFrame - firstFrame >= video->numFrames - video->numIntroFrames)  {
+				bIsCapturing = false;
+			}
 		}
 	}
 	
@@ -284,8 +287,8 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 //    glMatrixMode(GL_MODELVIEW);
 //    glLoadIdentity();
 	
-	glDisable(GL_DEPTH_TEST);
-	glDisableClientState(GL_COLOR_ARRAY);
+//	glDisable(GL_DEPTH_TEST);
+//	glDisableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -296,24 +299,31 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
+//	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glEnable(GL_DEPTH_TEST);
+//	glEnable(GL_DEPTH_TEST);
+	
+	glDisable(GL_TEXTURE_2D);
 	
 }
+
+- (void) capture {
+	bIsCapturing = true;
+	currentFrame = 0;
+}
+
 
 
 - (void) record {
 	if (!m_textureHandle)
 		return;
 	
-	bRecording = true;
-	currentTexture = video->textures.begin();
-}
-
-- (bool) isRecording {
-	return bRecording;
+	firstFrame = currentFrame-1;
+	video->firstFrame = (currentFrame-1) % video->numFrames;
+	
+	
+		
 }
 
 

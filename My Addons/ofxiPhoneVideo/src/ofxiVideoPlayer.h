@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <deque>
+
 using namespace std;
 
 class ofxiPhoneVideo;
@@ -28,12 +29,13 @@ public:
 	void play(float speed);
 	bool getIsPlaying();
 	
-	void startScrubbing();
-	void stopScrubbing();
-	bool getIsScrubbing();
-	void setPosition(float pos);
+//	void startScrubbing();
+//	void stopScrubbing();
+//	bool getIsScrubbing();
+//	void setPosition(float pos);
 	
 	void audioRequested( float * output, int bufferSize);
+	void mix(float *buffer,int bufferSize,float volume=1.0f);
 	
 	void drawFrame(int frame);
 

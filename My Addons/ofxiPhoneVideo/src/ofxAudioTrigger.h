@@ -1,0 +1,54 @@
+/*
+ *  ofxAudioTrigger.h
+ *  iPhoneSantaExample
+ *
+ *  Created by Roee Kremer on 12/9/10.
+ *  Copyright 2010 __MyCompanyName__. All rights reserved.
+ *
+ */
+
+enum {
+	STATE_IDLE,
+	STATE_SET,
+	STATE_TRIGGER
+};
+
+class ofxAudioTrigger {
+	
+public:
+	ofxAudioTrigger();
+	void setup();
+	void update();
+	void draw();
+	
+	void resetTrigger();
+	void setThresh(float thresh);
+	void setTrigger();
+	int getTriggerState();
+	
+	void resetMeters();
+	
+	float getAmplitude();
+	float getRmsAmplitude();
+	
+	float getPeak();
+	float getRmsPeak();
+	
+	
+	void audioReceived( float * input, int bufferSize);
+	
+protected:
+	
+	int state;
+	float thresh;
+	
+	float amplitude;
+	float rmsAmplitude;
+	float peak;
+	float rmsPeak;
+	
+	
+	
+};
+
+

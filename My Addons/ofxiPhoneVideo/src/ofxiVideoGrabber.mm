@@ -15,10 +15,17 @@
 #include "ofxiPhoneVideo.h"
 
 
+ofxiVideoGrabber::ofxiVideoGrabber() {
+	state = CAMERA_IDLE;
+}
 
+int ofxiVideoGrabber::getState() {
+	return state;
+}
+	
 
 void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
-	bIsSessionRunning = false;
+	
 	
 	this->video = video;
 	
@@ -29,22 +36,16 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 	
 		
 	
-	bIsRecording = false;
 	
 	
 }
 
 void ofxiVideoGrabber::update() {
-	if (bIsRecording) {
-		
-		if (![videoTexture isRecording]) {
-			stopRecording();
-		}
-	}
 	
-	while (scaledSamples.size()>=ofGetWidth()) {
-		scaledSamples.pop_back();
-	}
+	
+//	while (scaledSamples.size()>=ofGetWidth()) {
+//		scaledSamples.pop_back();
+//	}
 }
 
 void ofxiVideoGrabber::draw() {
@@ -57,15 +58,16 @@ void ofxiVideoGrabber::draw() {
 	[videoTexture renderCameraToSprite:videoTexture.CameraTexture];
 }
 
-void ofxiVideoGrabber::drawAudio() {
-	for (deque<float>::iterator iter = scaledSamples.begin(); iter!=scaledSamples.end(); iter++) {
-		ofLine(distance(scaledSamples.begin(),iter), ofGetHeight()*(0.5+*iter*0.5), 
-			   distance(scaledSamples.begin(),iter), ofGetHeight()*(0.5-*iter*0.5));
-	}
-}
+
+
+//	for (deque<float>::iterator iter = scaledSamples.begin(); iter!=scaledSamples.end(); iter++) {
+//		ofLine(distance(scaledSamples.begin(),iter), ofGetHeight()*(0.5+*iter*0.5), 
+//			   distance(scaledSamples.begin(),iter), ofGetHeight()*(0.5-*iter*0.5));
+//	}
+	
 
 void ofxiVideoGrabber::exit() {
-	stopSession();
+	stopCamera();
 	[videoTexture release];
 	videoTexture = nil;
 	
@@ -79,26 +81,20 @@ void ofxiVideoGrabber::audioReceived( float * input, int bufferSize) {
 	}	
 	
 	
-	float max = 0;
-	// samples are "interleaved"
-	for (int i = 0; i < bufferSize; i++){
-		buffer[i] = input[i];
-		max = buffer[i]>max ? buffer[i] : max;
-	}
 	
-	if (bIsRecording) {
+	if (getState()==CAMERA_RECORDING) {
 		for (int i = 0; i < bufferSize; i++){
 			video->sample[video->bufferSize*currentBuffer+i] = input[i];
 		}
 		currentBuffer++;
 		
 		if (currentBuffer>=video->numBuffers) {
-			stopRecording();
+			state = CAMERA_RUNNING;
 		}
 	}
 	
 	
-	scaledSamples.push_front(max);
+	//scaledSamples.push_front(max);
 	
 	
 }
@@ -106,49 +102,44 @@ void ofxiVideoGrabber::audioReceived( float * input, int bufferSize) {
 
 
 
-void ofxiVideoGrabber::startSession() {
+void ofxiVideoGrabber::startCamera() {
 	
-	if (bIsSessionRunning)
+	if (getState()!=CAMERA_IDLE)
 		return;
 	
 	[videoTexture._session startRunning];
-	bIsSessionRunning =  true;
+	state = CAMERA_RUNNING;
 	
 }
 
-void ofxiVideoGrabber::stopSession() {
+void ofxiVideoGrabber::stopCamera() {
 	
-	if (!bIsSessionRunning)
+	if (getState()==CAMERA_IDLE)
 		return;
 	
 	if([videoTexture._session isRunning])
 		[videoTexture._session stopRunning];
 	
-	bIsSessionRunning = false;
-}
-
-bool ofxiVideoGrabber::getIsSessionRunning() {
-	return bIsSessionRunning;
+	state = CAMERA_IDLE;
 }
 
 
-void ofxiVideoGrabber::startRecording() {
-	if (bIsRecording) 
-		return;
-	
+void ofxiVideoGrabber::startCapture() {
+	state = CAMERA_CAPTURING;
+	[videoTexture capture];
+}
+
+void ofxiVideoGrabber::record() {
 	currentBuffer = 0;
-	bIsRecording = true;
+	state =CAMERA_RECORDING;
 	[videoTexture record];
 	
 }
 
-void ofxiVideoGrabber::stopRecording() {
-	bIsRecording = false;
-}
 
-bool ofxiVideoGrabber::getIsRecording() {
-	return bIsRecording;
-}
+
+
+
 
 
 

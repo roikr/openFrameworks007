@@ -43,10 +43,10 @@ void ofxiVideoPlayer::update() {
 		
 	if (state == PLAYER_PLAYING) {
 		int tempFrame = speed*(ofGetElapsedTimeMillis()-start)*video->fps/1000;
-		if (tempFrame >= video->textures.size()) {
+		if (tempFrame >= video->textures.size()-video->numIntroFrames) {
 			state = PLAYER_IDLE;
 		} else {
-			currentTexture =video->textures[tempFrame];
+			currentTexture =video->textures[(video->firstFrame+tempFrame) % video->textures.size()];
 		}
 	}
 	
@@ -82,8 +82,7 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 	
 	
 	
-	glDisable(GL_DEPTH_TEST);
-	glDisableClientState(GL_COLOR_ARRAY);
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -94,10 +93,9 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_TEXTURE_2D);
 		
 }
 
@@ -128,11 +126,32 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 	
 }
 
+void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) {
+	if( video->bufferSize != bufferSize ){
+		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->bufferSize, bufferSize);
+		return;
+	}
+	
+	if (state == PLAYER_PLAYING) {
+		
+		for (int i = 0; i < bufferSize; i++) {
+			buffer[i ] += video->sample[(int)(pos+speed*i)]*volume;
+		}
+		
+		pos+=bufferSize*speed;
+		
+		if (pos + bufferSize*speed >=video->numBuffers*bufferSize) {
+			state = PLAYER_IDLE;
+		}
+	} 
+}
+
 
 void ofxiVideoPlayer::play(float speed) {
 	state = PLAYER_PLAYING;
 	start = ofGetElapsedTimeMillis();
-	currentTexture = 0;
+	currentTexture = video->textures[video->firstFrame];
+	
 	pos = 0;
 	this->speed = speed;
 	
@@ -142,6 +161,8 @@ bool ofxiVideoPlayer::getIsPlaying() {
 	return state == PLAYER_PLAYING;
 }
 
+
+/*
 void ofxiVideoPlayer::startScrubbing() {
 	state = PLAYER_SCRUBBING;
 }
@@ -157,6 +178,7 @@ bool ofxiVideoPlayer::getIsScrubbing() {
 void ofxiVideoPlayer::setPosition(float pos) {
 	currentTexture = pos*(int)video->textures.size();
 }
+ */
 
 
 
