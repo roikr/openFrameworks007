@@ -1,5 +1,7 @@
 
 #include "testApp.h"
+#include "Constants.h"
+#include "ofSoundStream.h"
 #include "ofxXmlSettings.h"
 
 #include "ofxiPhoneVideo.h"
@@ -7,26 +9,33 @@
 #include "ofxiVideoPlayer.h"
 
 #include <iostream>
+#include "ofMain.h"
+
+
 
 
 //--------------------------------------------------------------
 void testApp::setup(){	
 	
+	ofSetOrientation(OF_LANDSCAPE);
 	
-	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+	ofDisableDataPath();
+	
 	// register touch events
-	ofRegisterTouchEvents(this);
+	//ofRegisterTouchEvents(this);
 	
 	// initialize the accelerometer
-	ofxAccelerometer.setup();
+	//ofxAccelerometer.setup();
 	
 	//iPhoneAlerts will be sent to this.
-	ofxiPhoneAlerts.addListener(this);
+	//ofxiPhoneAlerts.addListener(this);
 	
-	background.loadImage("santa.png");
+	background.setup(ofToResourcesPath("santa.pvr"));
+	background.init();
+	background.load();
 	
 	ofSetFrameRate(60);
-	ofBackground(255,255,255);
+	//ofBackground(255,255,255);
 	
 	video = new ofxiPhoneVideo;
 	
@@ -40,9 +49,11 @@ void testApp::setup(){
 	video->sample				= new float[video->numBuffers*video->bufferSize];
 	memset(video->sample, 0, video->numBuffers*video->bufferSize * sizeof(float));
 	
+	song.setupForSave(video->bufferSize);
+	
 	ofxXmlSettings xml;
 	
-	bool loaded = xml.loadFile("players.xml");
+	bool loaded = xml.loadFile(ofToResourcesPath("players.xml"));
 	assert(loaded);
 	
 	
@@ -57,7 +68,7 @@ void testApp::setup(){
 		p.scale = xml.getAttribute("player", "scale", 1.0f, i) ;
 		p.degree = xml.getAttribute("player", "degree", 0.0f, i) ;
 		p.song.setup(video->bufferSize, video->sampleRate);
-		p.song.loadTrack(ofToDataPath(xml.getAttribute("player", "song", "", i)));
+		p.song.loadTrack(ofToResourcesPath(xml.getAttribute("player", "song", "", i)));
 		p.video = new ofxiVideoPlayer;
 		p.video->setup(video);
 		
@@ -85,9 +96,11 @@ void testApp::setup(){
 	
 	camera->startCamera();
 	
-	
+	songVersion = 0;
 	
 }
+
+
 
 
 //--------------------------------------------------------------
@@ -96,11 +109,37 @@ void testApp::update()
 	
 	camera->update();
 	
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
-		iter->video->update();
-	}
 	
-		
+	switch (songState) {
+		case SONG_IDLE:
+		case SONG_PLAY:
+			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
+				iter->video->update();
+			}
+		case SONG_RENDER_AUDIO:
+		case SONG_CANCEL_RENDER_AUDIO:
+			if (! getIsPlaying()) {
+				
+				songState = SONG_IDLE;
+				//bNeedDisplay = true;
+			}
+			break;
+			
+		case SONG_RENDER_VIDEO:
+			
+			if  (currentBlock / totalBlocks >= 1.0) {
+				setSongState(SONG_IDLE);
+				//songState = SONG_IDLE; // TODO: check why not notifying players...
+				//bNeedDisplay = true;
+			}
+			
+			
+			break;
+			
+			
+		default:
+			break;
+	}
 	
 }
 
@@ -115,7 +154,7 @@ void testApp::draw()
 		ofPushMatrix();
 		ofTranslate(iter->x, iter->y, 0);
 		ofScale(iter->scale,iter->scale,1.0);
-		ofRotateZ(iter->degree);
+		ofRotate(iter->degree);
 		//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
 		//ofScale(0.5, 0.5, 1);
 		if (iter->video->getIsPlaying()) {
@@ -149,6 +188,8 @@ void testApp::record() {
 	trigger.setTrigger();
 	trigger.resetMeters();
 	camera->startCapture();
+	
+	songVersion++;
 	//camera->setTrigger(thresh);
 	//camera->startRecording();
 	//cout << "Start recording" << endl;
@@ -158,28 +199,98 @@ void testApp::preview() {
 	players[0].video->play(1.0f);
 }
 
-
-void testApp::play() {
-	songState = SONG_PLAY;
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
-		iter->song.play();
+bool testApp::getIsPlaying() {
+	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
+		if (iter->video->getIsPlaying() || iter->song.getIsPlaying()) {
+			return true;
+		} 
 	}
+	return false;
 }
 
-void testApp::stop() {
-	songState = SONG_IDLE;
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
-		iter->song.stop();
-	}
+
+int  testApp::getSongState() { 
+	return songState;
 }
+
+void testApp::setSongState(int songState) {
+	
+		
+	// song is valid and can Overwritten only when FINISHING RECORD
+//	if (this->songState==SONG_RECORD && songState!=SONG_RECORD) {
+//		songVersion++;
+//	}
+	
+//	if (this->songState==SONG_RENDER_VIDEO && songState!=SONG_RENDER_VIDEO) {
+//		currentFrame =(ofGetElapsedTimeMillis()-startTime)  / 40;
+//	}
+	
+	this->songState = songState;
+	
+	if (songState == SONG_RENDER_AUDIO || songState == SONG_RENDER_VIDEO) {
+		duration = 0;
+		
+		for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++)  {
+			duration = max(duration, piter->song.getDuration());
+		}
+
+	}		
+	
+	if (songState == SONG_RENDER_VIDEO) { 
+		currentBlock = 0;
+	}
+	
+//	for (int i=0;i<3;i++) {
+//		player[i].setSongState(songState);
+//	}
+	
+	
+	
+	switch (songState) {
+		case SONG_IDLE:
+		case SONG_RENDER_AUDIO_FINISHED:
+		case SONG_CANCEL_RENDER_AUDIO:
+			songState = SONG_IDLE;
+			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
+				iter->song.stop();
+			}
+			break;
+		case SONG_PLAY:
+		case SONG_RENDER_AUDIO:
+		case SONG_RENDER_VIDEO:
+			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
+				iter->song.play();
+			}
+			break;
+		default:
+			break;
+	}
+	
+	bNeedDisplay = true;
+}
+
+
+int testApp::getSongVersion() {
+	return songVersion;
+}
+
+void testApp::soundStreamStart() {
+	ofSoundStreamStart();
+}
+
+void testApp::soundStreamStop() {
+	ofSoundStreamStop();
+}
+
+
 
 
 //--------------------------------------------------------------
-void testApp::touchDown(ofTouchEventArgs &touch){
+void testApp::touchDown(float x, float y, int touchId){
 	
-	if (touch.x > ofGetWidth()-30) {
+	if (x > ofGetWidth()-30) {
 		
-		switch ((int)(3*touch.y/(ofGetHeight()+1))) {
+		switch ((int)(4*y/(ofGetHeight()+1))) {
 			case 0:
 				record();
 				break;
@@ -188,29 +299,35 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 				break;
 
 			case 2:
-				play();
+				setSongState(SONG_PLAY);
+				break;
+				
+			case 3:
+				ofSoundStreamStop();
+				renderAudio();
+				ofSoundStreamStart();
 				break;
 			default:
 				break;
 		}  
 
-	} else if (touch.x < 30) {
-		trigger.setThresh(1-(touch.y/ofGetHeight()));
+	} else if (x < 30) {
+		trigger.setThresh(1-(y/ofGetHeight()));
 	}
 
 
 }
 
 //--------------------------------------------------------------
-void testApp::touchMoved(ofTouchEventArgs &touch){
-		
+
+void testApp::touchMoved(float x, float y, int touchId)	{	
 }
 
 //--------------------------------------------------------------
-void testApp::touchUp(ofTouchEventArgs &touch){	
-	if (touch.x > ofGetWidth()-30) {
+void testApp::touchUp(float x, float y, int touchId){	
+	if (x > ofGetWidth()-30) {
 		
-		switch ((int)(3*touch.y/(ofGetHeight()+1))) {
+		switch ((int)(4*y/(ofGetHeight()+1))) {
 			case 0:
 				
 				break;
@@ -219,7 +336,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 				break;
 				
 			case 2:
-				stop();
+				setSongState(SONG_IDLE);
 				break;
 			default:
 				break;
@@ -229,7 +346,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 }
 
 //--------------------------------------------------------------
-void testApp::touchDoubleTap(ofTouchEventArgs &touch){
+void testApp::touchDoubleTap(float x, float y, int touchId){
 }
 
 void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
@@ -238,7 +355,7 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 	
 	
 	
-	if (trigger.getTriggerState() == STATE_TRIGGER) {
+	if (trigger.getTriggerState() == TRIGGER_TRIGGERED) {
 		trigger.resetTrigger();
 		camera->record();
 		bRecording = true;
@@ -251,49 +368,44 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 	if (bRecording && camera->getState()!=CAMERA_RECORDING) {
 		bRecording = false;
 		gain = 0.6f/trigger.getRmsPeak();
-		printf("rms: %1.2f, players: %i, gain: %1.2f\n", trigger.getRmsPeak(),players.size(),gain);
+		printf("rms: %1.2f, players: %i, gain: %1.2f\n", trigger.getRmsPeak(),(int)players.size(),gain);
 	}
 }
 
-void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
+
+
+void testApp::audioProcess(int bufferSize) {
 	memset(buffer, 0, bufferSize*sizeof(float));
 	
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
-		
-		vector<event> events;
+	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++)  {
 		
 		switch (songState) {
 			case SONG_PLAY:
 			case SONG_RENDER_AUDIO: {
-				iter->song.process(events);
+				vector<event> events;
+				piter->song.process(events);
 				
 				for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
 					float fr = exp((float)(niter->note-60)/12.0*log(2.0));
-					//printf("note:  %i %1.2f\n", niter->note,fr);
+					printf("player: %i, note:  %i %1.2f\n", distance(players.begin(),piter), niter->note,fr);
 					if (niter->bNoteOn) {
-						
-						iter->video->play(fr);
-						
-						//					midiInstrument->noteOn(note, iter->velocity*volume);
-						//					
-						//					if (songState!=SONG_RENDER_AUDIO) {
-						//						currentPlayer->play(midiToSample[note]); // TODO: manage animations for multi player (drum)
-						//					}
-						
+						piter->video->play(fr);
 					}
 				}
+			
 			} break;
-				
-				
-				
-				
+		
 			default:
 				break;
 		}
 		
-		iter->video->mix(buffer, bufferSize,1.0f/players.size());
+		piter->video->mix(buffer, bufferSize,1.0f/players.size());
 	}
+}
+
+void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	
+	audioProcess(bufferSize);
 	
 	for (int i = 0; i < bufferSize; i++){
 		output[i*nChannels] = buffer[i] * gain;
@@ -301,6 +413,94 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	}
 	
 }
+
+
+void testApp::renderAudio() {
+	
+	setSongState(SONG_RENDER_AUDIO);
+	
+	cout << "renderAudio started" << endl;
+	
+	song.open(ofToDocumentsPath("santa.wav")); 
+	
+	currentBlock = 0;
+	
+	while (getSongState()==SONG_RENDER_AUDIO || getSongState()==SONG_CANCEL_RENDER_AUDIO) {
+		
+		//update(); // todo move to production for other thread
+		audioProcess(video->bufferSize);
+		
+		song.saveWithBlocks(buffer, buffer);
+		currentBlock++;
+	}
+	
+	song.close();	
+	
+	cout << "renderAudio finished" << endl;
+	
+	setSongState(SONG_RENDER_AUDIO_FINISHED);
+	
+	totalBlocks = currentBlock;
+	
+}
+
+void testApp::seekFrame(int frame) {
+	
+		
+	int reqBlock = (float)frame/25.0f*(float)video->sampleRate/(float)video->bufferSize;
+	
+	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+		piter->bDidStartPlaying = false;
+	}
+	
+	for (;currentBlock<reqBlock;currentBlock++) { // TODO: or song finished...
+		for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+			vector<event> events;
+			piter->song.process(events);
+			
+			for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
+				float fr = exp((float)(niter->note-60)/12.0*log(2.0));
+				printf("player: %i, note:  %i %1.2f\n", distance(players.begin(),piter), niter->note,fr);
+				if (niter->bNoteOn) {
+					
+					piter->video->play(fr);
+					piter->bDidStartPlaying = true;
+					
+				}
+			}
+			
+		}
+	}
+	
+	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+		if (piter->bDidStartPlaying) {
+			piter->bDidStartPlaying = false;
+		} else {
+			piter->video->nextFrame();
+		}
+
+	}
+	
+}
+
+
+
+
+float testApp::getRenderProgress(){
+	
+	switch (songState) {
+		case SONG_RENDER_AUDIO: {
+			return (float)currentBlock * (float)video->bufferSize / (float)video->sampleRate/duration;
+		}	break;
+		case SONG_RENDER_VIDEO:
+			return (float)currentBlock/(float)totalBlocks;
+			break;
+		default:
+			return 0.0f;
+	}
+	
+}
+
 
 //--------------------------------------------------------------
 void testApp::lostFocus() {
