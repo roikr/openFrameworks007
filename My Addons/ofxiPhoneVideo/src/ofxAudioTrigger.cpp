@@ -11,11 +11,11 @@
 #include "ofxAudioTrigger.h"
 
 
-//#include <math.h>
+#include <math.h>
 #include <algorithm>
 
 ofxAudioTrigger::ofxAudioTrigger() {
-	state=STATE_IDLE;
+	state=TRIGGER_IDLE;
 	amplitude = 0;
 	rmsAmplitude = 0;
 	peak= 0;
@@ -35,13 +35,13 @@ void ofxAudioTrigger::draw() {
 	ofFill();
 	
 	switch (state) {
-		case STATE_IDLE:
+		case TRIGGER_IDLE:
 			ofSetColor(0,0,255);
 			break;
-		case STATE_SET:
+		case TRIGGER_SET:
 			ofSetColor(0,255,0);
 			break;
-		case STATE_TRIGGER:
+		case TRIGGER_TRIGGERED:
 			ofSetColor(255,0,0);
 			break;
 		default:
@@ -66,7 +66,7 @@ void ofxAudioTrigger::draw() {
 }
 
 void ofxAudioTrigger::resetTrigger() {
-	state = STATE_IDLE;
+	state = TRIGGER_IDLE;
 }
 
 void ofxAudioTrigger::setThresh(float thresh) {
@@ -74,7 +74,7 @@ void ofxAudioTrigger::setThresh(float thresh) {
 }
 
 void ofxAudioTrigger::setTrigger() {
-	state = STATE_SET;
+	state = TRIGGER_SET;
 }
 
 int ofxAudioTrigger::getTriggerState() {
@@ -119,8 +119,8 @@ void ofxAudioTrigger::audioReceived( float * input, int bufferSize) {
 	peak = max(peak,amplitude);
 	rmsPeak = max(rmsPeak,rmsAmplitude);
 	
-	if (state == STATE_SET && peak>thresh) {
-		state = STATE_TRIGGER;
+	if (state == TRIGGER_SET && peak>thresh) {
+		state = TRIGGER_TRIGGERED;
 	}
 	
 }

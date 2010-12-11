@@ -8,9 +8,9 @@
  */
 
 enum {
-	STATE_IDLE,
-	STATE_SET,
-	STATE_TRIGGER
+	TRIGGER_IDLE,
+	TRIGGER_SET,
+	TRIGGER_TRIGGERED
 };
 
 class ofxAudioTrigger {

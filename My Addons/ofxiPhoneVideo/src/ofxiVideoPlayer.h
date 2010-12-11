@@ -29,6 +29,9 @@ public:
 	void play(float speed);
 	bool getIsPlaying();
 	
+	void firstFrame();
+	void nextFrame();
+	
 //	void startScrubbing();
 //	void stopScrubbing();
 //	bool getIsScrubbing();
@@ -39,6 +42,7 @@ public:
 	
 	void drawFrame(int frame);
 
+	
 	
 	
 protected:
@@ -55,5 +59,7 @@ protected:
 	int pos;
 	
 	ofxiPhoneVideo *video;
+	
+	int currentFrame;
 	
 };

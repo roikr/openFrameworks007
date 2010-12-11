@@ -52,6 +52,8 @@ void ofxiVideoPlayer::update() {
 	
 }
 
+
+
 void ofxiVideoPlayer::draw() {
 	drawTexture(currentTexture);
 }
@@ -151,15 +153,30 @@ void ofxiVideoPlayer::play(float speed) {
 	state = PLAYER_PLAYING;
 	start = ofGetElapsedTimeMillis();
 	currentTexture = video->textures[video->firstFrame];
-	
+	currentFrame = 0;
 	pos = 0;
 	this->speed = speed;
-	
 }
 
 bool ofxiVideoPlayer::getIsPlaying() {
 	return state == PLAYER_PLAYING;
 }
+
+
+void ofxiVideoPlayer::nextFrame() {
+	if (getIsPlaying()) {
+		currentFrame++;
+		if (currentFrame >= video->textures.size()-1-video->numIntroFrames) {
+			state = PLAYER_IDLE;
+			currentTexture = video->textures[video->firstFrame];
+		} else {
+			currentTexture =video->textures[(video->firstFrame+currentFrame) % video->textures.size()];
+		}
+		
+	}
+}
+
+
 
 
 /*
@@ -174,6 +191,7 @@ void ofxiVideoPlayer::stopScrubbing() {
 bool ofxiVideoPlayer::getIsScrubbing() {
 	return state == PLAYER_SCRUBBING;
 }
+
 
 void ofxiVideoPlayer::setPosition(float pos) {
 	currentTexture = pos*(int)video->textures.size();
