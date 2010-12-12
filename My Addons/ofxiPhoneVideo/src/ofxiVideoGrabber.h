@@ -19,8 +19,7 @@ class ofxiPhoneVideo;
 enum {
 	CAMERA_IDLE,
 	CAMERA_RUNNING,
-	CAMERA_CAPTURING,
-	CAMERA_RECORDING
+	CAMERA_CAPTURING
 };
 
 class ofxiVideoGrabber {
@@ -50,15 +49,16 @@ public:
 	
 	void audioReceived( float * input, int bufferSize);
 	
+	
 protected:
 	
 	
 	//int		drawCounter, bufferCounter;
-	int		currentBuffer;
+	//int		currentBuffer;
 	
 	MyVideoBuffer *	videoTexture;
 	
-	float *buffer;
+	//float *buffer;
 	
 	//deque<float> scaledSamples;
 	

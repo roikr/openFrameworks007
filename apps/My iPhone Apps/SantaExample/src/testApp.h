@@ -9,7 +9,7 @@
 #include "ofxAudioTrigger.h"
 #include "ofxSndFile.h"
 #include "ofxRKTexture.h"
-//#include "ofxAudioCompressor.h"
+//#include "ofxDynamicCompressor.h"
 
 
 
@@ -31,7 +31,7 @@ struct player {
 	bool bDidStartPlaying;
 };
 
-class testApp : public ofSimpleApp {
+class testApp:public ofSimpleApp  { // : public   ofxiPhoneApp
 	
 public:
 	void setup();
@@ -47,11 +47,10 @@ public:
 	int getSongState();
 	void setSongState(int songState);
 	
-	
-	void touchDown(float x, float y, int touchId);
-	void touchMoved(float x, float y, int touchId);
-	void touchUp(float x, float y, int touchId);
-	void touchDoubleTap(float x, float y, int touchId);
+	void touchDown(ofTouchEventArgs &touch);
+	void touchMoved(ofTouchEventArgs &touch);
+	void touchUp(ofTouchEventArgs &touch);
+	void touchDoubleTap(ofTouchEventArgs &touch);
 
 	void audioReceived( float * input, int bufferSize, int nChannels );
 	
@@ -72,10 +71,8 @@ public:
 	
 	bool bNeedDisplay;
 	
-	
 	ofxiPhoneVideo *video;
 	ofxiVideoGrabber *camera;
-	
 	
 	vector<player> players;
 	
@@ -83,18 +80,14 @@ public:
 	
 	float *buffer;
 	
-	
-	
 	ofxRKTexture background;
-	
-	
+
 	int songState;
 	
 	ofxAudioTrigger trigger;
-	//ofxAudioCompressor compressor;
-	
-	
-	float gain;
+	//ofxDynamicCompressor compressor;
+		
+	//float gain;
 	bool bRecording;
 	
 	ofxSndFile song; // just for saving

@@ -29,6 +29,8 @@ public:
 	void play(float speed);
 	bool getIsPlaying();
 	
+	void introFrame();
+	
 	void firstFrame();
 	void nextFrame();
 	

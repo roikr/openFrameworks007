@@ -102,8 +102,8 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 }
 
 void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
-	if( video->bufferSize != bufferSize ){
-		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->bufferSize, bufferSize);
+	if( video->audio.getBufferSize() != bufferSize ){
+		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
 		return;
 	}
 	
@@ -113,11 +113,11 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 		
 		for (int i = 0; i < bufferSize; i++){
 			
-			output[i ] = video->sample[(int)(pos+speed*i)];
+			output[i ] = *(video->audio.getBuffer()+pos+(int)(speed*i));
 		}
 		pos+=bufferSize*speed;
 		
-		if (pos + bufferSize*speed >=video->numBuffers*bufferSize) {
+		if (pos + bufferSize*speed >=video->audio.getNumBuffers()*bufferSize) {
 			state = PLAYER_IDLE;
 		}
 	} else {
@@ -129,20 +129,20 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 }
 
 void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) {
-	if( video->bufferSize != bufferSize ){
-		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->bufferSize, bufferSize);
+	if( video->audio.getBufferSize() != bufferSize ){
+		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
 		return;
 	}
 	
 	if (state == PLAYER_PLAYING) {
 		
 		for (int i = 0; i < bufferSize; i++) {
-			buffer[i ] += video->sample[(int)(pos+speed*i)]*volume;
+			buffer[i ] += (*(video->audio.getBuffer()+pos+(int)(speed*i))) *volume;
 		}
 		
 		pos+=bufferSize*speed;
 		
-		if (pos + bufferSize*speed >=video->numBuffers*bufferSize) {
+		if (pos + bufferSize*speed >=video->audio.getNumBuffers()*bufferSize) {
 			state = PLAYER_IDLE;
 		}
 	} 
@@ -177,7 +177,10 @@ void ofxiVideoPlayer::nextFrame() {
 }
 
 
-
+void ofxiVideoPlayer::introFrame() {
+	
+	currentTexture =video->textures[(video->textures.size()+video->firstFrame-video->numIntroFrames) % video->textures.size()];
+}
 
 /*
 void ofxiVideoPlayer::startScrubbing() {

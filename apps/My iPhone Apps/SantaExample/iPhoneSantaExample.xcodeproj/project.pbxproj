@@ -35,8 +35,9 @@
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E41F382912B3FCCF00A2A57B /* ofxRKTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E41F382612B3FCCF00A2A57B /* ofxRKTexture.mm */; };
 		E41F382A12B3FCCF00A2A57B /* PVRTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = E41F382712B3FCCF00A2A57B /* PVRTexture.m */; };
-		E48DA36F12B1710000EC4C4A /* ofxAudioTrigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48DA36E12B1710000EC4C4A /* ofxAudioTrigger.cpp */; };
 		E48DA3D912B2469E00EC4C4A /* ofxAudioCompressor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48DA3D812B2469E00EC4C4A /* ofxAudioCompressor.cpp */; };
+		E48F721E12B566700053ACCB /* ofxAudioTrigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48F721C12B566700053ACCB /* ofxAudioTrigger.cpp */; };
+		E48F723612B5684B0053ACCB /* ofxAudioSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48F723412B5684B0053ACCB /* ofxAudioSampler.cpp */; };
 		E4922D1412AFE5DC000FCC0B /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E4922D0B12AFE5DC000FCC0B /* install.xml */; };
 		E4922D1512AFE5DC000FCC0B /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4922D0D12AFE5DC000FCC0B /* tinyxml.cpp */; };
 		E4922D1612AFE5DC000FCC0B /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4922D0F12AFE5DC000FCC0B /* tinyxmlerror.cpp */; };
@@ -160,10 +161,12 @@
 		E41F382612B3FCCF00A2A57B /* ofxRKTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofxRKTexture.mm; path = ../../../../YesPlastic/src/ofxRKTexture.mm; sourceTree = SOURCE_ROOT; };
 		E41F382712B3FCCF00A2A57B /* PVRTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PVRTexture.m; path = ../../../../YesPlastic/src/PVRTexture.m; sourceTree = SOURCE_ROOT; };
 		E41F382812B3FCCF00A2A57B /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PVRTexture.h; path = ../../../../YesPlastic/src/PVRTexture.h; sourceTree = SOURCE_ROOT; };
-		E48DA36D12B1710000EC4C4A /* ofxAudioTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioTrigger.h; sourceTree = "<group>"; };
-		E48DA36E12B1710000EC4C4A /* ofxAudioTrigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioTrigger.cpp; sourceTree = "<group>"; };
 		E48DA3D712B2469E00EC4C4A /* ofxAudioCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioCompressor.h; sourceTree = "<group>"; };
 		E48DA3D812B2469E00EC4C4A /* ofxAudioCompressor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioCompressor.cpp; sourceTree = "<group>"; };
+		E48F721C12B566700053ACCB /* ofxAudioTrigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioTrigger.cpp; sourceTree = "<group>"; };
+		E48F721D12B566700053ACCB /* ofxAudioTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioTrigger.h; sourceTree = "<group>"; };
+		E48F723412B5684B0053ACCB /* ofxAudioSampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioSampler.cpp; sourceTree = "<group>"; };
+		E48F723512B5684B0053ACCB /* ofxAudioSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioSampler.h; sourceTree = "<group>"; };
 		E4922D0B12AFE5DC000FCC0B /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E4922D0D12AFE5DC000FCC0B /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		E4922D0E12AFE5DC000FCC0B /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -339,6 +342,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E48F723212B5684B0053ACCB /* ofxAudioSampler */,
+				E48F721A12B566700053ACCB /* ofxAudioTrigger */,
 				E4A5A67B12B37E9A007B4DD6 /* ofxSndFile */,
 				E4FBC15312B10DE500AB4E15 /* ofxMidi */,
 				E4922D0A12AFE5DC000FCC0B /* ofxXmlSettings */,
@@ -579,6 +584,42 @@
 			name = myOF;
 			sourceTree = "<group>";
 		};
+		E48F721A12B566700053ACCB /* ofxAudioTrigger */ = {
+			isa = PBXGroup;
+			children = (
+				E48F721B12B566700053ACCB /* src */,
+			);
+			name = ofxAudioTrigger;
+			path = "../../../My Addons/ofxAudioTrigger";
+			sourceTree = SOURCE_ROOT;
+		};
+		E48F721B12B566700053ACCB /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E48F721C12B566700053ACCB /* ofxAudioTrigger.cpp */,
+				E48F721D12B566700053ACCB /* ofxAudioTrigger.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E48F723212B5684B0053ACCB /* ofxAudioSampler */ = {
+			isa = PBXGroup;
+			children = (
+				E48F723312B5684B0053ACCB /* src */,
+			);
+			name = ofxAudioSampler;
+			path = "../../../My Addons/ofxAudioSampler";
+			sourceTree = SOURCE_ROOT;
+		};
+		E48F723312B5684B0053ACCB /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E48F723412B5684B0053ACCB /* ofxAudioSampler.cpp */,
+				E48F723512B5684B0053ACCB /* ofxAudioSampler.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4922D0A12AFE5DC000FCC0B /* ofxXmlSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -662,8 +703,6 @@
 				E4CA991812AFB43000DD8F68 /* ofxiVideoGrabber.mm */,
 				E4CA991F12AFB46700DD8F68 /* ofxiVideoPlayer.h */,
 				E4CA992012AFB46700DD8F68 /* ofxiVideoPlayer.cpp */,
-				E48DA36D12B1710000EC4C4A /* ofxAudioTrigger.h */,
-				E48DA36E12B1710000EC4C4A /* ofxAudioTrigger.cpp */,
 				E48DA3D712B2469E00EC4C4A /* ofxAudioCompressor.h */,
 				E48DA3D812B2469E00EC4C4A /* ofxAudioCompressor.cpp */,
 			);
@@ -803,12 +842,13 @@
 				E4922D1812AFE5DC000FCC0B /* ofxXmlSettings.cpp in Sources */,
 				E4FBC16112B10DE500AB4E15 /* ofxMidi.cpp in Sources */,
 				E4FBC16612B10DE500AB4E15 /* ofxMidiTrack.cpp in Sources */,
-				E48DA36F12B1710000EC4C4A /* ofxAudioTrigger.cpp in Sources */,
 				E48DA3D912B2469E00EC4C4A /* ofxAudioCompressor.cpp in Sources */,
 				E4A5A67F12B37E9A007B4DD6 /* ofxSndFile.cpp in Sources */,
 				E4A5A6BF12B38B18007B4DD6 /* ofMainExt.mm in Sources */,
 				E41F382912B3FCCF00A2A57B /* ofxRKTexture.mm in Sources */,
 				E41F382A12B3FCCF00A2A57B /* PVRTexture.m in Sources */,
+				E48F721E12B566700053ACCB /* ofxAudioTrigger.cpp in Sources */,
+				E48F723612B5684B0053ACCB /* ofxAudioSampler.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

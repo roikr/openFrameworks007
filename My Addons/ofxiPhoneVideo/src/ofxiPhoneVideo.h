@@ -8,7 +8,7 @@
  */
 
 #include <vector>
-
+#include "ofxAudioSampler.h"
 
 using namespace std;
 
@@ -21,12 +21,13 @@ struct ofxiPhoneVideo {
 	int		sampleRate;
 	int		sampleLength; // in millis -  make sure that there are more frames than needed
 	
-	int		numBuffers;
-	int		bufferSize;
 	
 	vector<int> textures;
+	
+	ofxAudioSampler audio;
+	
 	int firstFrame;
-	float	*sample;
+	//float	*sample;
 	
 	int width;
 	int height;

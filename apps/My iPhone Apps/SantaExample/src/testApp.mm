@@ -22,7 +22,7 @@ void testApp::setup(){
 	ofDisableDataPath();
 	
 	// register touch events
-	//ofRegisterTouchEvents(this);
+	ofRegisterTouchEvents(this);
 	
 	// initialize the accelerometer
 	//ofxAccelerometer.setup();
@@ -39,17 +39,21 @@ void testApp::setup(){
 	
 	video = new ofxiPhoneVideo;
 	
+	int bufferSize = 512;
+	
 	video->fps = 25;
 	video->numIntroFrames = 1;
-	video->bufferSize	= 512;
 	video->sampleRate 			= 44100;
 	video->numFrames = 25;
 	video->sampleLength = 1000*video->numFrames/video->fps;
-	video->numBuffers = 44100 * video->sampleLength / (1000 * video->bufferSize);
-	video->sample				= new float[video->numBuffers*video->bufferSize];
-	memset(video->sample, 0, video->numBuffers*video->bufferSize * sizeof(float));
 	
-	song.setupForSave(video->bufferSize);
+	video->audio.setup(bufferSize,video->sampleRate * video->sampleLength / (1000 * bufferSize));	
+	
+	
+	//video->sample				= new float[video->numBuffers*video->bufferSize];
+	//memset(video->sample, 0, video->numBuffers*video->bufferSize * sizeof(float));
+	
+	song.setupForSave(video->audio.getBufferSize());
 	
 	ofxXmlSettings xml;
 	
@@ -67,7 +71,7 @@ void testApp::setup(){
 		p.y = xml.getAttribute("player", "y", 0, i) ;
 		p.scale = xml.getAttribute("player", "scale", 1.0f, i) ;
 		p.degree = xml.getAttribute("player", "degree", 0.0f, i) ;
-		p.song.setup(video->bufferSize, video->sampleRate);
+		p.song.setup(video->audio.getBufferSize(), video->sampleRate);
 		p.song.loadTrack(ofToResourcesPath(xml.getAttribute("player", "song", "", i)));
 		p.video = new ofxiVideoPlayer;
 		p.video->setup(video);
@@ -80,7 +84,7 @@ void testApp::setup(){
 	xml.popTag();
 	
 	
-	buffer	= new float[video->bufferSize];
+	buffer	= new float[video->audio.getBufferSize()];
 	
 	
 	camera = new ofxiVideoGrabber;
@@ -90,9 +94,9 @@ void testApp::setup(){
 	
 	songState = SONG_IDLE;
 	bRecording = false;
-	trigger.setThresh(0.2);
+	trigger.setThresh(0.05);
 	
-	ofSoundStreamSetup(2, 1, this, video->sampleRate, video->bufferSize, 2);
+	ofSoundStreamSetup(2, 1, this, video->sampleRate, video->audio.getBufferSize(), 2);
 	
 	camera->startCamera();
 	
@@ -157,11 +161,18 @@ void testApp::draw()
 		ofRotate(iter->degree);
 		//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
 		//ofScale(0.5, 0.5, 1);
-		if (iter->video->getIsPlaying()) {
-			iter->video->draw();
-		} else {
+		
+		if (camera->getState()==CAMERA_CAPTURING) {
 			camera->draw();
+		} else {
+			iter->video->draw();
 		}
+		
+		//if (iter->video->getIsPlaying()) {
+//			iter->video->draw();
+//		} else {
+//			camera->draw();
+//		}
 		ofPopMatrix();
 	
 	}
@@ -286,11 +297,11 @@ void testApp::soundStreamStop() {
 
 
 //--------------------------------------------------------------
-void testApp::touchDown(float x, float y, int touchId){
+void testApp::touchDown(ofTouchEventArgs &touch){
 	
-	if (x > ofGetWidth()-30) {
+	if (touch.x > ofGetWidth()-30) {
 		
-		switch ((int)(4*y/(ofGetHeight()+1))) {
+		switch ((int)(4*touch.y/(ofGetHeight()+1))) {
 			case 0:
 				record();
 				break;
@@ -311,8 +322,8 @@ void testApp::touchDown(float x, float y, int touchId){
 				break;
 		}  
 
-	} else if (x < 30) {
-		trigger.setThresh(1-(y/ofGetHeight()));
+	} else if (touch.x < 30) {
+		trigger.setThresh(1-(touch.y/ofGetHeight()));
 	}
 
 
@@ -320,14 +331,14 @@ void testApp::touchDown(float x, float y, int touchId){
 
 //--------------------------------------------------------------
 
-void testApp::touchMoved(float x, float y, int touchId)	{	
+void testApp::touchMoved(ofTouchEventArgs &touch)	{	
 }
 
 //--------------------------------------------------------------
-void testApp::touchUp(float x, float y, int touchId){	
-	if (x > ofGetWidth()-30) {
+void testApp::touchUp(ofTouchEventArgs &touch){	
+	if (touch.x > ofGetWidth()-30) {
 		
-		switch ((int)(4*y/(ofGetHeight()+1))) {
+		switch ((int)(4*touch.y/(ofGetHeight()+1))) {
 			case 0:
 				
 				break;
@@ -346,7 +357,7 @@ void testApp::touchUp(float x, float y, int touchId){
 }
 
 //--------------------------------------------------------------
-void testApp::touchDoubleTap(float x, float y, int touchId){
+void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 }
 
 void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
@@ -365,10 +376,13 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 	
 	camera->audioReceived(input, bufferSize);
 	
-	if (bRecording && camera->getState()!=CAMERA_RECORDING) {
+	if (bRecording && !video->audio.getIsRecording()) {
 		bRecording = false;
-		gain = 0.6f/trigger.getRmsPeak();
-		printf("rms: %1.2f, players: %i, gain: %1.2f\n", trigger.getRmsPeak(),(int)players.size(),gain);
+		for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
+			iter->video->introFrame();
+		}
+		//gain = 0.6f/trigger.getRmsPeak();
+		//printf("rms: %1.2f, players: %i, gain: %1.2f\n", trigger.getRmsPeak(),(int)players.size(),gain);
 	}
 }
 
@@ -408,8 +422,8 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	audioProcess(bufferSize);
 	
 	for (int i = 0; i < bufferSize; i++){
-		output[i*nChannels] = buffer[i] * gain;
-		output[i*nChannels + 1] = buffer[i] * gain;
+		output[i*nChannels] = buffer[i];// * gain;
+		output[i*nChannels + 1] = buffer[i];// * gain;
 	}
 	
 }
@@ -428,7 +442,7 @@ void testApp::renderAudio() {
 	while (getSongState()==SONG_RENDER_AUDIO || getSongState()==SONG_CANCEL_RENDER_AUDIO) {
 		
 		//update(); // todo move to production for other thread
-		audioProcess(video->bufferSize);
+		audioProcess(video->audio.getBufferSize());
 		
 		song.saveWithBlocks(buffer, buffer);
 		currentBlock++;
@@ -447,7 +461,7 @@ void testApp::renderAudio() {
 void testApp::seekFrame(int frame) {
 	
 		
-	int reqBlock = (float)frame/25.0f*(float)video->sampleRate/(float)video->bufferSize;
+	int reqBlock = (float)frame/25.0f*(float)video->sampleRate/(float)video->audio.getBufferSize();
 	
 	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
 		piter->bDidStartPlaying = false;
@@ -490,7 +504,7 @@ float testApp::getRenderProgress(){
 	
 	switch (songState) {
 		case SONG_RENDER_AUDIO: {
-			return (float)currentBlock * (float)video->bufferSize / (float)video->sampleRate/duration;
+			return (float)currentBlock * (float)video->audio.getBufferSize() / (float)video->sampleRate/duration;
 		}	break;
 		case SONG_RENDER_VIDEO:
 			return (float)currentBlock/(float)totalBlocks;

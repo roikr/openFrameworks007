@@ -31,8 +31,8 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 	
 	videoTexture = [[[MyVideoBuffer alloc] initWithVideo:video] retain];
 	
-	buffer				= new float[video->bufferSize];
-	memset(buffer, 0, video->bufferSize * sizeof(float));
+	//buffer				= new float[video->bufferSize];
+	//memset(buffer, 0, video->bufferSize * sizeof(float));
 	
 		
 	
@@ -42,10 +42,6 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 
 void ofxiVideoGrabber::update() {
 	
-	
-//	while (scaledSamples.size()>=ofGetWidth()) {
-//		scaledSamples.pop_back();
-//	}
 }
 
 void ofxiVideoGrabber::draw() {
@@ -60,10 +56,7 @@ void ofxiVideoGrabber::draw() {
 
 
 
-//	for (deque<float>::iterator iter = scaledSamples.begin(); iter!=scaledSamples.end(); iter++) {
-//		ofLine(distance(scaledSamples.begin(),iter), ofGetHeight()*(0.5+*iter*0.5), 
-//			   distance(scaledSamples.begin(),iter), ofGetHeight()*(0.5-*iter*0.5));
-//	}
+
 	
 
 void ofxiVideoGrabber::exit() {
@@ -74,24 +67,33 @@ void ofxiVideoGrabber::exit() {
 }
 
 
+
+
 void ofxiVideoGrabber::audioReceived( float * input, int bufferSize) {
-	if( video->bufferSize != bufferSize ){
-		ofLog(OF_LOG_ERROR, "ofxiVideoGrabber: your buffer size was set to %i - but the stream needs a buffer size of %i", video->bufferSize, bufferSize);
+	if( video->audio.getBufferSize() != bufferSize ){
+		ofLog(OF_LOG_ERROR, "ofxiVideoGrabber: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
 		return;
 	}	
 	
-	
-	
-	if (getState()==CAMERA_RECORDING) {
-		for (int i = 0; i < bufferSize; i++){
-			video->sample[video->bufferSize*currentBuffer+i] = input[i];
-		}
-		currentBuffer++;
-		
-		if (currentBuffer>=video->numBuffers) {
+	if (video->audio.getIsRecording()) {
+		video->audio.audioReceived(input,bufferSize);
+		if (!video->audio.getIsRecording()) {
 			state = CAMERA_RUNNING;
+			video->audio.normalize();
 		}
 	}
+	
+//	if (getState()==CAMERA_RECORDING) {
+//		
+//		for (int i = 0; i < bufferSize; i++){
+//			video->sample[video->audio.getBufferSize()*currentBuffer+i] = input[i];
+//		}
+//		currentBuffer++;
+//		
+//		if (currentBuffer>=video->numBuffers) {
+//			state = CAMERA_RUNNING;
+//		}
+//	}
 	
 	
 	//scaledSamples.push_front(max);
@@ -130,8 +132,8 @@ void ofxiVideoGrabber::startCapture() {
 }
 
 void ofxiVideoGrabber::record() {
-	currentBuffer = 0;
-	state =CAMERA_RECORDING;
+	//currentBuffer = 0;
+	video->audio.record();
 	[videoTexture record];
 	
 }
