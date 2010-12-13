@@ -80,6 +80,7 @@ using namespace std;
 	
 	uint m_textureHandle;
 	bool bIsCapturing;
+	bool bIsRecording;
 	
 	
 	int currentFrame;

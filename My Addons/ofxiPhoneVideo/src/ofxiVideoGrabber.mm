@@ -66,9 +66,6 @@ void ofxiVideoGrabber::exit() {
 	
 }
 
-
-
-
 void ofxiVideoGrabber::audioReceived( float * input, int bufferSize) {
 	if( video->audio.getBufferSize() != bufferSize ){
 		ofLog(OF_LOG_ERROR, "ofxiVideoGrabber: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);

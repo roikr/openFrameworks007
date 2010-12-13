@@ -242,7 +242,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
 		currentFrame++;
 		
-		if (firstFrame) {
+		if (bIsRecording) {
 			if ( currentFrame - firstFrame >= video->numFrames - video->numIntroFrames)  {
 				bIsCapturing = false;
 			}
@@ -310,6 +310,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 
 - (void) capture {
 	bIsCapturing = true;
+	bIsRecording = false;
 	currentFrame = 0;
 }
 
@@ -319,6 +320,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	if (!m_textureHandle)
 		return;
 	
+	bIsRecording = true;
 	firstFrame = currentFrame-1;
 	video->firstFrame = (currentFrame-1) % video->numFrames;
 	
