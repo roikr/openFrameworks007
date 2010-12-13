@@ -66,6 +66,12 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 #import "ofxiPhoneVideo.h"
 
 
+@interface MyVideoBuffer (Internal)
+- (AVCaptureDevice *) cameraWithPosition:(AVCaptureDevicePosition) position;
+- (AVCaptureDevice *) frontFacingCamera;
+- (AVCaptureDevice *) backFacingCamera;
+
+@end
 
 @implementation MyVideoBuffer
 
@@ -75,6 +81,8 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 @synthesize videoDimensions;
 @synthesize videoType;
 @synthesize CameraTexture=m_textureHandle;
+
+@synthesize videoInput = _videoInput;
 
 -(id) initWithVideo:(ofxiPhoneVideo *)theVideo
 {
@@ -98,11 +106,14 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 			return nil;
 		
 		//-- Add the device to the session.
-		AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-		if(error)
-			return nil;
+		AVCaptureDeviceInput *videoInput = [[[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error] autorelease];
+		[self setVideoInput:videoInput];
+//		AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
+//		if(error)
+//			return nil;
 		
-		[self._session addInput:input];
+		
+		[self._session addInput:videoInput];
 		
 		//-- Create the output for the capture session.  We want 32bit BRGA
 		AVCaptureVideoDataOutput * dataOutput = [[[AVCaptureVideoDataOutput alloc] init] autorelease];
@@ -142,6 +153,85 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	}
 	return self;
 }
+
+- (BOOL) cameraToggle
+{
+    BOOL success = NO;
+    
+    if ([[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo] count] > 1) {
+        NSError *error;
+        AVCaptureDeviceInput *videoInput = [self videoInput];
+        AVCaptureDeviceInput *newVideoInput;
+        AVCaptureDevicePosition position = [[videoInput device] position];
+//        BOOL mirror;
+        if (position == AVCaptureDevicePositionBack) {
+            newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self frontFacingCamera] error:&error];
+            
+        } else if (position == AVCaptureDevicePositionFront) {
+            newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error];
+                   } else {
+            goto bail;
+        }
+        
+        //AVCaptureSession *session = [self session];
+        if (newVideoInput != nil) {
+            [self._session beginConfiguration];
+            [self._session removeInput:videoInput];
+            NSString *currentPreset = [self._session sessionPreset];
+            if (![[newVideoInput device] supportsAVCaptureSessionPreset:currentPreset]) {
+                [self._session setSessionPreset:AVCaptureSessionPresetHigh]; // default back to high, since this will always work regardless of the camera
+            }
+            if ([self._session canAddInput:newVideoInput]) {
+                [self._session addInput:newVideoInput];
+               // AVCaptureConnection *connection = [AVCamCaptureManager connectionWithMediaType:AVMediaTypeVideo fromConnections:[[self movieFileOutput] connections]];
+//                if ([connection isVideoMirroringSupported]) {
+//                    [connection setVideoMirrored:mirror];
+//                }
+                [self setVideoInput:newVideoInput];
+            } else {
+                [self._session setSessionPreset:currentPreset];
+                [self._session addInput:videoInput];
+            }
+            [self._session commitConfiguration];
+            success = YES;
+            [newVideoInput release];
+        } 
+		
+//		else if (error) {
+//            id delegate = [self delegate];
+//            if ([delegate respondsToSelector:@selector(someOtherError:)]) {
+//                [delegate someOtherError:error];
+//            }
+//        }
+    }
+    
+bail:
+    return success;
+}
+
+
+- (AVCaptureDevice *) cameraWithPosition:(AVCaptureDevicePosition) position
+{
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *device in devices) {
+        if ([device position] == position) {
+            return device;
+        }
+    }
+    return nil;
+}
+
+
+- (AVCaptureDevice *) frontFacingCamera
+{
+    return [self cameraWithPosition:AVCaptureDevicePositionFront];
+}
+
+- (AVCaptureDevice *) backFacingCamera
+{
+    return [self cameraWithPosition:AVCaptureDevicePositionBack];
+}
+
 
 -(GLuint)createVideoTextuerUsingWidth:(GLuint)w Height:(GLuint)h
 {

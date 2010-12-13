@@ -94,7 +94,7 @@ void testApp::setup(){
 	
 	songState = SONG_IDLE;
 	bRecording = false;
-	trigger.setThresh(0.05);
+	trigger.setThresh(0.15);
 	
 	ofSoundStreamSetup(2, 1, this, video->sampleRate, video->audio.getBufferSize(), 2);
 	
@@ -400,10 +400,9 @@ void testApp::audioProcess(int bufferSize) {
 				piter->song.process(events);
 				
 				for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
-					float fr = exp((float)(niter->note-60)/12.0*log(2.0));
-					printf("player: %i, note:  %i %1.2f\n", distance(players.begin(),piter), niter->note,fr);
 					if (niter->bNoteOn) {
-						piter->video->play(fr);
+						printf("player: %i, ", distance(players.begin(),piter));
+						piter->video->play(niter->note,niter->velocity);
 					}
 				}
 			
@@ -473,11 +472,9 @@ void testApp::seekFrame(int frame) {
 			piter->song.process(events);
 			
 			for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
-				float fr = exp((float)(niter->note-60)/12.0*log(2.0));
-				printf("player: %i, note:  %i %1.2f\n", distance(players.begin(),piter), niter->note,fr);
 				if (niter->bNoteOn) {
-					
-					piter->video->play(fr);
+					printf("player: %i, ", distance(players.begin(),piter));
+					piter->video->play(niter->note,niter->velocity);
 					piter->bDidStartPlaying = true;
 					
 				}
@@ -515,7 +512,9 @@ float testApp::getRenderProgress(){
 	
 }
 
-
+bool testApp::cameraToggle() {
+	return camera->cameraToggle();
+}
 //--------------------------------------------------------------
 void testApp::lostFocus() {
 }

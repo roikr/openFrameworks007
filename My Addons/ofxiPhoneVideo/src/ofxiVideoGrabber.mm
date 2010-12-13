@@ -135,7 +135,9 @@ void ofxiVideoGrabber::record() {
 	
 }
 
-
+bool ofxiVideoGrabber::cameraToggle() {
+	return [videoTexture cameraToggle] == YES;
+}
 
 
 

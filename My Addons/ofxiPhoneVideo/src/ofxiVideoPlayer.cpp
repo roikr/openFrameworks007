@@ -11,6 +11,7 @@
 
 #include "ofxiPhoneVideo.h"
 #include "ofMain.h"
+#include <math.h>
 
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
@@ -113,7 +114,7 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 		
 		for (int i = 0; i < bufferSize; i++){
 			
-			output[i ] = *(video->audio.getBuffer()+pos+(int)(speed*i));
+			output[i ] = (*(video->audio.getBuffer()+pos+(int)(speed*i))) * this->volume;
 		}
 		pos+=bufferSize*speed;
 		
@@ -137,7 +138,7 @@ void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) {
 	if (state == PLAYER_PLAYING) {
 		
 		for (int i = 0; i < bufferSize; i++) {
-			buffer[i ] += (*(video->audio.getBuffer()+pos+(int)(speed*i))) *volume;
+			buffer[i ] += (*(video->audio.getBuffer()+pos+(int)(speed*i))) *volume * this->volume;
 		}
 		
 		pos+=bufferSize*speed;
@@ -148,14 +149,22 @@ void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) {
 	} 
 }
 
+void ofxiVideoPlayer::play(int note,int velocity) {
+	
+	float ratio = exp((float)(note-60)/12.0*log(2.0));
+	float volume = (float)velocity / 127;
+	printf("note:  %i %i, ratio: %1.2f %1.2f\n", note,velocity,ratio,volume);
+	play(ratio,volume);
+}
 
-void ofxiVideoPlayer::play(float speed) {
+void ofxiVideoPlayer::play(float speed,float volume) {
 	state = PLAYER_PLAYING;
 	start = ofGetElapsedTimeMillis();
 	currentTexture = video->textures[video->firstFrame];
 	currentFrame = 0;
 	pos = 0;
 	this->speed = speed;
+	this->volume = volume;
 }
 
 bool ofxiVideoPlayer::getIsPlaying() {

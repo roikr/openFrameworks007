@@ -66,6 +66,8 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 class ofxiPhoneVideo;
 
 using namespace std;
+
+
 									 
 @interface MyVideoBuffer : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>{
 
@@ -91,6 +93,8 @@ using namespace std;
 	
 	ofxiPhoneVideo *video;
 	
+	AVCaptureDeviceInput *_videoInput;
+	
 }
 
 @property (nonatomic, retain) AVCaptureSession* _session;
@@ -98,6 +102,8 @@ using namespace std;
 @property (readwrite) CMVideoDimensions videoDimensions;
 @property (readwrite) CMVideoCodecType videoType;
 @property (readwrite) CMTime previousTimestamp;
+
+@property (nonatomic,retain) AVCaptureDeviceInput *videoInput;
 
 @property (readwrite) uint CameraTexture;
 
@@ -109,7 +115,6 @@ using namespace std;
 - (void) capture;
 - (void) record;
 
-
-
+- (BOOL) cameraToggle;
 
 @end

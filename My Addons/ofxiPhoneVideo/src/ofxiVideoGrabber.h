@@ -49,6 +49,7 @@ public:
 	
 	void audioReceived( float * input, int bufferSize);
 	
+	bool cameraToggle();
 	
 protected:
 	

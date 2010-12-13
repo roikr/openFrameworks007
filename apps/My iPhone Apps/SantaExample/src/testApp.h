@@ -69,6 +69,8 @@ public:
 	void soundStreamStop();
 	float getRenderProgress();
 	
+	bool cameraToggle();
+	
 	bool bNeedDisplay;
 	
 	ofxiPhoneVideo *video;

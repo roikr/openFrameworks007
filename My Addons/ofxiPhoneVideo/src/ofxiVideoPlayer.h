@@ -26,7 +26,8 @@ public:
 	void draw();
 	void exit();
 	
-	void play(float speed);
+	void play(int note,int velocity);
+	void play(float speed,float volume=1.0f);
 	bool getIsPlaying();
 	
 	void introFrame();
@@ -58,6 +59,7 @@ protected:
 	int state;
 	
 	float speed;
+	float volume;
 	int pos;
 	
 	ofxiPhoneVideo *video;
