@@ -51,7 +51,14 @@ void ofxiVideoGrabber::draw() {
 	//ofTranslate(0, ofGetHeight());
 	//ofRotateZ(-90);
 	
+	glPushMatrix();
+	
+	if (video->bMirrored) {
+		glTranslatef(video->width, 0, 0);
+		glScalef(-1.0, 1.0, 1.0);
+	}
 	[videoTexture renderCameraToSprite:videoTexture.CameraTexture];
+	glPopMatrix();
 }
 
 

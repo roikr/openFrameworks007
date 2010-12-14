@@ -84,7 +84,11 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 		0,0,0};
 	
 	
-	
+	glPushMatrix();
+	if (video->bMirrored) {
+		glTranslatef(w, 0, 0);
+		glScalef(-1.0, 1.0, 1.0);
+	}
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
@@ -99,6 +103,8 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_TEXTURE_2D);
+	
+	glPopMatrix();
 		
 }
 

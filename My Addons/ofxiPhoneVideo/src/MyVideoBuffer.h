@@ -95,6 +95,7 @@ using namespace std;
 	
 	AVCaptureDeviceInput *_videoInput;
 	
+	
 }
 
 @property (nonatomic, retain) AVCaptureSession* _session;

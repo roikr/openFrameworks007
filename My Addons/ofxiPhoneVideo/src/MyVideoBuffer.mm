@@ -107,6 +107,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		
 		//-- Add the device to the session.
 		AVCaptureDeviceInput *videoInput = [[[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error] autorelease];
+		video->bMirrored = false;
 		[self setVideoInput:videoInput];
 //		AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
 //		if(error)
@@ -163,13 +164,14 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
         AVCaptureDeviceInput *videoInput = [self videoInput];
         AVCaptureDeviceInput *newVideoInput;
         AVCaptureDevicePosition position = [[videoInput device] position];
-//        BOOL mirror;
+       
         if (position == AVCaptureDevicePositionBack) {
             newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self frontFacingCamera] error:&error];
-            
+			video->bMirrored = true;
         } else if (position == AVCaptureDevicePositionFront) {
             newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error];
-                   } else {
+			video->bMirrored = false;
+		} else {
             goto bail;
         }
         
@@ -183,7 +185,9 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
             }
             if ([self._session canAddInput:newVideoInput]) {
                 [self._session addInput:newVideoInput];
-               // AVCaptureConnection *connection = [AVCamCaptureManager connectionWithMediaType:AVMediaTypeVideo fromConnections:[[self movieFileOutput] connections]];
+                
+//				AVCaptureVideoDataOutput does not supprt mirror so we will do it in the openGL
+//				AVCaptureConnection *connection = [AVCamCaptureManager connectionWithMediaType:AVMediaTypeVideo fromConnections:[[self movieFileOutput] connections]];
 //                if ([connection isVideoMirroringSupported]) {
 //                    [connection setVideoMirrored:mirror];
 //                }
@@ -324,6 +328,7 @@ bail:
 	
 	unsigned char* linebase = (unsigned char *)CVPixelBufferGetBaseAddress( pixelBuffer );
 	
+	
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
 	
 	
@@ -338,6 +343,7 @@ bail:
 			}
 		}
 	}
+	
 	
 	CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );
 }

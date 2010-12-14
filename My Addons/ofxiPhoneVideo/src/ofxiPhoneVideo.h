@@ -31,4 +31,6 @@ struct ofxiPhoneVideo {
 	
 	int width;
 	int height;
+	
+	bool bMirrored;
 };
