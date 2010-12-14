@@ -39,6 +39,8 @@ void ofxMidiTrack::loadTrack(string filename) {
 		float blocksPerMinutes = sampleRate * 60.0 / blockLength;
 		ticksPerBlock =  track.getTicksPerBeat() * bpm / blocksPerMinutes ;
 	}
+	
+	//track.dumpTracks();
 }
 
 void ofxMidiTrack::saveTrack(string filename) {
@@ -49,12 +51,12 @@ void ofxMidiTrack::saveTrack(string filename) {
 
 
 
-void ofxMidiTrack::play() {
+void ofxMidiTrack::play(int trackNum) {
 	
 	startBlock = 0;
 	blockIndex = 0;
 	startTick = 0;
-	track.firstEvent();
+	track.firstEvent(trackNum);
 	bPlaying = true;
 }
 
@@ -92,7 +94,7 @@ void ofxMidiTrack::setBPM(int bpm) {
 
 
 
-void ofxMidiTrack::process(vector<event> &events) {
+void ofxMidiTrack::process(vector<event> &events,int trackNum) {
 	
 	if (bPlaying || bRecording) {
 		
@@ -125,12 +127,12 @@ void ofxMidiTrack::process(vector<event> &events) {
 			
 			event e;
 			
-			while (track.getCurrentEvent(e) && e.absolute < nextTick ) {
-				track.nextEvent();
+			while (track.getCurrentEvent(e,trackNum) && e.absolute < nextTick ) {
+				track.nextEvent(trackNum);
 				events.push_back(e);
 				//cout << e.absolute << "\t";
 			}
-			if (track.getIsMidiDone()) {
+			if (track.getIsMidiDone(trackNum)) {
 				bPlaying = false;
 			}
 		}
@@ -157,7 +159,7 @@ bool ofxMidiTrack::getIsRecording() {
 	return bRecording;
 }
 
-float ofxMidiTrack::getPlayhead() {
+float ofxMidiTrack::getPlayhead(int trackNum) {
 //	int lastTick = track.getLastTick();
 //	if (lastTick) {
 //		event e;
@@ -166,13 +168,13 @@ float ofxMidiTrack::getPlayhead() {
 //	}
 	
 	event e;
-	track.getCurrentEvent(e);
+	track.getCurrentEvent(e,trackNum);
 	return (float)e.absolute / (float)track.getTicksPerBeat() / (float)bpm * 60;
 	
 }
 
-float ofxMidiTrack::getDuration() {
-	return(float)track.getLastTick() / (float)track.getTicksPerBeat() / (float)bpm * 60;
+float ofxMidiTrack::getDuration(int trackNum) {
+	return(float)track.getLastTick(trackNum) / (float)track.getTicksPerBeat() / (float)bpm * 60;
 }
 
 float ofxMidiTrack::getProgress() {

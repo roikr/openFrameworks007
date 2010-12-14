@@ -13,6 +13,19 @@
 #include <stdlib.h>
 #include <math.h>
 
+//#define DEBUG_OFX_MIDI
+
+#ifdef DEBUG_OFX_MIDI
+#define ofxMidiLog( s, ... ) \
+do { \
+printf(s, ##__VA_ARGS__); \
+} \
+while (0)
+#else
+#define ofxMidiLog( s, ... ) do {} while (0)
+#endif
+
+
 #define SWAPDWORD(a) ((((a) & 0x000000ff) << 24) | \
 (((a) & 0x0000ff00) << 8 ) | \
 (((a) & 0x00ff0000) >> 8 ) | \
@@ -77,32 +90,32 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 		return false;
 	int len;
 	int id = loadchunkheader(f,len);
-	//printf("%08x %d\n",id,len);
+	//ofxMidiLog("%08x %d\n",id,len);
 	if (id != 'MThd')
 	{
-		printf("Bad header id\n");
+		ofxMidiLog("Bad header id\n");
 		return false;
 	}
 	if (len < 6)
 	{
-		printf("Bad header block length\n");
+		ofxMidiLog("Bad header block length\n");
 		return false;
 	}
 	int format = readword(f);
-	//printf("format %d\n", format);
+	//ofxMidiLog("format %d\n", format);
 	if (format != 1 && format != 0)
 	{
-		printf("Unsupported format\n");
+		ofxMidiLog("Unsupported format\n");
 		return false;
 	}
 	int tracks = readword(f);
 	int numTracks=tracks;
-	//printf("tracks %d\n", tracks);
+	//ofxMidiLog("tracks %d\n", tracks);
 	ticksPerBeat = readword(f);
-	//printf("ppqn %d\n",ppqn); // pulses (clocks) per quater note
+	//ofxMidiLog("ppqn %d\n",ppqn); // pulses (clocks) per quater note
 	if (ticksPerBeat < 0)
 	{
-		printf("negative ppqn formats not supported\n");
+		ofxMidiLog("negative ppqn formats not supported\n");
 		return false;
 	}
 	if (len > 6)
@@ -120,10 +133,10 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 		id = loadchunkheader(f,len);
 		if (id != 'MTrk')
 		{
-			printf("Unknown chunk\n");
+			ofxMidiLog("Unknown chunk\n");
 			return false;
 		}
-		//printf("\nNew track, length %d\n",len);
+		//ofxMidiLog("\nNew track, length %d\n",len);
 		midiTrack t;
 		progress = (numTracks-tracks)/numTracks;
 		
@@ -134,12 +147,12 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 		{
 			int dtime = readvar(f);
 			time += dtime;
-			//printf("%3.3f ",((float)time * (float)uspertick)/1000000.0f);
+			//ofxMidiLog("%3.3f ",((float)time * (float)uspertick)/1000000.0f);
 			int data1 = fgetc(f);
 			if (data1 == 0xff)
 			{
 				data1 = fgetc(f); // sub-command
-				int len = readvar(f);
+				len = readvar(f);
 				switch (data1)
 				{
 					case 1:
@@ -162,31 +175,31 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 					case 0x2f:
 					{
 						trackend = 1;
-						//printf("Track end\n");
+						ofxMidiLog("Track end\n");
 						t.iter = t.events.begin();
 						this->tracks.push_back(t);
 					}
 						break;
 					case 0x58: // time signature
 					{
-//						int nn = fgetc(f);
-//						int dd = fgetc(f);
-//						int cc = fgetc(f);
-//						int bb = fgetc(f);
-						//printf("Time sig: %d:%d, metronome:%d, quarter:%d\n",nn,dd,cc,bb);
-						fgetc(f);
-						fgetc(f);
-						fgetc(f);
-						fgetc(f);
+						int nn = fgetc(f);
+						int dd = fgetc(f);
+						int cc = fgetc(f);
+						int bb = fgetc(f);
+						ofxMidiLog("Time sig: %d:%d, metronome:%d, quarter:%d\n",nn,dd,cc,bb);
+//						fgetc(f);
+//						fgetc(f);
+//						fgetc(f);
+//						fgetc(f);
 					}
 						break;
 					case 0x59: // key signature
 					{
-//						int sf = fgetc(f);
-//						int mi = fgetc(f);
-						//printf("Key sig: %d %s, %s\n",abs(sf),sf == 0?"c":(sf < 0 ? "flat":"sharp"), mi?"minor":"major");
-						fgetc(f);
-						fgetc(f);
+						int sf = fgetc(f);
+						int mi = fgetc(f);
+						ofxMidiLog("Key sig: %d %s, %s\n",abs(sf),sf == 0?"c":(sf < 0 ? "flat":"sharp"), mi?"minor":"major");
+//						fgetc(f);
+//						fgetc(f);
 					}
 						break;
 					case 0x51: // tempo
@@ -195,22 +208,22 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 						t = fgetc(f) << 16;
 						t |= fgetc(f) << 8;
 						t |= fgetc(f);
-						//printf("Tempo: quarter is %dus (%3.3fs) long - BPM = %3.3f\n",t,t/1000000.0f, 60000000.0f/t);						
+						ofxMidiLog("Tempo: quarter is %dus (%3.3fs) long - BPM = %3.3f\n",t,t/1000000.0f, 60000000.0f/t);						
 						uspertick = t / ticksPerBeat;
 					}
 						break;
 					case 0x21: // obsolete: midi port
 					{
-						fgetc(f);
-						//int pp = fgetc(f);
-						//printf("[obsolete] midi port: %d\n",pp);
+//						fgetc(f);
+						int pp = fgetc(f);
+						ofxMidiLog("[obsolete] midi port: %d\n",pp);
 					}
 						break;
 					case 0x20: // obsolete: midi channel
 					{
-						fgetc(f);
-						//int cc = fgetc(f);
-						//printf("[obsolete] midi channel: %d\n",cc);
+//						fgetc(f);
+						int cc = fgetc(f);
+						ofxMidiLog("[obsolete] midi channel: %d\n",cc);
 					}
 						break;
 					case 0x54: // SMPTE offset
@@ -225,24 +238,24 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 //						int se = fgetc(f);
 //						int fr = fgetc(f);
 //						int ff = fgetc(f);
-						//printf("SMPTE Offset: %dh %dm %ds %dfr %dff\n",hr,mn,se,fr,ff);
+						//ofxMidiLog("SMPTE Offset: %dh %dm %ds %dfr %dff\n",hr,mn,se,fr,ff);
 					}
 						break;
 					case 0x7f: // Proprietary event
 					{
-						//printf("Proprietary event ");
+						ofxMidiLog("Proprietary event ");
 						while (len)
 						{
-							fgetc(f);
-							//int d = fgetc(f);
-							//printf("%02X ",d);
+//							fgetc(f);
+							int d = fgetc(f);
+							ofxMidiLog("%02X ",d);
 							len--;
 						}
-						//printf("\n");
+						ofxMidiLog("\n");
 					}
 						break;
 					default:
-						//printf("meta command %02x %d\n", data1, len);
+						ofxMidiLog("meta command %02x %d\n", data1, len);
 						while (len)
 						{
 							fgetc(f);
@@ -275,7 +288,8 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 						e.bNoteOn = (command & 0xf0) == 0x90;
 						t.events.push_back(e);
 							
-						//printf("Note off: channel %d, Oct %d Note %s Velocity %d\n",command & 0xf, (data1/12)-1,note[data1%12], data2);
+//						ofxMidiLog("Note off: channel %d, Oct %d Note %s Velocity %d\n",command & 0xf, (data1/12)-1,note[data1%12], data2);
+//						ofxMidiLog("Note %s: channel %d, Oct %d Note %d Velocity %d\n",command & 0xf0 == 0x80 ? "off" : "on",command & 0xf, (data1/12)-1,data1, data2);
 					}
 						break;
 					
@@ -283,31 +297,31 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 					{
 						fgetc(f);
 						//int data2 = fgetc(f);
-						//printf("Aftertouch: channel %d, Oct %d, Note %s Aftertouch %d\n",command & 0xf, (data1/12)-1,note[data1%12], data2);
+						//ofxMidiLog("Aftertouch: channel %d, Oct %d, Note %s Aftertouch %d\n",command & 0xf, (data1/12)-1,note[data1%12], data2);
 					}
 						break;
 					case 0xb0: // Controller
 					{
 						fgetc(f);
 						//int data2 = fgetc(f);
-						//printf("Controller: channel %d, Controller %s Value %d\n",command & 0xf, controller[data1], data2);
+						//ofxMidiLog("Controller: channel %d, Controller %s Value %d\n",command & 0xf, controller[data1], data2);
 					}
 						break;
 					case 0xc0: // program change
 					{
-						//printf("Program change: channel %d, program %d\n",command & 0xf, data1);
+						//ofxMidiLog("Program change: channel %d, program %d\n",command & 0xf, data1);
 					}
 						break;
 					case 0xd0: // Channel aftertouch
 					{
-						//printf("Channel aftertouch: channel %d, Aftertouch %d\n",command & 0xf, data1);
+						//ofxMidiLog("Channel aftertouch: channel %d, Aftertouch %d\n",command & 0xf, data1);
 					}
 						break;
 					case 0xe0: // Pitch bend
 					{
 						fgetc(f);
 						//int data2 = fgetc(f);
-						//printf("Pitchbend: channel %d, Pitch %d\n",command & 0xf, data1 + (data2 << 7));
+						//ofxMidiLog("Pitchbend: channel %d, Pitch %d\n",command & 0xf, data1 + (data2 << 7));
 					}
 						break;
 					case 0xf0: // general / immediate
@@ -316,13 +330,13 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 						{
 							case 0xf0: // SysEx
 							{
-								//printf("SysEx ");
+								//ofxMidiLog("SysEx ");
 								while (data1 != 0xf7)
 								{
-									//printf("%02X ", data1);
+									//ofxMidiLog("%02X ", data1);
 									data1 = fgetc(f);
 								}
-								//printf("\n");
+								//ofxMidiLog("\n");
 								// universal sysexes of note:
 								// f0 (05) 7e 7f 09 01 f7 = "general midi enable"
 								// f0 (05) 7e 7f 09 00 f7 = "general midi disable"
@@ -335,7 +349,7 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 							{
 								fgetc(f);
 								//int dd = fgetc(f);
-								//printf("MTC quater frame %d\n",dd);
+								//ofxMidiLog("MTC quater frame %d\n",dd);
 							}
 								break;
 							case 0xf2: // Song position pointer
@@ -344,44 +358,44 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 								fgetc(f);
 								//int data1 = fgetc(f);
 								//int data2 = fgetc(f);
-								//printf("Song position pointer %d\n", data1 + (data2 << 7));
+								//ofxMidiLog("Song position pointer %d\n", data1 + (data2 << 7));
 							}
 								break;
 							case 0xf3: // Song select
 							{
 								fgetc(f);
 								//int song = fgetc(f);
-								//printf("Song select %d\n", song);
+								//ofxMidiLog("Song select %d\n", song);
 							}
 								break;
 							case 0xf6: // Tuning request
-								//printf("Tuning request\n");
+								//ofxMidiLog("Tuning request\n");
 								break;
 							case 0xf8: // MIDI clock
-								//printf("MIDI clock\n");
+								//ofxMidiLog("MIDI clock\n");
 								break;
 							case 0xf9: // MIDI Tick
-								//printf("MIDI Tick\n");
+								//ofxMidiLog("MIDI Tick\n");
 								break;
 							case 0xfa: // MIDI start
-								//printf("MIDI start\n");
+								//ofxMidiLog("MIDI start\n");
 								break;
 							case 0xfc:
-								//printf("MIDI stop\n");
+								//ofxMidiLog("MIDI stop\n");
 								break;
 							case 0xfb:
-								//printf("MIDI continue\n");
+								//ofxMidiLog("MIDI continue\n");
 								break;
 							case 0xfe:
-								//printf("Active sense\n");
+								//ofxMidiLog("Active sense\n");
 								break;
 							case 0xff:
-								//printf("Reset\n");
+								//ofxMidiLog("Reset\n");
 								break;
 								
 							default:
 							{
-								printf("Unknown: command 0x%02x, data 0x%02x\n", command, data1);
+								ofxMidiLog("Unknown: command 0x%02x, data 0x%02x\n", command, data1);
 							}
 								break;
 						}
@@ -389,7 +403,7 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 						break;
 					default:
 					{
-						printf("Unknown: command 0x%02x, data 0x%02x\n", command, data1);
+						ofxMidiLog("Unknown: command 0x%02x, data 0x%02x\n", command, data1);
 					}
 						break;
 				}
@@ -408,7 +422,7 @@ bool ofxMidi::loadFromXml(string filename) {
 	//events.clear();
 	//iter = events.end();
 	
-	//printf("ofxMidi::loadFromXml: %s\n",filename.c_str());
+	//ofxMidiLog("ofxMidi::loadFromXml: %s\n",filename.c_str());
 	
 	if (!xml.loadFile(filename)) 
 		return false;
@@ -477,7 +491,7 @@ void ofxMidi::saveToXml(string filename) {
 	ofxXmlSettings xml;
 		
 	
-	//printf("ofxMidi::saveToXml: %s\n",filename.c_str());
+	//ofxMidiLog("ofxMidi::saveToXml: %s\n",filename.c_str());
 	
 	xml.addTag("MIDIFile");
 	xml.pushTag("MIDIFile");

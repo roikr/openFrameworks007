@@ -28,22 +28,22 @@ public:
 	void loadTrack(string filename);
 	void saveTrack(string filename);
 	
-	void play();
+	void play(int trackNum=0);
 	void record();
 	void stop();
 	void clear();
 	
-	void process(vector<event> &events);
+	void process(vector<event> &events,int trackNum=0);
 	
 	void setBPM(int bpm);
 	
 	bool getIsPlaying();
 	bool getIsRecording();
 	
-	float getPlayhead();
+	float getPlayhead(int trackNum=0);
 	float getProgress();
 	
-	float getDuration();
+	float getDuration(int trackNum=0);
 	
 private:
 	
