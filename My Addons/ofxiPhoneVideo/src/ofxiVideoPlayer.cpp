@@ -27,32 +27,84 @@
 
 enum {
 	PLAYER_IDLE,
-	PLAYER_RECORDING,
 	PLAYER_PLAYING,
-	PLAYER_SCRUBBING
+	PLAYER_INTRO_FORWARD,
+	PLAYER_INTRO_BACKWARD
 };
 
-void ofxiVideoPlayer::setup(ofxiPhoneVideo *video) {
+void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,bool bIntroMode) {
 
 	this->video = video;
 	
 	state = PLAYER_IDLE;
+	this->bIntroMode = bIntroMode;
 	
+}
+
+void ofxiVideoPlayer::seekFrame(int nextFrame) {
+	
+	switch (state) {
+		case PLAYER_PLAYING: {
+			if (nextFrame >= video->textures.size()-video->numIntroFrames) {
+				state = PLAYER_IDLE;
+				if (bIntroMode) {
+					playIntro();
+				} 
+			} else {
+				currentTexture =video->textures[(video->firstFrame+nextFrame) % video->textures.size()];
+			}
+		}	break;
+			
+		case PLAYER_INTRO_FORWARD: 
+		case PLAYER_INTRO_BACKWARD: {
+			
+			state = (nextFrame / (video->numIntroFrames - 1)) % 2 ? PLAYER_INTRO_BACKWARD : PLAYER_INTRO_FORWARD;
+			int mod = nextFrame % (video->numIntroFrames - 1);
+			int frame = (state == PLAYER_INTRO_FORWARD) ?  mod  : (video->numIntroFrames - 1) - mod;
+			
+			currentTexture = video->textures[(video->textures.size()+video->firstFrame - video->numIntroFrames + frame) % video->textures.size()];
+			
+			
+			
+			
+		} break;
+			
+		default:
+			break;
+	}
 }
 
 void ofxiVideoPlayer::update() {
-		
-	if (state == PLAYER_PLAYING) {
-		int tempFrame = speed*(ofGetElapsedTimeMillis()-start)*video->fps/1000;
-		if (tempFrame >= video->textures.size()-video->numIntroFrames) {
-			state = PLAYER_IDLE;
-		} else {
-			currentTexture =video->textures[(video->firstFrame+tempFrame) % video->textures.size()];
-		}
+	
+	if (state == PLAYER_IDLE) {
+		return;
 	}
 	
+	seekFrame(speed*(ofGetElapsedTimeMillis()-start)*video->fps/1000);
+		
 }
 
+void ofxiVideoPlayer::updateFrame() {
+	if (state == PLAYER_IDLE) {
+		return;
+	}
+	
+	seekFrame(currentFrame);
+	currentFrame++;
+	
+	
+	//	if (getIsPlaying()) {
+	//		currentFrame++;
+	//		if (currentFrame >= video->textures.size()-1-video->numIntroFrames) {
+	//			state = PLAYER_IDLE;
+	//			currentTexture = video->textures[video->firstFrame];
+	//		} else {
+	//			currentTexture =video->textures[(video->firstFrame+currentFrame) % video->textures.size()];
+	//		}
+	//	}
+	
+	
+}
 
 
 void ofxiVideoPlayer::draw() {
@@ -152,7 +204,12 @@ void ofxiVideoPlayer::preProcess() {
 		pos+=video->audio.bufferSize*speed;
 		
 		if (pos + video->audio.bufferSize*speed >=video->audio.getNumBuffers()*video->audio.bufferSize) {
-			state = PLAYER_IDLE;
+			state = PLAYER_IDLE;	
+			
+			if (bIntroMode) {
+				playIntro();
+			} 
+
 		}
 	}
 	
@@ -181,17 +238,14 @@ bool ofxiVideoPlayer::getIsPlaying() {
 }
 
 
-void ofxiVideoPlayer::nextFrame() {
-	if (getIsPlaying()) {
-		currentFrame++;
-		if (currentFrame >= video->textures.size()-1-video->numIntroFrames) {
-			state = PLAYER_IDLE;
-			currentTexture = video->textures[video->firstFrame];
-		} else {
-			currentTexture =video->textures[(video->firstFrame+currentFrame) % video->textures.size()];
-		}
-		
-	}
+
+
+void ofxiVideoPlayer::playIntro() {
+	state = PLAYER_INTRO_FORWARD;
+	start = ofGetElapsedTimeMillis();
+	currentTexture = video->textures[(video->firstFrame-video->numIntroFrames+video->textures.size()) % video->textures.size()];
+	currentFrame = 0;
+	speed = 1;
 }
 
 

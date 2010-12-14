@@ -21,7 +21,7 @@ public:
 	//ofxiPhoneClipper();
 	//~ofxiPhoneClipper();
 	
-	void setup(ofxiPhoneVideo *video);
+	void setup(ofxiPhoneVideo *video,bool bIntroMode = false);
 	void update();
 	void draw();
 	void exit();
@@ -30,10 +30,16 @@ public:
 	void play(float speed,float volume=1.0f);
 	bool getIsPlaying();
 	
-	void introFrame();
+	void updateFrame();
 	
-	void firstFrame();
-	void nextFrame();
+//	void firstFrame();
+
+	
+	void introFrame();
+	void playIntro();
+	
+		
+	
 	
 //	void startScrubbing();
 //	void stopScrubbing();
@@ -53,6 +59,7 @@ public:
 protected:
 	
 	void drawTexture(int texture);
+	void seekFrame(int nextFrame);
 	
 	//int		drawCounter, bufferCounter;
 
@@ -67,5 +74,7 @@ protected:
 	ofxiPhoneVideo *video;
 	
 	int currentFrame;
+	
+	bool bIntroMode;
 	
 };

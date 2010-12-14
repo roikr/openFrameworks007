@@ -42,7 +42,7 @@ void testApp::setup(){
 	int bufferSize = 512;
 	
 	video->fps = 25;
-	video->numIntroFrames = 1;
+	video->numIntroFrames = 4;
 	video->sampleRate 			= 44100;
 	video->numFrames = 25;
 	video->sampleLength = 1000*video->numFrames/video->fps;
@@ -64,7 +64,7 @@ void testApp::setup(){
 	xml.pushTag("players");
 	numPlayers = xml.getNumTags("player");
 	
-	int maxX,minX;
+//	int maxX,minX;
 //	maxX = 0;
 //	minX = ofGetWidth();
 	
@@ -78,7 +78,7 @@ void testApp::setup(){
 		p.song.setup(video->audio.getBufferSize(), video->sampleRate);
 		p.song.loadTrack(ofToResourcesPath(xml.getAttribute("player", "song", "", i)));
 		p.video = new ofxiVideoPlayer;
-		p.video->setup(video);
+		p.video->setup(video,true);
 		
 		p.pan = (float)p.x/(float)(ofGetWidth());
 		
@@ -120,6 +120,7 @@ void testApp::setup(){
 	
 	songVersion = 0;
 	
+		
 }
 
 
@@ -133,16 +134,31 @@ void testApp::update()
 	
 	
 	switch (songState) {
-		case SONG_IDLE:
+		case SONG_IDLE: 
+			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
+				iter->video->update();
+			}
+			
+			
+			break;
 		case SONG_PLAY:
 			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
 				iter->video->update();
 			}
+			if (! getIsPlaying()) {
+				
+				setSongState(SONG_IDLE);
+				
+				//bNeedDisplay = true;
+			}
+			break;
 		case SONG_RENDER_AUDIO:
 		case SONG_CANCEL_RENDER_AUDIO:
 			if (! getIsPlaying()) {
 				
 				songState = SONG_IDLE;
+				
+								
 				//bNeedDisplay = true;
 			}
 			break;
@@ -231,6 +247,16 @@ void testApp::preview() {
 		
 	}
 	
+	
+}
+
+void testApp::playIntro() {
+	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
+		
+		iter->video->playIntro();
+		
+	}
+	
 }
 
 bool testApp::getIsPlaying() {
@@ -241,6 +267,8 @@ bool testApp::getIsPlaying() {
 	}
 	return false;
 }
+
+
 
 
 int  testApp::getSongState() { 
@@ -401,9 +429,7 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 	
 	if (bRecording && !video->audio.getIsRecording()) {
 		bRecording = false;
-		for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
-			iter->video->introFrame();
-		}
+		playIntro();
 		//gain = 0.6f/trigger.getRmsPeak();
 		//printf("rms: %1.2f, players: %i, gain: %1.2f\n", trigger.getRmsPeak(),(int)players.size(),gain);
 	}
@@ -491,9 +517,9 @@ void testApp::seekFrame(int frame) {
 		
 	int reqBlock = (float)frame/25.0f*(float)video->sampleRate/(float)video->audio.getBufferSize();
 	
-	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
-		piter->bDidStartPlaying = false;
-	}
+//	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+//		piter->bDidStartPlaying = true;
+//	}
 	
 	for (;currentBlock<reqBlock;currentBlock++) { // TODO: or song finished...
 		for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
@@ -504,22 +530,26 @@ void testApp::seekFrame(int frame) {
 				if (niter->bNoteOn) {
 					printf("player: %i, ", distance(players.begin(),piter));
 					piter->video->play(niter->note,niter->velocity);
-					piter->bDidStartPlaying = true;
+//					piter->bDidStartPlaying = true;
 					
 				}
 			}
 			
 		}
 	}
-	
-	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
-		if (piter->bDidStartPlaying) {
-			piter->bDidStartPlaying = false;
-		} else {
-			piter->video->nextFrame();
-		}
 
+	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+		piter->video->updateFrame();
 	}
+	
+//	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+//		if (piter->bDidStartPlaying) {
+//			piter->bDidStartPlaying = false;
+//		} else {
+//			piter->video->nextFrame();
+//		}
+//
+//	}
 	
 }
 

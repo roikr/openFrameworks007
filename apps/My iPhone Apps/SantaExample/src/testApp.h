@@ -43,8 +43,10 @@ public:
 	
 	void record();
 	void preview();
+	void playIntro(); 
 	
 	bool getIsPlaying();
+	
 	
 	int getSongState();
 	void setSongState(int songState);
@@ -103,6 +105,5 @@ public:
 	// because we don't use midi instrument while video rendering, we need to know when the last sample occured...
 	int songVersion;
 	
-
 };
 
