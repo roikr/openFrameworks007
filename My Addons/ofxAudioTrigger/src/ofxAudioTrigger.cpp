@@ -20,6 +20,7 @@ ofxAudioTrigger::ofxAudioTrigger() {
 	rmsAmplitude = 0;
 	peak= 0;
 	rmsPeak = 0;
+	bAutoThresh = false;
 };
 
 void ofxAudioTrigger::setup() {
@@ -124,6 +125,23 @@ void ofxAudioTrigger::audioReceived( float * input, int bufferSize) {
 	peak = max(peak,amplitude);
 	rmsPeak = max(rmsPeak,rmsAmplitude);
 	
+	
+	
+	
+	if (bAutoThresh) {
+		*currentSample = rmsAmplitude;
+		currentSample++;
+		if (currentSample==samples.end()) {
+			currentSample = samples.begin();
+		}
+		
+		
+		thresh = samples.front()+bias;
+		for (vector<float>::iterator iter=samples.begin() ; iter!=samples.end(); iter++) {
+			thresh =min(thresh,*iter + bias);
+		}
+	}
+	
 	if (state == TRIGGER_SET && peak>thresh) {
 		state = TRIGGER_TRIGGERED;
 	}
@@ -131,4 +149,21 @@ void ofxAudioTrigger::audioReceived( float * input, int bufferSize) {
 }
 
 
+
+void ofxAudioTrigger::setAutoThresh(float bias,int length) {
+	this->bias = bias;
+	for (int i=0;i<length;i++) { 
+		samples.push_back(0);
+	}
+	
+	currentSample = samples.begin();
+	
+	bAutoThresh = true;
+	
+}
+
+void ofxAudioTrigger::disableAutoTrhresh() {
+	bAutoThresh = false;
+	samples.clear();
+}
 

@@ -35,6 +35,10 @@ public:
 	float getPeak();
 	float getRmsPeak();
 	
+	void setAutoThresh(float bias,int length);
+	void disableAutoTrhresh();
+	
+	
 	
 	void audioReceived( float * input, int bufferSize);
 	
@@ -47,6 +51,11 @@ protected:
 	float rmsAmplitude;
 	float peak;
 	float rmsPeak;
+	
+	vector<float> samples;
+	vector<float>::iterator currentSample;
+	bool bAutoThresh;
+	float bias;
 	
 	
 	

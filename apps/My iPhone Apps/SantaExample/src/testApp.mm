@@ -94,7 +94,8 @@ void testApp::setup(){
 	
 	songState = SONG_IDLE;
 	bRecording = false;
-	trigger.setThresh(0.15);
+	trigger.setAutoThresh(0.1,50);
+	//trigger.setThresh(0.15);
 	
 	ofSoundStreamSetup(2, 1, this, video->sampleRate, video->audio.getBufferSize(), 2);
 	
@@ -207,7 +208,12 @@ void testApp::record() {
 }
 
 void testApp::preview() {
-	players[0].video->play(1.0f);
+	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
+		
+		iter->video->play(60,127);
+		
+	}
+	
 }
 
 bool testApp::getIsPlaying() {
