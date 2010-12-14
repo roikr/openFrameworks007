@@ -42,8 +42,8 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 301226668;
-			PBXWorkspaceStateSaveDate = 301226668;
+			PBXPerProjectTemplateStateSaveDate = 314032394;
+			PBXWorkspaceStateSaveDate = 314032394;
 		};
 		perUserProjectItems = {
 			E41D112911F2FDBB00980BF9 /* PBXTextBookmark */ = E41D112911F2FDBB00980BF9 /* PBXTextBookmark */;
@@ -51,9 +51,9 @@
 			E42E108E11F357A700B8B103 /* PBXTextBookmark */ = E42E108E11F357A700B8B103 /* PBXTextBookmark */;
 			E42E108F11F357A700B8B103 /* PBXTextBookmark */ = E42E108F11F357A700B8B103 /* PBXTextBookmark */;
 			E42E10BF11F35D3400B8B103 /* PBXTextBookmark */ = E42E10BF11F35D3400B8B103 /* PBXTextBookmark */;
-			E42E10C011F35D3400B8B103 /* PBXTextBookmark */ = E42E10C011F35D3400B8B103 /* PBXTextBookmark */;
-			E493703111F45CBC000F7E48 /* PBXTextBookmark */ = E493703111F45CBC000F7E48 /* PBXTextBookmark */;
-			E493703211F45CBC000F7E48 /* PBXTextBookmark */ = E493703211F45CBC000F7E48 /* PBXTextBookmark */;
+			E46ABE8012B7C11400AAEEB8 /* PBXTextBookmark */ = E46ABE8012B7C11400AAEEB8 /* PBXTextBookmark */;
+			E4A5A70812B3919F007B4DD6 /* PBXTextBookmark */ = E4A5A70812B3919F007B4DD6 /* PBXTextBookmark */;
+			E4A5A70912B3919F007B4DD6 /* PBXTextBookmark */ = E4A5A70912B3919F007B4DD6 /* PBXTextBookmark */;
 		};
 		sourceControlManager = E403964111F2ED69000530DA /* Source Control */;
 		userBuildSettings = {
@@ -127,11 +127,6 @@
 		name = LICENSE.txt;
 		path = /Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/addons/ofxiPhone/LICENSE.txt;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {698, 641}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{0, 1775}";
-		};
 	};
 	E42E103511F3558500B8B103 /* ofxiPhone.h */ = {
 		isa = PBXFileReference;
@@ -140,11 +135,6 @@
 		name = ofxiPhone.h;
 		path = /Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/addons/ofxiPhone/ofxiPhone.h;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {698, 663}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{73, 2129}";
-		};
 	};
 	E42E105111F3558500B8B103 /* ofxiPhoneSoundPlayer.mm */ = {
 		isa = PBXFileReference;
@@ -153,11 +143,6 @@
 		name = ofxiPhoneSoundPlayer.mm;
 		path = /Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/addons/ofxiPhone/src/ofxiPhoneSoundPlayer.mm;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {698, 1534}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{198, 2102}";
-		};
 	};
 	E42E105211F3558500B8B103 /* ofxiPhoneSoundStream.mm */ = {
 		isa = PBXFileReference;
@@ -166,11 +151,6 @@
 		name = ofxiPhoneSoundStream.mm;
 		path = /Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/addons/ofxiPhone/src/ofxiPhoneSoundStream.mm;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {698, 4225}}";
-			sepNavSelRange = "{976, 13}";
-			sepNavVisRange = "{0, 1643}";
-		};
 	};
 	E42E108D11F357A700B8B103 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -212,7 +192,7 @@
 		vrLen = 1643;
 		vrLoc = 0;
 	};
-	E42E10C011F35D3400B8B103 /* PBXTextBookmark */ = {
+	E46ABE8012B7C11400AAEEB8 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = E4D8923F1152755D007E1F53 /* testApp.h */;
 		name = "testApp.h: 41";
@@ -222,17 +202,7 @@
 		vrLen = 717;
 		vrLoc = 0;
 	};
-	E493703111F45CBC000F7E48 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4D892401152755D007E1F53 /* testApp.mm */;
-		name = "testApp.mm: 16";
-		rLen = 0;
-		rLoc = 306;
-		rType = 0;
-		vrLen = 1147;
-		vrLoc = 0;
-	};
-	E493703211F45CBC000F7E48 /* PBXTextBookmark */ = {
+	E4A5A70812B3919F007B4DD6 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = E4D892401152755D007E1F53 /* testApp.mm */;
 		name = "testApp.mm: 16";
@@ -240,6 +210,16 @@
 		rLoc = 306;
 		rType = 0;
 		vrLen = 1146;
+		vrLoc = 0;
+	};
+	E4A5A70912B3919F007B4DD6 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D8923F1152755D007E1F53 /* testApp.h */;
+		name = "testApp.h: 41";
+		rLen = 30;
+		rLoc = 667;
+		rType = 0;
+		vrLen = 717;
 		vrLoc = 0;
 	};
 	E4D8923F1152755D007E1F53 /* testApp.h */ = {
