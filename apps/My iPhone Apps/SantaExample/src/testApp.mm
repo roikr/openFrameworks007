@@ -64,6 +64,10 @@ void testApp::setup(){
 	xml.pushTag("players");
 	numPlayers = xml.getNumTags("player");
 	
+	int maxX,minX;
+//	maxX = 0;
+//	minX = ofGetWidth();
+	
 	for (int i=0; i<numPlayers;i++) {
 		
 		player p;
@@ -76,15 +80,28 @@ void testApp::setup(){
 		p.video = new ofxiVideoPlayer;
 		p.video->setup(video);
 		
+		p.pan = (float)p.x/(float)(ofGetWidth());
+		
+//		minX = min(p.x,minX);
+//		maxX = max(p.x,maxX);
+		
 		players.push_back(p);
+		
+
 		
 		
 		
 	}
 	xml.popTag();
 	
+//	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) {
+//		iter->pan = (float)(iter->x - minX)/(float)(maxX-minX);
+//		cout << iter-> pan << endl;
+//	}
 	
-	buffer	= new float[video->audio.getBufferSize()];
+	
+	lAudio	= new float[video->audio.getBufferSize()];
+	rAudio	= new float[video->audio.getBufferSize()];
 	
 	
 	camera = new ofxiVideoGrabber;
@@ -395,7 +412,8 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 
 
 void testApp::audioProcess(int bufferSize) {
-	memset(buffer, 0, bufferSize*sizeof(float));
+	memset(lAudio, 0, bufferSize*sizeof(float));
+	memset(rAudio, 0, bufferSize*sizeof(float));
 	
 	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++)  {
 		
@@ -418,7 +436,12 @@ void testApp::audioProcess(int bufferSize) {
 				break;
 		}
 		
-		piter->video->mix(buffer, bufferSize,1.0f/players.size());
+		float leftScale = 1 - piter->pan;
+		float rightScale = piter->pan;
+		
+		piter->video->mix(lAudio, bufferSize,1.0f/players.size()*leftScale);
+		piter->video->mix(rAudio, bufferSize,1.0f/players.size()*rightScale);
+		piter->video->preProcess();
 	}
 }
 
@@ -427,8 +450,8 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	audioProcess(bufferSize);
 	
 	for (int i = 0; i < bufferSize; i++){
-		output[i*nChannels] = buffer[i];// * gain;
-		output[i*nChannels + 1] = buffer[i];// * gain;
+		output[i*nChannels] = lAudio[i];// * gain;
+		output[i*nChannels + 1] = rAudio[i];// * gain;
 	}
 	
 }
@@ -449,7 +472,7 @@ void testApp::renderAudio() {
 		//update(); // todo move to production for other thread
 		audioProcess(video->audio.getBufferSize());
 		
-		song.saveWithBlocks(buffer, buffer);
+		song.saveWithBlocks(lAudio, rAudio);
 		currentBlock++;
 	}
 	

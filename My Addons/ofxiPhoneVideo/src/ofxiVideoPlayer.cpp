@@ -122,11 +122,7 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 			
 			output[i ] = (*(video->audio.getBuffer()+pos+(int)(speed*i))) * this->volume;
 		}
-		pos+=bufferSize*speed;
 		
-		if (pos + bufferSize*speed >=video->audio.getNumBuffers()*bufferSize) {
-			state = PLAYER_IDLE;
-		}
 	} else {
 		for (int i = 0; i < bufferSize; i++){
 			output[i ] = 0;
@@ -147,12 +143,19 @@ void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) {
 			buffer[i ] += (*(video->audio.getBuffer()+pos+(int)(speed*i))) *volume * this->volume;
 		}
 		
-		pos+=bufferSize*speed;
+	} 
+}
+
+void ofxiVideoPlayer::preProcess() {
+	
+	if (state == PLAYER_PLAYING) {
+		pos+=video->audio.bufferSize*speed;
 		
-		if (pos + bufferSize*speed >=video->audio.getNumBuffers()*bufferSize) {
+		if (pos + video->audio.bufferSize*speed >=video->audio.getNumBuffers()*video->audio.bufferSize) {
 			state = PLAYER_IDLE;
 		}
-	} 
+	}
+	
 }
 
 void ofxiVideoPlayer::play(int note,int velocity) {

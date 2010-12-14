@@ -28,6 +28,8 @@ struct player {
 	ofxiVideoPlayer *video;
 	ofxMidiTrack song;
 	
+	float pan;
+	
 	bool bDidStartPlaying;
 };
 
@@ -80,7 +82,9 @@ public:
 	
 	int numPlayers;
 	
-	float *buffer;
+	//float *buffer;
+	float 	* lAudio;
+	float   * rAudio;
 	
 	ofxRKTexture background;
 
