@@ -60,12 +60,9 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #include <OpenGLES/ES1/glext.h>
-#include <vector>
-
 
 class ofxiPhoneVideo;
 
-using namespace std;
 
 
 									 
