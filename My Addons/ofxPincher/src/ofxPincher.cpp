@@ -8,11 +8,9 @@
  */
 
 #include "ofxPincher.h"
+#include "easing.h"
 #include <math.h>
 
-enum {
-	ANIMATION_ZOOM
-};
 
 void ofxPincher::setup(ofPoint translate, float scale,pincherPrefs prefs) {
 	numActive = 0;
@@ -23,13 +21,7 @@ void ofxPincher::setup(ofPoint translate, float scale,pincherPrefs prefs) {
 	
 }
 
-float ofxPincher::easeInOutQuad(float t, float b, float e) { 
-	float d = 1.0;
-	float c = e - b;
-	if ((t/=d/2) < 1) 
-		return c/2*t*t + b; 
-	return -c/2 * ((--t)*(t-2) - 1) + b;
-}
+
 
 
 void ofxPincher::applyTranslation(ofPoint trns,float scl) {

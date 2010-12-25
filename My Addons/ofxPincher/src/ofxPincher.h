@@ -60,7 +60,7 @@ private:
 	void applyTranslation(ofPoint trns,float scl);
 	
 	float distance(ofPoint pnt);
-	float easeInOutQuad(float t, float b, float e);
+	
 	
 	ofPoint pos[2];
 	bool active[2];
