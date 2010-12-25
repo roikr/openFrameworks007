@@ -328,13 +328,13 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E40A2C6511C4F77900405E2F</string>
+										<string>E4E948A512C2540400C90205</string>
 										<key>history</key>
 										<array>
 											<string>E40A2C6111C4F77900405E2F</string>
-											<string>E40A2C6211C4F77900405E2F</string>
 											<string>E40A2C6311C4F77900405E2F</string>
-											<string>E40A2C6411C4F77900405E2F</string>
+											<string>E4E948A312C2540400C90205</string>
+											<string>E4E948A412C2540400C90205</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -346,14 +346,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {986, 581}}</string>
+								<string>{{0, 0}, {986, 576}}</string>
 								<key>RubberWindowFrame</key>
 								<string>322 190 1194 808 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>581pt</string>
+							<string>576pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -366,14 +366,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 586}, {986, 181}}</string>
+								<string>{{0, 581}, {986, 186}}</string>
 								<key>RubberWindowFrame</key>
 								<string>322 190 1194 808 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>181pt</string>
+							<string>186pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -392,9 +392,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>E40A2C2211C4EAD400405E2F</string>
+				<string>E4E948A612C2540400C90205</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>E40A2C2311C4EAD400405E2F</string>
+				<string>E4E948A712C2540400C90205</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -532,12 +532,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>E40A2C6611C4F77900405E2F</string>
-		<string>E40A2C6711C4F77900405E2F</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>E40A2C2511C4EAD400405E2F</string>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>/Users/roikr/Developer/openFrameworks/apps/My Works/playerXMLExample/playerXMLExample.xcodeproj</string>
+		<string>/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/apps/My Works/playerXMLExample/playerXMLExample.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>322 190 1194 808 0 0 1680 1028 </string>
@@ -617,7 +613,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>E40A2C2511C4EAD400405E2F</string>
-				<string>E40A2C2611C4EAD400405E2F</string>
+				<string>E4E948A812C2540400C90205</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
