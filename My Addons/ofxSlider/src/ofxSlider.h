@@ -10,6 +10,10 @@
 #include "ofMain.h"
 #include "ofMath.h"
 
+enum  {
+	SLIDER_HORIZONTAL,
+	SLIDER_VERTICAL
+};
 
 class sliderPrefs {
 	
@@ -17,11 +21,13 @@ public:
 	
 	
 	
-	sliderPrefs(){ };
+	sliderPrefs() : direction(SLIDER_HORIZONTAL) { };
 	
 	virtual ~sliderPrefs(){};
 		
 	vector<ofPoint> pages;
+	
+	int direction;
 	
 };
 
@@ -29,7 +35,7 @@ public:
 
 class ofxSlider {
 public:
-	void setup(float scale,sliderPrefs prefs = sliderPrefs());
+	void setup(int startPage,float scale,sliderPrefs prefs = sliderPrefs());
 	void update();
 	void transform();
 	
@@ -46,6 +52,10 @@ public:
 	
 	
 private:
+	
+	float boundsFix(float d);
+	float getComponent(ofPoint pnt);
+	void setComponent(ofPoint &pnt,float x);
 	
 	vector <pair<ofPoint,int> > touches;
 	ofPoint dest;

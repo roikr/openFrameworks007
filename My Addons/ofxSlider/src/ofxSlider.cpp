@@ -12,12 +12,13 @@
 #include <math.h>
 
 
-void ofxSlider::setup(float scale,sliderPrefs prefs) {
+void ofxSlider::setup(int startPage,float scale,sliderPrefs prefs) {
 	this->scale = scale;
-	translate = ofPoint(0,0);
+	this->translate = translate;
 	this->prefs = prefs;
 	bAnimating =false;
-	currentPage = this->prefs.pages.begin();
+	currentPage = this->prefs.pages.begin()+startPage;
+	translate = -*currentPage*scale;
 	
 }
 
@@ -31,7 +32,7 @@ void ofxSlider::update() {
 		if (t >= 1) 
 			bAnimating = false;
 		else 
-			translate.x = easeOutBack(t,translate.x,dest.x);
+			setComponent(translate, easeOutBack(t,getComponent(translate),getComponent(dest)));
 	}	
 		
 }
@@ -41,6 +42,10 @@ void ofxSlider::update() {
 void ofxSlider::transform() {
 	ofTranslate(translate.x, translate.y, 0);
 	ofScale(scale, scale, 1.0);
+	
+	
+	
+	
 }
 
 //#ifdef OF_DEBUG 
@@ -75,7 +80,30 @@ void ofxSlider::touchDown(int x, int y, int id) {
 }
 
 
+float ofxSlider::boundsFix(float dx)  {
+	return (currentPage == prefs.pages.end()-1 && dx < 0) || (currentPage == prefs.pages.begin() && dx > 0) ? dx/2 : dx;
+}
 
+float ofxSlider::getComponent(ofPoint pnt) {
+	return prefs.direction == SLIDER_HORIZONTAL ? pnt.x : pnt.y;
+	
+}
+
+void ofxSlider::setComponent(ofPoint &pnt,float x) {
+	
+	switch (prefs.direction) {
+		case SLIDER_HORIZONTAL:
+			pnt.x = x;
+			break;
+		case SLIDER_VERTICAL:
+			pnt.y = x;
+			break;
+		default:
+			break;
+	}
+	
+	
+}
 
 
 void ofxSlider::touchMoved(int x, int y, int id) {
@@ -84,13 +112,7 @@ void ofxSlider::touchMoved(int x, int y, int id) {
 	if (id==0) {
 		//printf("touchMoved: %i %.0f\n",touches.back().second,touches.back().first.x);
 		touches.push_back(make_pair(ofPoint(x,y), ofGetElapsedTimeMillis()));
-		
-		float dx = touches.back().first.x-(touches.end()-2)->first.x;
-		if ( (currentPage == prefs.pages.end()-1 && dx < 0) || (currentPage == prefs.pages.begin() && dx > 0)) {
-			dx=dx/2;
-		}
-		
-		translate.x += dx/scale;
+		setComponent(translate,getComponent(translate)+boundsFix(getComponent(touches.back().first-(touches.end()-2)->first)));
 	}
 			
 }
@@ -117,7 +139,7 @@ void ofxSlider::touchUp(int x, int y, int id) {
 		
 		upTime = ofGetElapsedTimeMillis();	
 		
-		float dx = touches.back().first.x-(touches.end()-2)->first.x;
+		float dx = getComponent(touches.back().first-(touches.end()-2)->first);
 		float dt = touches.back().second-(touches.end()-2)->second;
 		float vx = dx/dt;
 		
@@ -129,15 +151,15 @@ void ofxSlider::touchUp(int x, int y, int id) {
 			else if (currentPage > prefs.pages.begin() && vx>0) 
 				currentPage--;
 			
-		}  else if (currentPage < prefs.pages.end()-1 &&  ((currentPage+1)->x - currentPage->x)/2 < -translate.x - currentPage->x  ) {
+		}  else if (currentPage < prefs.pages.end()-1 &&  getComponent((*(currentPage+1) - *currentPage)/2  +translate/scale + *currentPage) <0  ) {
 			currentPage++;
-		} else if (currentPage > prefs.pages.begin() &&  (  currentPage->x - (currentPage-1)->x)/2 >  -translate.x - (currentPage-1)->x)  {
+		} else if (currentPage > prefs.pages.begin() &&  getComponent(( *currentPage - *(currentPage-1))/2 +translate/scale+ *(currentPage-1))>0 )  {
 			currentPage--;
 		}
 
 		
 		
-		dest = -*currentPage;
+		dest = -*currentPage*scale;
 		
 		touches.clear();
 	}

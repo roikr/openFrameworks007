@@ -16,11 +16,12 @@ void testApp::setup(){
 	
 	ofBackground(0,0,0);
 	sliderPrefs prefs;
+	prefs.direction = SLIDER_VERTICAL;
 	prefs.pages.push_back(ofPoint(0,0));
-	prefs.pages.push_back(ofPoint(320,0));
-	prefs.pages.push_back(ofPoint(480,0));
+	prefs.pages.push_back(ofPoint(0,400));
+	prefs.pages.push_back(ofPoint(0,600));
 	
-	slider.setup( 1.0,prefs);
+	slider.setup(1, 1.5,prefs);
 }
 
 //--------------------------------------------------------------
@@ -40,11 +41,13 @@ void testApp::draw(){
 		
 	ofFill();
 	ofSetColor(255, 0, 0);
-	ofRect(0+10, 10, 320-20, ofGetHeight()-20);
+	ofRect(0+10, 10, 400-20, 400-20);
 	ofSetColor(0, 255, 0);
-	ofRect(320+10, 10, 160-20, ofGetHeight()-20);
+	ofRect(400+10, 10, 200-20, 200-20);
+	ofRect(10, 400+10, 200-20, 200-20);
 	ofSetColor(0, 0, 255);
-	ofRect(480+10, 10, 320-20, ofGetHeight()-20);
+	ofRect(600+10, 10, 300-20, 300-20);
+	ofRect(10, 600+10, 300-20, 300-20);
 	slider.draw();
 	
 }
