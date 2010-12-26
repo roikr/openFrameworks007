@@ -15,19 +15,22 @@ enum  {
 	SLIDER_VERTICAL
 };
 
+
+
 class sliderPrefs {
 	
 public:
 	
 	
 	
-	sliderPrefs() : direction(SLIDER_HORIZONTAL) { };
+	sliderPrefs() : direction(SLIDER_HORIZONTAL), animDuration(5000) { };
 	
 	virtual ~sliderPrefs(){};
 		
 	vector<ofPoint> pages;
 	
 	int direction;
+	int animDuration;
 	
 };
 
@@ -35,20 +38,22 @@ public:
 
 class ofxSlider {
 public:
-	void setup(int startPage,float scale,sliderPrefs prefs = sliderPrefs());
+	void setup(float scale,sliderPrefs prefs = sliderPrefs());
 	void update();
 	void transform();
 	
-//#ifdef OF_DEBUG
+
 	void draw();
-//#endif
+
 	
 	void touchDown(int x, int y, int id);
 	void touchMoved(int x, int y, int id);
 	void touchUp(int x, int y, int id);
 	void touchDoubleTap(int x, int y, int id);
 	bool getIsAnimating();
-	
+	bool getIsDragging();
+	int	 getCurrentPage();
+	void setPage(int page);
 	
 	
 private:
@@ -68,7 +73,7 @@ private:
 	
 	sliderPrefs prefs;
 	
-	bool bAnimating;
+	int state;
 	
 	vector<ofPoint>::iterator currentPage;
 	

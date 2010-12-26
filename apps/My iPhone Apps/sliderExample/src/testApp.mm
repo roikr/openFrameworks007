@@ -1,5 +1,6 @@
 #include "testApp.h"
 
+
 //--------------------------------------------------------------
 void testApp::setup(){	
 	// register touch events
@@ -21,7 +22,8 @@ void testApp::setup(){
 	prefs.pages.push_back(ofPoint(0,400));
 	prefs.pages.push_back(ofPoint(0,600));
 	
-	slider.setup(1, 1.5,prefs);
+	slider.setup(1.5,prefs);
+	slider.setPage(1);
 }
 
 //--------------------------------------------------------------

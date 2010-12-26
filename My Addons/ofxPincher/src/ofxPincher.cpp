@@ -75,7 +75,7 @@ void ofxPincher::transform() {
 	ofScale(scale, scale, 1.0);
 }
 
-#ifdef OF_DEBUG 
+
 
 void ofxPincher::draw() {
 	
@@ -93,7 +93,7 @@ void ofxPincher::draw() {
 			ofNoFill();		// draw "filled shapes"
 			
 			ofPoint pnt=(pos[i]-translate)/scale;
-			ofCircle(pnt.x,pnt.y,50);
+			ofRect(pnt.x-25,pnt.y-25,50,50);
 		}
 		
 		if (numActive==2) {
@@ -103,14 +103,15 @@ void ofxPincher::draw() {
 			ofPoint center = (pos[0]+pos[1])/2;
 			ofPoint pnt=(center-translate)/scale;
 			
-			ofCircle(pnt.x,pnt.y,30);
+			//ofCircle(pnt.x,pnt.y,30);
+			ofRect(pnt.x-15,pnt.y-15,30,30);
 			
 		}
 		
 	}
 }
 
-#endif
+
  
 
 void ofxPincher::touchDown(int x, int y, int id) {

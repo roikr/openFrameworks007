@@ -43,9 +43,9 @@ public:
 	void update(float t);
 	void transform();
 	
-#ifdef OF_DEBUG
+
 	void draw();
-#endif
+
 	
 	void touchDown(int x, int y, int id);
 	void touchMoved(int x, int y, int id);

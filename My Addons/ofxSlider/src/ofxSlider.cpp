@@ -11,14 +11,19 @@
 #include "easing.h"
 #include <math.h>
 
+enum  {
+	SLIDER_STATE_IDLE,
+	SLIDER_STATE_DRAGGING,
+	SLIDER_STATE_ANIMATING
+};
 
-void ofxSlider::setup(int startPage,float scale,sliderPrefs prefs) {
+
+void ofxSlider::setup(float scale,sliderPrefs prefs) {
 	this->scale = scale;
 	this->translate = translate;
 	this->prefs = prefs;
-	bAnimating =false;
-	currentPage = this->prefs.pages.begin()+startPage;
-	translate = -*currentPage*scale;
+	setPage(0);
+	state = SLIDER_STATE_IDLE;
 	
 }
 
@@ -27,10 +32,10 @@ void ofxSlider::setup(int startPage,float scale,sliderPrefs prefs) {
 void ofxSlider::update() {
 	
 		
-	if (bAnimating) {
-		float t = (float)(ofGetElapsedTimeMillis() - upTime)/5000.0f;
+	if (state == SLIDER_STATE_ANIMATING) {
+		float t = (float)(ofGetElapsedTimeMillis() - upTime)/(float)prefs.animDuration;
 		if (t >= 1) 
-			bAnimating = false;
+			state = SLIDER_STATE_IDLE;
 		else 
 			setComponent(translate, easeOutBack(t,getComponent(translate),getComponent(dest)));
 	}	
@@ -48,7 +53,7 @@ void ofxSlider::transform() {
 	
 }
 
-//#ifdef OF_DEBUG 
+
 
 void ofxSlider::draw() {
 	
@@ -57,21 +62,21 @@ void ofxSlider::draw() {
 		ofNoFill();		// draw "filled shapes"
 		
 		ofPoint pnt=(touches.back().first-translate)/scale;
-		ofCircle(pnt.x,pnt.y,50);
+		ofRect(pnt.x-25,pnt.y-25,50,50);
 	}
 	
 		
 }
 
-//#endif
+
 
 
 void ofxSlider::touchDown(int x, int y, int id) {
 	
 	
 	if (id==0) {
+		state = SLIDER_STATE_IDLE;
 		
-		bAnimating = false;
 		
 		touches.push_back(make_pair(ofPoint(x,y), ofGetElapsedTimeMillis()));
 		//printf("touchDown: %i %.0f\n",touches.back().second,touches.back().first.x);
@@ -110,6 +115,7 @@ void ofxSlider::touchMoved(int x, int y, int id) {
 	
 	
 	if (id==0) {
+		state = SLIDER_STATE_DRAGGING;
 		//printf("touchMoved: %i %.0f\n",touches.back().second,touches.back().first.x);
 		touches.push_back(make_pair(ofPoint(x,y), ofGetElapsedTimeMillis()));
 		setComponent(translate,getComponent(translate)+boundsFix(getComponent(touches.back().first-(touches.end()-2)->first)));
@@ -118,8 +124,7 @@ void ofxSlider::touchMoved(int x, int y, int id) {
 }
 
 void ofxSlider::touchUp(int x, int y, int id) {
-	if (bAnimating)
-		return;
+	
 	
 	if (id==0 && touches.size()>1) {
 		//printf("touchUp: %i %.0f\n",touches.back().second,touches.back().first.x);
@@ -134,7 +139,7 @@ void ofxSlider::touchUp(int x, int y, int id) {
 //		
 //		translate.x += dx/scale;
 		
-		bAnimating = true;
+		state = SLIDER_STATE_ANIMATING;
 		
 		
 		upTime = ofGetElapsedTimeMillis();	
@@ -170,5 +175,18 @@ void ofxSlider::touchDoubleTap(int x, int y, int id) {
 }
 
 bool ofxSlider::getIsAnimating() {
-	return bAnimating;
+	return state == SLIDER_STATE_ANIMATING;
+}
+
+bool ofxSlider::getIsDragging() {
+	return state == SLIDER_STATE_DRAGGING;
+}
+
+int	ofxSlider::getCurrentPage() {
+	return distance(prefs.pages.begin(), currentPage);
+}
+
+void ofxSlider::setPage(int page) {
+	currentPage = this->prefs.pages.begin()+page;
+	translate = -*currentPage*scale;
 }
