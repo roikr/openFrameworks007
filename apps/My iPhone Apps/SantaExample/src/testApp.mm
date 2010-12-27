@@ -30,10 +30,6 @@ void testApp::setup(){
 	//iPhoneAlerts will be sent to this.
 	//ofxiPhoneAlerts.addListener(this);
 	
-	background.setup(ofToResourcesPath("santa.pvr"));
-	background.init();
-	background.load();
-	
 	ofSetFrameRate(60);
 	//ofBackground(255,255,255);
 	
@@ -57,42 +53,74 @@ void testApp::setup(){
 	
 	ofxXmlSettings xml;
 	
-	bool loaded = xml.loadFile(ofToResourcesPath("players.xml"));
+	bool loaded = xml.loadFile(ofToResourcesPath("cards.xml"));
 	assert(loaded);
 	
 	
-	xml.pushTag("players");
-	numPlayers = xml.getNumTags("player");
+	int i;
 	
-//	int maxX,minX;
-//	maxX = 0;
-//	minX = ofGetWidth();
+	xml.pushTag("cards");
 	
-	for (int i=0; i<numPlayers;i++) {
+	
+	sliderPrefs prefs;
+	
+	for (int j=0; j<xml.getNumTags("card");j++) {
+		card c;
 		
-		player p;
-		p.x = xml.getAttribute("player", "x", 0, i) ;
-		p.y = xml.getAttribute("player", "y", 0, i) ;
-		p.scale = xml.getAttribute("player", "scale", 1.0f, i) ;
-		p.degree = xml.getAttribute("player", "degree", 0.0f, i) ;
-		p.song.setup(video->audio.getBufferSize(), video->sampleRate);
-		p.song.loadTrack(ofToResourcesPath(xml.getAttribute("player", "song", "", i)));
-		p.video = new ofxiVideoPlayer;
-		p.video->setup(video,true);
+//			int maxX,minX;
+//			maxX = 0;
+//			minX = ofGetWidth();
 		
-		p.pan = (float)p.x/(float)(ofGetWidth());
+		c.background = new ofxRKTexture;
+		c.background->setup(ofToResourcesPath(xml.getAttribute("card", "image", "", j)));
+		c.background->init();
+		c.background->load();
 		
-//		minX = min(p.x,minX);
-//		maxX = max(p.x,maxX);
-		
-		players.push_back(p);
-		
+		xml.pushTag("card", j);
 
-		
-		
+		for (i=0; i<xml.getNumTags("actor");i++) {
+			
+			actor a;
+			a.x = xml.getAttribute("actor", "x", 0, i) ;
+			a.y = xml.getAttribute("actor", "y", 0, i) ;
+			a.scale = xml.getAttribute("actor", "scale", 1.0f, i) ;
+			a.degree = xml.getAttribute("actor", "degree", 0.0f, i) ;
+			a.pan = (float)a.x/(float)(ofGetWidth());
+			
+//				minX = min(p.x,minX);
+//				maxX = max(p.x,maxX);
+			c.actors.push_back(a);
+		}
+	
+		xml.popTag();
+	
+		cards.push_back(c);
+		prefs.pages.push_back(ofPoint(0,ofGetHeight()*j));
 		
 	}
+							  
+	prefs.direction = SLIDER_VERTICAL;
+	slider.setup(1,prefs);						  
+		
+	xml.pushTag("players");
+	
+	for (i=0; i<xml.getNumTags("player");i++) {
+		
+		player p;
+		p.song.setup(video->audio.getBufferSize(), video->sampleRate);
+		p.song.loadTrack(ofToResourcesPath(xml.getAttribute("player", "filename", "", i)));
+		p.video = new ofxiVideoPlayer;
+		p.video->setup(video,true);
+		players.push_back(p);
+	}
+	
 	xml.popTag();
+	
+	xml.popTag();
+	
+	citer = cards.begin();
+	
+	
 	
 //	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) {
 //		iter->pan = (float)(iter->x - minX)/(float)(maxX-minX);
@@ -132,7 +160,7 @@ void testApp::update()
 	
 	camera->update();
 	
-	
+		
 	switch (songState) {
 		case SONG_IDLE: 
 			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
@@ -184,43 +212,71 @@ void testApp::update()
 //--------------------------------------------------------------
 void testApp::draw()
 {
+	ofBackground(0, 0, 0);
 	ofSetColor(255,255,255,255);
+	slider.update();
+	slider.transform();
 	
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
-
+	vector<card>::iterator cbegin,cend;
+	cbegin = citer;
+	cend = citer;
 	
-		ofPushMatrix();
-		ofTranslate(iter->x, iter->y, 0);
-		ofScale(iter->scale,iter->scale,1.0);
-		ofRotate(iter->degree);
-		//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
-		//ofScale(0.5, 0.5, 1);
-		
-		if (camera->getState()==CAMERA_CAPTURING) {
-			camera->draw();
-		} else {
-			iter->video->draw();
+	if (slider.getIsDragging() || slider.getIsAnimating()) {
+		if (citer>cards.begin()) {
+			cbegin=citer-1;
 		}
 		
-		//if (iter->video->getIsPlaying()) {
-//			iter->video->draw();
-//		} else {
-//			camera->draw();
-//		}
-		ofPopMatrix();
-	
+		if(cards.size()>1 && citer<cards.end()-1) {
+			cend=citer+1;
+		}
 	}
 	
-	ofEnableAlphaBlending();
+	vector<player>::iterator piter;
+	vector<actor>::iterator aiter;
+	vector<card>::iterator iter;
 	
-	ofPushMatrix();
-	background.draw(0, 0);
-	ofPopMatrix();
-	
-	ofDisableAlphaBlending();
-	
-	trigger.draw();
+	for (iter=cbegin; iter<=cend; iter++) {
 		
+		int y = distance(cards.begin(), iter) *ofGetHeight();
+		//cout << y <<endl;
+		
+		for (piter=players.begin(),aiter=iter->actors.begin(); piter!=players.end(); piter++,aiter++)  {
+
+		
+			ofPushMatrix();
+			ofTranslate(aiter->x, aiter->y+y, 0);
+			ofScale(aiter->scale,aiter->scale,1.0);
+			ofRotate(aiter->degree);
+			//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
+			//ofScale(0.5, 0.5, 1);
+			
+			if (camera->getState()==CAMERA_CAPTURING) {
+				camera->draw();
+			} else {
+				piter->video->draw();
+			}
+			
+			//if (iter->video->getIsPlaying()) {
+	//			iter->video->draw();
+	//		} else {
+	//			camera->draw();
+	//		}
+			ofPopMatrix();
+		
+		}
+		
+		ofEnableAlphaBlending();
+		
+		ofPushMatrix();
+		ofTranslate(0, y); 
+		iter->background->draw(0, 0);
+		ofPopMatrix();
+		
+		ofDisableAlphaBlending();
+	}
+		
+	trigger.draw();
+			
 }
 
 //--------------------------------------------------------------
@@ -349,7 +405,7 @@ void testApp::soundStreamStop() {
 
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
-	
+	//touchDown(touch.x, touch.y, touch.id);
 	if (touch.x > ofGetWidth()-30) {
 		
 		switch ((int)(4*touch.y/(ofGetHeight()+1))) {
@@ -359,7 +415,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 			case 1:
 				preview();
 				break;
-
+				
 			case 2:
 				setSongState(SONG_PLAY);
 				break;
@@ -372,21 +428,34 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 			default:
 				break;
 		}  
-
+		
 	} else if (touch.x < 30) {
 		trigger.setThresh(1-(touch.y/ofGetHeight()));
 	}
+	
+}
 
+void testApp::touchDown(float x, float y, int touchId)	{	
+	
+	slider.touchDown(x, y, touchId);
 
 }
 
 //--------------------------------------------------------------
 
 void testApp::touchMoved(ofTouchEventArgs &touch)	{	
+	//touchMoved(touch.x, touch.y, touch.id);
 }
+
+void testApp::touchMoved(float x, float y, int touchId)	{	
+	slider.touchMoved(x, y, touchId);
+}
+
+
 
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){	
+	//touchUp(touch.x, touch.y, touch.id);
 	if (touch.x > ofGetWidth()-30) {
 		
 		switch ((int)(4*touch.y/(ofGetHeight()+1))) {
@@ -407,8 +476,18 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 	}
 }
 
+void testApp::touchUp(float x, float y, int touchId)	{	
+	slider.touchUp(x, y, touchId);
+	citer=cards.begin()+slider.getCurrentPage();
+	
+}
+
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
+	touchDoubleTap(touch.x, touch.y, touch.id);
+}
+	
+void testApp::touchDoubleTap(float x, float y, int touchId)	{	
 }
 
 void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
@@ -441,7 +520,10 @@ void testApp::audioProcess(int bufferSize) {
 	memset(lAudio, 0, bufferSize*sizeof(float));
 	memset(rAudio, 0, bufferSize*sizeof(float));
 	
-	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++)  {
+	vector<player>::iterator piter;
+	vector<actor>::iterator aiter;
+	
+	for (piter=players.begin(),aiter=citer->actors.begin(); piter!=players.end() ; piter++,aiter++)  {
 		
 		switch (songState) {
 			case SONG_PLAY:
@@ -462,8 +544,8 @@ void testApp::audioProcess(int bufferSize) {
 				break;
 		}
 		
-		float leftScale = 1 - piter->pan;
-		float rightScale = piter->pan;
+		float leftScale = 1 - aiter->pan;
+		float rightScale = aiter->pan;
 		
 		piter->video->mix(lAudio, bufferSize,1.0f/players.size()*leftScale);
 		piter->video->mix(rAudio, bufferSize,1.0f/players.size()*rightScale);

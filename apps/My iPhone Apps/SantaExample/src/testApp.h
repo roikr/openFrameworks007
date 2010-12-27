@@ -9,6 +9,7 @@
 #include "ofxAudioTrigger.h"
 #include "ofxSndFile.h"
 #include "ofxRKTexture.h"
+#include "ofxSlider.h"
 //#include "ofxDynamicCompressor.h"
 
 
@@ -20,18 +21,26 @@ class ofxiVideoPlayer;
 class ofxiPhoneVideo;
 
 struct player {
+	ofxiVideoPlayer *video;
+	ofxMidiTrack song;
+	bool bDidStartPlaying;
+	
+};
+
+struct actor {
 	int x;
 	int y;
 	float scale;
 	float degree;
-	
-	ofxiVideoPlayer *video;
-	ofxMidiTrack song;
-	
 	float pan;
-	
-	bool bDidStartPlaying;
 };
+
+struct card {
+	vector<actor> actors;
+	ofxRKTexture *background;
+};
+
+
 
 class testApp:public ofSimpleApp  { // : public   ofxiPhoneApp
 	
@@ -55,6 +64,11 @@ public:
 	void touchMoved(ofTouchEventArgs &touch);
 	void touchUp(ofTouchEventArgs &touch);
 	void touchDoubleTap(ofTouchEventArgs &touch);
+	
+	void touchDown(float x, float y, int touchId);
+	void touchMoved(float x, float y, int touchId);
+	void touchUp(float x, float y, int touchId);
+	void touchDoubleTap(float x, float y, int touchId);
 
 	void audioReceived( float * input, int bufferSize, int nChannels );
 	
@@ -81,14 +95,14 @@ public:
 	ofxiVideoGrabber *camera;
 	
 	vector<player> players;
-	
-	int numPlayers;
+	vector<card> cards;
+	vector<card>::iterator citer;
 	
 	//float *buffer;
 	float 	* lAudio;
 	float   * rAudio;
 	
-	ofxRKTexture background;
+	
 
 	int songState;
 	
@@ -104,6 +118,8 @@ public:
 	int totalBlocks; // calculating by renderAudio before rendering video - 
 	// because we don't use midi instrument while video rendering, we need to know when the last sample occured...
 	int songVersion;
+	
+	ofxSlider slider;
 	
 };
 
