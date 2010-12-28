@@ -12,13 +12,11 @@
 #include "ofxSlider.h"
 //#include "ofxDynamicCompressor.h"
 
-
-
-
+#include "ofxiPhoneVideo.h"
 
 class ofxiVideoGrabber;
 class ofxiVideoPlayer;
-class ofxiPhoneVideo;
+
 
 struct player {
 	ofxiVideoPlayer *video;
@@ -47,6 +45,9 @@ class testApp:public ofSimpleApp  { // : public   ofxiPhoneApp
 public:
 	void setup();
 	void update();
+	
+	bool getIsFboNeeded();
+	void fboDraw();
 	void draw();
 	void exit();
 	
@@ -91,7 +92,7 @@ public:
 	
 	bool bNeedDisplay;
 	
-	ofxiPhoneVideo *video;
+	ofxiPhoneVideo video;
 	ofxiVideoGrabber *camera;
 	
 	vector<player> players;

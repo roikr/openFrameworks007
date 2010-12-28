@@ -4,7 +4,7 @@
 #include "ofSoundStream.h"
 #include "ofxXmlSettings.h"
 
-#include "ofxiPhoneVideo.h"
+
 #include "ofxiVideoGrabber.h"
 #include "ofxiVideoPlayer.h"
 
@@ -33,23 +33,28 @@ void testApp::setup(){
 	ofSetFrameRate(60);
 	//ofBackground(255,255,255);
 	
-	video = new ofxiPhoneVideo;
+	
 	
 	int bufferSize = 512;
 	
-	video->fps = 25;
-	video->numIntroFrames = 4;
-	video->sampleRate 			= 44100;
-	video->numFrames = 25;
-	video->sampleLength = 1000*video->numFrames/video->fps;
+	video.fps = 25;
+	video.numIntroFrames = 4;
+	video.sampleRate 			= 44100;
+	video.numFrames = 25;
+	video.sampleLength = 1000*video.numFrames/video.fps;
 	
-	video->audio.setup(bufferSize,video->sampleRate * video->sampleLength / (1000 * bufferSize));	
+	video.audio.setup(bufferSize,video.sampleRate * video.sampleLength / (1000 * bufferSize));	
+	video.widthFraction = 1.0;
+	video.heightFraction = 1.0;
+	video.textureWidth = 128;
+	video.textureHeight = 256;
+	
 	
 	
 	//video->sample				= new float[video->numBuffers*video->bufferSize];
 	//memset(video->sample, 0, video->numBuffers*video->bufferSize * sizeof(float));
 	
-	song.setupForSave(video->audio.getBufferSize());
+	song.setupForSave(video.audio.getBufferSize());
 	
 	ofxXmlSettings xml;
 	
@@ -107,10 +112,10 @@ void testApp::setup(){
 	for (i=0; i<xml.getNumTags("player");i++) {
 		
 		player p;
-		p.song.setup(video->audio.getBufferSize(), video->sampleRate);
+		p.song.setup(video.audio.getBufferSize(), video.sampleRate);
 		p.song.loadTrack(ofToResourcesPath(xml.getAttribute("player", "filename", "", i)));
 		p.video = new ofxiVideoPlayer;
-		p.video->setup(video,true);
+		p.video->setup(&video,true);
 		players.push_back(p);
 	}
 	
@@ -128,12 +133,12 @@ void testApp::setup(){
 //	}
 	
 	
-	lAudio	= new float[video->audio.getBufferSize()];
-	rAudio	= new float[video->audio.getBufferSize()];
+	lAudio	= new float[video.audio.getBufferSize()];
+	rAudio	= new float[video.audio.getBufferSize()];
 	
 	
 	camera = new ofxiVideoGrabber;
-	camera->setup(video);
+	camera->setup(&video);
 	
 	
 	
@@ -142,13 +147,13 @@ void testApp::setup(){
 	trigger.setAutoThresh(0.1,50);
 	//trigger.setThresh(0.15);
 	
-	ofSoundStreamSetup(2, 1, this, video->sampleRate, video->audio.getBufferSize(), 2);
+	ofSoundStreamSetup(2, 1, this, video.sampleRate, video.audio.getBufferSize(), 2);
 	
 	camera->startCamera();
 	
 	songVersion = 0;
 	
-		
+	//camera->startCapture(); // TODO: remove this - just for testing	
 }
 
 
@@ -157,10 +162,7 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update()
 {
-	
-	camera->update();
-	
-		
+			
 	switch (songState) {
 		case SONG_IDLE: 
 			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
@@ -209,11 +211,42 @@ void testApp::update()
 	
 }
 
+bool testApp::getIsFboNeeded() {
+	return camera->getState()==CAMERA_CAPTURING || camera->getState()==CAMERA_RECORDING;
+	
+}
+
+void testApp::fboDraw()
+{
+	camera->fboDraw();
+}
 //--------------------------------------------------------------
 void testApp::draw()
 {
+	
+	
 	ofBackground(0, 0, 0);
 	ofSetColor(255,255,255,255);
+	
+//	if (players.front().video->getIsPlaying()) {
+//		players.front().video->draw();
+//	} else {
+//		camera->draw();
+//	}
+
+	
+//	if (camera->getState()==CAMERA_CAPTURING || camera->getState()==CAMERA_RECORDING) {
+//		camera->draw();
+//	} else {
+//		players.front().video->draw();
+//	}
+//	
+//	
+//	
+//	trigger.draw();
+//	
+//	return;
+	
 	slider.update();
 	slider.transform();
 	
@@ -250,7 +283,7 @@ void testApp::draw()
 			//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
 			//ofScale(0.5, 0.5, 1);
 			
-			if (camera->getState()==CAMERA_CAPTURING) {
+			if (camera->getState()==CAMERA_CAPTURING || camera->getState()==CAMERA_RECORDING) {
 				camera->draw();
 			} else {
 				piter->video->draw();
@@ -506,7 +539,7 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 	
 	camera->audioReceived(input, bufferSize);
 	
-	if (bRecording && !video->audio.getIsRecording()) {
+	if (bRecording && !video.audio.getIsRecording()) {
 		bRecording = false;
 		playIntro();
 		//gain = 0.6f/trigger.getRmsPeak();
@@ -578,7 +611,7 @@ void testApp::renderAudio() {
 	while (getSongState()==SONG_RENDER_AUDIO || getSongState()==SONG_CANCEL_RENDER_AUDIO) {
 		
 		//update(); // todo move to production for other thread
-		audioProcess(video->audio.getBufferSize());
+		audioProcess(video.audio.getBufferSize());
 		
 		song.saveWithBlocks(lAudio, rAudio);
 		currentBlock++;
@@ -597,7 +630,7 @@ void testApp::renderAudio() {
 void testApp::seekFrame(int frame) {
 	
 		
-	int reqBlock = (float)frame/25.0f*(float)video->sampleRate/(float)video->audio.getBufferSize();
+	int reqBlock = (float)frame/25.0f*(float)video.sampleRate/(float)video.audio.getBufferSize();
 	
 //	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
 //		piter->bDidStartPlaying = true;
@@ -610,7 +643,7 @@ void testApp::seekFrame(int frame) {
 			
 			for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
 				if (niter->bNoteOn) {
-					printf("player: %i, ", distance(players.begin(),piter));
+//					printf("player: %i, ", distance(players.begin(),piter));
 					piter->video->play(niter->note,niter->velocity);
 //					piter->bDidStartPlaying = true;
 					
@@ -642,7 +675,7 @@ float testApp::getRenderProgress(){
 	
 	switch (songState) {
 		case SONG_RENDER_AUDIO: {
-			return (float)currentBlock * (float)video->audio.getBufferSize() / (float)video->sampleRate/duration;
+			return (float)currentBlock * (float)video.audio.getBufferSize() / (float)video.sampleRate/duration;
 		}	break;
 		case SONG_RENDER_VIDEO:
 			return (float)currentBlock/(float)totalBlocks;

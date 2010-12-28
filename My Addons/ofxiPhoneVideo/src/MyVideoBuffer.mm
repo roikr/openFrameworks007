@@ -63,6 +63,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 #import <OpenGLES/ES1/glext.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+
 #import "ofxiPhoneVideo.h"
 
 
@@ -81,14 +82,14 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 @synthesize videoDimensions;
 @synthesize videoType;
 @synthesize CameraTexture=m_textureHandle;
+@synthesize currentFrame;
 
 @synthesize videoInput = _videoInput;
 
--(id) initWithVideo:(ofxiPhoneVideo *)theVideo
-{
+-(id) initWithFPS: (int) fps {
 	if ((self = [super init]))
 	{
-		video = theVideo;
+		
 		
 		NSError * error;
 		
@@ -107,7 +108,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		
 		//-- Add the device to the session.
 		AVCaptureDeviceInput *videoInput = [[[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error] autorelease];
-		video->bMirrored = false;
+//		video->bMirrored = false;
 		[self setVideoInput:videoInput];
 //		AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
 //		if(error)
@@ -119,14 +120,14 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		//-- Create the output for the capture session.  We want 32bit BRGA
 		AVCaptureVideoDataOutput * dataOutput = [[[AVCaptureVideoDataOutput alloc] init] autorelease];
 		
-		dataOutput.minFrameDuration = CMTimeMake(1, video->fps);
+		dataOutput.minFrameDuration = CMTimeMake(1, fps);
 		
 		
 		[dataOutput setAlwaysDiscardsLateVideoFrames:YES]; // Probably want to set this to NO when we're recording
 		
 		// If you wish to cap the frame rate to a known value, such as 15 fps, set 
 		// minFrameDuration.
-		dataOutput.minFrameDuration = CMTimeMake(1, video->fps);
+		dataOutput.minFrameDuration = CMTimeMake(1, fps);
 		
 		[dataOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]]; // Necessary for manual preview
 	
@@ -149,7 +150,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		//m_textureHandle = [self createVideoTextuerUsingWidth:1280 Height:720];
 		//m_textureHandle = [self createVideoTextuerUsingWidth:640 Height:480];
 		
-		bIsCapturing = false;
+
 		
 	}
 	return self;
@@ -167,10 +168,10 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
        
         if (position == AVCaptureDevicePositionBack) {
             newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self frontFacingCamera] error:&error];
-			video->bMirrored = true;
+			//video->bMirrored = true;
         } else if (position == AVCaptureDevicePositionFront) {
             newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error];
-			video->bMirrored = false;
+			//video->bMirrored = false;
 		} else {
             goto bail;
         }
@@ -302,14 +303,21 @@ bail:
 		
 		self.videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDesc);
 		NSLog(@"videoDimensions: %i %i",self.videoDimensions.width,self.videoDimensions.height);
-		video->width = videoDimensions.width;
-		video->height = videoDimensions.height;
+//		video->width = videoDimensions.width;
+//		video->height = videoDimensions.height;
 		//-- If we haven't created the video texture, do so now.
-		m_textureHandle = [self createVideoTextuerUsingWidth:videoDimensions.width Height:videoDimensions.height];
 		
-		for (int i=0; i<video->numFrames; i++) {
-			video->textures.push_back([self createVideoTextuerUsingWidth:videoDimensions.width Height:videoDimensions.height]);
-		}
+	
+		
+		
+		m_textureHandle = [self createVideoTextuerUsingWidth:videoDimensions.width Height:videoDimensions.height];
+		currentFrame = -1;
+		
+//		for (int i=0; i<video->numFrames; i++) {
+//			video->textures.push_back([self createVideoTextuerUsingWidth:videoDimensions.width Height:videoDimensions.height]);
+//			//video->textures.push_back([self createVideoTextuerUsingWidth:200 Height:200]);
+//
+//		}
 	}
 	
 	
@@ -322,8 +330,6 @@ bail:
 	CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
 	CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
 	
-	
-	
 	glBindTexture(GL_TEXTURE_2D, m_textureHandle);
 	
 	unsigned char* linebase = (unsigned char *)CVPixelBufferGetBaseAddress( pixelBuffer );
@@ -332,25 +338,14 @@ bail:
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
 	
 	
-	if (bIsCapturing ) {
-		glBindTexture(GL_TEXTURE_2D, video->textures[currentFrame % video->numFrames]);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
-		currentFrame++;
-		
-		if (bIsRecording) {
-			if ( currentFrame - firstFrame >= video->numFrames - video->numIntroFrames)  {
-				bIsCapturing = false;
-			}
-		}
-	}
-	
-	
 	CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );
+	
+	currentFrame++;
 }
 
 
 
--(void)renderCameraToSprite:(uint)text
+-(void)renderCameraToSprite:(uint)text withWidth:(GLuint) width
 {
 	if (!text)
 		return;
@@ -361,8 +356,9 @@ bail:
 		0,1.0f,   
 		0.0f,0,};
 	
-	float w = videoDimensions.width;
-	float h = videoDimensions.height;
+	float w = width; // normalizing each camera to 480 * 360
+	float h = (float)videoDimensions.height / (float)videoDimensions.width * w ;
+	
 	
 	GLfloat spriteVertices[] =  {
 		w,h,0,   
@@ -403,27 +399,6 @@ bail:
 	glDisable(GL_TEXTURE_2D);
 	
 }
-
-- (void) capture {
-	bIsCapturing = true;
-	bIsRecording = false;
-	currentFrame = 0;
-}
-
-
-
-- (void) record {
-	if (!m_textureHandle)
-		return;
-	
-	bIsRecording = true;
-	firstFrame = currentFrame-1;
-	video->firstFrame = (currentFrame-1) % video->numFrames;
-	
-	
-		
-}
-
 
 
 - (void)dealloc 

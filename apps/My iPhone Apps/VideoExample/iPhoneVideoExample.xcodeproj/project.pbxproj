@@ -35,6 +35,8 @@
 		BB24DE3D10DA785000E9C588 /* libGLU_arm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE2810DA785000E9C588 /* libGLU_arm.a */; };
 		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
+		E410682B12C8C3AE00DDD7FD /* ofxAudioSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E410682912C8C3AE00DDD7FD /* ofxAudioSampler.cpp */; };
+		E410687C12C8D20B00DDD7FD /* ofxColorBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E410687212C8D20B00DDD7FD /* ofxColorBase.cpp */; };
 		E4CA984112AF9A9600DD8F68 /* ofxFretless.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CA983F12AF9A9600DD8F68 /* ofxFretless.cpp */; };
 		E4CA991A12AFB43000DD8F68 /* MyVideoBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4CA991712AFB43000DD8F68 /* MyVideoBuffer.mm */; };
 		E4CA991B12AFB43000DD8F68 /* ofxiVideoGrabber.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4CA991812AFB43000DD8F68 /* ofxiVideoGrabber.mm */; };
@@ -141,6 +143,15 @@
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DA7851271105C039007EFC90 /* glu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glu.h; sourceTree = "<group>"; };
 		DA7851281105C039007EFC90 /* gluos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluos.h; sourceTree = "<group>"; };
+		E410682912C8C3AE00DDD7FD /* ofxAudioSampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioSampler.cpp; sourceTree = "<group>"; };
+		E410682A12C8C3AE00DDD7FD /* ofxAudioSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioSampler.h; sourceTree = "<group>"; };
+		E410687112C8D20B00DDD7FD /* ofxColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxColor.h; sourceTree = "<group>"; };
+		E410687212C8D20B00DDD7FD /* ofxColorBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxColorBase.cpp; sourceTree = "<group>"; };
+		E410687312C8D20B00DDD7FD /* ofxColorBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxColorBase.h; sourceTree = "<group>"; };
+		E410687412C8D20B00DDD7FD /* ofxColorConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxColorConversion.h; sourceTree = "<group>"; };
+		E410687512C8D20B00DDD7FD /* ofxColorMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxColorMatching.h; sourceTree = "<group>"; };
+		E410687612C8D20B00DDD7FD /* ofxColorMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxColorMath.h; sourceTree = "<group>"; };
+		E410687712C8D20B00DDD7FD /* ofxColorShared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxColorShared.h; sourceTree = "<group>"; };
 		E4CA983F12AF9A9600DD8F68 /* ofxFretless.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFretless.cpp; sourceTree = "<group>"; };
 		E4CA984012AF9A9600DD8F68 /* ofxFretless.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFretless.h; sourceTree = "<group>"; };
 		E4CA991612AFB43000DD8F68 /* MyVideoBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoBuffer.h; sourceTree = "<group>"; };
@@ -295,6 +306,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E410686712C8D20B00DDD7FD /* ofxColor */,
+				E410682712C8C3AE00DDD7FD /* ofxAudioSampler */,
 				E4CA991412AFB43000DD8F68 /* ofxiPhoneVideo */,
 				E4CA983D12AF9A9600DD8F68 /* ofxFretless */,
 			);
@@ -530,6 +543,47 @@
 			path = include_iphone;
 			sourceTree = "<group>";
 		};
+		E410682712C8C3AE00DDD7FD /* ofxAudioSampler */ = {
+			isa = PBXGroup;
+			children = (
+				E410682812C8C3AE00DDD7FD /* src */,
+			);
+			name = ofxAudioSampler;
+			path = "../../../My Addons/ofxAudioSampler";
+			sourceTree = SOURCE_ROOT;
+		};
+		E410682812C8C3AE00DDD7FD /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E410682912C8C3AE00DDD7FD /* ofxAudioSampler.cpp */,
+				E410682A12C8C3AE00DDD7FD /* ofxAudioSampler.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E410686712C8D20B00DDD7FD /* ofxColor */ = {
+			isa = PBXGroup;
+			children = (
+				E410687012C8D20B00DDD7FD /* src */,
+			);
+			name = ofxColor;
+			path = ../../../moreAddons/ofxColor;
+			sourceTree = SOURCE_ROOT;
+		};
+		E410687012C8D20B00DDD7FD /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E410687112C8D20B00DDD7FD /* ofxColor.h */,
+				E410687212C8D20B00DDD7FD /* ofxColorBase.cpp */,
+				E410687312C8D20B00DDD7FD /* ofxColorBase.h */,
+				E410687412C8D20B00DDD7FD /* ofxColorConversion.h */,
+				E410687512C8D20B00DDD7FD /* ofxColorMatching.h */,
+				E410687612C8D20B00DDD7FD /* ofxColorMath.h */,
+				E410687712C8D20B00DDD7FD /* ofxColorShared.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4CA983D12AF9A9600DD8F68 /* ofxFretless */ = {
 			isa = PBXGroup;
 			children = (
@@ -673,6 +727,8 @@
 				E4CA991A12AFB43000DD8F68 /* MyVideoBuffer.mm in Sources */,
 				E4CA991B12AFB43000DD8F68 /* ofxiVideoGrabber.mm in Sources */,
 				E4CA992112AFB46700DD8F68 /* ofxiVideoPlayer.cpp in Sources */,
+				E410682B12C8C3AE00DDD7FD /* ofxAudioSampler.cpp in Sources */,
+				E410687C12C8D20B00DDD7FD /* ofxColorBase.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

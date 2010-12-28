@@ -9,6 +9,9 @@
 
 #include <vector>
 #include <deque>
+#import <OpenGLES/ES1/gl.h>
+#import <OpenGLES/ES1/glext.h>
+
 
 
 using namespace std;
@@ -19,7 +22,8 @@ class ofxiPhoneVideo;
 enum {
 	CAMERA_IDLE,
 	CAMERA_RUNNING,
-	CAMERA_CAPTURING
+	CAMERA_CAPTURING,
+	CAMERA_RECORDING
 };
 
 class ofxiVideoGrabber {
@@ -31,14 +35,12 @@ public:
 	
 	void setup(ofxiPhoneVideo *video);
 	void update();
+	void fboDraw();
 	void draw();
+	void drawTexture(int text,int width,int height);
 	
 	void exit();
-	
-	void setTrigger(float thresh);
-	bool getIsTriggered();
-	float getMeter();
-	
+		
 	void startCamera();
 	void stopCamera();
 	
@@ -66,5 +68,12 @@ protected:
 	int state;
 	
 	ofxiPhoneVideo *video;
+	
+	int currentFrame;
+	int firstFrame;
+	
+	GLuint fbo;
+	
+	int cameraFrame;
 	
 };

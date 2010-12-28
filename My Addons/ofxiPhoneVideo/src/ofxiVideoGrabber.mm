@@ -13,6 +13,7 @@
 #include <iostream>
 #include "ofMain.h"
 #include "ofxiPhoneVideo.h"
+#import "glu.h"
 
 
 ofxiVideoGrabber::ofxiVideoGrabber() {
@@ -29,36 +30,109 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 	
 	this->video = video;
 	
-	videoTexture = [[[MyVideoBuffer alloc] initWithVideo:video] retain];
+	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps] retain];
 	
-	//buffer				= new float[video->bufferSize];
-	//memset(buffer, 0, video->bufferSize * sizeof(float));
+	
+	glGenFramebuffersOES(1, &fbo);
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
+	
 	
 		
+	for (int i=0; i<video->numFrames; i++) {
 	
-	
+		GLuint texture;
+		
+		 
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
+		
+		glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, texture, 0); // probably for init and alloc mem
+		
+		glBindTexture(GL_TEXTURE_2D,0);
+		
+		GLuint status = glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES);
+		if (status != GL_FRAMEBUFFER_COMPLETE_OES)
+		{
+			NSLog(@"failed to make complete framebuffer object %x", status);
+		}
+		
+		
+		video->textures.push_back(texture);
+				
+	}
 	
 }
 
-void ofxiVideoGrabber::update() {
-	
+void ofxiVideoGrabber::fboDraw()
+{
+	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)  ) {
+		
+		if (cameraFrame == videoTexture.currentFrame) {
+			//NSLog(@"do nothing");
+			return;
+		}
+		
+		cameraFrame++;
+		
+		if (videoTexture.currentFrame - cameraFrame > 0) {
+			NSLog(@"skip %i frames",videoTexture.currentFrame - cameraFrame );
+		}
+		
+		GLuint texture = video->textures[currentFrame % video->numFrames];
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
+		glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, texture, 0);
+		glBindTexture(GL_TEXTURE_2D,0);
+		
+		
+		glViewport(0, 0, video->textureWidth, video->textureHeight);
+		
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity ();
+		gluOrtho2D (0, video->textureWidth, 0, video->textureHeight);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+				
+		glColor4f(1.0, 1.0, 1.0, 0);
+		
+		
+		[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
+			
+		currentFrame++;
+		
+		if (state == CAMERA_RECORDING) {
+			if ( currentFrame-1 - firstFrame >= video->numFrames - video->numIntroFrames)  {
+				state = CAMERA_RUNNING;
+			}
+		}
+	}
 }
+
+
+
 
 void ofxiVideoGrabber::draw() {
+
 	
-	//ofScale(0.5, 0.5, 1);
-	//ofScale(1, -1, 1);
-	//ofTranslate(0, ofGetHeight());
-	//ofRotateZ(-90);
+	//[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
 	
-	glPushMatrix();
-	
-	if (video->bMirrored) {
-		glTranslatef(video->width, 0, 0);
-		glScalef(-1.0, 1.0, 1.0);
+	if (state == CAMERA_CAPTURING || state == CAMERA_RECORDING) {
+		GLuint texture = video->textures[(currentFrame-1) % video->numFrames];
+		video->drawTexture(texture);
+		
+		
+		
 	}
-	[videoTexture renderCameraToSprite:videoTexture.CameraTexture];
-	glPopMatrix();
+	
+//	if (video->bMirrored) {
+//		glTranslatef(video->width, 0, 0);
+//		glScalef(-1.0, 1.0, 1.0);
+//	}
+	
+
 }
 
 
@@ -132,13 +206,22 @@ void ofxiVideoGrabber::stopCamera() {
 
 void ofxiVideoGrabber::startCapture() {
 	state = CAMERA_CAPTURING;
-	[videoTexture capture];
+	
+	currentFrame = 0;
+	
+	cameraFrame = videoTexture.currentFrame-1;
 }
 
 void ofxiVideoGrabber::record() {
-	//currentBuffer = 0;
+	
 	video->audio.record();
-	[videoTexture record];
+		
+	firstFrame = currentFrame-1;
+	video->firstFrame = (currentFrame-1) % video->numFrames;
+	
+	state = CAMERA_RECORDING;
+	
+	ofLog(OF_LOG_VERBOSE, "ofxiVideoGrabber::record, first frame: %i", firstFrame);
 	
 }
 

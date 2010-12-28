@@ -1,7 +1,7 @@
 #include "ofxiVideoGrabber.h"
 #include "ofxiVideoPlayer.h"
 #include "testApp.h"
-
+#include "ofxColor.h"
 
 //--------------------------------------------------------------
 void testApp::setup(){	
@@ -19,15 +19,20 @@ void testApp::setup(){
 	
 	ofSetFrameRate(60);
 	
+	
+	
+	int bufferSize = 512;
+	
 	video.fps = 25;
-	video.bufferSize	= 512;
+	video.numIntroFrames = 4;
 	video.sampleRate 			= 44100;
-	video.numFrames = 50;
+	video.numFrames = 25;
 	video.sampleLength = 1000*video.numFrames/video.fps;
-	video.numBuffers = 44100 * video.sampleLength / (1000 * video.bufferSize);
-	video.sample				= new float[video.numBuffers*video.bufferSize];
-	memset(video.sample, 0, video.numBuffers*video.bufferSize * sizeof(float));
-
+	
+	video.audio.setup(bufferSize,video.sampleRate * video.sampleLength / (1000 * bufferSize));	
+	
+	
+	
 	
 	 
 	camera = new ofxiVideoGrabber();
@@ -38,9 +43,9 @@ void testApp::setup(){
 	player->setup(&video);
 	
 	
-	ofSoundStreamSetup(1, 1, this, video.sampleRate, video.bufferSize, 2);
+	ofSoundStreamSetup(1, 1, this, video.sampleRate, video.audio.getBufferSize(), 2);
 	
-	camera->startSession();
+	camera->startCamera();
 	
 }
 
@@ -64,13 +69,27 @@ void testApp::update()
 //--------------------------------------------------------------
 void testApp::draw()
 {
-	if (player->getIsPlaying() || player->getIsScrubbing()) {
+	
+	
+	
+	ofSetColor(255, 255, 255);
+	if (player->getIsPlaying()) {
 		player->draw();
-	} else {
+	} else if (camera->getState()==CAMERA_CAPTURING) {
 		camera->draw();
-		camera->drawAudio();
+		//camera->drawAudio();
 	}
 	
+	ofFill();
+	int width = ofGetWidth()/4;
+	for (int i=0; i<4; i++) {
+		
+		
+		ofxColorf color;
+		color.setMode(OF_COLOR_HSV).set((float)i/4,1,0.9).setRange(255);
+		ofSetColor(color.getRed(), color.getGreen(), color.getBlue());
+		ofRect(i*width, 0, width, 30);
+	}
 }
 
 //--------------------------------------------------------------
@@ -83,12 +102,14 @@ void testApp::exit() {
 void testApp::touchDown(ofTouchEventArgs &touch){
 	
 	if(touch.id == 0){
-		switch ((int)((3*touch.y) / (ofGetHeight()+1))) {
+		switch ((int)((2*touch.y) / (ofGetHeight()+1))) {
 			case 0: {
 				switch ((int)((4*touch.x) / (ofGetWidth()+1))) {
 					case 0:
-						camera->startRecording();
-						cout << "Start recording" << endl;
+						if (camera->getState()==CAMERA_RUNNING) {
+							camera->startCapture();
+						}
+						camera->record();
 						break;
 					case 1:
 						fretless.record();
@@ -105,9 +126,9 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 						
 			} break;
 			case 1:
-				if (!camera->getIsRecording()) {
+				if (!camera->getState()!=CAMERA_CAPTURING) {
 					float note = 0.5 + touch.x / (ofGetWidth());
-					player->play( note );
+					player->play( note,1.0 );
 					
 					if (fretless.getSongState() == SONG_RECORD) {
 						fretless.addNoteEvent(note);
@@ -115,12 +136,12 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 				}
 				break;
 				
-			case 2:
-				if (!camera->getIsRecording()) {
-					player->startScrubbing();
-					player->setPosition(touch.x / (ofGetWidth()+1));
-				}
-				break;
+//			case 2:
+//				if (!camera->getIsRecording()) {
+//					player->startScrubbing();
+//					player->setPosition(touch.x / (ofGetWidth()+1));
+//				}
+//				break;
 				
 			default:
 				break;
@@ -132,7 +153,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch){
 	if(touch.id == 0){
-		switch ((int)((3*touch.y) / (ofGetHeight()+1))) {
+		switch ((int)((2*touch.y) / (ofGetHeight()+1))) {
 			case 0:
 				
 				break;
@@ -140,11 +161,11 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 				
 				break;
 				
-			case 2:
-				if (player->getIsScrubbing()) {
-					player->setPosition(touch.x / (ofGetWidth()+1));
-				}
-				break;
+//			case 2:
+//				if (player->getIsScrubbing()) {
+//					player->setPosition(touch.x / (ofGetWidth()+1));
+//				}
+//				break;
 				
 			default:
 				break;
@@ -156,7 +177,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){	
 	if(touch.id == 0){
-		switch ((int)((3*touch.y) / (ofGetHeight()+1))) {
+		switch ((int)((2*touch.y) / (ofGetHeight()+1))) {
 			case 0:
 				
 				break;
@@ -164,11 +185,11 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 				
 				break;
 				
-			case 2:
-				if (player->getIsScrubbing()) {
-					player->stopScrubbing();
-				}
-				break;
+//			case 2:
+//				if (player->getIsScrubbing()) {
+//					player->stopScrubbing();
+//				}
+//				break;
 				
 			default:
 				break;
@@ -187,6 +208,7 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 
 void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	player->audioRequested(output, bufferSize);
+	player->preProcess();
 }
 
 //--------------------------------------------------------------

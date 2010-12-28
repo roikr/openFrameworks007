@@ -43,6 +43,9 @@ void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,bool bIntroMode) {
 
 void ofxiVideoPlayer::seekFrame(int nextFrame) {
 	
+	
+	
+	
 	switch (state) {
 		case PLAYER_PLAYING: {
 			if (nextFrame >= video->textures.size()-video->numIntroFrames) {
@@ -51,7 +54,11 @@ void ofxiVideoPlayer::seekFrame(int nextFrame) {
 					playIntro();
 				} 
 			} else {
-				currentTexture =video->textures[(video->firstFrame+nextFrame) % video->textures.size()];
+				int temp = video->textures[(video->firstFrame+nextFrame) % video->textures.size()];
+				if	(temp!=currentTexture) {
+					//printf("seekFrame: %i, texture: %i\n", nextFrame,temp);
+					currentTexture =temp;
+				}
 			}
 		}	break;
 			
@@ -108,57 +115,9 @@ void ofxiVideoPlayer::updateFrame() {
 
 
 void ofxiVideoPlayer::draw() {
-	drawTexture(currentTexture);
+	video->drawTexture(currentTexture);
 }
 
-void ofxiVideoPlayer::drawFrame(int frame) {
-	drawTexture(video->textures[frame]);
-}
-
-void ofxiVideoPlayer::drawTexture(int texture) {
-		
-	
-	
-	
-	GLfloat spriteTexcoords[] = {
-		1.0f,1.0f,   
-		1.0f,0.0f,
-		0,1.0f,   
-		0.0f,0,};
-	
-	float w = video->width;
-	float h = video->height;
-	
-	GLfloat spriteVertices[] =  {
-		w,h,0,   
-		w,0,0,   
-		0,h,0, 
-		0,0,0};
-	
-	
-	glPushMatrix();
-	if (video->bMirrored) {
-		glTranslatef(w, 0, 0);
-		glScalef(-1.0, 1.0, 1.0);
-	}
-	
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glEnable(GL_TEXTURE_2D);
-	
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
-	
-	glPopMatrix();
-		
-}
 
 void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 	if( video->audio.getBufferSize() != bufferSize ){
@@ -219,7 +178,7 @@ void ofxiVideoPlayer::play(int note,int velocity) {
 	
 	float ratio = exp((float)(note-60)/12.0*log(2.0));
 	float volume = (float)velocity / 127;
-	printf("note:  %i %i, ratio: %1.2f %1.2f\n", note,velocity,ratio,volume);
+	//printf("note:  %i %i, ratio: %1.2f %1.2f\n", note,velocity,ratio,volume);
 	play(ratio,volume);
 }
 

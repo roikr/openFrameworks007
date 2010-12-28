@@ -61,9 +61,6 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 #import <AVFoundation/AVFoundation.h>
 #include <OpenGLES/ES1/glext.h>
 
-class ofxiPhoneVideo;
-
-
 
 									 
 @interface MyVideoBuffer : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>{
@@ -78,20 +75,15 @@ class ofxiPhoneVideo;
 	
 	
 	uint m_textureHandle;
-	bool bIsCapturing;
-	bool bIsRecording;
-	
-	
-	int currentFrame;
-	int firstFrame;
 	
 	//AVCaptureConnection *audioConnection;
 	AVCaptureInputPort *audioInputPort;
 	
-	ofxiPhoneVideo *video;
 	
 	AVCaptureDeviceInput *_videoInput;
 	
+	
+	int currentFrame;
 	
 }
 
@@ -104,14 +96,15 @@ class ofxiPhoneVideo;
 @property (nonatomic,retain) AVCaptureDeviceInput *videoInput;
 
 @property (readwrite) uint CameraTexture;
+@property (readwrite) int currentFrame;
 
--(id) initWithVideo:(ofxiPhoneVideo *)theVideo;
+
+-(id) initWithFPS: (int) fps;
 - (void)	captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
-- (void)	renderCameraToSprite:(uint)text;
+- (void)	renderCameraToSprite:(uint)text withWidth:(GLuint)width;
 - (GLuint)	createVideoTextuerUsingWidth:(GLuint)w Height:(GLuint)h;
 - (void)	resetWithSize:(GLuint)w Height:(GLuint)h;
-- (void) capture;
-- (void) record;
+
 
 - (BOOL) cameraToggle;
 

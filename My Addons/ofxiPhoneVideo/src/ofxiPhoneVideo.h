@@ -12,7 +12,12 @@
 
 using namespace std;
 
-struct ofxiPhoneVideo {
+class ofxiPhoneVideo {
+	
+public:
+	
+	void drawFrame(int frame);
+	void drawTexture(int texture);
 	
 	int		numFrames;
 	int		numIntroFrames;
@@ -27,10 +32,13 @@ struct ofxiPhoneVideo {
 	ofxAudioSampler audio;
 	
 	int firstFrame;
-	//float	*sample;
 	
-	int width;
-	int height;
+	int textureWidth; // power of 2
+	int textureHeight;
 	
-	bool bMirrored;
+	float widthFraction;
+	float heightFraction;
+
+	
+	
 };

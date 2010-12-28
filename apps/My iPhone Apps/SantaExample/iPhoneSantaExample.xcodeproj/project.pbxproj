@@ -35,7 +35,6 @@
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E41F382912B3FCCF00A2A57B /* ofxRKTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E41F382612B3FCCF00A2A57B /* ofxRKTexture.mm */; };
 		E41F382A12B3FCCF00A2A57B /* PVRTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = E41F382712B3FCCF00A2A57B /* PVRTexture.m */; };
-		E48DA3D912B2469E00EC4C4A /* ofxAudioCompressor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48DA3D812B2469E00EC4C4A /* ofxAudioCompressor.cpp */; };
 		E48F721E12B566700053ACCB /* ofxAudioTrigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48F721C12B566700053ACCB /* ofxAudioTrigger.cpp */; };
 		E48F723612B5684B0053ACCB /* ofxAudioSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48F723412B5684B0053ACCB /* ofxAudioSampler.cpp */; };
 		E4922D1412AFE5DC000FCC0B /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E4922D0B12AFE5DC000FCC0B /* install.xml */; };
@@ -45,13 +44,17 @@
 		E4922D1812AFE5DC000FCC0B /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4922D1212AFE5DC000FCC0B /* ofxXmlSettings.cpp */; };
 		E49A35CA12B3FF960081B918 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E49A35C312B3FF960081B918 /* Default.png */; };
 		E49A35CB12B3FF960081B918 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E49A35C412B3FF960081B918 /* Icon.png */; };
-		E49A35CC12B3FF960081B918 /* jingle_01.mid in Resources */ = {isa = PBXBuildFile; fileRef = E49A35C512B3FF960081B918 /* jingle_01.mid */; };
-		E49A35CD12B3FF960081B918 /* jingle_02.mid in Resources */ = {isa = PBXBuildFile; fileRef = E49A35C612B3FF960081B918 /* jingle_02.mid */; };
-		E49A35CE12B3FF960081B918 /* jingle_03.mid in Resources */ = {isa = PBXBuildFile; fileRef = E49A35C712B3FF960081B918 /* jingle_03.mid */; };
-		E49A35CF12B3FF960081B918 /* players.xml in Resources */ = {isa = PBXBuildFile; fileRef = E49A35C812B3FF960081B918 /* players.xml */; };
-		E49A35D012B3FF960081B918 /* santa.pvr in Resources */ = {isa = PBXBuildFile; fileRef = E49A35C912B3FF960081B918 /* santa.pvr */; };
 		E4A5A67F12B37E9A007B4DD6 /* ofxSndFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A5A67D12B37E9A007B4DD6 /* ofxSndFile.cpp */; };
 		E4A5A6BF12B38B18007B4DD6 /* ofMainExt.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A5A6BE12B38B18007B4DD6 /* ofMainExt.mm */; };
+		E4C4D10A12C9DBD400411B7A /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C4D10812C9DBD400411B7A /* ofxSlider.cpp */; };
+		E4C4D11912C9DBF800411B7A /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C4D11412C9DBF800411B7A /* easing.cpp */; };
+		E4C4D11A12C9DBF800411B7A /* rkmath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C4D11712C9DBF800411B7A /* rkmath.cpp */; };
+		E4C4D14C12C9DCBE00411B7A /* alon.pvr in Resources */ = {isa = PBXBuildFile; fileRef = E4C4D14612C9DCBE00411B7A /* alon.pvr */; };
+		E4C4D14D12C9DCBE00411B7A /* cards.xml in Resources */ = {isa = PBXBuildFile; fileRef = E4C4D14712C9DCBE00411B7A /* cards.xml */; };
+		E4C4D14E12C9DCBE00411B7A /* dani.pvr in Resources */ = {isa = PBXBuildFile; fileRef = E4C4D14812C9DCBE00411B7A /* dani.pvr */; };
+		E4C4D14F12C9DCBE00411B7A /* jingle_01.mid in Resources */ = {isa = PBXBuildFile; fileRef = E4C4D14912C9DCBE00411B7A /* jingle_01.mid */; };
+		E4C4D15012C9DCBE00411B7A /* jingle_02.mid in Resources */ = {isa = PBXBuildFile; fileRef = E4C4D14A12C9DCBE00411B7A /* jingle_02.mid */; };
+		E4C4D15112C9DCBE00411B7A /* jingle_03.mid in Resources */ = {isa = PBXBuildFile; fileRef = E4C4D14B12C9DCBE00411B7A /* jingle_03.mid */; };
 		E4CA991A12AFB43000DD8F68 /* MyVideoBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4CA991712AFB43000DD8F68 /* MyVideoBuffer.mm */; };
 		E4CA991B12AFB43000DD8F68 /* ofxiVideoGrabber.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4CA991812AFB43000DD8F68 /* ofxiVideoGrabber.mm */; };
 		E4CA992112AFB46700DD8F68 /* ofxiVideoPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CA992012AFB46700DD8F68 /* ofxiVideoPlayer.cpp */; };
@@ -161,8 +164,6 @@
 		E41F382612B3FCCF00A2A57B /* ofxRKTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofxRKTexture.mm; path = ../../../../YesPlastic/src/ofxRKTexture.mm; sourceTree = SOURCE_ROOT; };
 		E41F382712B3FCCF00A2A57B /* PVRTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PVRTexture.m; path = ../../../../YesPlastic/src/PVRTexture.m; sourceTree = SOURCE_ROOT; };
 		E41F382812B3FCCF00A2A57B /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PVRTexture.h; path = ../../../../YesPlastic/src/PVRTexture.h; sourceTree = SOURCE_ROOT; };
-		E48DA3D712B2469E00EC4C4A /* ofxAudioCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioCompressor.h; sourceTree = "<group>"; };
-		E48DA3D812B2469E00EC4C4A /* ofxAudioCompressor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioCompressor.cpp; sourceTree = "<group>"; };
 		E48F721C12B566700053ACCB /* ofxAudioTrigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioTrigger.cpp; sourceTree = "<group>"; };
 		E48F721D12B566700053ACCB /* ofxAudioTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioTrigger.h; sourceTree = "<group>"; };
 		E48F723412B5684B0053ACCB /* ofxAudioSampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioSampler.cpp; sourceTree = "<group>"; };
@@ -176,15 +177,22 @@
 		E4922D1312AFE5DC000FCC0B /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E49A35C312B3FF960081B918 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		E49A35C412B3FF960081B918 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		E49A35C512B3FF960081B918 /* jingle_01.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = jingle_01.mid; sourceTree = "<group>"; };
-		E49A35C612B3FF960081B918 /* jingle_02.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = jingle_02.mid; sourceTree = "<group>"; };
-		E49A35C712B3FF960081B918 /* jingle_03.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = jingle_03.mid; sourceTree = "<group>"; };
-		E49A35C812B3FF960081B918 /* players.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = players.xml; sourceTree = "<group>"; };
-		E49A35C912B3FF960081B918 /* santa.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; path = santa.pvr; sourceTree = "<group>"; };
 		E4A5A67D12B37E9A007B4DD6 /* ofxSndFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSndFile.cpp; sourceTree = "<group>"; };
 		E4A5A67E12B37E9A007B4DD6 /* ofxSndFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSndFile.h; sourceTree = "<group>"; };
 		E4A5A6BD12B38B18007B4DD6 /* ofMainExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofMainExt.h; path = src/ofMainExt.h; sourceTree = "<group>"; };
 		E4A5A6BE12B38B18007B4DD6 /* ofMainExt.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofMainExt.mm; path = src/ofMainExt.mm; sourceTree = "<group>"; };
+		E4C4D10812C9DBD400411B7A /* ofxSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSlider.cpp; sourceTree = "<group>"; };
+		E4C4D10912C9DBD400411B7A /* ofxSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSlider.h; sourceTree = "<group>"; };
+		E4C4D11412C9DBF800411B7A /* easing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = easing.cpp; sourceTree = "<group>"; };
+		E4C4D11512C9DBF800411B7A /* easing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
+		E4C4D11712C9DBF800411B7A /* rkmath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rkmath.cpp; sourceTree = "<group>"; };
+		E4C4D11812C9DBF800411B7A /* rkmath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rkmath.h; sourceTree = "<group>"; };
+		E4C4D14612C9DCBE00411B7A /* alon.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; name = alon.pvr; path = ../../../../SingingCard/data/alon.pvr; sourceTree = SOURCE_ROOT; };
+		E4C4D14712C9DCBE00411B7A /* cards.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = cards.xml; path = ../../../../SingingCard/data/cards.xml; sourceTree = SOURCE_ROOT; };
+		E4C4D14812C9DCBE00411B7A /* dani.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; name = dani.pvr; path = ../../../../SingingCard/data/dani.pvr; sourceTree = SOURCE_ROOT; };
+		E4C4D14912C9DCBE00411B7A /* jingle_01.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; name = jingle_01.mid; path = ../../../../SingingCard/data/jingle_01.mid; sourceTree = SOURCE_ROOT; };
+		E4C4D14A12C9DCBE00411B7A /* jingle_02.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; name = jingle_02.mid; path = ../../../../SingingCard/data/jingle_02.mid; sourceTree = SOURCE_ROOT; };
+		E4C4D14B12C9DCBE00411B7A /* jingle_03.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; name = jingle_03.mid; path = ../../../../SingingCard/data/jingle_03.mid; sourceTree = SOURCE_ROOT; };
 		E4CA991612AFB43000DD8F68 /* MyVideoBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoBuffer.h; sourceTree = "<group>"; };
 		E4CA991712AFB43000DD8F68 /* MyVideoBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyVideoBuffer.mm; sourceTree = "<group>"; };
 		E4CA991812AFB43000DD8F68 /* ofxiVideoGrabber.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVideoGrabber.mm; sourceTree = "<group>"; };
@@ -342,6 +350,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4C4D11312C9DBF800411B7A /* common */,
+				E4C4D10612C9DBD400411B7A /* ofxSlider */,
 				E48F721A12B566700053ACCB /* ofxAudioTrigger */,
 				E4A5A67B12B37E9A007B4DD6 /* ofxSndFile */,
 				E4FBC15312B10DE500AB4E15 /* ofxMidi */,
@@ -654,13 +664,14 @@
 		E49A35C212B3FF960081B918 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				E4C4D14612C9DCBE00411B7A /* alon.pvr */,
+				E4C4D14712C9DCBE00411B7A /* cards.xml */,
+				E4C4D14812C9DCBE00411B7A /* dani.pvr */,
+				E4C4D14912C9DCBE00411B7A /* jingle_01.mid */,
+				E4C4D14A12C9DCBE00411B7A /* jingle_02.mid */,
+				E4C4D14B12C9DCBE00411B7A /* jingle_03.mid */,
 				E49A35C312B3FF960081B918 /* Default.png */,
 				E49A35C412B3FF960081B918 /* Icon.png */,
-				E49A35C512B3FF960081B918 /* jingle_01.mid */,
-				E49A35C612B3FF960081B918 /* jingle_02.mid */,
-				E49A35C712B3FF960081B918 /* jingle_03.mid */,
-				E49A35C812B3FF960081B918 /* players.xml */,
-				E49A35C912B3FF960081B918 /* santa.pvr */,
 			);
 			name = data;
 			path = bin/data;
@@ -684,6 +695,36 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E4C4D10612C9DBD400411B7A /* ofxSlider */ = {
+			isa = PBXGroup;
+			children = (
+				E4C4D10712C9DBD400411B7A /* src */,
+			);
+			name = ofxSlider;
+			path = "../../../My Addons/ofxSlider";
+			sourceTree = SOURCE_ROOT;
+		};
+		E4C4D10712C9DBD400411B7A /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4C4D10812C9DBD400411B7A /* ofxSlider.cpp */,
+				E4C4D10912C9DBD400411B7A /* ofxSlider.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4C4D11312C9DBF800411B7A /* common */ = {
+			isa = PBXGroup;
+			children = (
+				E4C4D11412C9DBF800411B7A /* easing.cpp */,
+				E4C4D11512C9DBF800411B7A /* easing.h */,
+				E4C4D11712C9DBF800411B7A /* rkmath.cpp */,
+				E4C4D11812C9DBF800411B7A /* rkmath.h */,
+			);
+			name = common;
+			path = "../../../My Addons/common";
+			sourceTree = SOURCE_ROOT;
+		};
 		E4CA991412AFB43000DD8F68 /* ofxiPhoneVideo */ = {
 			isa = PBXGroup;
 			children = (
@@ -703,8 +744,6 @@
 				E4CA991812AFB43000DD8F68 /* ofxiVideoGrabber.mm */,
 				E4CA991F12AFB46700DD8F68 /* ofxiVideoPlayer.h */,
 				E4CA992012AFB46700DD8F68 /* ofxiVideoPlayer.cpp */,
-				E48DA3D712B2469E00EC4C4A /* ofxAudioCompressor.h */,
-				E48DA3D812B2469E00EC4C4A /* ofxAudioCompressor.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -800,11 +839,12 @@
 				E4922D1412AFE5DC000FCC0B /* install.xml in Resources */,
 				E49A35CA12B3FF960081B918 /* Default.png in Resources */,
 				E49A35CB12B3FF960081B918 /* Icon.png in Resources */,
-				E49A35CC12B3FF960081B918 /* jingle_01.mid in Resources */,
-				E49A35CD12B3FF960081B918 /* jingle_02.mid in Resources */,
-				E49A35CE12B3FF960081B918 /* jingle_03.mid in Resources */,
-				E49A35CF12B3FF960081B918 /* players.xml in Resources */,
-				E49A35D012B3FF960081B918 /* santa.pvr in Resources */,
+				E4C4D14C12C9DCBE00411B7A /* alon.pvr in Resources */,
+				E4C4D14D12C9DCBE00411B7A /* cards.xml in Resources */,
+				E4C4D14E12C9DCBE00411B7A /* dani.pvr in Resources */,
+				E4C4D14F12C9DCBE00411B7A /* jingle_01.mid in Resources */,
+				E4C4D15012C9DCBE00411B7A /* jingle_02.mid in Resources */,
+				E4C4D15112C9DCBE00411B7A /* jingle_03.mid in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,13 +882,15 @@
 				E4922D1812AFE5DC000FCC0B /* ofxXmlSettings.cpp in Sources */,
 				E4FBC16112B10DE500AB4E15 /* ofxMidi.cpp in Sources */,
 				E4FBC16612B10DE500AB4E15 /* ofxMidiTrack.cpp in Sources */,
-				E48DA3D912B2469E00EC4C4A /* ofxAudioCompressor.cpp in Sources */,
 				E4A5A67F12B37E9A007B4DD6 /* ofxSndFile.cpp in Sources */,
 				E4A5A6BF12B38B18007B4DD6 /* ofMainExt.mm in Sources */,
 				E41F382912B3FCCF00A2A57B /* ofxRKTexture.mm in Sources */,
 				E41F382A12B3FCCF00A2A57B /* PVRTexture.m in Sources */,
 				E48F721E12B566700053ACCB /* ofxAudioTrigger.cpp in Sources */,
 				E48F723612B5684B0053ACCB /* ofxAudioSampler.cpp in Sources */,
+				E4C4D10A12C9DBD400411B7A /* ofxSlider.cpp in Sources */,
+				E4C4D11912C9DBF800411B7A /* easing.cpp in Sources */,
+				E4C4D11A12C9DBF800411B7A /* rkmath.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

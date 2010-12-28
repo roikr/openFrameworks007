@@ -13,6 +13,7 @@
 
 
 void ofxFretless::record() {
+	events.clear();
 	state = SONG_RECORD;
 	startTime = ofGetElapsedTimeMillis();
 }

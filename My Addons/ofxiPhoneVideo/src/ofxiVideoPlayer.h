@@ -7,10 +7,6 @@
  *
  */
 
-#include <vector>
-#include <deque>
-
-using namespace std;
 
 class ofxiPhoneVideo;
 
@@ -51,14 +47,13 @@ public:
 	
 	void preProcess(); // should be call after audioRequested or mix to update position and state
 	
-	void drawFrame(int frame);
+	
 
 	
 	
 	
 protected:
 	
-	void drawTexture(int texture);
 	void seekFrame(int nextFrame);
 	
 	//int		drawCounter, bufferCounter;
