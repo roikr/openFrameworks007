@@ -7,7 +7,18 @@
  *
  */
 
+#pragma once
+
 #include "ofxiPhoneVideo.h"
 #include <string>
 
-void ofxiVideoLoad(string filename,ofxiPhoneVideo &video);
+class ofxiVideoLoader {
+	
+public:
+	
+	void setup(ofxiPhoneVideo *video);
+	void load(string filename);
+	
+	ofxiPhoneVideo *video;
+	
+};
