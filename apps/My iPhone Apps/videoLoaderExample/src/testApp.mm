@@ -30,8 +30,8 @@ void testApp::setup(){
 		
 	video.widthFraction = 1.0;
 	video.heightFraction = 1.0;
-	video.textureWidth = 480;
-	video.textureHeight = 360;
+	video.textureWidth = 256;
+	video.textureHeight = 128;
 	
 	
 	loader.setup(&video);
@@ -55,16 +55,16 @@ void testApp::update(){
 void testApp::draw(){
 	
 	ofPushMatrix();
-	ofScale(0.5, 0.5, 1);
+	//ofScale(0.5, 0.5, 1);
 	if (player.getIsPlaying()) {
 		player.draw();
 	} 
 	
 	ofPopMatrix();
 	
-	ofSetColor(255, 255, 255);
-	ofFill();
-	ofRect(0, 0, 20, 20);
+//	ofSetColor(255, 0, 0);
+//	ofNoFill();
+//	ofRect(0, 0, 256, 128);
 	
 }
 

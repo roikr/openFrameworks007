@@ -50,7 +50,7 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 		
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
-		fbo.begin(texture,video->textureWidth,video->textureHeight);
+		fbo.begin(texture);
 		fbo.end();
 		
 		video->textures.push_back(texture);
@@ -129,7 +129,8 @@ void ofxiVideoGrabber::render() {
 			}
 			
 			GLuint texture = video->textures[currentFrame % video->numFrames];
-			fbo.begin(texture,video->textureWidth,video->textureHeight);		
+			fbo.push(video->textureWidth,video->textureHeight);
+			fbo.begin(texture);		
 			
 			[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
 			
@@ -143,6 +144,7 @@ void ofxiVideoGrabber::render() {
 			
 			
 			fbo.end();
+			fbo.pop();
 		}
 	}
 	

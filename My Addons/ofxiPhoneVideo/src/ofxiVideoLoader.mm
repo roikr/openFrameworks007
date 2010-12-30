@@ -17,6 +17,7 @@
 
 void ofxiVideoLoader::setup(ofxiPhoneVideo *video) {
 	this->video = video;
+	fbo.setup();
 }
 
 
@@ -42,6 +43,47 @@ GLuint createVideoTextue(GLuint w,GLuint h)
 	free(textureData);
 	
 	return handle;
+}
+
+
+void renderCameraToSprite(GLuint text,float w,float h)
+{
+	if (!text)
+		return;
+	
+	GLfloat spriteTexcoords[] = {
+		1.0f,1.0f,   
+		1.0f,0.0f,
+		0,1.0f,   
+		0.0f,0,};
+	
+	
+	
+	
+	GLfloat spriteVertices[] =  {
+		w,h,0,   
+		w,0,0,   
+		0,h,0, 
+		0,0,0};
+	
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
+	glBindTexture(GL_TEXTURE_2D, text);
+	glEnable(GL_TEXTURE_2D);
+	
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	//	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	//	glEnable(GL_DEPTH_TEST);
+	
+	glDisable(GL_TEXTURE_2D);
+	
 }
 
 void ofxiVideoLoader::load(string filename) {
@@ -105,6 +147,10 @@ void ofxiVideoLoader::load(string filename) {
 	CMVideoCodecType videoType;
 	float *buffer = new float[video->sampleRate * 2]; // max 2 sec
 	int pos = 0;
+	fbo.push(video->textureWidth, video->textureHeight);
+	GLuint videoTexture;
+	float renderWidth;
+	float renderHeight;
 	
 	while (reader.status == AVAssetReaderStatusReading) {
 		
@@ -176,11 +222,35 @@ void ofxiVideoLoader::load(string filename) {
 					videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDesc);
 					NSLog(@"videoDimensions: %i %i",videoDimensions.width,videoDimensions.height);
 					
+					
+					
 					CMVideoCodecType type = CMFormatDescriptionGetMediaSubType(formatDesc);
 #if defined(__LITTLE_ENDIAN__)
 					type = OSSwapInt32(type);
 #endif
 					videoType = type;
+					
+					videoTexture = createVideoTextue(videoDimensions.width,videoDimensions.height);
+					
+					float videoAspectRatio = (float)videoDimensions.width/(float)videoDimensions.height;
+					float textureAspectRatio = (float)video->textureWidth/(float)video->textureHeight;
+					
+					if (textureAspectRatio>videoAspectRatio) {
+						renderHeight = video->textureHeight;
+						renderWidth = videoAspectRatio * renderHeight;
+						video->heightFraction = 1;
+						video->widthFraction = renderWidth/(float)video->textureWidth;
+					} else {
+						renderWidth = video->textureWidth;
+						renderHeight =  renderWidth / videoAspectRatio;
+						video->widthFraction = 1;
+						video->heightFraction = renderHeight/(float)video->textureHeight;
+					}
+					
+					NSLog(@"renderDimensions: %.0f %.0f",renderWidth,renderHeight);
+					NSLog(@"textureFractions: %.2f %.2f",video->widthFraction,video->heightFraction);
+
+
 					
 					
 				}
@@ -188,26 +258,47 @@ void ofxiVideoLoader::load(string filename) {
 				CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
 				CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
 				
-				
-				GLuint texture = createVideoTextue(videoDimensions.width,videoDimensions.height);
-				
-				video->textures.push_back(texture);
-				glBindTexture(GL_TEXTURE_2D, texture);
+			
+				glBindTexture(GL_TEXTURE_2D, videoTexture);
 				
 				unsigned char* linebase = (unsigned char *)CVPixelBufferGetBaseAddress( pixelBuffer );
 				
 				
 				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
 				
-				
 				CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );
 				
+				GLuint texture;
 				
+				glGenTextures(1, &texture);
+				
+				
+				
+				glBindTexture(GL_TEXTURE_2D, texture);
+				
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
+				
+				//glBindTexture(GL_TEXTURE_2D, 0);
+				
+				fbo.begin(texture);
+			
+				//renderCameraToSprite(videoTexture, video->textureWidth, video->textureHeight);
+				//float w = width; // normalizing each camera to 480 * 360
+				//float h = (float)videoDimensions.height / (float)videoDimensions.width * w ;
+				renderCameraToSprite(videoTexture, renderWidth, renderHeight);
+				//renderCameraToSprite(videoTexture, videoDimensions.width, videoDimensions.height);
+				
+				fbo.end();
+				
+				video->textures.push_back(texture);
 			}
 
 		}
 		
 	}
+	
+	fbo.pop();
 	
 	NSLog(@"status: %i",reader.status);
 	

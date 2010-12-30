@@ -16,7 +16,21 @@ void ofxiFBO::setup() {
 	glGenFramebuffersOES(1, &fbo);
 }
 
-void ofxiFBO::begin(GLuint texture,int width,int height) {
+void ofxiFBO::push(int width,int height) {
+	glViewport(0, 0, width, height);
+	
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity ();
+	gluOrtho2D (0, width, 0, height);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	
+	glColor4f(1.0, 1.0, 1.0, 0);
+}
+
+void ofxiFBO::begin(GLuint texture) {
 	
 	
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING_OES, (GLint *) &oldFramebuffer); 
@@ -34,33 +48,27 @@ void ofxiFBO::begin(GLuint texture,int width,int height) {
 	}
 	
 	
-	glViewport(0, 0, width, height);
 	
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity ();
-	gluOrtho2D (0, width, 0, height);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	
-	glColor4f(1.0, 1.0, 1.0, 0);
 	
 }
 
 
 
 void ofxiFBO::end() {
+	
+	
+	
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, oldFramebuffer);
+	
+	}
+
+
+void ofxiFBO::pop() {
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	
 	glMatrixMode(GL_MODELVIEW);
-	
-	
-	glBindFramebufferOES(GL_FRAMEBUFFER_OES, oldFramebuffer);
-	
 	ofxiPhoneGLViewPort();
-	
-		
+
 }

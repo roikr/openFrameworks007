@@ -16,8 +16,10 @@ class ofxiFBO {
 public:
 	
 	void setup();
-	void begin(GLuint texture,int width,int height);
+	void push(int width,int height);
+	void begin(GLuint texture);
 	void end();
+	void pop();
 	
 	GLuint fbo;
 	GLuint oldFramebuffer;

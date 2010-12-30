@@ -25,7 +25,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					901,
+					697,
 					20,
 					48,
 					43,
@@ -42,20 +42,17 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 315422051;
-			PBXWorkspaceStateSaveDate = 315422051;
+			PBXPerProjectTemplateStateSaveDate = 315427653;
+			PBXWorkspaceStateSaveDate = 315427653;
 		};
 		perUserProjectItems = {
 			E499073012CC05C80068F6A5 /* PBXTextBookmark */ = E499073012CC05C80068F6A5 /* PBXTextBookmark */;
 			E499073212CC05C80068F6A5 /* PBXTextBookmark */ = E499073212CC05C80068F6A5 /* PBXTextBookmark */;
-			E499073512CC05C80068F6A5 /* PBXTextBookmark */ = E499073512CC05C80068F6A5 /* PBXTextBookmark */;
 			E499073612CC05C80068F6A5 /* PBXTextBookmark */ = E499073612CC05C80068F6A5 /* PBXTextBookmark */;
 			E499073812CC05C80068F6A5 /* PBXTextBookmark */ = E499073812CC05C80068F6A5 /* PBXTextBookmark */;
+			E4D21CF112CD28F9003C5617 /* PBXTextBookmark */ = E4D21CF112CD28F9003C5617 /* PBXTextBookmark */;
 			E4EC179912CB945C00F267CD /* PBXTextBookmark */ = E4EC179912CB945C00F267CD /* PBXTextBookmark */;
 			E4F7D75012CCFEF100D3119E /* PBXTextBookmark */ = E4F7D75012CCFEF100D3119E /* PBXTextBookmark */;
-			E4F7D75112CCFEF100D3119E /* PBXTextBookmark */ = E4F7D75112CCFEF100D3119E /* PBXTextBookmark */;
-			E4F7D75212CCFEF100D3119E /* PBXBookmark */ = E4F7D75212CCFEF100D3119E /* PBXBookmark */;
-			E4F7D75312CCFEF100D3119E /* PBXTextBookmark */ = E4F7D75312CCFEF100D3119E /* PBXTextBookmark */;
 		};
 		sourceControlManager = E4EC173712CB93A300F267CD /* Source Control */;
 		userBuildSettings = {
@@ -63,16 +60,16 @@
 	};
 	E49906F512CBF9290068F6A5 /* ofxiFBO.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {439, 325}}";
-			sepNavSelRange = "{225, 0}";
-			sepNavVisRange = "{164, 208}";
+			sepNavIntBoundsRect = "{{0, 0}, {875, 468}}";
+			sepNavSelRange = "{248, 0}";
+			sepNavVisRange = "{0, 398}";
 		};
 	};
 	E49906F612CBF9290068F6A5 /* ofxiFBO.mm */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1079, 858}}";
-			sepNavSelRange = "{220, 0}";
-			sepNavVisRange = "{0, 954}";
+			sepNavIntBoundsRect = "{{0, 0}, {978, 910}}";
+			sepNavSelRange = "{322, 20}";
+			sepNavVisRange = "{220, 926}";
 		};
 	};
 	E499073012CC05C80068F6A5 /* PBXTextBookmark */ = {
@@ -109,16 +106,6 @@
 		path = /Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/addons/ofxiPhone/src/ofAppiPhoneWindow.mm;
 		sourceTree = "<absolute>";
 	};
-	E499073512CC05C80068F6A5 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4EC175912CB93C800F267CD /* ofxiVideoLoader.h */;
-		name = "ofxiVideoLoader.h: 10";
-		rLen = 0;
-		rLoc = 167;
-		rType = 0;
-		vrLen = 274;
-		vrLoc = 0;
-	};
 	E499073612CC05C80068F6A5 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = E4EC175D12CB93C800F267CD /* VideoImporter.h */;
@@ -139,6 +126,16 @@
 		vrLen = 679;
 		vrLoc = 0;
 	};
+	E4D21CF112CD28F9003C5617 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D8928711527878007E1F53 /* testApp.mm */;
+		name = "testApp.mm: 9";
+		rLen = 0;
+		rLoc = 134;
+		rType = 0;
+		vrLen = 695;
+		vrLoc = 851;
+	};
 	E4D8928511527878007E1F53 /* main.mm */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {902, 564}}";
@@ -155,9 +152,9 @@
 	};
 	E4D8928711527878007E1F53 /* testApp.mm */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1079, 1508}}";
+			sepNavIntBoundsRect = "{{0, 0}, {875, 1547}}";
 			sepNavSelRange = "{134, 0}";
-			sepNavVisRange = "{851, 741}";
+			sepNavVisRange = "{851, 695}";
 		};
 	};
 	E4EC172612CB938700F267CD /* cameraExample */ = {
@@ -229,9 +226,9 @@
 	};
 	E4EC175412CB93C800F267CD /* MyVideoBuffer.mm */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1419, 5239}}";
-			sepNavSelRange = "{12671, 1132}";
-			sepNavVisRange = "{1734, 1743}";
+			sepNavIntBoundsRect = "{{0, 0}, {1174, 5616}}";
+			sepNavSelRange = "{12578, 1229}";
+			sepNavVisRange = "{13101, 777}";
 		};
 	};
 	E4EC175512CB93C800F267CD /* ofxiPhoneVideo.cpp */ = {
@@ -250,16 +247,16 @@
 	};
 	E4EC175712CB93C800F267CD /* ofxiVideoGrabber.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1079, 1014}}";
+			sepNavIntBoundsRect = "{{0, 0}, {875, 1001}}";
 			sepNavSelRange = "{170, 0}";
-			sepNavVisRange = "{0, 665}";
+			sepNavVisRange = "{0, 518}";
 		};
 	};
 	E4EC175812CB93C800F267CD /* ofxiVideoGrabber.mm */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1118, 3393}}";
-			sepNavSelRange = "{1099, 0}";
-			sepNavVisRange = "{2249, 1018}";
+			sepNavIntBoundsRect = "{{0, 0}, {736, 3536}}";
+			sepNavSelRange = "{2949, 0}";
+			sepNavVisRange = "{2353, 610}";
 		};
 	};
 	E4EC175912CB93C800F267CD /* ofxiVideoLoader.h */ = {
@@ -267,6 +264,13 @@
 			sepNavIntBoundsRect = "{{0, 0}, {1079, 575}}";
 			sepNavSelRange = "{167, 0}";
 			sepNavVisRange = "{0, 274}";
+		};
+	};
+	E4EC175A12CB93C800F267CD /* ofxiVideoLoader.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1174, 3172}}";
+			sepNavSelRange = "{6352, 0}";
+			sepNavVisRange = "{6111, 663}";
 		};
 	};
 	E4EC175C12CB93C800F267CD /* ofxiVideoPlayer.h */ = {
@@ -295,9 +299,9 @@
 	};
 	E4F7D73E12CCFE4A00D3119E /* ofMainExt.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {565, 312}}";
-			sepNavSelRange = "{336, 0}";
-			sepNavVisRange = "{0, 267}";
+			sepNavIntBoundsRect = "{{0, 0}, {1079, 501}}";
+			sepNavSelRange = "{185, 0}";
+			sepNavVisRange = "{0, 366}";
 		};
 	};
 	E4F7D73F12CCFE4A00D3119E /* ofMainExt.mm */ = {
@@ -316,29 +320,5 @@
 		rType = 0;
 		vrLen = 741;
 		vrLoc = 851;
-	};
-	E4F7D75112CCFEF100D3119E /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E49906F612CBF9290068F6A5 /* ofxiFBO.mm */;
-		name = "ofxiFBO.mm: 13";
-		rLen = 0;
-		rLoc = 220;
-		rType = 0;
-		vrLen = 954;
-		vrLoc = 0;
-	};
-	E4F7D75212CCFEF100D3119E /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = E4F7D73E12CCFE4A00D3119E /* ofMainExt.h */;
-	};
-	E4F7D75312CCFEF100D3119E /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4F7D73E12CCFE4A00D3119E /* ofMainExt.h */;
-		name = "ofMainExt.h: 12";
-		rLen = 0;
-		rLoc = 185;
-		rType = 0;
-		vrLen = 366;
-		vrLoc = 0;
 	};
 }

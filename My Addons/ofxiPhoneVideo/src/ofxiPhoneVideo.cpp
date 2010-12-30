@@ -37,8 +37,8 @@ void ofxiPhoneVideo::drawTexture(int texture) {
 		0,v,   
 		0.0f,0,};
 	
-	float w = textureWidth;//ofGetWidth()/2;
-	float h = textureHeight;//(float)ofGetWidth()/(float)width*(float)height/2;
+	float w = textureWidth*u;//ofGetWidth()/2;
+	float h = textureHeight*v;//(float)ofGetWidth()/(float)width*(float)height/2;
 	
 	GLfloat spriteVertices[] =  {
 		w,h,0,   

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "ofxiPhoneVideo.h"
+#include "ofxiFBO.h"
 #include <string>
 
 class ofxiVideoLoader {
@@ -20,5 +21,5 @@ public:
 	void load(string filename);
 	
 	ofxiPhoneVideo *video;
-	
+	ofxiFBO fbo;
 };
