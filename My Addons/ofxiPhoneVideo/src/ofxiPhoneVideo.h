@@ -6,9 +6,12 @@
  *  Copyright 2010 __MyCompanyName__. All rights reserved.
  *
  */
+#pragma once
 
 #include <vector>
 #include "ofxAudioSampler.h"
+
+// for now supporting 44100 mono audio
 
 using namespace std;
 
@@ -23,6 +26,7 @@ public:
 	int		numIntroFrames;
 	
 	int		fps;
+	int		bufferSize;
 	int		sampleRate;
 	int		sampleLength; // in millis -  make sure that there are more frames than needed
 	

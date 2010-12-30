@@ -13,6 +13,8 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 
+#define SINT16_MAX 32767.0
+
 void ofxiVideoLoader::setup(ofxiPhoneVideo *video) {
 	this->video = video;
 }
@@ -43,21 +45,11 @@ GLuint createVideoTextue(GLuint w,GLuint h)
 }
 
 void ofxiVideoLoader::load(string filename) {
-	AVURLAsset *asset;
-	AVAssetReaderTrackOutput *output;
-	
-	asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%s",filename.c_str()]] options:nil];
-	NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
-	//NSDictionary* audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kAudioFormatLinearPCM ], AVFormatIDKey,nil];
-	
-	NSDictionary *pixelBufferAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], kCVPixelBufferOpenGLCompatibilityKey, 
-										   [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA],(NSString*)kCVPixelBufferPixelFormatTypeKey,
-										   /*[NSNumber numberWithUnsignedInt:size.width],(NSString*)kCVPixelBufferWidthKey,
-											[NSNumber numberWithUnsignedInt:size.height],(NSString*)kCVPixelBufferHeightKey,*/nil];
 	
 	
-	output = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[tracks objectAtIndex:0] outputSettings:pixelBufferAttributes];
-	NSLog(@"AVAssetReaderTrackOutput mediaType: %@",[output mediaType]);
+	BOOL test;
+	
+	AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%s",filename.c_str()]] options:nil];
 	
 	NSError *error = nil;
 	AVAssetReader *reader = [AVAssetReader assetReaderWithAsset:asset error:&error];
@@ -66,68 +58,177 @@ void ofxiVideoLoader::load(string filename) {
 		NSLog(@"AVAssetReader: %@",[error description]);
 	}
 	
-	BOOL test = [reader canAddOutput:output];
+	NSArray *videoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+	
+	NSDictionary *pixelBufferAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], kCVPixelBufferOpenGLCompatibilityKey, 
+										   [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA],(NSString*)kCVPixelBufferPixelFormatTypeKey,
+										   /*[NSNumber numberWithUnsignedInt:size.width],(NSString*)kCVPixelBufferWidthKey,
+											[NSNumber numberWithUnsignedInt:size.height],(NSString*)kCVPixelBufferHeightKey,*/nil];
+	
+	
+	AVAssetReaderTrackOutput * videoOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[videoTracks objectAtIndex:0] outputSettings:pixelBufferAttributes];
+	NSLog(@"AVAssetReaderTrackOutput mediaType: %@",[videoOutput mediaType]);
+	
+		
+	 test = [reader canAddOutput:videoOutput];
 	NSLog(@"can add output: %i",test);
-	[reader addOutput:output];
+	[reader addOutput:videoOutput];
+	
+	
+	
+	NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
+	NSDictionary* audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kAudioFormatLinearPCM ], AVFormatIDKey,nil];
+	
+	AVAssetReaderTrackOutput * audioOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:[audioTracks objectAtIndex:0] outputSettings:audioOutputSettings];
+	NSLog(@"AVAssetReaderTrackOutput mediaType: %@",[audioOutput mediaType]);
+	
+		
+	test = [reader canAddOutput:audioOutput];
+	NSLog(@"can add output: %i",test);
+	[reader addOutput:audioOutput];
+	
+	
+	
+	
 	
 	//	EAGLContext* contextB = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1 sharegroup:contextA.sharegroup];
 	//	[EAGLContext setCurrentContext:contextB];
 	
 	[reader startReading];
 	
-	int i=0;
+	bool bVideoDone = false;
+	bool bAudioDone = false;
+	
 	video->textures.clear();
 	
 	CMVideoDimensions videoDimensions;
 	CMVideoCodecType videoType;
+	float *buffer = new float[video->sampleRate * 2]; // max 2 sec
+	int pos = 0;
 	
 	while (reader.status == AVAssetReaderStatusReading) {
-		CMSampleBufferRef  sampleBuffer = [output copyNextSampleBuffer];
-		if (sampleBuffer != NULL) {
-			NSLog(@"got sampleBuffer %i",i);
-			//			CMTime timestamp = CMSampleBufferGetPresentationTimeStamp( sampleBuffer );
-			//			if (CMTIME_IS_VALID( self.previousTimestamp ))
-			//				self.videoFrameRate = 1.0 / CMTimeGetSeconds( CMTimeSubtract( timestamp, self.previousTimestamp ) );
-			//			
-			//			previousTimestamp = timestamp;
-			//			
-			
-			
-			if (video->textures.empty() )
+		
+		if (!bAudioDone) {
+			CMSampleBufferRef  sampleBuffer = [audioOutput copyNextSampleBuffer];
+			if (sampleBuffer == NULL) {
+				bAudioDone = true;
+			} else
 			{
-				CMFormatDescriptionRef formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer);
-				videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDesc);
-				NSLog(@"videoDimensions: %i %i",videoDimensions.width,videoDimensions.height);
+				CMItemCount numSamples = CMSampleBufferGetNumSamples(sampleBuffer);
+				NSUInteger channelIndex = 0;
 				
-				CMVideoCodecType type = CMFormatDescriptionGetMediaSubType(formatDesc);
+				CMBlockBufferRef audioBlockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
+				size_t audioBlockBufferOffset = (channelIndex * numSamples * sizeof(SInt16));
+				size_t lengthAtOffset = 0;
+				size_t totalLength = 0;
+				SInt16 *samples = NULL;
+				CMBlockBufferGetDataPointer(audioBlockBuffer, audioBlockBufferOffset, &lengthAtOffset, &totalLength, (char **)(&samples));
+				
+				
+				int numSamplesToRead = 1;
+				for (int i = 0; i < numSamplesToRead; i++) {
+					
+					for (int j = 0; j < numSamples / numSamplesToRead; j++) {
+						SInt16 audioSample = samples[(i * (numSamples / numSamplesToRead)) + j];
+						buffer[pos+j] = (float)(audioSample / SINT16_MAX);
+						
+					}
+					
+//					SInt16 subSet[numSamples / numSamplesToRead];
+//					for (int j = 0; j < numSamples / numSamplesToRead; j++)
+//						subSet[j] = samples[(i * (numSamples / numSamplesToRead)) + j];
+//					
+//					self.lastAudioSample = [self maxValueInArray: subSet ofSize: numSamples / numSamplesToRead];
+//					
+//					double scaledSample = (double) ((self.lastAudioSample / SINT16_MAX));
+//					
+//					[audioDisplayDelegate addX:scaledSample];
+				}
+				
+				pos+=numSamples;
+				
+				
+				
+				
+				
+				NSLog(@"got audio, totalLength: %i",totalLength);
+				
+			}
+		}
+		
+		if (!bVideoDone) {
+			CMSampleBufferRef sampleBuffer = [videoOutput copyNextSampleBuffer];
+			if (sampleBuffer == NULL) {
+				bVideoDone = true;
+			} else {
+				NSLog(@"got video: %i",video->textures.size());
+				//			CMTime timestamp = CMSampleBufferGetPresentationTimeStamp( sampleBuffer );
+				//			if (CMTIME_IS_VALID( self.previousTimestamp ))
+				//				self.videoFrameRate = 1.0 / CMTimeGetSeconds( CMTimeSubtract( timestamp, self.previousTimestamp ) );
+				//			
+				//			previousTimestamp = timestamp;
+				//			
+				
+				
+				if (video->textures.empty() )
+				{
+					CMFormatDescriptionRef formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer);
+					videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDesc);
+					NSLog(@"videoDimensions: %i %i",videoDimensions.width,videoDimensions.height);
+					
+					CMVideoCodecType type = CMFormatDescriptionGetMediaSubType(formatDesc);
 #if defined(__LITTLE_ENDIAN__)
-				type = OSSwapInt32(type);
+					type = OSSwapInt32(type);
 #endif
-				videoType = type;
+					videoType = type;
+					
+					
+				}
+				
+				CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+				CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
+				
+				
+				GLuint texture = createVideoTextue(videoDimensions.width,videoDimensions.height);
+				
+				video->textures.push_back(texture);
+				glBindTexture(GL_TEXTURE_2D, texture);
+				
+				unsigned char* linebase = (unsigned char *)CVPixelBufferGetBaseAddress( pixelBuffer );
+				
+				
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
+				
+				
+				CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );
 				
 				
 			}
-			
-			CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-			CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
-			
-			
-			GLuint texture = createVideoTextue(videoDimensions.width,videoDimensions.height);
-			
-			video->textures.push_back(texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			
-			unsigned char* linebase = (unsigned char *)CVPixelBufferGetBaseAddress( pixelBuffer );
-			
-			
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoDimensions.width, videoDimensions.height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, linebase);
-			
-			
-			CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );
-			i++;
+
 		}
 		
 	}
+	
+	NSLog(@"status: %i",reader.status);
+	
+	if (reader.status == AVAssetReaderStatusFailed) {
+		NSLog(@"error: %@",[reader.error description]);
+	}
+	
+	int numBuffers = pos / video->bufferSize;
+	numBuffers+= pos % video->bufferSize ? 1 : 0;
+	video->audio.setup(video->bufferSize,numBuffers);  //video.sampleRate * video.sampleLength / (1000 * bufferSize)
+	
+	for (int i=0; i<pos; i++) {
+		video->audio.buffer[i] = buffer[i];
+	}
+	
+	delete buffer;
+	
+	// no need to zero pad the end because it is done in audio.setup()
+	
+	
+	video->sampleLength = 1000*video->numFrames/video->fps;
 	
 	video->numFrames = video->textures.size();
 	

@@ -6,12 +6,13 @@
  *  Copyright 2010 __MyCompanyName__. All rights reserved.
  *
  */
+#pragma once
 
 #include <vector>
 #include <deque>
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
-
+#include "ofxiFBO.h"
 
 
 using namespace std;
@@ -35,9 +36,9 @@ public:
 	
 	void setup(ofxiPhoneVideo *video);
 	void update();
-	void fboDraw();
+	void render();
 	void draw();
-	void drawTexture(int text,int width,int height);
+	void drawLiveCam();
 	
 	void exit();
 		
@@ -72,8 +73,8 @@ protected:
 	int currentFrame;
 	int firstFrame;
 	
-	GLuint fbo;
-	
 	int cameraFrame;
+	
+	ofxiFBO fbo;
 	
 };

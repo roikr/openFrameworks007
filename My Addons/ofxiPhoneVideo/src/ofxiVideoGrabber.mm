@@ -14,6 +14,7 @@
 #include "ofMain.h"
 #include "ofxiPhoneVideo.h"
 #import "glu.h"
+#include "ofxiPhoneExtras.h"
 
 
 ofxiVideoGrabber::ofxiVideoGrabber() {
@@ -32,9 +33,7 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 	
 	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps] retain];
 	
-	
-	glGenFramebuffersOES(1, &fbo);
-	glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
+	fbo.setup();
 	
 	
 		
@@ -49,90 +48,124 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
 		
-		glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, texture, 0); // probably for init and alloc mem
+		glBindTexture(GL_TEXTURE_2D, 0);
 		
-		glBindTexture(GL_TEXTURE_2D,0);
-		
-		GLuint status = glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES);
-		if (status != GL_FRAMEBUFFER_COMPLETE_OES)
-		{
-			NSLog(@"failed to make complete framebuffer object %x", status);
-		}
-		
+		fbo.begin(texture,video->textureWidth,video->textureHeight);
+		fbo.end();
 		
 		video->textures.push_back(texture);
 				
 	}
+}
+
+
+
+
+
+void ofxiVideoGrabber::drawLiveCam() {
+	
+	
+	float w = 480; // normalizing each camera to 480 * 360
+	float h = (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
+	
+	
+	glEnable(GL_TEXTURE_2D);
+	
+	// bind the texture
+	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture );
+	
+	GLfloat px0 = 0;		// up to you to get the aspect ratio right
+	GLfloat py0 = 0;
+	GLfloat px1 = w;
+	GLfloat py1 = h;
+	
+			
+	
+	GLfloat tx0 = 0;
+	GLfloat ty0 = 0;
+	GLfloat tx1 = 1;
+	GLfloat ty1 = 1;
+	
+	glPushMatrix(); 
+	glScalef(0.5, 0.5, 0);
+	//glTranslatef(x,y,0.0f);
+	
+	GLfloat tex_coords[] = {
+		tx0,ty0,
+		tx1,ty0,
+		tx1,ty1,
+		tx0,ty1
+	};
+	GLfloat verts[] = {
+		px0,py0,
+		px1,py0,
+		px1,py1,
+		px0,py1
+	};
+	
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	
 	
 }
 
-void ofxiVideoGrabber::fboDraw()
-{
-	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)  ) {
+void ofxiVideoGrabber::render() {
+	
+	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)) {
 		
-		if (cameraFrame == videoTexture.currentFrame) {
-			//NSLog(@"do nothing");
-			return;
-		}
+		if  (cameraFrame != videoTexture.currentFrame ) {
 		
-		cameraFrame++;
-		
-		if (videoTexture.currentFrame - cameraFrame > 0) {
-			NSLog(@"skip %i frames",videoTexture.currentFrame - cameraFrame );
-		}
-		
-		GLuint texture = video->textures[currentFrame % video->numFrames];
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
-		glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, texture, 0);
-		glBindTexture(GL_TEXTURE_2D,0);
-		
-		
-		glViewport(0, 0, video->textureWidth, video->textureHeight);
-		
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity ();
-		gluOrtho2D (0, video->textureWidth, 0, video->textureHeight);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-				
-		glColor4f(1.0, 1.0, 1.0, 0);
-		
-		
-		[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
+			cameraFrame++;
 			
-		currentFrame++;
-		
-		if (state == CAMERA_RECORDING) {
-			if ( currentFrame-1 - firstFrame >= video->numFrames - video->numIntroFrames)  {
-				state = CAMERA_RUNNING;
+			if (videoTexture.currentFrame - cameraFrame > 0) {
+				NSLog(@"skip %i frames",videoTexture.currentFrame - cameraFrame );
 			}
+			
+			GLuint texture = video->textures[currentFrame % video->numFrames];
+			fbo.begin(texture,video->textureWidth,video->textureHeight);		
+			
+			[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
+			
+			currentFrame++;
+			
+			if (state == CAMERA_RECORDING) {
+				if ( currentFrame-1 - firstFrame >= video->numFrames - video->numIntroFrames)  {
+					state = CAMERA_RUNNING;
+				}
+			}
+			
+			
+			fbo.end();
 		}
 	}
+	
+
 }
-
-
-
 
 void ofxiVideoGrabber::draw() {
-
 	
-	//[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
-	
-	if (state == CAMERA_CAPTURING || state == CAMERA_RECORDING) {
-		GLuint texture = video->textures[(currentFrame-1) % video->numFrames];
-		video->drawTexture(texture);
+	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)) {
 		
-		
-		
+		video->drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
+	} else {
+		//[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
+		drawLiveCam();
 	}
 	
-//	if (video->bMirrored) {
-//		glTranslatef(video->width, 0, 0);
-//		glScalef(-1.0, 1.0, 1.0);
-//	}
 	
-
+	//	if (video->bMirrored) {
+	//		glTranslatef(video->width, 0, 0);
+	//		glScalef(-1.0, 1.0, 1.0);
+	//	}
+	
+	
 }
 
 
