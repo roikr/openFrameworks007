@@ -33,9 +33,11 @@
 		BB24DE3D10DA785000E9C588 /* libGLU_arm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE2810DA785000E9C588 /* libGLU_arm.a */; };
 		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
-		E49002E212CC9A050035BED7 /* oren.mov in Resources */ = {isa = PBXBuildFile; fileRef = E49002E112CC9A050035BED7 /* oren.mov */; };
-		E49002FA12CC9C880035BED7 /* roee.mov in Resources */ = {isa = PBXBuildFile; fileRef = E49002F912CC9C880035BED7 /* roee.mov */; };
 		E49906F712CBF9290068F6A5 /* ofxiFBO.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49906F612CBF9290068F6A5 /* ofxiFBO.mm */; };
+		E4BDB21A12CD05A6004E1EC1 /* orenh.mov in Resources */ = {isa = PBXBuildFile; fileRef = E4BDB21812CD05A6004E1EC1 /* orenh.mov */; };
+		E4BDB21B12CD05A6004E1EC1 /* orenv.mov in Resources */ = {isa = PBXBuildFile; fileRef = E4BDB21912CD05A6004E1EC1 /* orenv.mov */; };
+		E4D21C3E12CD0639003C5617 /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D21C3A12CD0639003C5617 /* easing.cpp */; };
+		E4D21C3F12CD0639003C5617 /* ofMainExt.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D21C3D12CD0639003C5617 /* ofMainExt.mm */; };
 		E4D8928811527878007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8928511527878007E1F53 /* main.mm */; };
 		E4D8928911527878007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8928711527878007E1F53 /* testApp.mm */; };
 		E4EC175F12CB93C800F267CD /* ofxAudioSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC174F12CB93C800F267CD /* ofxAudioSampler.cpp */; };
@@ -44,7 +46,6 @@
 		E4EC176212CB93C800F267CD /* ofxiVideoGrabber.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4EC175812CB93C800F267CD /* ofxiVideoGrabber.mm */; };
 		E4EC176312CB93C800F267CD /* ofxiVideoLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4EC175A12CB93C800F267CD /* ofxiVideoLoader.mm */; };
 		E4EC176412CB93C800F267CD /* ofxiVideoPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC175B12CB93C800F267CD /* ofxiVideoPlayer.cpp */; };
-		E4EC176512CB93C800F267CD /* VideoImporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4EC175E12CB93C800F267CD /* VideoImporter.mm */; };
 		E4EC176912CB942100F267CD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4EC176812CB942100F267CD /* AVFoundation.framework */; };
 		E4EC176B12CB942100F267CD /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4EC176A12CB942100F267CD /* CoreMedia.framework */; };
 		E4EC176D12CB942100F267CD /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4EC176C12CB942100F267CD /* CoreVideo.framework */; };
@@ -144,10 +145,14 @@
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DA7851271105C039007EFC90 /* glu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glu.h; sourceTree = "<group>"; };
 		DA7851281105C039007EFC90 /* gluos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluos.h; sourceTree = "<group>"; };
-		E49002E112CC9A050035BED7 /* oren.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = oren.mov; sourceTree = "<group>"; };
-		E49002F912CC9C880035BED7 /* roee.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = roee.mov; sourceTree = "<group>"; };
 		E49906F512CBF9290068F6A5 /* ofxiFBO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFBO.h; sourceTree = "<group>"; };
 		E49906F612CBF9290068F6A5 /* ofxiFBO.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFBO.mm; sourceTree = "<group>"; };
+		E4BDB21812CD05A6004E1EC1 /* orenh.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = orenh.mov; sourceTree = "<group>"; };
+		E4BDB21912CD05A6004E1EC1 /* orenv.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = orenv.mov; sourceTree = "<group>"; };
+		E4D21C3A12CD0639003C5617 /* easing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = easing.cpp; sourceTree = "<group>"; };
+		E4D21C3B12CD0639003C5617 /* easing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
+		E4D21C3C12CD0639003C5617 /* ofMainExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofMainExt.h; sourceTree = "<group>"; };
+		E4D21C3D12CD0639003C5617 /* ofMainExt.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofMainExt.mm; sourceTree = "<group>"; };
 		E4D8928511527878007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8928611527878007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8928711527878007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -163,8 +168,6 @@
 		E4EC175A12CB93C800F267CD /* ofxiVideoLoader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVideoLoader.mm; sourceTree = "<group>"; };
 		E4EC175B12CB93C800F267CD /* ofxiVideoPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxiVideoPlayer.cpp; sourceTree = "<group>"; };
 		E4EC175C12CB93C800F267CD /* ofxiVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoPlayer.h; sourceTree = "<group>"; };
-		E4EC175D12CB93C800F267CD /* VideoImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoImporter.h; sourceTree = "<group>"; };
-		E4EC175E12CB93C800F267CD /* VideoImporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoImporter.mm; sourceTree = "<group>"; };
 		E4EC176812CB942100F267CD /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E4EC176A12CB942100F267CD /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		E4EC176C12CB942100F267CD /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -310,6 +313,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4D21C3912CD0639003C5617 /* common */,
 				E4EC174D12CB93C800F267CD /* ofxAudioSampler */,
 				E4EC175112CB93C800F267CD /* ofxiPhoneVideo */,
 			);
@@ -319,8 +323,8 @@
 		BB24DD8B10DA77E000E9C588 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				E49002F912CC9C880035BED7 /* roee.mov */,
-				E49002E112CC9A050035BED7 /* oren.mov */,
+				E4BDB21812CD05A6004E1EC1 /* orenh.mov */,
+				E4BDB21912CD05A6004E1EC1 /* orenv.mov */,
 				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
 			);
@@ -537,6 +541,18 @@
 			path = include_iphone;
 			sourceTree = "<group>";
 		};
+		E4D21C3912CD0639003C5617 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				E4D21C3A12CD0639003C5617 /* easing.cpp */,
+				E4D21C3B12CD0639003C5617 /* easing.h */,
+				E4D21C3C12CD0639003C5617 /* ofMainExt.h */,
+				E4D21C3D12CD0639003C5617 /* ofMainExt.mm */,
+			);
+			name = common;
+			path = "../../../My Addons/common";
+			sourceTree = SOURCE_ROOT;
+		};
 		E4D8928411527878007E1F53 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -579,16 +595,14 @@
 			children = (
 				E4EC175312CB93C800F267CD /* MyVideoBuffer.h */,
 				E4EC175412CB93C800F267CD /* MyVideoBuffer.mm */,
-				E4EC175512CB93C800F267CD /* ofxiPhoneVideo.cpp */,
 				E4EC175612CB93C800F267CD /* ofxiPhoneVideo.h */,
+				E4EC175512CB93C800F267CD /* ofxiPhoneVideo.cpp */,
 				E4EC175712CB93C800F267CD /* ofxiVideoGrabber.h */,
 				E4EC175812CB93C800F267CD /* ofxiVideoGrabber.mm */,
 				E4EC175912CB93C800F267CD /* ofxiVideoLoader.h */,
 				E4EC175A12CB93C800F267CD /* ofxiVideoLoader.mm */,
-				E4EC175B12CB93C800F267CD /* ofxiVideoPlayer.cpp */,
 				E4EC175C12CB93C800F267CD /* ofxiVideoPlayer.h */,
-				E4EC175D12CB93C800F267CD /* VideoImporter.h */,
-				E4EC175E12CB93C800F267CD /* VideoImporter.mm */,
+				E4EC175B12CB93C800F267CD /* ofxiVideoPlayer.cpp */,
 				E49906F512CBF9290068F6A5 /* ofxiFBO.h */,
 				E49906F612CBF9290068F6A5 /* ofxiFBO.mm */,
 			);
@@ -665,8 +679,8 @@
 				BB24DD8F10DA77E000E9C588 /* Default.png in Resources */,
 				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				BB24DDCA10DA781C00E9C588 /* ofxiphone-Info.plist in Resources */,
-				E49002E212CC9A050035BED7 /* oren.mov in Resources */,
-				E49002FA12CC9C880035BED7 /* roee.mov in Resources */,
+				E4BDB21A12CD05A6004E1EC1 /* orenh.mov in Resources */,
+				E4BDB21B12CD05A6004E1EC1 /* orenv.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,8 +715,9 @@
 				E4EC176212CB93C800F267CD /* ofxiVideoGrabber.mm in Sources */,
 				E4EC176312CB93C800F267CD /* ofxiVideoLoader.mm in Sources */,
 				E4EC176412CB93C800F267CD /* ofxiVideoPlayer.cpp in Sources */,
-				E4EC176512CB93C800F267CD /* VideoImporter.mm in Sources */,
 				E49906F712CBF9290068F6A5 /* ofxiFBO.mm in Sources */,
+				E4D21C3E12CD0639003C5617 /* easing.cpp in Sources */,
+				E4D21C3F12CD0639003C5617 /* ofMainExt.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

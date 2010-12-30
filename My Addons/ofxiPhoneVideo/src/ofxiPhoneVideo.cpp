@@ -9,6 +9,7 @@
 
 
 #include "ofxiPhoneVideo.h"
+#include "ofMain.h"
 
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
@@ -18,6 +19,14 @@ void ofxiPhoneVideo::drawFrame(int frame) {
 }
 
 void ofxiPhoneVideo::drawTexture(int texture) {
+	
+	glPushMatrix();
+	
+	if (!bHorizontal) {
+		ofTranslate(textureHeight, 0, 0);
+		ofRotateZ(90);
+		
+	}
 	
 	float u = widthFraction;
 	float v = heightFraction;
@@ -45,6 +54,7 @@ void ofxiPhoneVideo::drawTexture(int texture) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glEnable(GL_TEXTURE_2D);
 	
+	
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -61,5 +71,6 @@ void ofxiPhoneVideo::drawTexture(int texture) {
 //	//	}
 //	
 //	glPopMatrix();
+	glPopMatrix();
 	
 }

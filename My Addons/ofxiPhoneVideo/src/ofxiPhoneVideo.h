@@ -18,7 +18,7 @@ using namespace std;
 class ofxiPhoneVideo {
 	
 public:
-	
+	ofxiPhoneVideo() : bHorizontal(true),bFlipHoriznotal(false) {};
 	void drawFrame(int frame);
 	void drawTexture(int texture);
 	
@@ -43,6 +43,7 @@ public:
 	float widthFraction;
 	float heightFraction;
 
-	
+	bool bHorizontal;
+	bool bFlipHoriznotal;
 	
 };

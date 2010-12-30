@@ -16,7 +16,7 @@ void testApp::setup(){
 	ofxiPhoneAlerts.addListener(this);
 	
 	//If you want a landscape oreintation 
-	iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+	//iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
 	
 	ofBackground(0,0,0);
 	
@@ -35,7 +35,8 @@ void testApp::setup(){
 	
 	
 	loader.setup(&video);
-	loader.load(ofToDataPath("oren.mov"));
+	loader.load(ofToDataPath("orenv.mov"));
+	video.bHorizontal = false;
 	player.setup(&video, false);
 	
 	lAudio	= new float[video.audio.getBufferSize()];
@@ -53,10 +54,13 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-	
+	ofPushMatrix();
+	ofScale(0.5, 0.5, 1);
 	if (player.getIsPlaying()) {
 		player.draw();
 	} 
+	
+	ofPopMatrix();
 	
 	ofSetColor(255, 255, 255);
 	ofFill();
