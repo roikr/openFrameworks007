@@ -24,6 +24,7 @@ public:
 	ofxPincher pincher;
 	int animStart;
 	
+	ofImage image;
 
 };
 

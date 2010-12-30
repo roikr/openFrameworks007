@@ -34,6 +34,9 @@
 		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E43929311293250B00F855A8 /* ofxPincher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E439292F1293250B00F855A8 /* ofxPincher.cpp */; };
+		E4A0F2ED12CCA8B600913F71 /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A0F2E812CCA8B600913F71 /* easing.cpp */; };
+		E4A0F2EE12CCA8B600913F71 /* rkmath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A0F2EB12CCA8B600913F71 /* rkmath.cpp */; };
+		E4A0F30A12CCBE4400913F71 /* esb2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E4A0F30912CCBE4400913F71 /* esb2.jpg */; };
 		E4D8933311527A44007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8933011527A44007E1F53 /* main.mm */; };
 		E4D8933411527A44007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8933211527A44007E1F53 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -134,6 +137,11 @@
 		DA7851281105C039007EFC90 /* gluos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluos.h; sourceTree = "<group>"; };
 		E439292F1293250B00F855A8 /* ofxPincher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPincher.cpp; sourceTree = "<group>"; };
 		E43929301293250B00F855A8 /* ofxPincher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPincher.h; sourceTree = "<group>"; };
+		E4A0F2E812CCA8B600913F71 /* easing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = easing.cpp; sourceTree = "<group>"; };
+		E4A0F2E912CCA8B600913F71 /* easing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
+		E4A0F2EB12CCA8B600913F71 /* rkmath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rkmath.cpp; sourceTree = "<group>"; };
+		E4A0F2EC12CCA8B600913F71 /* rkmath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rkmath.h; sourceTree = "<group>"; };
+		E4A0F30912CCBE4400913F71 /* esb2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = esb2.jpg; sourceTree = "<group>"; };
 		E4D8933011527A44007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8933111527A44007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8933211527A44007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -273,6 +281,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4A0F2E712CCA8B600913F71 /* common */,
 				E439292D1293250B00F855A8 /* ofxPincher */,
 			);
 			name = addons;
@@ -281,6 +290,7 @@
 		BB24DD8B10DA77E000E9C588 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				E4A0F30912CCBE4400913F71 /* esb2.jpg */,
 				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
 			);
@@ -515,6 +525,18 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E4A0F2E712CCA8B600913F71 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				E4A0F2E812CCA8B600913F71 /* easing.cpp */,
+				E4A0F2E912CCA8B600913F71 /* easing.h */,
+				E4A0F2EB12CCA8B600913F71 /* rkmath.cpp */,
+				E4A0F2EC12CCA8B600913F71 /* rkmath.h */,
+			);
+			name = common;
+			path = "../../../My Addons/common";
+			sourceTree = SOURCE_ROOT;
+		};
 		E4D8932F11527A44007E1F53 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -595,6 +617,7 @@
 				BB24DD8F10DA77E000E9C588 /* Default.png in Resources */,
 				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				BB24DDCA10DA781C00E9C588 /* ofxiphone-Info.plist in Resources */,
+				E4A0F30A12CCBE4400913F71 /* esb2.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,6 +647,8 @@
 				E4D8933311527A44007E1F53 /* main.mm in Sources */,
 				E4D8933411527A44007E1F53 /* testApp.mm in Sources */,
 				E43929311293250B00F855A8 /* ofxPincher.cpp in Sources */,
+				E4A0F2ED12CCA8B600913F71 /* easing.cpp in Sources */,
+				E4A0F2EE12CCA8B600913F71 /* rkmath.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

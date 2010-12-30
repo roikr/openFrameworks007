@@ -8,7 +8,7 @@
  */
 
 #include "ofMain.h"
-#include "ofMath.h"
+
 
 class pincherPrefs {
 	

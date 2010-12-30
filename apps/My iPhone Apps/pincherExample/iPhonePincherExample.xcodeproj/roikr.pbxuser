@@ -43,37 +43,46 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 312728905;
-			PBXWorkspaceStateSaveDate = 312728905;
+			PBXPerProjectTemplateStateSaveDate = 315402385;
+			PBXWorkspaceStateSaveDate = 315402385;
 		};
 		perUserProjectItems = {
-			E40CB4AE129A7D2B00A3B0EA /* PBXTextBookmark */ = E40CB4AE129A7D2B00A3B0EA /* PBXTextBookmark */;
+			E41582A012CCA88700999D64 /* PBXTextBookmark */ = E41582A012CCA88700999D64 /* PBXTextBookmark */;
+			E41582A112CCA88700999D64 /* PBXTextBookmark */ = E41582A112CCA88700999D64 /* PBXTextBookmark */;
 			E423F343129300E1004596C5 /* PBXTextBookmark */ = E423F343129300E1004596C5 /* PBXTextBookmark */;
 			E423F347129300E1004596C5 /* PBXTextBookmark */ = E423F347129300E1004596C5 /* PBXTextBookmark */;
 			E423F34B129300E1004596C5 /* PBXTextBookmark */ = E423F34B129300E1004596C5 /* PBXTextBookmark */;
 			E423F34D129300E1004596C5 /* PBXTextBookmark */ = E423F34D129300E1004596C5 /* PBXTextBookmark */;
 			E423F350129300E1004596C5 /* PBXTextBookmark */ = E423F350129300E1004596C5 /* PBXTextBookmark */;
 			E423F352129300E1004596C5 /* PBXTextBookmark */ = E423F352129300E1004596C5 /* PBXTextBookmark */;
-			E492A2FD129FC959003D9F0E /* PBXTextBookmark */ = E492A2FD129FC959003D9F0E /* PBXTextBookmark */;
+			E4A0F31512CCE83500913F71 /* PBXTextBookmark */ = E4A0F31512CCE83500913F71 /* PBXTextBookmark */;
+			E4A0F31612CCE83500913F71 /* PBXTextBookmark */ = E4A0F31612CCE83500913F71 /* PBXTextBookmark */;
 			E4E32BAF12A3E69800508CC8 /* PBXTextBookmark */ = E4E32BAF12A3E69800508CC8 /* PBXTextBookmark */;
 			E4E32BB012A3E69800508CC8 /* PBXTextBookmark */ = E4E32BB012A3E69800508CC8 /* PBXTextBookmark */;
-			E4E32C0912A3EE6400508CC8 /* PBXTextBookmark */ = E4E32C0912A3EE6400508CC8 /* PBXTextBookmark */;
-			E4E32C0A12A3EE6400508CC8 /* PBXTextBookmark */ = E4E32C0A12A3EE6400508CC8 /* PBXTextBookmark */;
-			E4E32C0B12A3EE6400508CC8 /* PBXTextBookmark */ = E4E32C0B12A3EE6400508CC8 /* PBXTextBookmark */;
 			E4F2ED5A129A5F8C00FCE175 /* PBXTextBookmark */ = E4F2ED5A129A5F8C00FCE175 /* PBXTextBookmark */;
 		};
 		sourceControlManager = E423F1F01292C835004596C5 /* Source Control */;
 		userBuildSettings = {
 		};
 	};
-	E40CB4AE129A7D2B00A3B0EA /* PBXTextBookmark */ = {
+	E41582A012CCA88700999D64 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = E4F2ED62129A5F8D00FCE175 /* ofMath.h */;
-		name = "ofMath.h: 189";
-		rLen = 20;
-		rLoc = 3751;
+		fRef = E439292F1293250B00F855A8 /* ofxPincher.cpp */;
+		name = "ofxPincher.cpp: 207";
+		rLen = 0;
+		rLoc = 3467;
 		rType = 0;
-		vrLen = 1044;
+		vrLen = 1111;
+		vrLoc = 0;
+	};
+	E41582A112CCA88700999D64 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D8933111527A44007E1F53 /* testApp.h */;
+		name = "testApp.h: 27";
+		rLen = 0;
+		rLoc = 463;
+		rType = 0;
+		vrLen = 470;
 		vrLoc = 0;
 	};
 	E423F1DF1292C830004596C5 /* pincherExample */ = {
@@ -226,9 +235,9 @@
 	};
 	E439292F1293250B00F855A8 /* ofxPincher.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1075, 3146}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1075, 2938}}";
 			sepNavSelRange = "{3467, 0}";
-			sepNavVisRange = "{3177, 881}";
+			sepNavVisRange = "{0, 1111}";
 		};
 	};
 	E43929301293250B00F855A8 /* ofxPincher.h */ = {
@@ -238,14 +247,24 @@
 			sepNavVisRange = "{559, 808}";
 		};
 	};
-	E492A2FD129FC959003D9F0E /* PBXTextBookmark */ = {
+	E4A0F31512CCE83500913F71 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = E4D8933111527A44007E1F53 /* testApp.h */;
-		name = "testApp.h: 25";
+		fRef = E4D8933211527A44007E1F53 /* testApp.mm */;
+		name = "testApp.mm: 18";
 		rLen = 0;
-		rLoc = 445;
+		rLoc = 354;
 		rType = 0;
-		vrLen = 454;
+		vrLen = 1530;
+		vrLoc = 0;
+	};
+	E4A0F31612CCE83500913F71 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D8933211527A44007E1F53 /* testApp.mm */;
+		name = "testApp.mm: 9";
+		rLen = 0;
+		rLoc = 171;
+		rType = 0;
+		vrLen = 1626;
 		vrLoc = 0;
 	};
 	E4D8933011527A44007E1F53 /* main.mm */ = {
@@ -258,15 +277,15 @@
 	E4D8933111527A44007E1F53 /* testApp.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1075, 700}}";
-			sepNavSelRange = "{445, 0}";
-			sepNavVisRange = "{0, 454}";
+			sepNavSelRange = "{463, 0}";
+			sepNavVisRange = "{0, 470}";
 		};
 	};
 	E4D8933211527A44007E1F53 /* testApp.mm */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1075, 1183}}";
-			sepNavSelRange = "{333, 0}";
-			sepNavVisRange = "{862, 807}";
+			sepNavIntBoundsRect = "{{0, 0}, {1075, 1053}}";
+			sepNavSelRange = "{171, 0}";
+			sepNavVisRange = "{0, 1626}";
 		};
 	};
 	E4E32BAF12A3E69800508CC8 /* PBXTextBookmark */ = {
@@ -289,36 +308,6 @@
 		vrLen = 160;
 		vrLoc = 0;
 	};
-	E4E32C0912A3EE6400508CC8 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4D8933211527A44007E1F53 /* testApp.mm */;
-		name = "testApp.mm: 19";
-		rLen = 0;
-		rLoc = 333;
-		rType = 0;
-		vrLen = 807;
-		vrLoc = 862;
-	};
-	E4E32C0A12A3EE6400508CC8 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E439292F1293250B00F855A8 /* ofxPincher.cpp */;
-		name = "ofxPincher.cpp: 231";
-		rLen = 0;
-		rLoc = 3886;
-		rType = 0;
-		vrLen = 1183;
-		vrLoc = 0;
-	};
-	E4E32C0B12A3EE6400508CC8 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E439292F1293250B00F855A8 /* ofxPincher.cpp */;
-		name = "ofxPincher.cpp: 201";
-		rLen = 0;
-		rLoc = 3467;
-		rType = 0;
-		vrLen = 881;
-		vrLoc = 3177;
-	};
 	E4F2ED5A129A5F8C00FCE175 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = E4F2ED5B129A5F8C00FCE175 /* ofMath.cpp */;
@@ -334,13 +323,6 @@
 		lastKnownFileType = sourcecode.cpp.cpp;
 		name = ofMath.cpp;
 		path = "/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/apps/My iPhone Apps/pincherExample/../../../libs/openFrameworks/utils/ofMath.cpp";
-		sourceTree = "<absolute>";
-	};
-	E4F2ED62129A5F8D00FCE175 /* ofMath.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = ofMath.h;
-		path = "/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/My Addons/ofxPincher/src/ofMath.h";
 		sourceTree = "<absolute>";
 	};
 }

@@ -11,18 +11,22 @@
 #include <iostream>
 #include "ofMain.h"
 
+#include "ofMainExt.h"
 
+#include "ofxiPhoneExtras.h"
 
 
 //--------------------------------------------------------------
 void testApp::setup(){	
 	
-	ofSetOrientation(OF_LANDSCAPE);
 	
 	ofDisableDataPath();
 	
 	// register touch events
 	ofRegisterTouchEvents(this);
+	
+	//If you want a landscape oreintation 
+	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
 	
 	// initialize the accelerometer
 	//ofxAccelerometer.setup();
@@ -211,19 +215,11 @@ void testApp::update()
 	
 }
 
-bool testApp::getIsFboNeeded() {
-	return camera->getState()==CAMERA_CAPTURING || camera->getState()==CAMERA_RECORDING;
-	
-}
 
-void testApp::fboDraw()
-{
-	camera->fboDraw();
-}
 //--------------------------------------------------------------
 void testApp::draw()
 {
-	
+	camera->render();
 	
 	ofBackground(0, 0, 0);
 	ofSetColor(255,255,255,255);

@@ -7,6 +7,8 @@
  *
  */
 
+#pragma once
+
 float easeInOutQuad(float t, float b, float e);
 float easeOutBounce(float t, float b, float e);
 float easeOutBack (float t, float b, float e);

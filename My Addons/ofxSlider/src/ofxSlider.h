@@ -8,7 +8,6 @@
  */
 
 #include "ofMain.h"
-#include "ofMath.h"
 
 enum  {
 	SLIDER_HORIZONTAL,

@@ -46,8 +46,7 @@ public:
 	void setup();
 	void update();
 	
-	bool getIsFboNeeded();
-	void fboDraw();
+	
 	void draw();
 	void exit();
 	
