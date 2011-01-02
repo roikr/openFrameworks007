@@ -53,7 +53,9 @@ public:
 	void touchDoubleTap(int x, int y, int id);
 	bool getIsAnimating();
 	
-	
+	ofPoint getTranslate() {return translate;};
+	float getScale() {return scale;};
+	ofPoint touchToPoint(int x,int y);
 	
 private:
 	

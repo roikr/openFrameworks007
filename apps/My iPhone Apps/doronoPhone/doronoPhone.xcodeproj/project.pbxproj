@@ -38,6 +38,30 @@
 		E4A038E912D11A25007EA18F /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A038E512D11A25007EA18F /* easing.cpp */; };
 		E4A038EA12D11A25007EA18F /* ofMainExt.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A038E812D11A25007EA18F /* ofMainExt.mm */; };
 		E4A038FE12D11D3E007EA18F /* nyc.pvr in Resources */ = {isa = PBXBuildFile; fileRef = E4A038FD12D11D3E007EA18F /* nyc.pvr */; };
+		E4A0399212D12A4E007EA18F /* MyVideoBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A0398512D12A4E007EA18F /* MyVideoBuffer.mm */; };
+		E4A0399312D12A4E007EA18F /* ofxiFBO.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A0398712D12A4E007EA18F /* ofxiFBO.mm */; };
+		E4A0399412D12A4E007EA18F /* ofxiPhoneVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A0398812D12A4E007EA18F /* ofxiPhoneVideo.cpp */; };
+		E4A0399512D12A4E007EA18F /* ofxiVideoGrabber.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A0398B12D12A4E007EA18F /* ofxiVideoGrabber.mm */; };
+		E4A0399612D12A4E007EA18F /* ofxiVideoLoader.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A0398D12D12A4E007EA18F /* ofxiVideoLoader.mm */; };
+		E4A0399712D12A4E007EA18F /* ofxiVideoPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A0398E12D12A4E007EA18F /* ofxiVideoPlayer.cpp */; };
+		E4A0399812D12A4E007EA18F /* VideoImporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A0399112D12A4E007EA18F /* VideoImporter.mm */; };
+		E4A0399F12D12AB6007EA18F /* ofxAudioSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A0399D12D12AB6007EA18F /* ofxAudioSampler.cpp */; };
+		E4A039AC12D12ADD007EA18F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4A039AB12D12ADD007EA18F /* AVFoundation.framework */; };
+		E4A039AE12D12ADD007EA18F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4A039AD12D12ADD007EA18F /* CoreMedia.framework */; };
+		E4A039B012D12ADD007EA18F /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4A039AF12D12ADD007EA18F /* CoreVideo.framework */; };
+		E4A039B812D12B46007EA18F /* orenv.mov in Resources */ = {isa = PBXBuildFile; fileRef = E4A039B712D12B46007EA18F /* orenv.mov */; };
+		E4A039DC12D12F15007EA18F /* ofxMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039D012D12F15007EA18F /* ofxMidi.cpp */; };
+		E4A039DD12D12F15007EA18F /* ofxMidiInstrument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039D212D12F15007EA18F /* ofxMidiInstrument.cpp */; };
+		E4A039DE12D12F15007EA18F /* ofxMidiLooper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039D412D12F15007EA18F /* ofxMidiLooper.cpp */; };
+		E4A039DF12D12F15007EA18F /* ofxMidiPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039D612D12F15007EA18F /* ofxMidiPlayer.cpp */; };
+		E4A039E012D12F15007EA18F /* ofxMidiSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039D812D12F15007EA18F /* ofxMidiSample.cpp */; };
+		E4A039E112D12F15007EA18F /* ofxMidiTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039DA12D12F15007EA18F /* ofxMidiTrack.cpp */; };
+		E4A039F012D12F4D007EA18F /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E4A039E712D12F4D007EA18F /* install.xml */; };
+		E4A039F112D12F4D007EA18F /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039E912D12F4D007EA18F /* tinyxml.cpp */; };
+		E4A039F212D12F4D007EA18F /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039EB12D12F4D007EA18F /* tinyxmlerror.cpp */; };
+		E4A039F312D12F4D007EA18F /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039EC12D12F4D007EA18F /* tinyxmlparser.cpp */; };
+		E4A039F412D12F4D007EA18F /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039EE12D12F4D007EA18F /* ofxXmlSettings.cpp */; };
+		E4A039FB12D12F65007EA18F /* ofxSndFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A039F912D12F65007EA18F /* ofxSndFile.cpp */; };
 		E4D8933311527A44007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8933011527A44007E1F53 /* main.mm */; };
 		E4D8933411527A44007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8933211527A44007E1F53 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -61,7 +85,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* pincherExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pincherExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* doronoPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = doronoPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
@@ -145,6 +169,47 @@
 		E4A038E712D11A25007EA18F /* ofMainExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofMainExt.h; sourceTree = "<group>"; };
 		E4A038E812D11A25007EA18F /* ofMainExt.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofMainExt.mm; sourceTree = "<group>"; };
 		E4A038FD12D11D3E007EA18F /* nyc.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; path = nyc.pvr; sourceTree = "<group>"; };
+		E4A0398412D12A4E007EA18F /* MyVideoBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoBuffer.h; sourceTree = "<group>"; };
+		E4A0398512D12A4E007EA18F /* MyVideoBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyVideoBuffer.mm; sourceTree = "<group>"; };
+		E4A0398612D12A4E007EA18F /* ofxiFBO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFBO.h; sourceTree = "<group>"; };
+		E4A0398712D12A4E007EA18F /* ofxiFBO.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFBO.mm; sourceTree = "<group>"; };
+		E4A0398812D12A4E007EA18F /* ofxiPhoneVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxiPhoneVideo.cpp; sourceTree = "<group>"; };
+		E4A0398912D12A4E007EA18F /* ofxiPhoneVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiPhoneVideo.h; sourceTree = "<group>"; };
+		E4A0398A12D12A4E007EA18F /* ofxiVideoGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoGrabber.h; sourceTree = "<group>"; };
+		E4A0398B12D12A4E007EA18F /* ofxiVideoGrabber.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVideoGrabber.mm; sourceTree = "<group>"; };
+		E4A0398C12D12A4E007EA18F /* ofxiVideoLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoLoader.h; sourceTree = "<group>"; };
+		E4A0398D12D12A4E007EA18F /* ofxiVideoLoader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVideoLoader.mm; sourceTree = "<group>"; };
+		E4A0398E12D12A4E007EA18F /* ofxiVideoPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxiVideoPlayer.cpp; sourceTree = "<group>"; };
+		E4A0398F12D12A4E007EA18F /* ofxiVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoPlayer.h; sourceTree = "<group>"; };
+		E4A0399012D12A4E007EA18F /* VideoImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoImporter.h; sourceTree = "<group>"; };
+		E4A0399112D12A4E007EA18F /* VideoImporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoImporter.mm; sourceTree = "<group>"; };
+		E4A0399D12D12AB6007EA18F /* ofxAudioSampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioSampler.cpp; sourceTree = "<group>"; };
+		E4A0399E12D12AB6007EA18F /* ofxAudioSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioSampler.h; sourceTree = "<group>"; };
+		E4A039AB12D12ADD007EA18F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		E4A039AD12D12ADD007EA18F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		E4A039AF12D12ADD007EA18F /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		E4A039B712D12B46007EA18F /* orenv.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = orenv.mov; sourceTree = "<group>"; };
+		E4A039D012D12F15007EA18F /* ofxMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidi.cpp; sourceTree = "<group>"; };
+		E4A039D112D12F15007EA18F /* ofxMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidi.h; sourceTree = "<group>"; };
+		E4A039D212D12F15007EA18F /* ofxMidiInstrument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiInstrument.cpp; sourceTree = "<group>"; };
+		E4A039D312D12F15007EA18F /* ofxMidiInstrument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiInstrument.h; sourceTree = "<group>"; };
+		E4A039D412D12F15007EA18F /* ofxMidiLooper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiLooper.cpp; sourceTree = "<group>"; };
+		E4A039D512D12F15007EA18F /* ofxMidiLooper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiLooper.h; sourceTree = "<group>"; };
+		E4A039D612D12F15007EA18F /* ofxMidiPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiPlayer.cpp; sourceTree = "<group>"; };
+		E4A039D712D12F15007EA18F /* ofxMidiPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiPlayer.h; sourceTree = "<group>"; };
+		E4A039D812D12F15007EA18F /* ofxMidiSample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiSample.cpp; sourceTree = "<group>"; };
+		E4A039D912D12F15007EA18F /* ofxMidiSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiSample.h; sourceTree = "<group>"; };
+		E4A039DA12D12F15007EA18F /* ofxMidiTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMidiTrack.cpp; sourceTree = "<group>"; };
+		E4A039DB12D12F15007EA18F /* ofxMidiTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMidiTrack.h; sourceTree = "<group>"; };
+		E4A039E712D12F4D007EA18F /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
+		E4A039E912D12F4D007EA18F /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		E4A039EA12D12F4D007EA18F /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		E4A039EB12D12F4D007EA18F /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		E4A039EC12D12F4D007EA18F /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		E4A039EE12D12F4D007EA18F /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
+		E4A039EF12D12F4D007EA18F /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		E4A039F912D12F65007EA18F /* ofxSndFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSndFile.cpp; sourceTree = "<group>"; };
+		E4A039FA12D12F65007EA18F /* ofxSndFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSndFile.h; sourceTree = "<group>"; };
 		E4D8933011527A44007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8933111527A44007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8933211527A44007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -178,6 +243,9 @@
 				5E2568A610ED26CD00A9501C /* PocoNet.a in Frameworks */,
 				5E2568A710ED26CD00A9501C /* PocoUtil.a in Frameworks */,
 				5E2568A810ED26CD00A9501C /* PocoXML.a in Frameworks */,
+				E4A039AC12D12ADD007EA18F /* AVFoundation.framework in Frameworks */,
+				E4A039AE12D12ADD007EA18F /* CoreMedia.framework in Frameworks */,
+				E4A039B012D12ADD007EA18F /* CoreVideo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +255,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* pincherExample.app */,
+				1D6058910D05DD3D006BFB54 /* doronoPhone.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -225,6 +293,9 @@
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 				53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */,
 				5326AEA710A23A0500278DE6 /* CoreLocation.framework */,
+				E4A039AB12D12ADD007EA18F /* AVFoundation.framework */,
+				E4A039AD12D12ADD007EA18F /* CoreMedia.framework */,
+				E4A039AF12D12ADD007EA18F /* CoreVideo.framework */,
 			);
 			name = "core frameworks";
 			sourceTree = "<group>";
@@ -284,6 +355,11 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4A039F712D12F65007EA18F /* ofxSndFile */,
+				E4A039E612D12F4D007EA18F /* ofxXmlSettings */,
+				E4A039CE12D12F15007EA18F /* ofxMidi */,
+				E4A0399B12D12AB6007EA18F /* ofxAudioSampler */,
+				E4A0398212D12A4E007EA18F /* ofxiPhoneVideo */,
 				E4A038E412D11A25007EA18F /* common */,
 				E439292D1293250B00F855A8 /* ofxPincher */,
 				E4A0385312D10D37007EA18F /* ofxiTexture */,
@@ -294,6 +370,7 @@
 		BB24DD8B10DA77E000E9C588 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				E4A039B712D12B46007EA18F /* orenv.mov */,
 				E4A038FD12D11D3E007EA18F /* nyc.pvr */,
 				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
@@ -559,6 +636,131 @@
 			path = "../../../My Addons/common";
 			sourceTree = SOURCE_ROOT;
 		};
+		E4A0398212D12A4E007EA18F /* ofxiPhoneVideo */ = {
+			isa = PBXGroup;
+			children = (
+				E4A0398312D12A4E007EA18F /* src */,
+			);
+			name = ofxiPhoneVideo;
+			path = "../../../My Addons/ofxiPhoneVideo";
+			sourceTree = SOURCE_ROOT;
+		};
+		E4A0398312D12A4E007EA18F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4A0398412D12A4E007EA18F /* MyVideoBuffer.h */,
+				E4A0398512D12A4E007EA18F /* MyVideoBuffer.mm */,
+				E4A0398612D12A4E007EA18F /* ofxiFBO.h */,
+				E4A0398712D12A4E007EA18F /* ofxiFBO.mm */,
+				E4A0398812D12A4E007EA18F /* ofxiPhoneVideo.cpp */,
+				E4A0398912D12A4E007EA18F /* ofxiPhoneVideo.h */,
+				E4A0398A12D12A4E007EA18F /* ofxiVideoGrabber.h */,
+				E4A0398B12D12A4E007EA18F /* ofxiVideoGrabber.mm */,
+				E4A0398C12D12A4E007EA18F /* ofxiVideoLoader.h */,
+				E4A0398D12D12A4E007EA18F /* ofxiVideoLoader.mm */,
+				E4A0398E12D12A4E007EA18F /* ofxiVideoPlayer.cpp */,
+				E4A0398F12D12A4E007EA18F /* ofxiVideoPlayer.h */,
+				E4A0399012D12A4E007EA18F /* VideoImporter.h */,
+				E4A0399112D12A4E007EA18F /* VideoImporter.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4A0399B12D12AB6007EA18F /* ofxAudioSampler */ = {
+			isa = PBXGroup;
+			children = (
+				E4A0399C12D12AB6007EA18F /* src */,
+			);
+			name = ofxAudioSampler;
+			path = "../../../My Addons/ofxAudioSampler";
+			sourceTree = SOURCE_ROOT;
+		};
+		E4A0399C12D12AB6007EA18F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4A0399D12D12AB6007EA18F /* ofxAudioSampler.cpp */,
+				E4A0399E12D12AB6007EA18F /* ofxAudioSampler.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4A039CE12D12F15007EA18F /* ofxMidi */ = {
+			isa = PBXGroup;
+			children = (
+				E4A039CF12D12F15007EA18F /* src */,
+			);
+			name = ofxMidi;
+			path = "../../../My Addons/ofxMidi";
+			sourceTree = SOURCE_ROOT;
+		};
+		E4A039CF12D12F15007EA18F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4A039D012D12F15007EA18F /* ofxMidi.cpp */,
+				E4A039D112D12F15007EA18F /* ofxMidi.h */,
+				E4A039D212D12F15007EA18F /* ofxMidiInstrument.cpp */,
+				E4A039D312D12F15007EA18F /* ofxMidiInstrument.h */,
+				E4A039D412D12F15007EA18F /* ofxMidiLooper.cpp */,
+				E4A039D512D12F15007EA18F /* ofxMidiLooper.h */,
+				E4A039D612D12F15007EA18F /* ofxMidiPlayer.cpp */,
+				E4A039D712D12F15007EA18F /* ofxMidiPlayer.h */,
+				E4A039D812D12F15007EA18F /* ofxMidiSample.cpp */,
+				E4A039D912D12F15007EA18F /* ofxMidiSample.h */,
+				E4A039DA12D12F15007EA18F /* ofxMidiTrack.cpp */,
+				E4A039DB12D12F15007EA18F /* ofxMidiTrack.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4A039E612D12F4D007EA18F /* ofxXmlSettings */ = {
+			isa = PBXGroup;
+			children = (
+				E4A039E712D12F4D007EA18F /* install.xml */,
+				E4A039E812D12F4D007EA18F /* libs */,
+				E4A039ED12D12F4D007EA18F /* src */,
+			);
+			name = ofxXmlSettings;
+			path = ../../../addons/ofxXmlSettings;
+			sourceTree = SOURCE_ROOT;
+		};
+		E4A039E812D12F4D007EA18F /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				E4A039E912D12F4D007EA18F /* tinyxml.cpp */,
+				E4A039EA12D12F4D007EA18F /* tinyxml.h */,
+				E4A039EB12D12F4D007EA18F /* tinyxmlerror.cpp */,
+				E4A039EC12D12F4D007EA18F /* tinyxmlparser.cpp */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		E4A039ED12D12F4D007EA18F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4A039EE12D12F4D007EA18F /* ofxXmlSettings.cpp */,
+				E4A039EF12D12F4D007EA18F /* ofxXmlSettings.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4A039F712D12F65007EA18F /* ofxSndFile */ = {
+			isa = PBXGroup;
+			children = (
+				E4A039F812D12F65007EA18F /* src */,
+			);
+			name = ofxSndFile;
+			path = "../../../My Addons/ofxSndFile";
+			sourceTree = SOURCE_ROOT;
+		};
+		E4A039F812D12F65007EA18F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4A039F912D12F65007EA18F /* ofxSndFile.cpp */,
+				E4A039FA12D12F65007EA18F /* ofxSndFile.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4D8932F11527A44007E1F53 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -572,9 +774,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* pincherExample */ = {
+		1D6058900D05DD3D006BFB54 /* doronoPhone */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "pincherExample" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "doronoPhone" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -586,9 +788,9 @@
 			dependencies = (
 				BB24E23E10DAA93400E9C588 /* PBXTargetDependency */,
 			);
-			name = pincherExample;
+			name = doronoPhone;
 			productName = iPhone;
-			productReference = 1D6058910D05DD3D006BFB54 /* pincherExample.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* doronoPhone.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -596,7 +798,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iPhonePincherExample" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "doronoPhone" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -616,7 +818,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* pincherExample */,
+				1D6058900D05DD3D006BFB54 /* doronoPhone */,
 			);
 		};
 /* End PBXProject section */
@@ -640,6 +842,8 @@
 				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				BB24DDCA10DA781C00E9C588 /* ofxiphone-Info.plist in Resources */,
 				E4A038FE12D11D3E007EA18F /* nyc.pvr in Resources */,
+				E4A039B812D12B46007EA18F /* orenv.mov in Resources */,
+				E4A039F012D12F4D007EA18F /* install.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,6 +876,25 @@
 				E4A0386312D10D74007EA18F /* ofxiTexture.mm in Sources */,
 				E4A038E912D11A25007EA18F /* easing.cpp in Sources */,
 				E4A038EA12D11A25007EA18F /* ofMainExt.mm in Sources */,
+				E4A0399212D12A4E007EA18F /* MyVideoBuffer.mm in Sources */,
+				E4A0399312D12A4E007EA18F /* ofxiFBO.mm in Sources */,
+				E4A0399412D12A4E007EA18F /* ofxiPhoneVideo.cpp in Sources */,
+				E4A0399512D12A4E007EA18F /* ofxiVideoGrabber.mm in Sources */,
+				E4A0399612D12A4E007EA18F /* ofxiVideoLoader.mm in Sources */,
+				E4A0399712D12A4E007EA18F /* ofxiVideoPlayer.cpp in Sources */,
+				E4A0399812D12A4E007EA18F /* VideoImporter.mm in Sources */,
+				E4A0399F12D12AB6007EA18F /* ofxAudioSampler.cpp in Sources */,
+				E4A039DC12D12F15007EA18F /* ofxMidi.cpp in Sources */,
+				E4A039DD12D12F15007EA18F /* ofxMidiInstrument.cpp in Sources */,
+				E4A039DE12D12F15007EA18F /* ofxMidiLooper.cpp in Sources */,
+				E4A039DF12D12F15007EA18F /* ofxMidiPlayer.cpp in Sources */,
+				E4A039E012D12F15007EA18F /* ofxMidiSample.cpp in Sources */,
+				E4A039E112D12F15007EA18F /* ofxMidiTrack.cpp in Sources */,
+				E4A039F112D12F4D007EA18F /* tinyxml.cpp in Sources */,
+				E4A039F212D12F4D007EA18F /* tinyxmlerror.cpp in Sources */,
+				E4A039F312D12F4D007EA18F /* tinyxmlparser.cpp in Sources */,
+				E4A039F412D12F4D007EA18F /* ofxXmlSettings.cpp in Sources */,
+				E4A039FB12D12F65007EA18F /* ofxSndFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -705,6 +928,7 @@
 					"../../../addons/ofxiPhone/**",
 					"../../../libs/openFrameworks/**",
 					"../../../libs/freetype/**",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -732,11 +956,13 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/linux64\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/osx\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/vs2008\"",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-w",
+					"-lsndfile",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "809FA590-A5D0-4BA9-9757-3FD36DDFDEB4";
@@ -762,6 +988,7 @@
 					"../../../addons/ofxiPhone/**",
 					"../../../libs/openFrameworks/**",
 					"../../../libs/freetype/**",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -789,6 +1016,7 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/linux64\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/osx\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/vs2008\"",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 				);
 				OTHER_LDFLAGS = (
@@ -833,6 +1061,7 @@
 					"../../../addons/ofxiPhone/**",
 					"../../../libs/openFrameworks/**",
 					"../../../libs/freetype/**",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -860,6 +1089,7 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/linux64\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/osx\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/vs2008\"",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
@@ -910,7 +1140,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "pincherExample" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "doronoPhone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
@@ -920,7 +1150,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iPhonePincherExample" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "doronoPhone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,

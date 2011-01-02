@@ -118,6 +118,8 @@ void ofxPincher::touchDown(int x, int y, int id) {
 	if (bAnimating)
 		return;
 	
+	
+	
 	if (id<2) {
 		
 		
@@ -222,4 +224,9 @@ void ofxPincher::touchDoubleTap(int x, int y, int id) {
 
 bool ofxPincher::getIsAnimating() {
 	return bAnimating;
+}
+
+ofPoint ofxPincher::touchToPoint(int x,int y) {
+	ofPoint touch(x,y);
+	return (-translate+touch)/scale;
 }
