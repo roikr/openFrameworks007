@@ -54,9 +54,10 @@ public:
 	bool getIsAnimating();
 	
 //	ofPoint getTranslate() {return translate;};
-//	float getScale() {return scale;};
+	float getScale() {return scale;};
 	ofPoint touchToPoint(int x,int y);
 //	ofPoint getTransform();;
+	pincherPrefs& getPrefs() {return prefs;};
 	
 private:
 	

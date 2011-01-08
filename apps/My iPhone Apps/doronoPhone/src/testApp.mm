@@ -93,9 +93,6 @@ void testApp::setup(){
 		video->textureWidth = 128;
 		video->textureHeight = 256;
 		
-		
-		
-		
 		video->firstFrame = 0;
 		
 		//video->bHorizontal = false;
@@ -107,6 +104,7 @@ void testApp::setup(){
 		loader.addVideo(video);
 		loader.loadAudio(video, ofToResourcesPath(filename));
 		video->audio.normalize();
+		video->audio.trim(0.05);
 				
 		videos[name] = video;
 		bases[name] = xml.getAttribute("video","base",60,i);
@@ -116,12 +114,9 @@ void testApp::setup(){
 	
 	xml.popTag();
 	
-	
-	
 	xml.pushTag("actors");
 	for (i=0; i<xml.getNumTags("actor");i++) {
 		
-				
 		actor a;
 		a.x = xml.getAttribute("actor", "x", 0, i) ;
 		a.y = xml.getAttribute("actor", "y", 0, i) ;
@@ -133,11 +128,11 @@ void testApp::setup(){
 		ofxiPhoneVideo *video = videos[videoName];
 		
 		a.base = bases[videoName];
-		
+		a.pan = 0.5;
+		a.volume = 1;
 		
 		map<int,note>::iterator iter = notes.find(a.midi);
-	
-		
+
 		assert(video);
 		
 		if (iter==notes.end())  {
@@ -146,7 +141,6 @@ void testApp::setup(){
 			n.base = a.base;
 			n.player = new ofxiVideoPlayer;
 			n.player->setup(video,false);
-			n.pan = 0.5;
 			notes[a.midi] = n;
 			//a.pan = (float)a.x/(float)(ofGetWidth());
 			
@@ -161,13 +155,13 @@ void testApp::setup(){
 		
 		
 	xml.popTag();
-	
-	
-	
-		
-		
 	xml.popTag();
 	
+	for (vector<actor>::iterator iter=actors.begin(); iter!=actors.end(); iter++) { 
+		notes[iter->midi].actors.push_back(&(*iter));
+	}
+
+	calcAudio();
 	
 	ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 2);
 	
@@ -257,20 +251,69 @@ void testApp::touchDown(int x, int y, int id) {
 
 }
 
+void testApp::calcAudio() {
+	
+//	float rangeX = maxX-minX;
+//	minX -=rangeX/4;
+//	maxX +=rangeX/4;
+	
+//	float minY = (pincher.touchToPoint(0, 0)).x;
+//	float maxY= (pincher.touchToPoint(ofGetWidth(), 0)).x;
+//	float rangeX = maxY-minY;
+//	minY -=rangeY/4;
+//	maxY +=rangeY/4;
+	
+//	printf("min: %.0f, max: %.0f\n",minX,maxX);
+	
+	printf("scale: %2.2f, ",pincher.getScale());
+	
+	float minX = (pincher.touchToPoint(0, 0)).x;
+	float maxX = (pincher.touchToPoint(ofGetWidth(), 0)).x;
+	float rangeX = maxX-minX;
+	minX-=rangeX/10;
+	maxX+=rangeX/10;
+	float rangeY = (pincher.touchToPoint(0, ofGetHeight()) - pincher.touchToPoint(0, 0)).y/2;
+	
+	ofPoint center = pincher.touchToPoint(ofGetWidth()/2, ofGetHeight()/2);
+	
+	for (map<int,note>::iterator niter = notes.begin(); niter!=notes.end(); niter++) {
+		
+		niter->second.volume = 0;
+		
+		for (vector<actor*>::iterator aiter=niter->second.actors.begin(); aiter!=niter->second.actors.end(); aiter++) { 
+			
+			
+			(*aiter)->volume = exp(-(pow(center.x-(float)(*aiter)->x,2)+pow(center.y-(float)(*aiter)->y,2))/(2*pow(rangeY,2)));
+			(*aiter)->pan = ((*aiter)->x - minX)/ (maxX-minX);
+			//niter->second.pan+= (min(maxX, max(minX,(float)(*aiter)->x)) - minX)/ (maxX-minX);
+			if (niter==notes.begin()) {
+				//printf("actor: %i, x: %i, y: %i, vol: %1.2f, pan: %1.2f\n",distance(niter->second.actors.begin(),aiter),(*aiter)->x,(*aiter)->y,(*aiter)->volume,(*aiter)->pan);
+				printf("(%i,%2.2f) ",distance(niter->second.actors.begin(),aiter),(*aiter)->scale);
+			}
+			
+			if ((*aiter)->volume > niter->second.volume) {
+				niter->second.volume = (*aiter)->volume;
+				niter->second.pan = (*aiter)->pan;
+			}
+			
+		}
+		
+		//niter->second.pan /=niter->second.actors.size();
+		//niter->second.pan = 0.5;
+	}
+	
+	printf("\n");
+	
+}
+
 
 void testApp::touchMoved(int x, int y, int id) {
 	
 	pincher.touchMoved(x, y, id);
 	
-	float minX = (pincher.touchToPoint(0, 0)).x;
-	float maxX = (pincher.touchToPoint(ofGetWidth(), 0)).x;
-
-	printf("min: %.0f, max: %.0f\n",minX,maxX);
+	calcAudio();
 	
-	//for (vector<actor>::iterator iter=actors.begin(); iter!=actors.end(); iter++) { 
-//		iter->pan = (min(maxX, max(minX,(float)iter->x)) - minX)/ (maxX-minX);
-//	}
-	
+		
 }
 
 void testApp::touchUp(int x, int y, int id) {
@@ -287,10 +330,14 @@ void testApp::touchDoubleTap(int x, int y, int id) {
 //		pincher.touchDoubleTap(x,y,id);
 //	}
 	
+	bSolo = false;
+	
 	ofPoint trans = pincher.touchToPoint(x, y);
 	for (vector<actor>::iterator iter=actors.begin(); iter!=actors.end(); iter++) { 
 		if (trans.x > iter->x && trans.x < iter->x+12 && trans.y>iter->y && trans.y<iter->y+18) {
-			return;
+			bSolo = true;
+			soloist = &(*iter);
+			break;
 		}
 	}
 	
@@ -322,27 +369,29 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	
 		for (vector<event>::iterator eiter=events.begin(); eiter!=events.end(); eiter++) {
 			if (eiter->bNoteOn) {
-				map<int,note>::iterator niter = notes.find(60+(eiter->note)%12);
+				int midi = bSolo ? soloist->midi : 60+(eiter->note)%12;
+				
+				map<int,note>::iterator niter = notes.find(midi);
 				if (niter!=notes.end()) {
-					
-					niter->second.player->play(60+eiter->note-niter->second.base,127);
-					
-										
+					niter->second.player->play(60+eiter->note-niter->second.base,eiter->velocity);
 				}
+
+				
 			}
 		}
 	}
 	
-	float numPoly = 9; //(float)actors.size()
+	float numPoly = 5; //(float)actors.size()
 	
-	for (map<int,note>::iterator iter=notes.begin(); iter!=notes.end(); iter++) { 
+	for (map<int,note>::iterator niter=notes.begin(); niter!=notes.end(); niter++) { 
 		//float pan = 0.5;
 		
-		float leftScale = 1 - iter->second.pan;
-		float rightScale = iter->second.pan;
-		iter->second.player->mix(lAudio, bufferSize,leftScale/numPoly);
-		iter->second.player->mix(rAudio, bufferSize,rightScale/numPoly);
-		iter->second.player->preProcess();
+		float leftScale = 1 - niter->second.pan;
+		float rightScale = niter->second.pan;
+		float volume = (pincher.getScale() - pincher.getPrefs().minScale)/(pincher.getPrefs().maxScale - pincher.getPrefs().minScale)+0.2;
+		niter->second.player->mix(lAudio, bufferSize,volume*niter->second.volume*leftScale/numPoly);
+		niter->second.player->mix(rAudio, bufferSize,volume*niter->second.volume*rightScale/numPoly);
+		niter->second.player->preProcess();
 	}
 	
 	

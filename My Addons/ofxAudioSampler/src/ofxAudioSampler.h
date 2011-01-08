@@ -24,6 +24,7 @@ public:
 	void stop();
 	
 	void normalize();
+	void trim(float thresh);
 	
 	
 	bool getIsPlaying();

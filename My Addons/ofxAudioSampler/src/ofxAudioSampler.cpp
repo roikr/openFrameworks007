@@ -135,6 +135,24 @@ void ofxAudioSampler::normalize() {
 	}
 }
 
+void ofxAudioSampler::trim(float thresh) {
+	
+	int i;
+	for (i = 0; i < bufferSize * numBuffers; i++){
+		if (sqrt(buffer[i]*buffer[i])>thresh) {
+			break;
+		}
+	}
+	
+	if (i<bufferSize * numBuffers) {
+		for (int j = 0; j < bufferSize * numBuffers-i; j++){
+			buffer[j] = buffer[j+i];
+		}
+	}
+	
+	
+}
+
 
 bool ofxAudioSampler::getIsPlaying() {
 	return state == SAMPLER_PLAYING;

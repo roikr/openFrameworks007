@@ -250,8 +250,8 @@ void ofxiVideoLoader::loadVideo(string filename) {
 		CMSampleBufferRef sampleBuffer = [videoOutput copyNextSampleBuffer];
 		if (sampleBuffer != NULL) {
 		
-			
-			NSLog(@"got video: %i",(*iter)->textures.size());
+			printf(".");
+			//NSLog(@"got video: %i",(*iter)->textures.size());
 			//			CMTime timestamp = CMSampleBufferGetPresentationTimeStamp( sampleBuffer );
 			//			if (CMTIME_IS_VALID( self.previousTimestamp ))
 			//				self.videoFrameRate = 1.0 / CMTimeGetSeconds( CMTimeSubtract( timestamp, self.previousTimestamp ) );
@@ -342,7 +342,7 @@ void ofxiVideoLoader::loadVideo(string filename) {
 
 	}
 		
-	
+	printf("\n");
 	fbo.pop();
 	
 		

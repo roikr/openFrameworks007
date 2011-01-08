@@ -17,14 +17,18 @@ struct actor {
 	float degree;
 	int midi;
 	int base;
+	float pan;
+	float volume;
 	ofxiVideoPlayer *player;
 };
 
 struct note {
 	ofxiVideoPlayer *player;
 	int base;
-	float pan;
 	float fine;
+	float pan;
+	float volume;
+	vector<actor*> actors;
 };
 
 
@@ -49,6 +53,8 @@ public:
 	void touchDoubleTap(int x, int y, int id);
 	
 	void audioRequested( float * output, int bufferSize, int nChannels );
+	
+	void calcAudio();
 
 	
 	bool			bSmooth;
@@ -69,6 +75,9 @@ public:
 	float   * rAudio;
 	
 	bool bSongPlaying;
+	bool bSolo;
+	actor *soloist;
+	
 	
 	map<string,ofxiPhoneVideo*> videos;
 	//map<int,actor*> notes; 
