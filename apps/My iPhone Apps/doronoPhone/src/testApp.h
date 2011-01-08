@@ -10,6 +10,32 @@
 #include "ofxiVideoPlayer.h"
 #include "ofxMidiTrack.h"
 
+
+struct actor {
+	int x,y;
+	float scale;
+	float degree;
+	int midi;
+	int base;
+	ofxiVideoPlayer *player;
+};
+
+struct note {
+	ofxiVideoPlayer *player;
+	int base;
+	float pan;
+	float fine;
+};
+
+
+struct layer {
+	float x;
+	float y;
+	float scale;
+	float degree;
+	ofxiTexture *texture;
+};
+
 class testApp : public ofxiPhoneApp {
 	
 public:
@@ -33,17 +59,21 @@ public:
 	int animStart;
 	
 	//ofImage image;
-	ofxiTexture texture;
+	vector<layer> layers;
+	ofxiTexture background;
 	
-	ofxiPhoneVideo video;
-	ofxiVideoLoader loader;
-	ofxiVideoPlayer player;
+	
 	ofxMidiTrack song;
 	
 	float 	* lAudio;
 	float   * rAudio;
 	
 	bool bSongPlaying;
+	
+	map<string,ofxiPhoneVideo*> videos;
+	//map<int,actor*> notes; 
+	vector<actor> actors;
+	map<int,note> notes;
 	
 
 };

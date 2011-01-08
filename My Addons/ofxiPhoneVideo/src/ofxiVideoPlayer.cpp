@@ -39,6 +39,11 @@ void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,bool bIntroMode) {
 	state = PLAYER_IDLE;
 	this->bIntroMode = bIntroMode;
 	
+	if (!bIntroMode && video->textures.size()) {
+		currentTexture = video->textures[video->firstFrame];
+
+	}
+	
 }
 
 void ofxiVideoPlayer::seekFrame(int nextFrame) {
@@ -52,7 +57,10 @@ void ofxiVideoPlayer::seekFrame(int nextFrame) {
 				state = PLAYER_IDLE;
 				if (bIntroMode) {
 					playIntro();
-				} 
+				} else {
+					currentTexture = video->textures[video->firstFrame];
+				}
+
 			} else {
 				int temp = video->textures[(video->firstFrame+nextFrame) % video->textures.size()];
 				if	(temp!=currentTexture) {

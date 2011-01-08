@@ -971,9 +971,9 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 				);
 				OTHER_LDFLAGS = (
-					"-lsndfile",
 					"-ObjC",
 					"-w",
+					"-lsndfile",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "09506734-48DB-4056-813C-4386BC164AB6";
@@ -998,6 +998,7 @@
 					"../../../addons/ofxiPhone/**",
 					"../../../libs/openFrameworks/**",
 					"../../../libs/freetype/**",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -1026,6 +1027,7 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/osx\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/vs2008\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1068,6 +1070,7 @@
 					"../../../addons/ofxiPhone/**",
 					"../../../libs/openFrameworks/**",
 					"../../../libs/freetype/**",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -1096,6 +1099,7 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/osx\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/vs2008\"",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
+					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";

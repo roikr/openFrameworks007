@@ -13,13 +13,23 @@
 #include "ofxiFBO.h"
 #include <string>
 
+
 class ofxiVideoLoader {
 	
 public:
 	
-	void setup(ofxiPhoneVideo *video);
-	void load(string filename);
+	void setup();
 	
-	ofxiPhoneVideo *video;
-	ofxiFBO fbo;
+	
+	
+	void addVideo(ofxiPhoneVideo *video);
+	void loadVideo(string filename);
+	
+	void loadAudio(ofxiPhoneVideo *video,string filename);
+	
+	GLuint createVideoTextue(GLuint w,GLuint h);
+	
+	vector<ofxiPhoneVideo*> videos;
+	
+	
 };

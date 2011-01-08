@@ -27,7 +27,7 @@ public:
 	
 	int		fps;
 	int		bufferSize;
-	int		sampleRate;
+	float	sampleRate;
 	int		sampleLength; // in millis -  make sure that there are more frames than needed
 	
 	

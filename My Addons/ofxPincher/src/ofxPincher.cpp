@@ -230,3 +230,9 @@ ofPoint ofxPincher::touchToPoint(int x,int y) {
 	ofPoint touch(x,y);
 	return (-translate+touch)/scale;
 }
+
+/*
+ofPoint ofxPincher::getTransform() {
+	return (-translate)/scale;
+}
+ */
