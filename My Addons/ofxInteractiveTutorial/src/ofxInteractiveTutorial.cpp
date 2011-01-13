@@ -11,13 +11,12 @@
 #include "ofxXmlSettings.h"
 
 
-void ofxInteractiveTutorial::setup(bool bKeepOrder) {
+void ofxInteractiveTutorial::setup() {
 	state = TUTORIAL_IDLE;
-	this->bKeepOrder = bKeepOrder;
 }
 
 void ofxInteractiveTutorial::addMessage(string& str) {
-	messages.push_back(make_pair(str, false));
+	messages.push_back(str);
 }
 
 void ofxInteractiveTutorial::loadFile(string filename) {
@@ -30,7 +29,7 @@ void ofxInteractiveTutorial::loadFile(string filename) {
 	xml.pushTag("tutorial");
 	
 	for (int i=0; i<xml.getNumTags("message"); i++) {
-		messages.push_back(make_pair(xml.getValue("message", "", i), false));
+		messages.push_back(xml.getValue("message", "", i));
 	}
 	
 	citer = messages.begin();
@@ -48,15 +47,15 @@ void ofxInteractiveTutorial::start() {
 
 void ofxInteractiveTutorial::update() {
 	if (citer!=messages.end() && state == TUTORIAL_TIMER_STARTED && ofGetElapsedTimeMillis()-timerStart > delay) {
-		state = TUTORIAL_TIMER_FINISHED;
-		cout << citer->first << endl;
+		state = TUTORIAL_READY;
+		cout << *citer << endl;
 	}
 }
 
 
 
 string ofxInteractiveTutorial::getCurrentText() {
-	return citer->first;
+	return *citer;
 }
 
 int	ofxInteractiveTutorial::getCurrentNumber() {
@@ -77,24 +76,11 @@ void ofxInteractiveTutorial::done(int num) {
 		return;
 	}
 	
-	if (!bKeepOrder) {
-		messages[num].second = true;
-	}
 	
 	
 	if (num == distance(messages.begin(), citer)) {
-		messages[num].second = true;
-		
-		while (citer->second && citer!=messages.end()) {
-			citer++;
-		}
-		
-		if (citer!=messages.end()) {
-			start();
-		} else {
-			state = TUTORIAL_IDLE;
-		}
-
+		citer++;
+		state = citer==messages.end() ? TUTORIAL_DONE : TUTORIAL_IDLE;
 	}
 }
 

@@ -17,19 +17,17 @@ using namespace std;
 enum {
 	TUTORIAL_IDLE,
 	TUTORIAL_TIMER_STARTED,
-	TUTORIAL_TIMER_FINISHED,
-	TUTORIAL_MESSAGE_PRESENTED,
-	TUTORIAL_SCREEN_TOUCHED
+	TUTORIAL_READY,
+	TUTORIAL_DONE
 };
 
 class ofxInteractiveTutorial {
 public:
-	void setup(bool bKeepOrder);
+	void setup();
 	void addMessage(string& str);
 	void loadFile(string filename);
 	void start();
 	void update();
-	void messagePresented();
 	void done(int num);
 	
 	string getCurrentText();
@@ -38,12 +36,11 @@ public:
 	void setState(int state);
 	
 private:
-	vector<pair<string,bool> > messages;
-	vector<pair<string,bool> >::iterator citer;
+	vector<string> messages;
+	vector<string>::iterator citer;
 	
 	int timerStart;
 	int delay;
 	int state;
-	bool bKeepOrder;
 };
 
