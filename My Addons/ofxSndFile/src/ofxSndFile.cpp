@@ -9,7 +9,7 @@
 
 #include "ofxSndFile.h"
 
-#include <sndfile.h>
+#include "sndfile.h"
 #include <iostream>
 
 bool ofxSndFile::load(string filename,int blockLength) {
