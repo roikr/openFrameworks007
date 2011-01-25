@@ -20,17 +20,21 @@ void ofxInteractiveTutorial::addMessage(string& str) {
 }
 
 void ofxInteractiveTutorial::loadFile(string filename) {
+	this->filename = filename;
 	ofxXmlSettings xml;
 	bool bLoaded = xml.loadFile(filename);
 	assert(bLoaded);
 	
 	delay = xml.getAttribute("tutorial", "delay", 3000);
+	timesCompleted = xml.getAttribute("tutorial", "timesCompleted", 0);
 	
 	xml.pushTag("tutorial");
 	
 	for (int i=0; i<xml.getNumTags("message"); i++) {
 		messages.push_back(xml.getValue("message", "", i));
 	}
+	
+	xml.popTag();
 	
 	citer = messages.begin();
 
@@ -46,9 +50,9 @@ void ofxInteractiveTutorial::start() {
 }
 
 void ofxInteractiveTutorial::update() {
-	if (citer!=messages.end() && state == TUTORIAL_TIMER_STARTED && ofGetElapsedTimeMillis()-timerStart > delay) {
+	if (/*citer!=messages.end() &&*/ state == TUTORIAL_TIMER_STARTED && ofGetElapsedTimeMillis()-timerStart > delay) {
 		state = TUTORIAL_READY;
-		cout << *citer << endl;
+		//cout << *citer << endl;
 	}
 }
 
@@ -72,7 +76,7 @@ void ofxInteractiveTutorial::setState(int state) {
 
 
 void ofxInteractiveTutorial::done(int num) {
-	if (num>=messages.size()) {
+	if (state==TUTORIAL_DONE || num>=messages.size() ) {
 		return;
 	}
 	
@@ -80,7 +84,23 @@ void ofxInteractiveTutorial::done(int num) {
 	
 	if (num == distance(messages.begin(), citer)) {
 		citer++;
-		state = citer==messages.end() ? TUTORIAL_DONE : TUTORIAL_IDLE;
+		state = TUTORIAL_IDLE;
+		if (citer==messages.end()) {
+			state =  TUTORIAL_DONE;
+			timesCompleted++;
+			ofxXmlSettings xml;
+			bool bLoaded = xml.loadFile(filename);
+			assert(bLoaded);
+			xml.setAttribute("tutorial", "timesCompleted", timesCompleted,0);
+			xml.saveFile(filename);
+			
+		}
+			
+		
 	}
+}
+
+int ofxInteractiveTutorial::getTimesCompleted() {
+	return timesCompleted;
 }
 

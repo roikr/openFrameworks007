@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+
 using namespace std;
 
 enum {
@@ -35,6 +36,8 @@ public:
 	int getState();
 	void setState(int state);
 	
+	int getTimesCompleted();
+	
 private:
 	vector<string> messages;
 	vector<string>::iterator citer;
@@ -42,5 +45,8 @@ private:
 	int timerStart;
 	int delay;
 	int state;
+	int timesCompleted;
+	string filename;
+	
 };
 
