@@ -171,6 +171,34 @@ void ofxSndFile::postProcess() {
 }
 
 
+void ofxSndFile::audioRequested (float * output, int channel,int bufferSize, int nChannels) {
+	if (!bIsPlaying ) {
+		return;
+	} else {
+		
+		int n = getIsLastBlock() ? (currentBlock+1) * blockLength - samplesPerChannel : blockLength;
+		
+		
+		float *buffer = getCurrentBlock(0);
+		for (int i=0; i<n; i++) {
+			output[i*nChannels+channel]=buffer[i];
+		}
+		
+		for (int i=n; i<bufferSize; i++) {
+			output[i*nChannels+channel]=0;
+		}
+		
+		
+		if (getIsLastBlock()) {
+			bIsPlaying = false;
+		}
+		else
+			currentBlock++;
+		
+	}
+	
+}
+
 void ofxSndFile::open(string filename) {
 	SF_INFO sfInfo;
 	sfInfo.samplerate = 44100;

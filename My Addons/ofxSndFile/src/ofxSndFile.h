@@ -34,6 +34,8 @@ public:
 	void mixWithBlocks(float *left,float *right,float volume=1.0f);
 	void mix(float *left,float *right,int block,float volume,bool ramp);
 	void postProcess(); // to call after processing
+	
+	void audioRequested (float * output, int channel,int bufferSize, int nChannels); // to use without postProcess and for left side only
 
 	void open(string filename);
 	void saveWithBlocks(float *left,float*right);
