@@ -92,6 +92,11 @@ void ofxiPhoneGLViewPort() {
 
 #endif
 
+bool ofxCopyFile(string src,string dest) {
+	
+	NSError *error = nil;	
+	return [[NSFileManager defaultManager] copyItemAtPath:[NSString stringWithCString:src.c_str() encoding:NSASCIIStringEncoding] toPath:[NSString stringWithCString:dest.c_str() encoding:NSASCIIStringEncoding] error:&error];
+}
 
 float distance(ofPoint pnt) {
 	ofPoint norm = pnt*pnt;

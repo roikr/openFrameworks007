@@ -16,6 +16,7 @@ using namespace std;
 
 string ofToDocumentsPath(string path);
 string ofToResourcesPath(string path);
+bool ofxCopyFile(string src,string dest);
 
 void ofxiPhoneGLViewPort();
 

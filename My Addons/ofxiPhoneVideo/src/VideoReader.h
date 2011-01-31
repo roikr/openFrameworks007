@@ -37,6 +37,8 @@
 
 	float _buffer[RING_BUFFER_SIZE];
 	int readPos;
+	
+	int numChannels;
 }
 
 @property (readonly) GLuint videoTexture;
@@ -49,6 +51,7 @@
 @property (readonly) int readPos;
 @property (readonly) float* buffer;
 @property (readonly) int frame;
+@property (readonly) int numChannels;
 
 
 

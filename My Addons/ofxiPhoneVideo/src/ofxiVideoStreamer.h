@@ -10,6 +10,7 @@
 #pragma once
 
 #include <string>
+#include "ofMain.h"
 
 using namespace std;
 
@@ -23,13 +24,17 @@ public:
 	
 	void setup(string filename);
 	void update();
-	void draw();
+	void draw(ofRectangle rect,ofRectangle tex);
 	void exit();
 	
 	
 	void audioRequested( float * output, int bufferSize, int nChannels );
 	float getFrameRate();
+	
+	float getWidth();
+	float getHeight();
 
+	bool getIsStreaming();
 	
 protected:
 	

@@ -14,7 +14,7 @@
 
 @implementation VideoReader
 
-@synthesize reader,videoOutput,audioOutput,videoTexture,frameRate,width,height,readPos,frame;
+@synthesize reader,videoOutput,audioOutput,videoTexture,frameRate,width,height,readPos,frame,numChannels;
 
 +(id)videoReaderWithURL:(NSURL*)videoURL 
 {
@@ -183,7 +183,8 @@
 			if (!readPos) {
 				CMFormatDescriptionRef formarDesc = CMSampleBufferGetFormatDescription (sampleBuffer);
 				const AudioStreamBasicDescription * streamDesc = CMAudioFormatDescriptionGetStreamBasicDescription (formarDesc);
-				//printf("here");
+				numChannels = streamDesc->mChannelsPerFrame;
+				
 			}
 						
 			CMBlockBufferRef audioBlockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
@@ -193,30 +194,13 @@
 			SInt16 *samples = NULL;
 			CMBlockBufferGetDataPointer(audioBlockBuffer, audioBlockBufferOffset, &lengthAtOffset, &totalLength, (char **)(&samples));
 			//NSLog(@"numSamples: %i, audioBlockBufferOffset: %i, lengthAtOffset: %i, totalLength %i",numSamples,audioBlockBufferOffset,lengthAtOffset,totalLength);
-			int numSamplesToRead = 1;
-			for (int i = 0; i < numSamplesToRead; i++) {
-				
-				//SInt16 subSet[numSamples / numSamplesToRead];
-//				for (int j = 0; j < numSamples / numSamplesToRead; j++)
-//					subSet[j] = samples[(i * (numSamples / numSamplesToRead)) + j];
-//				
-//				lastAudioSample = [self maxValueInArray: subSet ofSize: numSamples / numSamplesToRead];
-				
-				
-				
-				for (int j = 0; j < numSamples / numSamplesToRead; j++) {
-					
-					SInt16 sample = samples[(i * (numSamples / numSamplesToRead)) + j];
-					_buffer[(readPos+j) % RING_BUFFER_SIZE]= (float)sample / SINT16_MAX;
-				}
-					
-				
-				//lastAudioSample = [self maxValueInArray: subSet ofSize: numSamples / numSamplesToRead];
-				//double scaledSample = (double) ((lastAudioSample / SINT16_MAX));
-				
-			}
 			
-			readPos+=numSamples;
+			for (int i=0; i<numSamples*numChannels; i++) {
+				SInt16 sample = samples[i];
+				_buffer[(readPos+i) % RING_BUFFER_SIZE]= (float)sample / SINT16_MAX;
+			}
+						
+			readPos+=numSamples*numChannels;
 						
 			
 			

@@ -26,15 +26,15 @@ void ofxiVideoStreamer::update() {
 		
 	} 
 	
-	printf("readPos: %i, playPos: %i\n",videoReader.readPos,playPos);
+	//printf("readPos: %i, playPos: %i\n",videoReader.readPos,playPos);
 }
 
-float ofxiVideoStreamer::getFrameRate() {
-	return videoReader.frameRate;
-}
 
-void ofxiVideoStreamer::draw() {
-	
+
+void ofxiVideoStreamer::draw(ofRectangle rect,ofRectangle tex) {
+	if (!getIsStreaming()) {
+		return;
+	}
 	
 	glPushMatrix();
 	
@@ -44,27 +44,22 @@ void ofxiVideoStreamer::draw() {
 //		
 //	}
 	
-	float widthFraction = 1.0f;
-	float heightFraction = 1.0f;
 	
-	
-	float u = widthFraction;
-	float v = heightFraction;
 	
 	GLfloat spriteTexcoords[] = {
-		u,v,   
-		u,0.0f,
-		0,v,   
-		0.0f,0,};
+		tex.x+tex.width,tex.y+tex.height,   
+		tex.x+tex.width,tex.y,
+		tex.x,tex.y+tex.height,   
+		tex.x,tex.y,};
 	
-	float w =videoReader.width*u;//ofGetWidth()/2;
-	float h =videoReader.height*v;//(float)ofGetWidth()/(float)width*(float)height/2;
+//	float w =videoReader.width*u;//ofGetWidth()/2;
+//	float h =videoReader.height*v;//(float)ofGetWidth()/(float)width*(float)height/2;
 	
 	GLfloat spriteVertices[] =  {
-		w,h,0,   
-		w,0,0,   
-		0,h,0, 
-		0,0,0};
+		rect.x+rect.width,rect.y+rect.height,0,   
+		rect.x+rect.width,rect.y,0,   
+		rect.x,rect.y+rect.height,0, 
+		rect.x,rect.y,0};
 	
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -87,9 +82,29 @@ void ofxiVideoStreamer::draw() {
 	glPopMatrix();
 }
 
-void ofxiVideoStreamer::exit() {
 
+void ofxiVideoStreamer::exit() {
+	
 }
+
+
+float ofxiVideoStreamer::getFrameRate() {
+	return videoReader.frameRate;
+}
+
+
+float ofxiVideoStreamer::getWidth() {
+	return videoReader.width;
+}
+
+float ofxiVideoStreamer::getHeight() {
+	return videoReader.height;
+}
+
+bool ofxiVideoStreamer::getIsStreaming() {
+	return videoReader.videoTexture;
+}
+
 
 
 void ofxiVideoStreamer::audioRequested( float * output, int bufferSize, int nChannels ) {
@@ -98,11 +113,13 @@ void ofxiVideoStreamer::audioRequested( float * output, int bufferSize, int nCha
 	
 	if (videoReader.readPos-playPos>=bufferSize && videoReader.frame>0) {
 		for (int i = 0; i < bufferSize; i++){
-			output[i*nChannels] = videoReader.buffer[(playPos+i) % RING_BUFFER_SIZE];// * gain;
-			output[i*nChannels + 1] = videoReader.buffer[(playPos+i) % RING_BUFFER_SIZE];// * gain;
+			
+			output[i*nChannels] = videoReader.buffer[(playPos+i*videoReader.numChannels) % RING_BUFFER_SIZE];// * gain;
+			output[i*nChannels + 1] = videoReader.numChannels == 2 ? videoReader.buffer[(playPos+i*videoReader.numChannels+1) % RING_BUFFER_SIZE] : output[i*nChannels];// * gain;
+			
 		}
 		
-		playPos+=bufferSize;
+		playPos+=bufferSize*videoReader.numChannels;
 	} else {
 		memset(output, 0, nChannels*bufferSize*sizeof(float));
 
