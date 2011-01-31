@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\testApp.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\myAddons\ofxSndFile\src\ofxSndFile.cpp">
+      <Filter>addons\ofxSndFile\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\testApp.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.h">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h">
+      <Filter>addons\ofxOsc\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\myAddons\ofxSndFile\src\ofxSndFile.h">
+      <Filter>addons\ofxSndFile\src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="addons">
+      <UniqueIdentifier>{78c67342-45f3-4076-be39-4116b8d4900e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc">
+      <UniqueIdentifier>{826a2c53-2214-421f-9088-405c41b5e350}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\src">
+      <UniqueIdentifier>{94a26222-5ee2-41f0-a776-9cafbabe2ae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings">
+      <UniqueIdentifier>{2f3962c5-6d9b-4893-9f09-bf15ca44d8e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\src">
+      <UniqueIdentifier>{23133626-6984-43a5-a519-3d94107d4d65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\libs">
+      <UniqueIdentifier>{afa2f703-77ac-4cde-9525-11718c1488a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxSndFile">
+      <UniqueIdentifier>{ae520a8c-2ad2-4b83-9df6-aaffe3240594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxSndFile\src">
+      <UniqueIdentifier>{82a1b740-8e4c-46e2-a8a9-1919af87b3cb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

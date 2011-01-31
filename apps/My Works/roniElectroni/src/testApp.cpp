@@ -7,6 +7,9 @@
 //--------------------------------------------------------------
 void testApp::setup(){	 
 	
+
+	
+
 	bufferSize = 256;
 	sampleRate = 44100;
 	
@@ -50,10 +53,7 @@ void testApp::setup(){
 	
 	xml.popTag();
 		
-	ofSoundStreamListDevices(); 
 	
-		
-	ofSoundStreamSetup(sounds.size(),0,this);
 	
 		
 	ofSetFrameRate(60);
@@ -61,6 +61,11 @@ void testApp::setup(){
 	ofBackground(255,255,255);
 	
 	bPlaying = false;
+
+	ofSoundStreamListDevices(); 
+	
+		
+	ofSoundStreamSetup(sounds.size(),0,this,sampleRate,256, 4);
 }
 
 void testApp::play() {
@@ -95,22 +100,28 @@ void testApp::update(){
 			}
 		}
 		
-	} else {
+	} else 
+	
+	{
 		if (!bPlaying) {
 			play();
+			
 			ofxOscMessage m;
 			m.setAddress( "/play" );
 			for (vector<ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
 				(*iter)->sendMessage( m );
 			}
+			
 		} 
 				
 	}
 	
-	if (bPlaying && video.getIsMovieDone()) {
+	
+	if (bPlaying && video.getIsMovieDone() ) {  
 		cout << "movie is done" << endl;
 		bPlaying = false;
 	}
+	
 
 	
 	
@@ -130,11 +141,14 @@ void testApp::draw(){
 }
 
 void testApp::exit() {
-	
+	video.stop();
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){ 
+	if	(key='t') {
+		ofToggleFullscreen();	
+	}
 }
 
 //--------------------------------------------------------------
