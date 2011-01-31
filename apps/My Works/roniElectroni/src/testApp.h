@@ -6,6 +6,8 @@
 
 
 class ofxSndFile;
+class ofxOscSender;
+class ofxOscReceiver;
 
 class testApp : public ofBaseApp {
 	
@@ -15,6 +17,8 @@ class testApp : public ofBaseApp {
 		void update();
 		void draw();
 		void exit();
+	
+		void play();
 	
 		void audioRequested 	(float * output, int bufferSize, int nChannels);
 		
@@ -28,14 +32,20 @@ class testApp : public ofBaseApp {
 		void windowResized(int w, int h);
 	
 		vector<ofxSndFile*> sounds;
+		vector<ofxOscSender *> senders;
+		ofxOscReceiver *receiver;
 	
 		int bufferSize;
 		float sampleRate;
 			
 		ofTrueTypeFont	font;
 		
-		ofVideoPlayer video;
 		
+		ofVideoPlayer video;
+		bool bPlaying;	
+		
+		int port;
+
 
 };
 

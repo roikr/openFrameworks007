@@ -1,7 +1,8 @@
 #include "testApp.h"
 #include "ofxXmlSettings.h"
 #include "ofxSndFile.h"
-#include "ofxSoundStream.h"
+#include "ofxOsc.h"
+
 
 //--------------------------------------------------------------
 void testApp::setup(){	 
@@ -12,7 +13,27 @@ void testApp::setup(){
 	ofxXmlSettings xml;
 	bool bLoaded = xml.loadFile("channels.xml");
 	assert(bLoaded);
+	
+	receiver = NULL;
+	bool bSender = xml.getAttribute("channels", "sender", 0);
+	port = xml.getAttribute("channels", "port", 0);
+	
+		
 	xml.pushTag("channels");
+	
+	if (bSender) {
+		for (int i=0; i<xml.getNumTags("client"); i++) {
+			ofxOscSender *sender = new ofxOscSender;
+			sender->setup(xml.getAttribute("client","address","",i), port);
+			senders.push_back(sender);
+		}
+	} else {
+		receiver = new ofxOscReceiver;
+		receiver->setup(port);
+	}
+
+	
+	
 	for (int i=0; i<xml.getNumTags("audio"); i++) {
 		ofxSndFile *sound = new ofxSndFile;
 
@@ -23,33 +44,77 @@ void testApp::setup(){
 	}
 	
 	video.loadMovie(xml.getAttribute("video", "filename", ""));
+	video.play();
+	video.setPaused(true);
+	video.setLoopState(OF_LOOP_NONE);
 	
 	xml.popTag();
-	
-	
-	for (vector<ofxSndFile*>::iterator iter = sounds.begin(); iter!=sounds.end(); iter++) {
 		
-		(*iter)->play();
-	}
+	ofSoundStreamListDevices(); 
 	
-	video.play();
+		
+	ofSoundStreamSetup(sounds.size(),0,this);
 	
-	//ofxSoundStreamListDevices(); 
-	
-	//ofxSoundStreamSetup(8,0,this, sampleRate,256, 4);
-	
-	ofxSoundStreamSetup(2,sounds.size(),0,this);
-	
-	
-	
-	
+		
 	ofSetFrameRate(60);
 		
 	ofBackground(255,255,255);
+	
+	bPlaying = false;
+}
+
+void testApp::play() {
+	video.setPaused(true);
+	video.firstFrame();
+	video.setPaused(false);
+	for (vector<ofxSndFile*>::iterator iter = sounds.begin(); iter!=sounds.end(); iter++) {
+		(*iter)->play();
+	}
+	
+	bPlaying = true;
+	
 }
 
 //--------------------------------------------------------------
 void testApp::update(){	
+	
+	if (receiver) {
+		while( receiver->hasWaitingMessages() )
+		{
+			// get the next message
+			ofxOscMessage m;
+			receiver->getNextMessage( &m );
+			
+			// check for mouse moved message
+			if ( m.getAddress() == "/play" )
+			{
+				
+				cout << "play" << endl;
+				play();
+				
+			}
+		}
+		
+	} else {
+		if (!bPlaying) {
+			play();
+			ofxOscMessage m;
+			m.setAddress( "/play" );
+			for (vector<ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+				(*iter)->sendMessage( m );
+			}
+		} 
+				
+	}
+	
+	if (bPlaying && video.getIsMovieDone()) {
+		cout << "movie is done" << endl;
+		bPlaying = false;
+	}
+
+	
+	
+
 	
 	
 	
@@ -83,7 +148,9 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-	
+	video.setPaused(true);
+	video.setPosition(0.95);
+	video.setPaused(false);
 	
 }
 
