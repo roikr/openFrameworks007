@@ -11,7 +11,7 @@
 
 #include <string>
 #include <deque>
-#include "ofxSndFile.h"
+#include "ofxAudioFile.h"
 using namespace std;
 
 struct instance {
@@ -39,7 +39,7 @@ public:
 	
 	
 private:
-	ofxSndFile sample;
+	ofxAudioFile sample;
 	deque<instance > instances;
 	int blockLength;
 };

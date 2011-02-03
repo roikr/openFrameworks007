@@ -19,11 +19,6 @@ void ofxMidiInstrument::setup(int blockLength,int sampleTriggers) {
 	this->blockLength = blockLength;
 	this->sampleTriggers = sampleTriggers;
 	
-	/*
-	for (map<int,ofxSndFile*>::iterator iter=samples.begin() ; iter!=samples.end();iter++)
-		iter->second->setup(blockLength);
-	 */
-	
 	bNoteOffAll = false;
 }
 

@@ -1,0 +1,1 @@
+/usr/bin/afconvert -f caff -d LEI16 {INPUT} {OUTPUT}
