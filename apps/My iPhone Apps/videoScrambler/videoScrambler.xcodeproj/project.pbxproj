@@ -874,6 +874,7 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../libs/freetype/lib\"",

@@ -30,6 +30,7 @@ void testApp::setup(){
 	ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 2);	
 
 	streamer.setup(ofToResourcesPath("can.m4v"));
+	//streamer.setup("http:////www.roikr.com//can.m4v");
 	//streamer.setup(ofToDataPath("IMG_0121.MOV"));
 	bStarted = false;
 	

@@ -28,6 +28,8 @@
 		NSError *error;
 		BOOL test;
 	
+		//NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+		
 		AVURLAsset * asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
 		self.reader = [AVAssetReader assetReaderWithAsset:asset error:&error];
 		if (error) {

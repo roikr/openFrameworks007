@@ -15,6 +15,9 @@
 
 void ofxiVideoStreamer::setup(string filename) {
 	videoReader = [[[VideoReader alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:filename.c_str()]]] retain]; 
+	
+	//NSString *str = @"http://www.roikr.com/can.m4v";
+	//videoReader = [[[VideoReader alloc] initWithURL:[NSURL URLWithString:str]] retain];
 	playPos = 0;
 
 }
