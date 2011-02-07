@@ -277,7 +277,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>7</integer>
+									<integer>23</integer>
+									<integer>20</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -301,7 +302,7 @@
 							<real>255</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>34 146 1280 632 0 0 1280 778 </string>
+						<string>580 396 1280 632 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -331,7 +332,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E4A9F89F12D2155000F20E4E</string>
+										<string>E422549B12F8A3D50032CA23</string>
 										<key>history</key>
 										<array>
 											<string>E4EADB94128FF20E0064E56B</string>
@@ -360,8 +361,8 @@
 											<string>E4EC167D12CB86E800F267CD</string>
 											<string>E49002C612CC98000035BED7</string>
 											<string>E4F7D7DD12CD009500D3119E</string>
-											<string>E4A03A1412D13327007EA18F</string>
-											<string>E4A9F83A12D208E800F20E4E</string>
+											<string>E422549912F8A3D50032CA23</string>
+											<string>E422549A12F8A3D50032CA23</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -373,14 +374,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1003, 496}}</string>
+								<string>{{0, 0}, {1003, 493}}</string>
 								<key>RubberWindowFrame</key>
-								<string>34 146 1280 632 0 0 1280 778 </string>
+								<string>580 396 1280 632 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>496pt</string>
+							<string>493pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -393,14 +394,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 501}, {1003, 90}}</string>
+								<string>{{0, 498}, {1003, 93}}</string>
 								<key>RubberWindowFrame</key>
-								<string>34 146 1280 632 0 0 1280 778 </string>
+								<string>580 396 1280 632 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>90pt</string>
+							<string>93pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -419,9 +420,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>E4A9F8A012D2155000F20E4E</string>
+				<string>E422549C12F8A3D50032CA23</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>E4A9F8A112D2155000F20E4E</string>
+				<string>E422549D12F8A3D50032CA23</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -560,11 +561,10 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>E4B90D851287E24D0099699F</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/apps/My iPhone Apps/SantaExample/iPhoneSantaExample.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>34 146 1280 632 0 0 1280 778 </string>
+	<string>580 396 1280 632 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -594,7 +594,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1389, 425}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-106 -103 1389 881 0 0 1280 778 </string>
+								<string>294 147 1389 881 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -618,7 +618,7 @@
 								<key>Frame</key>
 								<string>{{0, 430}, {1389, 410}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-106 -103 1389 881 0 0 1280 778 </string>
+								<string>294 147 1389 881 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXBuildResultsModule</string>
@@ -641,7 +641,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>E4B90D851287E24D0099699F</string>
-				<string>E4A9F89D12D2154B00F20E4E</string>
+				<string>E422549E12F8A3D50032CA23</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -650,7 +650,7 @@
 			<key>WindowContentMinSize</key>
 			<string>486 300</string>
 			<key>WindowString</key>
-			<string>-106 -103 1389 881 0 0 1280 778 </string>
+			<string>294 147 1389 881 0 0 1680 1028 </string>
 			<key>WindowToolGUID</key>
 			<string>E4B90D851287E24D0099699F</string>
 			<key>WindowToolIsVisible</key>

@@ -43,10 +43,11 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 318417034;
-			PBXWorkspaceStateSaveDate = 318417034;
+			PBXPerProjectTemplateStateSaveDate = 318520942;
+			PBXWorkspaceStateSaveDate = 318520942;
 		};
 		perUserProjectItems = {
+			E4026CDE12FC4676009FA2FD /* PBXTextBookmark */ = E4026CDE12FC4676009FA2FD /* PBXTextBookmark */;
 			E459CD5012FAA8A1006AE917 /* PBXTextBookmark */ = E459CD5012FAA8A1006AE917 /* PBXTextBookmark */;
 			E459CD6812FAAD2E006AE917 /* PBXTextBookmark */ = E459CD6812FAAD2E006AE917 /* PBXTextBookmark */;
 			E459CD6912FAAD2E006AE917 /* PBXTextBookmark */ = E459CD6912FAAD2E006AE917 /* PBXTextBookmark */;
@@ -57,17 +58,26 @@
 			E4CBC7F512F9D5E60076C5C6 /* PBXTextBookmark */ = E4CBC7F512F9D5E60076C5C6 /* PBXTextBookmark */;
 			E4CBC7F612F9D5E60076C5C6 /* PBXTextBookmark */ = E4CBC7F612F9D5E60076C5C6 /* PBXTextBookmark */;
 			E4CBC7F712F9D5E60076C5C6 /* PBXTextBookmark */ = E4CBC7F712F9D5E60076C5C6 /* PBXTextBookmark */;
-			E4CBC7F912F9D5E60076C5C6 /* PBXTextBookmark */ = E4CBC7F912F9D5E60076C5C6 /* PBXTextBookmark */;
 		};
 		sourceControlManager = E428D6E212F8A11B00F22DA2 /* Source Control */;
 		userBuildSettings = {
 		};
 	};
+	E4026CDE12FC4676009FA2FD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E42254A912F8A4ED0032CA23 /* ofxAudioFile.mm */;
+		name = "ofxAudioFile.mm: 74";
+		rLen = 0;
+		rLoc = 2207;
+		rType = 0;
+		vrLen = 1400;
+		vrLoc = 4422;
+	};
 	E42254A912F8A4ED0032CA23 /* ofxAudioFile.mm */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1074, 6916}}";
-			sepNavSelRange = "{2687, 0}";
-			sepNavVisRange = "{1910, 1047}";
+			sepNavIntBoundsRect = "{{0, 0}, {1195, 6448}}";
+			sepNavSelRange = "{2207, 0}";
+			sepNavVisRange = "{4422, 1400}";
 		};
 	};
 	E42254AA12F8A4ED0032CA23 /* ofxAudioFile.h */ = {
@@ -85,11 +95,6 @@
 		name = ofxSndFile.cpp;
 		path = "/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/My Addons/ofxSndFile/src/ofxSndFile.cpp";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1074, 3055}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{2356, 1123}";
-		};
 	};
 	E422553E12F8B0930032CA23 /* ofxSndFile.h */ = {
 		isa = PBXFileReference;
@@ -98,11 +103,6 @@
 		name = ofxSndFile.h;
 		path = "/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/My Addons/ofxSndFile/src/ofxSndFile.h";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1074, 793}}";
-			sepNavSelRange = "{455, 0}";
-			sepNavVisRange = "{85, 1014}";
-		};
 	};
 	E428D6D112F8A11000F22DA2 /* audioFileExample */ = {
 		isa = PBXExecutable;
@@ -277,16 +277,6 @@
 		rType = 0;
 		vrLen = 610;
 		vrLoc = 0;
-	};
-	E4CBC7F912F9D5E60076C5C6 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E42254A912F8A4ED0032CA23 /* ofxAudioFile.mm */;
-		name = "ofxAudioFile.mm: 307";
-		rLen = 7;
-		rLoc = 8337;
-		rType = 0;
-		vrLen = 830;
-		vrLoc = 8032;
 	};
 	E4D8928611527878007E1F53 /* testApp.h */ = {
 		uiCtxt = {

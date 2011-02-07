@@ -267,6 +267,8 @@
 								<string>E4D8932F11527A44007E1F53</string>
 								<string>BB24E1F710DAA51900E9C588</string>
 								<string>BB16F26B0F2B646B00518274</string>
+								<string>E44EC4F71300354B0014F8FE</string>
+								<string>E44EC4F81300354B0014F8FE</string>
 								<string>E4A0398212D12A4E007EA18F</string>
 								<string>E4A0398312D12A4E007EA18F</string>
 								<string>19C28FACFE9D520D11CA2CBB</string>
@@ -276,9 +278,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>30</integer>
-									<integer>14</integer>
-									<integer>13</integer>
 									<integer>9</integer>
 									<integer>0</integer>
 								</array>
@@ -303,7 +302,7 @@
 							<real>279</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>106 194 1480 824 0 0 1680 1028 </string>
+						<string>115 188 1480 824 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -321,7 +320,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>ofxiVideoStreamer.mm</string>
+								<string>testApp.mm</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -329,11 +328,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>ofxiVideoStreamer.mm</string>
+										<string>testApp.mm</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E4026D2F12FC563F009FA2FD</string>
+										<string>E466A7E913004F0D00C7B24A</string>
 										<key>history</key>
 										<array>
 											<string>E423F347129300E1004596C5</string>
@@ -373,11 +372,11 @@
 											<string>E4DA8E7212F1D63100EDDAF7</string>
 											<string>E4B3F55612F70DB400CDA252</string>
 											<string>E4026CC412FC3E6B009FA2FD</string>
-											<string>E4026D0C12FC4CBA009FA2FD</string>
 											<string>E4026D2812FC563E009FA2FD</string>
-											<string>E4026D2912FC563E009FA2FD</string>
 											<string>E4026D2A12FC563E009FA2FD</string>
-											<string>E4026D2B12FC563E009FA2FD</string>
+											<string>E482420712FC57B4009ECBDB</string>
+											<string>E482420812FC57B4009ECBDB</string>
+											<string>E44EC540130036940014F8FE</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -391,7 +390,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1179, 778}}</string>
 								<key>RubberWindowFrame</key>
-								<string>106 194 1480 824 0 0 1680 1028 </string>
+								<string>115 188 1480 824 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -411,7 +410,7 @@
 								<key>Frame</key>
 								<string>{{0, 783}, {1179, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>106 194 1480 824 0 0 1680 1028 </string>
+								<string>115 188 1480 824 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -435,9 +434,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>E4026CC712FC3E6B009FA2FD</string>
+				<string>E466A7CA13004CCC00C7B24A</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>E4026CC812FC3E6B009FA2FD</string>
+				<string>E466A7CB13004CCC00C7B24A</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -577,16 +576,12 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>E4026CD112FC3E6B009FA2FD</string>
-		<string>E4026CD212FC3E6B009FA2FD</string>
-		<string>1CD10A99069EF8BA00B06720</string>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/apps/My iPhone Apps/videoScrambler/videoScrambler.xcodeproj</string>
 		<string>E423F1EE1292C835004596C5</string>
-		<string>E4026D2D12FC563E009FA2FD</string>
+		<string>1CD10A99069EF8BA00B06720</string>
+		<string>/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/apps/My iPhone Apps/videoScrambler/videoScrambler.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>106 194 1480 824 0 0 1680 1028 </string>
+	<string>115 188 1480 824 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -624,8 +619,6 @@
 							<string>400pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -665,7 +658,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>E423F1EE1292C835004596C5</string>
-				<string>E4026CC912FC3E6B009FA2FD</string>
+				<string>E466A7CC13004CCC00C7B24A</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -678,7 +671,7 @@
 			<key>WindowToolGUID</key>
 			<string>E423F1EE1292C835004596C5</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
@@ -787,13 +780,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>E4026CCA12FC3E6B009FA2FD</string>
+				<string>E466A7CD13004CCC00C7B24A</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>E4026CCB12FC3E6B009FA2FD</string>
-				<string>E4026CCC12FC3E6B009FA2FD</string>
-				<string>E4026CCD12FC3E6B009FA2FD</string>
-				<string>E4026CCE12FC3E6B009FA2FD</string>
-				<string>E4026CCF12FC3E6B009FA2FD</string>
+				<string>E466A7CE13004CCC00C7B24A</string>
+				<string>E466A7CF13004CCC00C7B24A</string>
+				<string>E466A7D013004CCC00C7B24A</string>
+				<string>E466A7D113004CCC00C7B24A</string>
+				<string>E466A7D213004CCC00C7B24A</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -912,8 +905,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -949,7 +940,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>E4026CD012FC3E6B009FA2FD</string>
+				<string>E482421312FC57B4009ECBDB</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>
@@ -959,7 +950,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>

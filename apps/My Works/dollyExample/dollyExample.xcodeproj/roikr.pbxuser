@@ -44,16 +44,6 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	E4280BF51173163900F458BB /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
-		name = "testApp.cpp: 12";
-		rLen = 0;
-		rLoc = 311;
-		rType = 0;
-		vrLen = 559;
-		vrLoc = 0;
-	};
 	E4473BC91152D350000E9E64 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = E4B69E1F0A3A1BDC003C02F2 /* testApp.h */;
@@ -64,15 +54,25 @@
 		vrLen = 565;
 		vrLoc = 0;
 	};
-	E45964D7117C9981004CE881 /* PBXTextBookmark */ = {
+	E48FF30D12F0CF9800708378 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
 		name = "testApp.cpp: 12";
 		rLen = 0;
 		rLoc = 311;
 		rType = 0;
-		vrLen = 559;
+		vrLen = 557;
 		vrLoc = 0;
+	};
+	E48FF30E12F0CF9800708378 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 12";
+		rLen = 0;
+		rLoc = 311;
+		rType = 0;
+		vrLen = 491;
+		vrLoc = 355;
 	};
 	E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 		activeBuildConfigurationName = Debug;
@@ -108,13 +108,13 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 293378333;
-			PBXWorkspaceStateSaveDate = 293378333;
+			PBXPerProjectTemplateStateSaveDate = 317771655;
+			PBXWorkspaceStateSaveDate = 317771655;
 		};
 		perUserProjectItems = {
-			E4280BF51173163900F458BB /* PBXTextBookmark */ = E4280BF51173163900F458BB /* PBXTextBookmark */;
 			E4473BC91152D350000E9E64 /* PBXTextBookmark */ = E4473BC91152D350000E9E64 /* PBXTextBookmark */;
-			E45964D7117C9981004CE881 /* PBXTextBookmark */ = E45964D7117C9981004CE881 /* PBXTextBookmark */;
+			E48FF30D12F0CF9800708378 /* PBXTextBookmark */ = E48FF30D12F0CF9800708378 /* PBXTextBookmark */;
+			E48FF30E12F0CF9800708378 /* PBXTextBookmark */ = E48FF30E12F0CF9800708378 /* PBXTextBookmark */;
 		};
 		sourceControlManager = E409168210F548AF002A952C /* Source Control */;
 		userBuildSettings = {
@@ -135,9 +135,9 @@
 	};
 	E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {876, 1261}}";
+			sepNavIntBoundsRect = "{{0, 0}, {876, 1300}}";
 			sepNavSelRange = "{311, 0}";
-			sepNavVisRange = "{0, 559}";
+			sepNavVisRange = "{355, 491}";
 		};
 	};
 	E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {
