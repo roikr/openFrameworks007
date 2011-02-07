@@ -19,6 +19,13 @@
 
 #include <iostream>
 
+ofxAudioFile::ofxAudioFile() {
+	saveBuffer = NULL;
+	tableBuffer = NULL;
+	bLoaded = false;
+	bIsPlaying = false;
+}
+
 
 bool ofxAudioFile::load(string filename,int blockLength) {
 	
@@ -55,9 +62,9 @@ bool ofxAudioFile::load(string filename,int blockLength) {
 		//printf("Source file length frames: %i\n",(int)frames); 
 		
 		
-		UInt32 bufferByteSize  = format.FramesToBytes(frames);
+		//UInt32 bufferByteSize  = format.FramesToBytes(frames);
 		//printf("frame to bytes: %i\n",(int)bufferByteSize);
-		cout<< "loading audio file: " << filename <<  ", length: " << bufferByteSize << "\n";
+		//cout<< "loading audio file: " << filename <<  ", length: " << bufferByteSize << "\n";
 		
         char srcBuffer[LOADING_BUFFER_SIZE];
 		

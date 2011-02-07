@@ -23,6 +23,8 @@ using namespace std;
 class ofxAudioFile {
 public:
 	
+	ofxAudioFile();
+	
 	bool load(string filename,int blockLength);
 	void setupForSave(int blockLength); // allocate memory just for current block
 	void exit();
