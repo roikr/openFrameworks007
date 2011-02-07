@@ -46,10 +46,20 @@ void testApp::setup(){
 		sounds.push_back(sound);
 	}
 	
-	video.loadMovie(xml.getAttribute("video", "filename", ""));
-	video.play();
-	video.setPaused(true);
-	video.setLoopState(OF_LOOP_NONE);
+	for (int i=0; i<xml.getNumTags("video"); i++) {
+		videoPlayer *video = new videoPlayer;
+		
+		string filename = xml.getAttribute("video", "filename", "", i);
+		video->pos = ofPoint(xml.getAttribute("video", "x", 0, i),xml.getAttribute("video", "y", 0, i));		
+		video->player.loadMovie(xml.getAttribute("video", "filename", ""));
+		video->player.play();
+		video->player.setPaused(true);
+		video->player.setLoopState(OF_LOOP_NONE);
+		
+		videos.push_back(video);
+	}
+	
+	
 	
 	xml.popTag();
 		
@@ -69,11 +79,14 @@ void testApp::setup(){
 }
 
 void testApp::play() {
-	video.setPaused(true);
-	video.firstFrame();
-	video.setPaused(false);
-	for (vector<ofxSndFile*>::iterator iter = sounds.begin(); iter!=sounds.end(); iter++) {
-		(*iter)->play();
+	
+	for (vector<videoPlayer*>::iterator viter = videos.begin(); viter!=videos.end(); viter++) {
+		(*viter)->player.setPaused(true);
+		(*viter)->player.firstFrame();
+		(*viter)->player.setPaused(false);
+	}
+	for (vector<ofxSndFile*>::iterator siter = sounds.begin(); siter!=sounds.end(); siter++) {
+		(*siter)->play();
 	}
 	
 	bPlaying = true;
@@ -100,27 +113,36 @@ void testApp::update(){
 			}
 		}
 		
-	} else 
-	
-	{
-		if (!bPlaying) {
-			play();
-			
-			ofxOscMessage m;
-			m.setAddress( "/play" );
-			for (vector<ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
-				(*iter)->sendMessage( m );
-			}
-			
-		} 
+	} else if (!bPlaying) {
+		play();
+		
+		ofxOscMessage m;
+		m.setAddress( "/play" );
+		for (vector<ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+			(*iter)->sendMessage( m );
+		}
+		
+	} 
 				
+	
+	if (bPlaying) {
+		bool bDone = true;
+		for (vector<videoPlayer*>::iterator viter = videos.begin(); viter!=videos.end(); viter++) {
+			bDone = bDone && (*viter)->player.getIsMovieDone();
+			
+			(*viter)->player.update();
+		}
+		
+		if (bDone ) {  
+			cout << "movie is done" << endl;
+			bPlaying = false;
+		}
 	}
 	
 	
-	if (bPlaying && video.getIsMovieDone() ) {  
-		cout << "movie is done" << endl;
-		bPlaying = false;
-	}
+	
+	
+	
 	
 
 	
@@ -129,19 +151,29 @@ void testApp::update(){
 	
 	
 	
-	video.update();
+
 	
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	
-	video.draw(0, 0);
-		
+	for (vector<videoPlayer*>::iterator viter = videos.begin(); viter!=videos.end(); viter++) {
+		(*viter)->player.draw((*viter)->pos.x, (*viter)->pos.y);
+	}
 }
 
 void testApp::exit() {
-	video.stop();
+	for (vector<videoPlayer*>::iterator viter = videos.begin(); viter!=videos.end(); viter++) {
+		(*viter)->player.stop();
+		delete (*viter);
+		*viter = 0;
+	}
+	
+	for (vector<ofxSndFile*>::iterator siter = sounds.begin(); siter!=sounds.end(); siter++) {
+		(*siter)->exit();
+		delete (*siter);
+		*siter = 0;
+	}
 }
 
 //--------------------------------------------------------------
@@ -162,10 +194,11 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-	video.setPaused(true);
-	video.setPosition(0.95);
-	video.setPaused(false);
-	
+	for (vector<videoPlayer*>::iterator viter = videos.begin(); viter!=videos.end(); viter++) {
+		(*viter)->player.setPaused(true);
+		(*viter)->player.setPosition(0.95);
+		(*viter)->player.setPaused(false);
+	}
 }
 
 //--------------------------------------------------------------

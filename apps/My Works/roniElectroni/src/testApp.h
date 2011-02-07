@@ -4,6 +4,10 @@
 
 #include "ofMain.h"
 
+struct videoPlayer {
+	ofVideoPlayer player;
+	ofPoint pos;
+};
 
 class ofxSndFile;
 class ofxOscSender;
@@ -32,6 +36,7 @@ class testApp : public ofBaseApp {
 		void windowResized(int w, int h);
 	
 		vector<ofxSndFile*> sounds;
+		vector<videoPlayer*> videos;
 		vector<ofxOscSender *> senders;
 		ofxOscReceiver *receiver;
 	
@@ -40,8 +45,6 @@ class testApp : public ofBaseApp {
 			
 		ofTrueTypeFont	font;
 		
-		
-		ofVideoPlayer video;
 		bool bPlaying;	
 		
 		int port;
