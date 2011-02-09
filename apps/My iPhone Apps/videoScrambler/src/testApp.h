@@ -4,9 +4,9 @@
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
 
-
 #include "ofxiVideoStreamer.h"
-
+#include "ofxCoordinator.h"
+#include <Box2D/Box2D.h>
 
 struct videoTile {
 
@@ -17,10 +17,11 @@ struct videoTile {
 
 
 
-
+@class Box2DAccel;
 class testApp : public ofxiPhoneApp {
 	
 public:
+	testApp() : world(b2Vec2(0.0f,0.0f),true),m_mouseJoint(NULL),m_stepCount(0) {};
 	void setup();
 	void update();
 	void draw();
@@ -39,14 +40,17 @@ public:
 	
 	void audioRequested( float * output, int bufferSize, int nChannels );
 	
+	void setGravity(float x,float y);
 		
 	ofxiVideoStreamer streamer;
 	
 	ofPoint down;
 	
-	vector<videoTile> tiles;
+	vector<videoTile> testTiles;
 	
-	vector<videoTile>::iterator current;
+	
+	
+	//vector<videoTile>::iterator current;
 	
 	
 	float offset;
@@ -58,6 +62,23 @@ public:
 	
 	float tileSize;
 	int tilesPerRow;
+	
+	ofxCoordinator coordinator;
+	
+	b2World world;
+		
+	int32 velocityIterations;
+	int32 positionIterations;
+	float32 timeStep;
+	
+	//GLESDebugDraw m_debugDraw;
+	
+	b2MouseJoint* m_mouseJoint;
+	b2Vec2 m_mouseWorld;
+	b2Body* m_groundBody;
+	int32 m_stepCount;
+	
+	Box2DAccel *accel;
 
 };
 

@@ -32,9 +32,12 @@
 		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E43929311293250B00F855A8 /* ofxPincher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E439292F1293250B00F855A8 /* ofxPincher.cpp */; };
-		E44EC5261300354B0014F8FE /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E44EC5251300354B0014F8FE /* libBox2D.a */; };
+		E466A82E130076EB00C7B24A /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E466A82B130076EB00C7B24A /* libBox2D.a */; };
+		E466A8B413007D4700C7B24A /* ofxCoordinator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E466A8B213007D4700C7B24A /* ofxCoordinator.cpp */; };
+		E466A8C6130089A200C7B24A /* GLES-Render.mm in Sources */ = {isa = PBXBuildFile; fileRef = E466A8C5130089A200C7B24A /* GLES-Render.mm */; };
 		E4931E7C12ECC833006CD61E /* VideoReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4931E7B12ECC833006CD61E /* VideoReader.mm */; };
 		E4931E7F12ECC867006CD61E /* ofxiVideoStreamer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4931E7E12ECC867006CD61E /* ofxiVideoStreamer.mm */; };
+		E49BC71613032D1400064B09 /* Box2DAccel.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC71513032D1400064B09 /* Box2DAccel.mm */; };
 		E4A0386312D10D74007EA18F /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A0386212D10D74007EA18F /* ofxiTexture.mm */; };
 		E4A038E912D11A25007EA18F /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A038E512D11A25007EA18F /* easing.cpp */; };
 		E4A038EA12D11A25007EA18F /* ofMainExt.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A038E812D11A25007EA18F /* ofMainExt.mm */; };
@@ -188,11 +191,17 @@
 		E44EC5211300354B0014F8FE /* b2PulleyJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2PulleyJoint.h; sourceTree = "<group>"; };
 		E44EC5221300354B0014F8FE /* b2RevoluteJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2RevoluteJoint.h; sourceTree = "<group>"; };
 		E44EC5231300354B0014F8FE /* b2WeldJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2WeldJoint.h; sourceTree = "<group>"; };
-		E44EC5251300354B0014F8FE /* libBox2D.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBox2D.a; sourceTree = "<group>"; };
+		E466A82B130076EB00C7B24A /* libBox2D.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBox2D.a; sourceTree = "<group>"; };
+		E466A8B213007D4700C7B24A /* ofxCoordinator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxCoordinator.cpp; sourceTree = "<group>"; };
+		E466A8B313007D4700C7B24A /* ofxCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCoordinator.h; sourceTree = "<group>"; };
+		E466A8C4130089A200C7B24A /* GLES-Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLES-Render.h"; sourceTree = "<group>"; };
+		E466A8C5130089A200C7B24A /* GLES-Render.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "GLES-Render.mm"; sourceTree = "<group>"; };
 		E4931E7A12ECC833006CD61E /* VideoReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoReader.h; sourceTree = "<group>"; };
 		E4931E7B12ECC833006CD61E /* VideoReader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoReader.mm; sourceTree = "<group>"; };
 		E4931E7D12ECC867006CD61E /* ofxiVideoStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoStreamer.h; sourceTree = "<group>"; };
 		E4931E7E12ECC867006CD61E /* ofxiVideoStreamer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVideoStreamer.mm; sourceTree = "<group>"; };
+		E49BC71413032D1400064B09 /* Box2DAccel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2DAccel.h; sourceTree = "<group>"; };
+		E49BC71513032D1400064B09 /* Box2DAccel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Box2DAccel.mm; sourceTree = "<group>"; };
 		E4A0386112D10D74007EA18F /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
 		E4A0386212D10D74007EA18F /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E4A038E512D11A25007EA18F /* easing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = easing.cpp; sourceTree = "<group>"; };
@@ -261,7 +270,7 @@
 				E4A039AC12D12ADD007EA18F /* AVFoundation.framework in Frameworks */,
 				E4A039AE12D12ADD007EA18F /* CoreMedia.framework in Frameworks */,
 				E4A039B012D12ADD007EA18F /* CoreVideo.framework in Frameworks */,
-				E44EC5261300354B0014F8FE /* libBox2D.a in Frameworks */,
+				E466A82E130076EB00C7B24A /* libBox2D.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,6 +380,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E466A8B013007D4700C7B24A /* ofxCoordinator */,
 				E44EC4F71300354B0014F8FE /* Box2D */,
 				E4A039E612D12F4D007EA18F /* ofxXmlSettings */,
 				E4A0399B12D12AB6007EA18F /* ofxAudioSampler */,
@@ -620,8 +630,8 @@
 		E44EC4F71300354B0014F8FE /* Box2D */ = {
 			isa = PBXGroup;
 			children = (
+				E466A829130076EB00C7B24A /* lib */,
 				E44EC4F81300354B0014F8FE /* include */,
-				E44EC5241300354B0014F8FE /* lib */,
 			);
 			name = Box2D;
 			path = ../../../moreAddons/Box2D;
@@ -726,12 +736,38 @@
 			path = Joints;
 			sourceTree = "<group>";
 		};
-		E44EC5241300354B0014F8FE /* lib */ = {
+		E466A829130076EB00C7B24A /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				E44EC5251300354B0014F8FE /* libBox2D.a */,
+				E466A82A130076EB00C7B24A /* iPhone */,
 			);
 			path = lib;
+			sourceTree = "<group>";
+		};
+		E466A82A130076EB00C7B24A /* iPhone */ = {
+			isa = PBXGroup;
+			children = (
+				E466A82B130076EB00C7B24A /* libBox2D.a */,
+			);
+			path = iPhone;
+			sourceTree = "<group>";
+		};
+		E466A8B013007D4700C7B24A /* ofxCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+				E466A8B113007D4700C7B24A /* src */,
+			);
+			name = ofxCoordinator;
+			path = "../../../My Addons/ofxCoordinator";
+			sourceTree = SOURCE_ROOT;
+		};
+		E466A8B113007D4700C7B24A /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E466A8B213007D4700C7B24A /* ofxCoordinator.cpp */,
+				E466A8B313007D4700C7B24A /* ofxCoordinator.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		E4A0385312D10D37007EA18F /* ofxiTexture */ = {
@@ -850,9 +886,13 @@
 		E4D8932F11527A44007E1F53 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E466A8C4130089A200C7B24A /* GLES-Render.h */,
+				E466A8C5130089A200C7B24A /* GLES-Render.mm */,
 				E4D8933011527A44007E1F53 /* main.mm */,
 				E4D8933211527A44007E1F53 /* testApp.mm */,
 				E4D8933111527A44007E1F53 /* testApp.h */,
+				E49BC71413032D1400064B09 /* Box2DAccel.h */,
+				E49BC71513032D1400064B09 /* Box2DAccel.mm */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -972,6 +1012,9 @@
 				E4A039F412D12F4D007EA18F /* ofxXmlSettings.cpp in Sources */,
 				E4931E7C12ECC833006CD61E /* VideoReader.mm in Sources */,
 				E4931E7F12ECC867006CD61E /* ofxiVideoStreamer.mm in Sources */,
+				E466A8B413007D4700C7B24A /* ofxCoordinator.cpp in Sources */,
+				E466A8C6130089A200C7B24A /* GLES-Render.mm in Sources */,
+				E49BC71613032D1400064B09 /* Box2DAccel.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1037,6 +1080,8 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib\"",
+					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib/iPhone\"",
+					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib/osx\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1098,6 +1143,8 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib\"",
+					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib/iPhone\"",
+					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib/osx\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1172,6 +1219,8 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib\"",
+					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib/iPhone\"",
+					"\"$(SRCROOT)/../../../moreAddons/Box2D/lib/osx\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";

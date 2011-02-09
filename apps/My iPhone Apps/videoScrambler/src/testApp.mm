@@ -3,7 +3,7 @@
 
 #include "ofxXmlSettings.h"
 
-
+#import "Box2DAccel.h"
 
 
 
@@ -13,27 +13,53 @@ void testApp::setup(){
 	// register touch events
 	ofxRegisterMultitouch(this);
 	
+		
 	//ofxCopyFile(ofToResourcesPath("IMG_0121.MOV"), ofToDataPath("IMG_0121.MOV"));
 	//ofxCopyFile(ofToResourcesPath("can.m4v"), ofToDataPath("can.m4v"));
+	//ofxCopyFile(ofToResourcesPath("IZABO_On_my_way.mp4"), ofToDataPath("IZABO_On_my_way.mp4"));
 	
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+	
+	Box2DAccel *accel = [[[Box2DAccel alloc] init] retain];
+	accel.app = this;
+
  
 	
 	ofBackground(0,0,0);
 		
 	
-	ofSetFrameRate(24);
+	ofSetFrameRate(60);
 	
 	int bufferSize = 256;
 	int sampleRate = 44100;
 	
 	ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 2);	
 
-	streamer.setup(ofToResourcesPath("can.m4v"));
+	streamer.setup(ofToResourcesPath("IZABO_On_my_way.mp4"));
 	//streamer.setup("http:////www.roikr.com//can.m4v");
 	//streamer.setup(ofToDataPath("IMG_0121.MOV"));
 	bStarted = false;
 	
+	tilesPerRow = 4;
+	tileSize = ofGetHeight()/tilesPerRow;
+	
+	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint((ofGetWidth()-ofGetHeight())/2,ofGetHeight()), ofGetHeight()/4);
+	
+	b2BodyDef bodyDef;
+	m_groundBody = world.CreateBody(&bodyDef);
+	
+	//world.SetDebugDraw(&m_debugDraw);
+	
+	//uint32 flags = b2DebugDraw::e_shapeBit | b2DebugDraw::e_jointBit | b2DebugDraw::e_centerOfMassBit ;
+	//flags += settings->drawJoints			* b2DebugDraw::e_jointBit;
+	//	flags += settings->drawAABBs			* b2DebugDraw::e_aabbBit;
+	//	flags += settings->drawPairs			* b2DebugDraw::e_pairBit;
+	//	flags += settings->drawCOMs				* b2DebugDraw::e_centerOfMassBit;
+	//m_debugDraw.SetFlags(flags);
+	
+	velocityIterations = 5;
+	positionIterations = 2;
+	timeStep = 1.0f/60.0; // framerate
 	
 }
 
@@ -72,9 +98,42 @@ void testApp::setupTiles() {
 	margin.x+=videoRect.width-margin.width;
 	fillVideoTile(rightMargin, margin, videoRect);
 	
-	tilesPerRow = 4;
+	
 	offset = leftMargin.rect.x+leftMargin.rect.width;
-	tileSize = ofGetHeight()/tilesPerRow;
+	
+	{
+		vector<b2Vec2 > points;
+		points.push_back(b2Vec2(-0.05,-0.05));
+		points.push_back(b2Vec2(-0.05,4.05));
+		points.push_back(b2Vec2(4.05,4.05));
+		points.push_back(b2Vec2(4.05,-0.05));
+		
+		for (vector<b2Vec2>::iterator iter = points.begin();iter!=points.end();iter++) {
+			vector<b2Vec2>::iterator niter= iter+1;
+			if (niter==points.end()) {
+				niter=points.begin();
+			}
+			
+			b2Body* edge = NULL;
+			{
+				b2BodyDef bd;
+				edge = world.CreateBody(&bd);
+				
+				
+				
+				b2PolygonShape shape;
+				
+				shape.SetAsEdge(*iter,*niter);
+				
+				b2FixtureDef fd;
+				fd.shape = &shape;
+				
+				
+				edge->CreateFixture(&fd);
+			}
+		}
+	}
+		
 		
 	for (int i=0; i<tilesPerRow*tilesPerRow-1	; i++) {
 		
@@ -85,17 +144,51 @@ void testApp::setupTiles() {
 		rect.width = tileSize;
 		rect.height = tileSize;
 		
-		fillVideoTile(t, rect, videoRect);
-				
-		tiles.push_back(t);
+		
+		
+		ofRectangle * tex= new ofRectangle;
+		
+		float videoAspectRatio = videoRect.width/videoRect.height;
+		
+		tex->x = (rect.x-videoRect.x)/videoRect.height/videoAspectRatio;
+		tex->y = (rect.y-videoRect.y)/videoRect.height;
+		tex->width = rect.width/videoRect.width;
+		tex->height = rect.height/videoRect.height;
+		
+		
+		float shapeSize = 1.0;
+		
+		b2BodyDef bd;
+		bd.type = b2_dynamicBody;
+		bd.position.Set((i%4+0.5)*shapeSize, (3-int(i/4)+0.5)*shapeSize);
+		bd.userData = tex;
+		b2Body* body = world.CreateBody(&bd);
+		
+		b2PolygonShape shape;
+		shape.SetAsBox(shapeSize/2.0f, shapeSize/2.0f);
+		
+		b2FixtureDef fd;
+		fd.shape = &shape;
+		fd.friction = 0.5f;
+		fd.density = 1.0f;
+		fd.restitution = 0.0f;
+		body->CreateFixture(&fd);
+			
+		
+			
+		
+		
+		
 	}
 	
 	
 	
-	current=tiles.end();
+//	current=tiles.end();
 		
 	
 	
+	
+
 	
 	//tile.tex.x = (float)pos.x/(float)ofGetWidth();
 	//tile.tex.y = (float)pos.y/(float)ofGetHeight();
@@ -114,12 +207,30 @@ void testApp::update(){
 	
 	
 	
+	world.Step( timeStep, velocityIterations, positionIterations); //
+	world.ClearForces();
+	
+}
+
+void testApp::setGravity(float x,float y) {
+	
+	//printf("x = %f   y = %f \n",x,y  );
+	float tVectorLength=sqrt(x*x+y*y);
+	float newGravityX=9.81f*x/tVectorLength;
+	float newGravityY=9.81f*y/tVectorLength;
+	world.SetGravity(b2Vec2(-newGravityY,newGravityX));
+	// TODO: the flip is because of the iDevice rotation
 	
 	
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	
+	if (!streamer.getIsStreaming()) {
+		return;
+	}
+	
 	//ofPushMatrix();
 	//ofTranslate(pos.x, pos.y, 0);
 	//ofScale(0.5, 0.5, 1);
@@ -130,21 +241,121 @@ void testApp::draw(){
 	streamer.draw(rightMargin.rect,rightMargin.tex);
 	
 	
-	for(vector<videoTile>::iterator iter = tiles.begin();iter!=tiles.end();iter++) {
-		streamer.draw(iter->rect,iter->tex);
-	}
+//	for(vector<videoTile>::iterator iter = tiles.begin();iter!=tiles.end();iter++) {
+//		streamer.draw(iter->rect,iter->tex);
+//	}
 	//streamer.draw(videoRect,tile.tex);
 	//ofPopMatrix();
 	
+	coordinator.pushTransform();
+	//ofFill();
+	//ofRect(0, 0, 8, 8);
 	
+	//world.DrawDebugData();
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, streamer.getTexture());
+	glEnable(GL_TEXTURE_2D);
+	
+	for (b2Body* b = world.GetBodyList(); b; b = b->GetNext())
+	{
+		const b2Transform& xf = b->GetTransform();
+		for (b2Fixture* fixture = b->GetFixtureList(); fixture; fixture = fixture->GetNext())
+		{
+			ofRectangle *vt = (ofRectangle*)b->GetUserData();
+			if (vt)
+			{
+				
+				b2Color color = b2Color(0.5f, 0.5f, 0.3f);
+				
+				switch (fixture->GetType())
+				{
+					case b2Shape::e_circle:
+					
+					break;
+						
+					case b2Shape::e_polygon:
+					{
+						b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
+						int32 vertexCount = poly->m_vertexCount;
+						b2Assert(vertexCount <= b2_maxPolygonVertices);
+						
+						
+						ofRectangle rect;
+						rect.x = b2Mul(xf, poly->m_vertices[0]).x;
+						rect.y = b2Mul(xf, poly->m_vertices[0]).y;
+						rect.width = b2Mul(xf, poly->m_vertices[2]).x-rect.x;
+						rect.height = b2Mul(xf, poly->m_vertices[2]).y -rect.y;
+						
+						ofRectangle tex =*vt;
+						
+						
+						GLfloat spriteTexcoords[] = {
+							tex.x+tex.width,tex.y,   
+							tex.x+tex.width,tex.y+tex.height,
+							tex.x,tex.y,   
+							tex.x,tex.y+tex.height,};
+						
+						//	float w =videoReader.width*u;//ofGetWidth()/2;
+						//	float h =videoReader.height*v;//(float)ofGetWidth()/(float)width*(float)height/2;
+						
+						GLfloat spriteVertices[] =  {
+							rect.x+rect.width,rect.y+rect.height,0,   
+							rect.x+rect.width,rect.y,0,   
+							rect.x,rect.y+rect.height,0, 
+							rect.x,rect.y,0};
+						
+						
+						glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
+						glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
+						
+						
+						
+						glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+						
+						
+						
+						
+						
+						//GLfloat spriteTexcoords[] = {
+//							tex.x,tex.y+tex.height,
+//							tex.x+tex.width,tex.y+tex.height,
+//							tex.x+tex.width,tex.y,   
+//							tex.x,tex.y,   
+//							};
+//						
+//												
+//						
+//						glVertexPointer(2, GL_FLOAT, 0, vertices);
+//						glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
+//						//glColor4f(color.r, color.g, color.b,0.5f);
+//						glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
+//						//glColor4f(color.r, color.g, color.b,1);
+//						glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
+						
+					}
+						break;
+				}
+			}
+			
+		}
+	}
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_TEXTURE_2D);
+		
+	coordinator.popTransform();
 	
 	
 	ofSetColor(255, 0, 0);
 	
-	float sfps = streamer.getFrameRate();
-	std::ostringstream ss;
-	
-	ss << sfps << "\n" << ofGetFrameRate() << "\n";
+	char str[256];
+	sprintf(str,"%d\n%d\n%2.2f\n%2.2f\n", streamer.getElapsedFrame(),streamer.getCurrentFrame(),streamer.getFrameRate(),ofGetFrameRate());
+	//std::ostringstream ss;
+	//ss << streamer.getFrameRate() << "\n" << streamer.getCurrentFrame() << "\n" << ofGetFrameRate() << "\n" ;
 	
 //	for (int i=0; i<4; i++) {
 //		ss << rowCounters[i] << " " << columnCounters[i] << "\n";
@@ -157,7 +368,7 @@ void testApp::draw(){
 //		ss << "touch" << "\n";
 //	}
 	
-	ofDrawBitmapString(ss.str(), 0, 20);
+	ofDrawBitmapString(str, 0, 20);
 	
 	//ofSetFrameRate(sfps);
 	
@@ -181,29 +392,6 @@ void testApp::draw(){
 
 
 
-void testApp::touchDown(int x, int y, int id) {
-	
-	if (!bStarted) {
-		return;
-	}
-	
-	down = ofPoint(x,y);
-	
-		
-	for (current=tiles.begin(); current!=tiles.end(); current++) {
-		if (x>=current->rect.x && x<current->rect.x+current->rect.width && y>=current->rect.y && y<current->rect.y+current->rect.height) {
-			break;
-		}
-	}		
-		
-	
-//	if (current!=tiles.end()) {
-//		cout << distance(tiles.begin(), current) << ": " <<current->rect.x << " " << current->rect.y << endl;
-//	}
-				
-	
-
-}
 
 bool testApp::getIsInside(ofRectangle &rect,ofPoint p) {
 	
@@ -217,6 +405,128 @@ bool testApp::getIsIntersecting(ofRectangle &r1,ofRectangle &r2) {
 	getIsInside(r1, ofPoint(r2.x+r2.width,r2.y)) || getIsInside(r1, ofPoint(r2.x+r2.width,r2.y+r2.height)) ||
 	getIsInside(r1, ofPoint(r2.x+r2.width/2,r2.y)) || getIsInside(r1, ofPoint(r2.x+r2.width/2,r2.y+r2.height)) ||
 	getIsInside(r1, ofPoint(r2.x,r2.y+r2.height/2)) || getIsInside(r1, ofPoint(r2.x+r2.width,r2.y+r2.height/2));
+}
+
+
+class QueryCallback : public b2QueryCallback
+{
+public:
+	QueryCallback(const b2Vec2& point)
+	{
+		m_point = point;
+		m_fixture = NULL;
+	}
+	
+	bool ReportFixture(b2Fixture* fixture)
+	{
+		b2Body* body = fixture->GetBody();
+		if (body->GetType() == b2_dynamicBody)
+		{
+			bool inside = fixture->TestPoint(m_point);
+			if (inside)
+			{
+				m_fixture = fixture;
+				
+				// We are done, terminate the query.
+				return false;
+			}
+		}
+		
+		// Continue the query.
+		return true;
+	}
+	
+	b2Vec2 m_point;
+	b2Fixture* m_fixture;
+};
+
+
+
+void testApp::touchDown(int x, int y, int id) {
+	
+	ofPoint pos = coordinator.screenSpaceToWorldSpace(ofPoint(x,y));
+	b2Vec2 p;
+	p.Set(pos.x,pos.y);
+	m_mouseWorld = p;
+	
+	if (m_mouseJoint != NULL)
+	{
+		return;
+	}
+	
+	// Make a small box.
+	b2AABB aabb;
+	b2Vec2 d;
+	d.Set(0.001f, 0.001f);
+	aabb.lowerBound = p - d;
+	aabb.upperBound = p + d;
+	
+	// Query the world for overlapping shapes.
+	QueryCallback callback(p);
+	world.QueryAABB(&callback, aabb);
+	
+	if (callback.m_fixture)
+	{
+		b2Body* body = callback.m_fixture->GetBody();
+		b2MouseJointDef md;
+		md.bodyA =m_groundBody;
+		md.bodyB = body;
+		md.target = p;
+#ifdef TARGET_FLOAT32_IS_FIXED
+		md.maxForce = (body->GetMass() < 16.0)? 
+		(1000.0f * body->GetMass()) : float32(16000.0);
+#else
+		md.maxForce = 1000.0f * body->GetMass();
+#endif
+		m_mouseJoint = (b2MouseJoint*)world.CreateJoint(&md);
+		body->SetAwake(true);
+	}
+	
+}
+
+void testApp::touchMoved(int x, int y, int id) {
+	ofPoint pos = coordinator.screenSpaceToWorldSpace(ofPoint(x,y));
+	b2Vec2 p;
+	p.Set(pos.x,pos.y);
+	m_mouseWorld = p;
+	
+	if (m_mouseJoint)
+	{
+		m_mouseJoint->SetTarget(p);
+	}
+}
+
+void testApp::touchUp(int x, int y, int id) {
+	if (m_mouseJoint)
+	{
+		world.DestroyJoint(m_mouseJoint);
+		m_mouseJoint = NULL;
+	}
+}
+
+/*
+void testApp::touchDown(int x, int y, int id) {
+	
+	if (!bStarted) {
+		return;
+	}
+	
+	down = ofPoint(x,y);
+	
+	
+	for (current=tiles.begin(); current!=tiles.end(); current++) {
+		if (x>=current->rect.x && x<current->rect.x+current->rect.width && y>=current->rect.y && y<current->rect.y+current->rect.height) {
+			break;
+		}
+	}		
+	
+	
+	//	if (current!=tiles.end()) {
+	//		cout << distance(tiles.begin(), current) << ": " <<current->rect.x << " " << current->rect.y << endl;
+	//	}
+	
+	
+	
 }
 
 
@@ -304,7 +614,7 @@ void testApp::touchUp(int x, int y, int id) {
 	
 		
 }
-
+*/
 void testApp::touchDoubleTap(int x, int y, int id) {
 
 }
