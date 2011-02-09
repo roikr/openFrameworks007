@@ -11,7 +11,7 @@
 #include "VideoReader.h"
 
 
-#define PRE_SAMPLES 8192
+#define PRE_SAMPLES 4096
 
 void ofxiVideoStreamer::setup(string filename) {
 	videoReader = [[[VideoReader alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:filename.c_str()]]] retain]; 
@@ -23,8 +23,26 @@ void ofxiVideoStreamer::setup(string filename) {
 }
 
 void ofxiVideoStreamer::update() {
-	[videoReader updateVideo];
 	
+	
+	if (!bStreaming) {
+		[videoReader updateVideo];
+		if (videoReader.videoTexture) {
+			bStreaming = true;
+			currentFrame = 0;
+			startTime=ofGetElapsedTimeMillis();
+		}
+	} else {
+		if (!getFrameRate()) {
+			[videoReader updateVideo];
+			currentFrame++;
+		} else if ( int((ofGetElapsedTimeMillis()-startTime) *  getFrameRate()/ 1000) > currentFrame) {
+			[videoReader updateVideo];
+			currentFrame++;
+			
+			
+		}
+	}
 	while (videoReader.readPos-playPos<PRE_SAMPLES && [videoReader readAudio]  ) {
 		
 	} 
@@ -33,6 +51,13 @@ void ofxiVideoStreamer::update() {
 }
 
 
+int ofxiVideoStreamer::getCurrentFrame() {
+	return currentFrame;
+}
+
+int ofxiVideoStreamer::getElapsedFrame() {
+	return  (ofGetElapsedTimeMillis()-startTime) *  getFrameRate()/ 1000;
+}
 
 void ofxiVideoStreamer::draw(ofRectangle rect,ofRectangle tex) {
 	if (!getIsStreaming()) {
@@ -85,6 +110,10 @@ void ofxiVideoStreamer::draw(ofRectangle rect,ofRectangle tex) {
 	glPopMatrix();
 }
 
+int ofxiVideoStreamer::getTexture() {
+	
+	return videoReader.videoTexture;
+}
 
 void ofxiVideoStreamer::exit() {
 	
@@ -105,7 +134,7 @@ float ofxiVideoStreamer::getHeight() {
 }
 
 bool ofxiVideoStreamer::getIsStreaming() {
-	return videoReader.videoTexture;
+	return bStreaming;
 }
 
 
