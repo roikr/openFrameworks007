@@ -22,10 +22,11 @@ enum {
 	TUTORIAL_DONE
 };
 
+
 class ofxInteractiveTutorial {
 public:
 	void setup();
-	void addMessage(string& str);
+	void addMessage(string& str,int delay);
 	void loadFile(string filename);
 	void start();
 	void update();
@@ -39,11 +40,10 @@ public:
 	int getTimesCompleted();
 	
 private:
-	vector<string> messages;
-	vector<string>::iterator citer;
+	vector<pair<string,int> > messages;
+	vector<pair<string,int> >::iterator citer;
 	
 	int timerStart;
-	int delay;
 	int state;
 	int timesCompleted;
 	string filename;
