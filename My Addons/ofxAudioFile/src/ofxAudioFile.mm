@@ -16,6 +16,7 @@
 #define SINT16_MAX 32767.0
 #define LOADING_BUFFER_SIZE 8192
 
+//#define LOG_AUDIO_FILE
 
 #include <iostream>
 
@@ -301,7 +302,9 @@ void ofxAudioFile::mix(float *left,float *right,int block,float volume,bool ramp
 	
 	if (ramp) {
 		float step = 1.0/(n-1);
+#ifdef LOG_AUDIO_FILE
 		cout << "ramp" << endl; //<< step << endl;
+#endif
 		for (int i=0; i<n; i++) {
 			left[i]+=channel0[i]*volume*((n-1-i)*step);
 			right[i]+=channel1[i]*volume*((n-1-i)*step);

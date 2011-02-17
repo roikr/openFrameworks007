@@ -13,6 +13,7 @@
 #include <algorithm> // for find
 #include <iostream>
 
+//#define LOG_MIDI_INSTRUMENT
 
 void ofxMidiInstrument::setup(int blockLength,int sampleTriggers) {
 	
@@ -86,7 +87,9 @@ void ofxMidiInstrument::preProcess() {
 			}
 		}
 		
+#ifdef LOG_MIDI_INSTRUMENT
 		cout << "note on: " << siter->midi << endl;
+#endif
 		
 		if (piter == playing.end()) { // note is not playing, add it
 			playing.push_back(*siter);
@@ -152,7 +155,9 @@ void ofxMidiInstrument::postProcess() {
 		iter->sample->postProcess();
 		if (!iter->sample->getNumPlaying()) {
 			stop.push_back(iter->midi);
+#ifdef LOG_MIDI_INSTRUMENT
 			cout << "finish playing: " << iter->midi << endl;
+#endif
 		}
 	}
 	
@@ -160,7 +165,9 @@ void ofxMidiInstrument::postProcess() {
 		for (vector<note>::iterator piter = playing.begin(); piter!=playing.end() ; piter++) {
 			if (piter->midi==*iter1) {
 				playing.erase(piter);
+#ifdef LOG_MIDI_INSTRUMENT
 				cout << "note off: " << piter->midi << endl;
+#endif
 				break;
 			}
 		}

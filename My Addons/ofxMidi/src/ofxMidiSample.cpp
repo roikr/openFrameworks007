@@ -12,7 +12,7 @@
 #include <algorithm> // for find
 #include <iostream>
 
-
+//#define LOG_MIDI_SAMPLE
 
 bool ofxMidiSample::loadSample(string filename,int blockLength) {
 	this->blockLength = blockLength;
@@ -23,14 +23,18 @@ bool ofxMidiSample::loadSample(string filename,int blockLength) {
 void ofxMidiSample::trigger(int velocity,bool retrigger) {
 	if (retrigger && !instances.empty()) {
 		instances.back().bStop = true;
+#ifdef LOG_MIDI_SAMPLE
 		cout << "retrigger, ";
+#endif
 	}
 	instance i;
 	i.block = 0;
 	i.volume = (float)velocity/127.0;
 	i.bStop = false;
 	instances.push_front(i);
+#ifdef LOG_MIDI_SAMPLE
 	cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
+#endif
 	
 }
 
