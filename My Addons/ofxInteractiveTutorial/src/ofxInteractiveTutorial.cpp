@@ -11,11 +11,6 @@
 #include "ofxXmlSettings.h"
 
 
-void ofxInteractiveTutorial::setup() {
-	state = TUTORIAL_IDLE;
-	citer = messages.end();
-}
-
 void ofxInteractiveTutorial::addMessage(string& str,int delay) {
 	messages.push_back(make_pair(str,delay));
 }
@@ -32,27 +27,53 @@ void ofxInteractiveTutorial::loadFile(string filename) {
 	xml.pushTag("tutorial");
 	
 	for (int i=0; i<xml.getNumTags("message"); i++) {
-		messages.push_back(make_pair(xml.getValue("message", "", i),xml.getAttribute("message", "delay", 1000,i)));
+		messages.push_back(make_pair(xml.getValue("message", "", i),xml.getAttribute("message", "delay", 0,i)));
 	}
 	
 	xml.popTag();
 	
-	citer = messages.begin();
-
 }
 
 void ofxInteractiveTutorial::start() {
-	if (messages.size()) {
-		timerStart = ofGetElapsedTimeMillis();
-		state = TUTORIAL_TIMER_STARTED;
+	citer = messages.begin();
+	state = TUTORIAL_READY;
+}
+
+
+void ofxInteractiveTutorial::skip() {
+	if (state==TUTORIAL_DONE || citer==messages.end() ) {
+		return;
 	}
 	
 	
+	timerStart = ofGetElapsedTimeMillis();
+	state = TUTORIAL_TIMER_STARTED;
+	
+}
+
+
+void ofxInteractiveTutorial::next() {
+	citer++;
+	
+	if (citer==messages.end()) {
+		state =  TUTORIAL_DONE;
+		timesCompleted++;
+		ofxXmlSettings xml;
+		bool bLoaded = xml.loadFile(filename);
+		assert(bLoaded);
+		xml.setAttribute("tutorial", "timesCompleted", timesCompleted,0);
+		xml.saveFile(filename);
+		
+	} else {
+		state = TUTORIAL_READY;
+	}
 }
 
 void ofxInteractiveTutorial::update() {
 	if (citer!=messages.end() && state == TUTORIAL_TIMER_STARTED && ofGetElapsedTimeMillis()-timerStart > citer->second) {
-		state = TUTORIAL_READY;
+		
+		next();
+		
 		//cout << *citer << endl;
 	}
 }
@@ -67,6 +88,7 @@ int	ofxInteractiveTutorial::getCurrentNumber() {
 	return distance(messages.begin(), citer);
 }
 
+
 int ofxInteractiveTutorial::getState() {
 	return state;
 }
@@ -76,30 +98,6 @@ void ofxInteractiveTutorial::setState(int state) {
 }
 
 
-void ofxInteractiveTutorial::done(int num) {
-	if (state==TUTORIAL_DONE || num>=messages.size() ) {
-		return;
-	}
-	
-	
-	
-	if (num == distance(messages.begin(), citer)) {
-		citer++;
-		state = TUTORIAL_IDLE;
-		if (citer==messages.end()) {
-			state =  TUTORIAL_DONE;
-			timesCompleted++;
-			ofxXmlSettings xml;
-			bool bLoaded = xml.loadFile(filename);
-			assert(bLoaded);
-			xml.setAttribute("tutorial", "timesCompleted", timesCompleted,0);
-			xml.saveFile(filename);
-			
-		}
-			
-		
-	}
-}
 
 int ofxInteractiveTutorial::getTimesCompleted() {
 	return timesCompleted;

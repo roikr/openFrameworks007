@@ -17,29 +17,37 @@ using namespace std;
 
 enum {
 	TUTORIAL_IDLE,
-	TUTORIAL_TIMER_STARTED,
 	TUTORIAL_READY,
+	TUTORIAL_TIMER_STARTED,
 	TUTORIAL_DONE
 };
 
 
 class ofxInteractiveTutorial {
 public:
-	void setup();
+	ofxInteractiveTutorial() : state(TUTORIAL_IDLE) {};	
+	
 	void addMessage(string& str,int delay);
 	void loadFile(string filename);
 	void start();
+	void skip();
+	
 	void update();
-	void done(int num);
 	
 	string getCurrentText();
 	int	 getCurrentNumber();
-	int getState();
-	void setState(int state);
+	
 	
 	int getTimesCompleted();
+
+	int getState();
 	
 private:
+	
+	void next();
+	
+	void setState(int state);
+
 	vector<pair<string,int> > messages;
 	vector<pair<string,int> >::iterator citer;
 	
@@ -47,6 +55,8 @@ private:
 	int state;
 	int timesCompleted;
 	string filename;
+	
+	
 	
 };
 
