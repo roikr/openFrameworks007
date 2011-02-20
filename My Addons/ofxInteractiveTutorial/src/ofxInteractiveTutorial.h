@@ -19,23 +19,28 @@ enum {
 	TUTORIAL_IDLE,
 	TUTORIAL_READY,
 	TUTORIAL_TIMER_STARTED,
-	TUTORIAL_DONE
 };
 
+struct slide {
+	int tag;
+	int delay;
+	string text;
+};
 
 class ofxInteractiveTutorial {
 public:
 	ofxInteractiveTutorial() : state(TUTORIAL_IDLE) {};	
 	
-	void addMessage(string& str,int delay);
+	void addSlide(string& text,int delay,int tag);
 	void loadFile(string filename);
 	void start();
 	void skip();
 	
 	void update();
 	
-	string getCurrentText();
-	int	 getCurrentNumber();
+	string getCurrentSlideText();
+	int	 getCurrentSlideNumber();
+	int	 getCurrentSlideTag();
 	
 	
 	int getTimesCompleted();
@@ -48,8 +53,8 @@ private:
 	
 	void setState(int state);
 
-	vector<pair<string,int> > messages;
-	vector<pair<string,int> >::iterator citer;
+	vector<slide> slides;
+	vector<slide>::iterator citer;
 	
 	int timerStart;
 	int state;

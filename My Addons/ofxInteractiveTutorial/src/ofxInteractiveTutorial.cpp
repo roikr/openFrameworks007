@@ -11,8 +11,12 @@
 #include "ofxXmlSettings.h"
 
 
-void ofxInteractiveTutorial::addMessage(string& str,int delay) {
-	messages.push_back(make_pair(str,delay));
+void ofxInteractiveTutorial::addSlide(string& text,int delay,int tag) {
+	slide s;
+	s.text = text;
+	s.delay = delay;
+	s.tag = tag;
+	slides.push_back(s);
 }
 
 void ofxInteractiveTutorial::loadFile(string filename) {
@@ -26,8 +30,12 @@ void ofxInteractiveTutorial::loadFile(string filename) {
 	
 	xml.pushTag("tutorial");
 	
-	for (int i=0; i<xml.getNumTags("message"); i++) {
-		messages.push_back(make_pair(xml.getValue("message", "", i),xml.getAttribute("message", "delay", 0,i)));
+	for (int i=0; i<xml.getNumTags("slide"); i++) {
+		slide s;
+		s.text = xml.getValue("slide", "", i);
+		s.delay = xml.getAttribute("slide", "delay", 0,i);
+		s.tag = xml.getAttribute("slide", "tag", 0,i);
+		slides.push_back(s);
 	}
 	
 	xml.popTag();
@@ -35,13 +43,13 @@ void ofxInteractiveTutorial::loadFile(string filename) {
 }
 
 void ofxInteractiveTutorial::start() {
-	citer = messages.begin();
+	citer = slides.begin();
 	state = TUTORIAL_READY;
 }
 
 
 void ofxInteractiveTutorial::skip() {
-	if (state==TUTORIAL_DONE || citer==messages.end() ) {
+	if (state==TUTORIAL_IDLE || citer==slides.end() ) {
 		return;
 	}
 	
@@ -55,8 +63,8 @@ void ofxInteractiveTutorial::skip() {
 void ofxInteractiveTutorial::next() {
 	citer++;
 	
-	if (citer==messages.end()) {
-		state =  TUTORIAL_DONE;
+	if (citer==slides.end()) {
+		state =  TUTORIAL_IDLE;
 		timesCompleted++;
 		ofxXmlSettings xml;
 		bool bLoaded = xml.loadFile(filename);
@@ -70,7 +78,7 @@ void ofxInteractiveTutorial::next() {
 }
 
 void ofxInteractiveTutorial::update() {
-	if (citer!=messages.end() && state == TUTORIAL_TIMER_STARTED && ofGetElapsedTimeMillis()-timerStart > citer->second) {
+	if (citer!=slides.end() && state == TUTORIAL_TIMER_STARTED && ofGetElapsedTimeMillis()-timerStart > citer->delay) {
 		
 		next();
 		
@@ -80,12 +88,16 @@ void ofxInteractiveTutorial::update() {
 
 
 
-string ofxInteractiveTutorial::getCurrentText() {
-	return citer->first;
+string ofxInteractiveTutorial::getCurrentSlideText() {
+	return citer->text;
 }
 
-int	ofxInteractiveTutorial::getCurrentNumber() {
-	return distance(messages.begin(), citer);
+int	ofxInteractiveTutorial::getCurrentSlideNumber() {
+	return distance(slides.begin(), citer);
+}
+
+int	ofxInteractiveTutorial::getCurrentSlideTag() {
+	return citer->tag;
 }
 
 
