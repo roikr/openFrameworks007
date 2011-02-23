@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+//#define LOG_MIDI
+
 //#define DEBUG_OFX_MIDI
 
 #ifdef DEBUG_OFX_MIDI
@@ -182,22 +184,47 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 						break;
 					case 0x58: // time signature
 					{
-						int nn = fgetc(f);
-						int dd = fgetc(f);
-						int cc = fgetc(f);
-						int bb = fgetc(f);
-						ofxMidiLog("Time sig: %d:%d, metronome:%d, quarter:%d\n",nn,dd,cc,bb);
-//						fgetc(f);
-//						fgetc(f);
-//						fgetc(f);
-//						fgetc(f);
+#ifdef LOG_MIDI
+					int nn = 	
+#endif
+					fgetc(f);	
+#ifdef LOG_MIDI
+					int dd =
+#endif
+					fgetc(f);	
+#ifdef LOG_MIDI
+					int cc =	
+#endif
+					fgetc(f);	
+#ifdef LOG_MIDI
+					int bb =		
+#endif
+					fgetc(f);	
+#ifdef LOG_MIDI
+					printf("Time sig: %d:%d, metronome:%d, quarter:%d\n",nn,dd,cc,bb);	
+#endif
+						
+						 
+						 
+						
+
 					}
 						break;
 					case 0x59: // key signature
 					{
-						int sf = fgetc(f);
-						int mi = fgetc(f);
-						ofxMidiLog("Key sig: %d %s, %s\n",abs(sf),sf == 0?"c":(sf < 0 ? "flat":"sharp"), mi?"minor":"major");
+#ifdef LOG_MIDI
+						int sf =
+#endif
+						fgetc(f);
+#ifdef LOG_MIDI
+						int mi =
+#endif
+						fgetc(f);
+						 
+#ifdef LOG_MIDI
+						printf("Key sig: %d %s, %s\n",abs(sf),sf == 0?"c":(sf < 0 ? "flat":"sharp"), mi?"minor":"major");	
+#endif
+						
 //						fgetc(f);
 //						fgetc(f);
 					}
@@ -214,16 +241,26 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 						break;
 					case 0x21: // obsolete: midi port
 					{
-//						fgetc(f);
-						int pp = fgetc(f);
-						ofxMidiLog("[obsolete] midi port: %d\n",pp);
+#ifdef LOG_MIDI
+						int pp =	
+#endif
+						fgetc(f);
+#ifdef LOG_MIDI
+						printf("[obsolete] midi port: %d\n",pp);	
+#endif
+						
 					}
 						break;
 					case 0x20: // obsolete: midi channel
 					{
-//						fgetc(f);
-						int cc = fgetc(f);
-						ofxMidiLog("[obsolete] midi channel: %d\n",cc);
+#ifdef LOG_MIDI
+						int cc =	
+#endif
+						fgetc(f);
+#ifdef LOG_MIDI
+						printf("[obsolete] midi channel: %d\n",cc);	
+#endif
+						
 					}
 						break;
 					case 0x54: // SMPTE offset
@@ -246,9 +283,13 @@ bool ofxMidi::loadFromMidiFile(string filename) {
 						ofxMidiLog("Proprietary event ");
 						while (len)
 						{
-//							fgetc(f);
-							int d = fgetc(f);
-							ofxMidiLog("%02X ",d);
+#ifdef LOG_MIDI
+							int d =	
+#endif
+							fgetc(f);
+#ifdef LOG_MIDI
+							printf("%02X ",d);
+#endif
 							len--;
 						}
 						ofxMidiLog("\n");
