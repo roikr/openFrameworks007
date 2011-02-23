@@ -127,7 +127,7 @@ void ofxPincher::touchDown(int x, int y, int id) {
 		active[id] = true;
 		pos[id]=ofPoint(x,y);
 		
-		
+		//cout << "touchDown, numActive: " << numActive << endl;
 		
 	}
 	
@@ -142,7 +142,7 @@ float ofxPincher::distance(ofPoint pnt) {
 
 
 void ofxPincher::touchMoved(int x, int y, int id) {
-	if (bAnimating)
+	if (bAnimating || !numActive) // if touchDown was missed because of animation, we should not enter here
 		return;
 	
 	if (id<2) {
@@ -200,13 +200,15 @@ void ofxPincher::touchMoved(int x, int y, int id) {
 }
 
 void ofxPincher::touchUp(int x, int y, int id) {
-	if (bAnimating)
+	if (bAnimating || !numActive) // if touchDown was missed because of animation, we should not enter here
 		return;
 	
 	if (id<2) {
 		numActive--;
 		pos[id]=ofPoint(x,y);
-	}	active[id] = false;
+		active[id] = false;
+		//cout << "touchUp, numActive: " << numActive << endl;
+	}	
 	
 }
 

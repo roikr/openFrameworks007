@@ -690,7 +690,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (G22F3GL4MN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (S8LHA25A98)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -739,7 +739,7 @@
 					"-w",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "809FA590-A5D0-4BA9-9757-3FD36DDFDEB4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A9796A89-168B-44B8-BF3C-97A7B608E436";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;

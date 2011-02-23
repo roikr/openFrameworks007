@@ -67,7 +67,7 @@ void testApp::touchDown(int x, int y, int id) {
 	pincher.touchDown(x, y, id);	
 	
 	ofPoint trans = pincher.touchToPoint(x, y);
-	printf("x: %.0f, y: %.0f\n",trans.x,trans.y);
+	printf("x: %.0f, y: %.0f, scale: %.2f\n",trans.x,trans.y,pincher.getScale());
 
 	
 	bSmooth = true;
