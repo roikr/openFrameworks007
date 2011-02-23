@@ -16,7 +16,7 @@
 #define SINT16_MAX 32767.0
 #define LOADING_BUFFER_SIZE 8192
 
-//#define LOG_AUDIO_FILE
+#define LOG_AUDIO_FILE
 
 #include <iostream>
 
@@ -36,7 +36,7 @@ bool ofxAudioFile::load(string filename,int blockLength) {
 	bLoaded = false;
 	this->blockLength = blockLength;	
 	
-	
+	this->filename = filename;
 	NSString *path = [NSString stringWithFormat:@"%s",filename.c_str()];
 	
     CFURLRef pathURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)path, kCFURLPOSIXPathStyle, false);
@@ -353,7 +353,9 @@ void ofxAudioFile::audioRequested (float * output, int channel,int bufferSize, i
 	
 }
 
-void ofxAudioFile::open(string filename) {
+void ofxAudioFile::openForSave(string filename) {
+	
+	this->filename = filename;
 	OSStatus error = noErr;
 	NSString *path = [NSString stringWithFormat:@"%s",filename.c_str()];
 	
@@ -429,11 +431,18 @@ void ofxAudioFile::exit() {
 		free(tableBuffer);
 		tableBuffer = 0;
 		
+#ifdef LOG_AUDIO_FILE
+		cout << "free tableBuffer: " << filename << endl; //<< step << endl;
+#endif
+		
 	}
 	
 	if (saveBuffer) {
 		free(saveBuffer);
 		saveBuffer = 0;
+#ifdef LOG_AUDIO_FILE
+		cout << "free saveBuffer: " << filename << endl; //<< step << endl;
+#endif
 	}
 	
 }

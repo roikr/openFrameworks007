@@ -46,7 +46,7 @@ public:
 	// ROIKR: bug when using audioRequested with 2 channels...
 	void audioRequested (float * output, int channel,int bufferSize, int nChannels); // to use without postProcess and for left side only
 
-	void open(string filename);
+	void openForSave(string filename);
 	void saveWithBlocks(float *left,float*right);
 	void close();
 	
@@ -68,6 +68,7 @@ private:
 //	AVAssetWriterInput *audioInput;
 //	AVAssetWriter *writer;
 	
+	string filename;
 };
 
 #endif 
