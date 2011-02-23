@@ -103,7 +103,7 @@ bool ofxAudioFile::load(string filename,int blockLength) {
 			
 		}
 		
-		
+		XThrowIfError(ExtAudioFileDispose(file), "ExtAudioFileDispose failed!");
 		bLoaded = true;
 	}		
 		
