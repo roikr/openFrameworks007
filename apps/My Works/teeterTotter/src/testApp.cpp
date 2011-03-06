@@ -1,5 +1,17 @@
 #include "testApp.h"
 
+enum {
+	TEETER_MODE_IDLE,
+	TEETER_MODE_PLANE,
+	TEETER_MODE_ROI_LEFT_TOP,
+	TEETER_MODE_ROI_RIGHT_BOTTOM
+};
+
+enum {
+	DISPLAY_MODE_CALIB,
+	DISPLAY_MODE_GAME,
+	DISPLAY_MODE_POINT_CLOUD
+};
 
 //--------------------------------------------------------------
 void testApp::setup() {
@@ -23,6 +35,7 @@ void testApp::setup() {
 	drawPC = false;
 	
 	mode = TEETER_MODE_IDLE;
+	displayMode = DISPLAY_MODE_CALIB;
 	
 }
 
@@ -38,7 +51,11 @@ void testApp::update() {
 			grayImage.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
 			
 			
+			
 			unsigned char * pix = grayImage.getPixels();
+			
+			
+			
 			int numPixels = grayImage.getWidth() * grayImage.getHeight();
 			
 			
@@ -46,15 +63,22 @@ void testApp::update() {
 			for(int i = 0; i < grayImage.getHeight(); i++){
 				for(int j = 0; j < grayImage.getWidth(); j++){
 					int c = i*(int)grayImage.getWidth()+j;
-					ofxVec3f pos = kinect.getWorldCoordinateFor(j, i);
+					if (i>roi.y && i<roi.y+roi.height && j>roi.x && j<roi.x+roi.width) {
+						
+						ofxVec3f pos = kinect.getWorldCoordinateFor(j, i);
 
-					int k; 
-					for (k=0; k<5; k++) {
-						if (pos.dot(normals[k]) > points[k % 4].dot(normals[k] - 0.01) ) {
-							break;
+						int k; 
+						for (k=0; k<5; k++) {
+							if (pos.dot(normals[k]) > points[k % 4].dot(normals[k] - 0.01) ) {
+								break;
+							}
 						}
+						pix[c] =  k==5 ? pix[c] : 0;
+					} else {
+						pix[c] = 0;
 					}
-					pix[c] =  k==5 ? pix[c] : 0;
+
+					
 					
 										
 					
@@ -62,11 +86,13 @@ void testApp::update() {
 			}
 			
 			//update the cv image
+			grayImage.erode_3x3();
+			grayImage.dilate_3x3();
 			grayImage.flagImageChanged();
 			
 			// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 			// also, find holes is set to true so we will get interior contours as well....
-			//contourFinder.findContours(grayImage, 1000, (kinect.width*kinect.height)/2, 1000, false);
+			contourFinder.findContours(grayImage, 1000, (kinect.width*kinect.height)/2, 1000, false);
 			
 		}
 		
@@ -114,55 +140,76 @@ void outVector(stringstream &reportStream,ofxVec3f vec) {
 //--------------------------------------------------------------
 void testApp::draw() {
 	ofSetColor(255, 255, 255);
-	if(drawPC){
-		ofPushMatrix();
-		ofTranslate(420, 320);
-		// we need a proper camera class
-		drawPointCloud();
-		ofPopMatrix();
-	}else{
-		kinect.drawDepth(10, 10, 400, 300);
-		kinect.draw(420, 10, 400, 300);
-
-		grayImage.draw(10, 320, 400, 300);
-		//contourFinder.draw(10, 320, 400, 300);
-		if (!contourFinder.blobs.empty()) {
-			ofxCvBlob &blob = contourFinder.blobs.front();
-			float x = 10;
-			float y =320;
-			float scalex = 400.0f/grayImage.getWidth();
-			float scaley = 300.0f/grayImage.getHeight();
-			
-						
-			ofPushStyle();
-			// ---------------------------- draw the bounding rectangle
-			ofSetColor(0xDD00CC);
-			glPushMatrix();
-			glTranslatef( x, y, 0.0 );
-			glScalef( scalex, scaley, 0.0 );
-			
-			ofNoFill();
-			ofRect( blob.boundingRect.x, blob.boundingRect.y,  blob.boundingRect.width, blob.boundingRect.height );
-			
-			
-			// ---------------------------- draw the blobs
-			ofSetColor(0x00FFFF);
-			
-			
-			ofNoFill();
-			ofBeginShape();
-			for( int j=0; j<blob.nPts; j++ ) {
-				ofVertex( blob.pts[j].x, blob.pts[j].y );
-			}
-			ofEndShape();
-				
-			
-			glPopMatrix();
-			ofPopStyle();
-		}
-		
-	}
 	
+	switch (displayMode) {
+		case DISPLAY_MODE_POINT_CLOUD:
+			ofPushMatrix();
+			ofTranslate(420, 320);
+			// we need a proper camera class
+			drawPointCloud();
+			ofPopMatrix();
+			break;
+		case DISPLAY_MODE_CALIB:
+			kinect.drawDepth(10, 10, 400, 300);
+			kinect.draw(420, 10, 400, 300);
+			
+			
+			grayImage.draw(10, 320, 400, 300);
+			
+			
+			//grayImage.drawROI(10, 320, 400, 300);
+			contourFinder.draw(10+roi.x*400/kinect.getWidth(), 320+roi.y*300/kinect.getHeight(), 400, 300);
+			break;
+
+		case DISPLAY_MODE_GAME:
+			if (!contourFinder.blobs.empty()) {
+				ofxCvBlob &blob = contourFinder.blobs.front();
+				float x = 10;
+				float y =10;
+				float scalex = 400.0f/grayImage.getWidth();
+				float scaley = 300.0f/grayImage.getHeight();
+				
+				
+				ofPushStyle();
+				// ---------------------------- draw the bounding rectangle
+				ofSetColor(0xDD00CC);
+				glPushMatrix();
+				glTranslatef( x, y, 0.0 );
+				glScalef( scalex, scaley, 0.0 );
+				glTranslatef(roi.x, roi.y, 0.0);
+				//			ofNoFill();
+				//			ofRect( blob.boundingRect.x, blob.boundingRect.y,  blob.boundingRect.width, blob.boundingRect.height );
+				//			
+				
+				
+				// ---------------------------- draw the blobs
+				ofSetColor(0x000000);
+				
+				
+				ofFill();
+				ofBeginShape();
+				for( int j=0; j<blob.nPts; j++ ) {
+					ofVertex( blob.pts[j].x, blob.pts[j].y );
+				}
+				ofEndShape();
+				
+				ofSetColor(0xFF0000);
+				ofRect( blob.centroid.x-2, blob.centroid.y-2,  4, 4 );
+				
+				glPopMatrix();
+				ofPopStyle();
+			}
+			
+			break;
+	
+			
+		default:
+			
+			break;
+	}
+			
+
+			
 
 	ofSetColor(255, 255, 255);
 	stringstream reportStream;
@@ -173,7 +220,8 @@ void testApp::draw() {
 				<<"num blobs found " << contourFinder.nBlobs
 				 	<< ", fps: " << ofGetFrameRate() << endl
 				 << "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
-	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
+	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
+	<< "(" << roi.x << "," << roi.y << "," << roi.width << "," << roi.height << ")" << endl;
 	
 	/*
 	if (!normals.empty()) {
@@ -280,6 +328,16 @@ void testApp::keyPressed (int key) {
 			points.clear();
 			normals.clear();
 			break;
+			
+		case 'r':
+			mode = TEETER_MODE_ROI_LEFT_TOP;
+			
+			break;
+			
+		case 'm':
+			displayMode = (displayMode+1) % 3;
+			break;
+
 	}
 }
 
@@ -299,6 +357,8 @@ void testApp::mousePressed(int x, int y, int button)
 {
 	float kx = float(x-10)/400;
 	float ky = float(y-10)/300;
+	
+	
 	
 	switch (mode) {
 		case TEETER_MODE_PLANE:
@@ -324,6 +384,22 @@ void testApp::mousePressed(int x, int y, int button)
 				//m_ground_plane = Plane(normal, p0);
 			}
 			break;
+			
+		case TEETER_MODE_ROI_LEFT_TOP:
+			roi.x = kx*kinect.getWidth();
+			roi.y = ky*kinect.getHeight();
+			mode =TEETER_MODE_ROI_RIGHT_BOTTOM;
+			break;
+			
+		case TEETER_MODE_ROI_RIGHT_BOTTOM:
+			roi.width = kx*kinect.getWidth() - roi.x;
+			roi.height = ky*kinect.getHeight() - roi.y;
+			grayImage.setROI(roi);
+			mode =TEETER_MODE_IDLE;
+			break;
+			
+			
+			
 		default:
 			break;
 	}

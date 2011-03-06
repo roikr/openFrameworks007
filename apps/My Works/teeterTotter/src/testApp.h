@@ -4,10 +4,7 @@
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
 
-enum {
-	TEETER_MODE_IDLE,
-	TEETER_MODE_PLANE
-};
+
 
 class testApp : public ofBaseApp {
 	public:
@@ -44,5 +41,8 @@ class testApp : public ofBaseApp {
 		vector<ofxVec3f> normals;
 		
 		int mode;
+		int displayMode;
+	
+		ofRectangle roi;
 		
 };
