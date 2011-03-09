@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-	world.SetDebugDraw(&m_debugDraw);
+	m_world.SetDebugDraw(&m_debugDraw);
 	
 	uint32 flags = b2DebugDraw::e_shapeBit | b2DebugDraw::e_jointBit | b2DebugDraw::e_centerOfMassBit ;
 	
@@ -13,50 +13,47 @@ void testApp::setup(){
 //	flags += settings->drawCOMs				* b2DebugDraw::e_centerOfMassBit;
 	m_debugDraw.SetFlags(flags);
 	
-	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f,-10.0f);
-	groundBody = world.CreateBody(&groundBodyDef);
-	b2PolygonShape groundBox;
-	groundBox.SetAsBox(ofGetWidth()*3/2,10.0f);
-	groundBody->CreateFixture(&groundBox,1.0f);
 	
-	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(-100.0f,150.0f);
-	body = world.CreateBody(&bodyDef);
+	b2PolygonShape shape;
+	shape.SetAsEdge(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
 	
-	b2PolygonShape dynamicBox;
-	dynamicBox.SetAsBox(5.0f, 5.0f);
+	b2BodyDef bd;
+	m_ground = m_world.CreateBody(&bd);
+	m_ground->CreateFixture(&shape, 0.0f);
 	
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &dynamicBox;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.5f;
-	fixtureDef.restitution = 0.2f;
-	body->CreateFixture(&fixtureDef);
-	body->SetLinearVelocity(b2Vec2(0.0f,-250.0f));
 	
 	b2BodyDef teeterDef;
 	teeterDef.type = b2_dynamicBody;
-	teeterDef.position.Set(0.0f,10.0f);
-	teeter = world.CreateBody(&teeterDef);
+	teeterDef.position.Set(0.0f,2.5f);
+	m_teeter = m_world.CreateBody(&teeterDef);
 	
 	b2PolygonShape teeterBox;
-	teeterBox.SetAsBox(150, 2);
+	teeterBox.SetAsEdge(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
 	
 	b2FixtureDef teeterFixtureDef;
 	teeterFixtureDef.shape = &teeterBox;
 	teeterFixtureDef.density = 1.0f;
-	teeterFixtureDef.friction = 0.0f;
-	teeter->CreateFixture(&teeterFixtureDef);
+	teeterFixtureDef.friction = 1.0f;
+	m_teeter->CreateFixture(&teeterFixtureDef);
+	
 	
 	b2RevoluteJointDef jointDef;
 	jointDef.collideConnected = true;
-	jointDef.Initialize(groundBody,teeter,teeter->GetWorldCenter());
+	jointDef.Initialize(m_ground,m_teeter,b2Vec2(0.0f,2.5f)); // teeter->GetWorldCenter()
 	
-	world.CreateJoint(&jointDef);
+	m_world.CreateJoint(&jointDef);
 	
 	
+	shape.SetAsBox(2.0f, 2.0f, b2Vec2(-8.0f, 2.0f), 0.0f);
+	m_fixture1 = m_teeter->CreateFixture(&shape, 5.0f);
+	
+	m_distance = 8.0f;
+	shape.SetAsBox(2.0f, 2.0f, b2Vec2(m_distance, 2.0f), 0.0f);
+	m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
+	
+	
+	
+		
 	
 	ofSetFrameRate(60);
 	
@@ -64,7 +61,7 @@ void testApp::setup(){
 	positionIterations = 2;
 	timeStep = 1.0f/60.0f;
 	
-	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 1.5);
+	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 10);
 
 	
 	
@@ -74,8 +71,8 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-	world.Step(timeStep, velocityIterations, positionIterations);
-	world.ClearForces();
+	m_world.Step(timeStep, velocityIterations, positionIterations);
+	m_world.ClearForces();
 //	b2Vec2 position = body->GetPosition();
 //	float angle = body->GetAngle();
 //	printf("%4.2f %4.2f %4.2f\n",position.x,position.y,angle);
@@ -90,7 +87,7 @@ void testApp::draw(){
 //	float scale = 1;
 //	ofScale(scale, -scale, 1.0);
 	coordinator.pushTransform();
-	world.DrawDebugData();
+	m_world.DrawDebugData();
 	coordinator.popTransform();
 //	ofPopMatrix();
 	ofDisableSmoothing();
@@ -106,7 +103,26 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	
+	switch (key)
+	{
+		case 'q': {
+			m_distance-=0.25;
+			m_teeter->DestroyFixture(m_fixture2);
+			b2PolygonShape shape;
+			shape.SetAsBox(2.0f, 2.0f, b2Vec2(m_distance, 2.0f), 0.0f);
+			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
+			m_teeter->SetAwake(true);
+		} break;
+			
+		case 'w': {
+			m_distance+=0.25;
+			m_teeter->DestroyFixture(m_fixture2);
+			b2PolygonShape shape;
+			shape.SetAsBox(2.0f, 2.0f, b2Vec2(m_distance, 2.0f), 0.0f);
+			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
+			m_teeter->SetAwake(true);
+		} break;
+	}
 }
 
 //--------------------------------------------------------------

@@ -10,7 +10,7 @@
 class testApp : public ofBaseApp{
 
 	public:
-		testApp() : world(b2Vec2(0.0f,-10.0f),true) {};
+		testApp() : m_world(b2Vec2(0.0f,-10.0f),true) {};
 		void setup();
 		void update();
 		void draw();
@@ -23,10 +23,14 @@ class testApp : public ofBaseApp{
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 	
-	b2World world;
-	b2Body* groundBody;
-	b2Body* body;
-	b2Body* teeter;
+	b2World m_world;
+	b2Body* m_ground;
+	b2Body* m_teeter;
+	
+	b2Fixture* m_fixture1;
+	b2Fixture* m_fixture2;
+	
+	float32 m_distance;
 	
 	int32 velocityIterations;
 	int32 positionIterations;
@@ -35,7 +39,7 @@ class testApp : public ofBaseApp{
 	DebugDraw m_debugDraw;
 	
 	ofxCoordinator coordinator;
-
+	
 };
 
 #endif
