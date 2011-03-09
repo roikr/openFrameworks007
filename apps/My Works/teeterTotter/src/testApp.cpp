@@ -13,6 +13,65 @@ enum {
 	DISPLAY_MODE_POINT_CLOUD
 };
 
+
+//--------------------------------------------------------------
+void testApp::setupPhysics() {
+	
+	m_world.SetDebugDraw(&m_debugDraw);
+	
+	uint32 flags = b2DebugDraw::e_shapeBit | b2DebugDraw::e_jointBit | b2DebugDraw::e_centerOfMassBit ;
+	
+	//flags += settings->drawJoints			* b2DebugDraw::e_jointBit;
+	//	flags += settings->drawAABBs			* b2DebugDraw::e_aabbBit;
+	//	flags += settings->drawPairs			* b2DebugDraw::e_pairBit;
+	//	flags += settings->drawCOMs				* b2DebugDraw::e_centerOfMassBit;
+	m_debugDraw.SetFlags(flags);
+	
+	
+	b2PolygonShape shape;
+	shape.SetAsEdge(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+	
+	b2BodyDef bd;
+	m_ground = m_world.CreateBody(&bd);
+	m_ground->CreateFixture(&shape, 0.0f);
+	
+	
+	b2BodyDef teeterDef;
+	teeterDef.type = b2_dynamicBody;
+	teeterDef.position.Set(0.0f,1.0f);
+	m_teeter = m_world.CreateBody(&teeterDef);
+	
+	b2PolygonShape teeterShape;
+	teeterShape.SetAsEdge(b2Vec2(-5.0f, 0.0f), b2Vec2(5.0f, 0.0f));
+	
+	b2FixtureDef teeterFixtureDef;
+	teeterFixtureDef.shape = &teeterShape;
+	teeterFixtureDef.density = 1.0f;
+	teeterFixtureDef.friction = 1.0f;
+	m_teeter->CreateFixture(&teeterFixtureDef);
+	
+	
+	b2RevoluteJointDef jointDef;
+	jointDef.collideConnected = true;
+	jointDef.Initialize(m_ground,m_teeter,b2Vec2(0.0f,1.0f)); // teeter->GetWorldCenter()
+	
+	m_world.CreateJoint(&jointDef);
+	
+	
+	shape.SetAsBox(0.25f, 1.0f, b2Vec2(-4.0f, 1.0f), 0.0f);
+	m_fixture1 = m_teeter->CreateFixture(&shape, 5.0f);
+	
+	m_distance = 4.0f;
+	shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
+	m_fixture2 = m_teeter->CreateFixture(&shape, 7.5f);
+	
+	
+	velocityIterations = 6;
+	positionIterations = 2;
+	timeStep = 1.0f/60.0f;
+	
+}
+
 //--------------------------------------------------------------
 void testApp::setup() {
 	//kinect.init(true);  //shows infrared image
@@ -26,7 +85,7 @@ void testApp::setup() {
 	ofSetFrameRate(60);
 
 	// zero the tilt on startup
-	angle = -20;
+	angle = -10;
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
@@ -37,11 +96,18 @@ void testApp::setup() {
 	mode = TEETER_MODE_IDLE;
 	displayMode = DISPLAY_MODE_CALIB;
 	
+	
+	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 50);
+	
+	setupPhysics();
+	
+	ofBackground(0, 0, 0);
+	
 }
 
 //--------------------------------------------------------------
 void testApp::update() {
-	ofBackground(100, 100, 100);
+	//ofBackground(100, 100, 100);
 	
 	kinect.update();
 	if(kinect.isFrameNew())	// there is a new frame and we are connected
@@ -131,6 +197,23 @@ void testApp::update() {
     	contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
 		 */
 	}
+	
+	if (!contourFinder.blobs.empty() && displayMode == DISPLAY_MODE_GAME) {
+		float32 distance = 4.0f+(contourFinder.blobs.front().centroid.x - m_position)/100;
+		if (distance!=m_distance) {
+			m_distance = distance;
+			m_teeter->DestroyFixture(m_fixture2);
+			b2PolygonShape shape;
+			shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
+			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
+			m_teeter->SetAwake(true);
+		}
+	} 
+	
+	m_world.Step(timeStep, velocityIterations, positionIterations);
+	m_world.ClearForces();
+	
+	
 }
 
 void outVector(stringstream &reportStream,ofxVec3f vec) {
@@ -161,7 +244,7 @@ void testApp::draw() {
 			contourFinder.draw(10+roi.x*400/kinect.getWidth(), 320+roi.y*300/kinect.getHeight(), 400, 300);
 			break;
 
-		case DISPLAY_MODE_GAME:
+		case DISPLAY_MODE_GAME: {
 			if (!contourFinder.blobs.empty()) {
 				ofxCvBlob &blob = contourFinder.blobs.front();
 				float x = 10;
@@ -183,7 +266,7 @@ void testApp::draw() {
 				
 				
 				// ---------------------------- draw the blobs
-				ofSetColor(0x000000);
+				ofSetColor(0xFFFFFF);
 				
 				
 				ofFill();
@@ -198,9 +281,26 @@ void testApp::draw() {
 				
 				glPopMatrix();
 				ofPopStyle();
+				
+				
 			}
 			
-			break;
+			ofEnableSmoothing();
+			coordinator.pushTransform();
+			m_world.DrawDebugData();
+			coordinator.popTransform();
+			
+			ofDisableSmoothing();
+			
+			ofSetColor(255, 255, 255);
+			std::ostringstream ss;
+			
+			ss << ofGetFrameRate();
+			
+			
+			ofDrawBitmapString(ss.str(), 20, 20);
+			
+		} break;
 	
 			
 		default:
@@ -221,7 +321,8 @@ void testApp::draw() {
 				 	<< ", fps: " << ofGetFrameRate() << endl
 				 << "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
 	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
-	<< "(" << roi.x << "," << roi.y << "," << roi.width << "," << roi.height << ")" << endl;
+	<< "(" << roi.x << "," << roi.y << "," << roi.width << "," << roi.height << ")" << endl
+	<< "m_position: " << m_position << "m_distance: " << m_distance << endl;
 	
 	/*
 	if (!normals.empty()) {
@@ -336,6 +437,30 @@ void testApp::keyPressed (int key) {
 			
 		case 'm':
 			displayMode = (displayMode+1) % 3;
+			break;
+
+		case OF_KEY_LEFT: {
+			m_distance-=0.25;
+			m_teeter->DestroyFixture(m_fixture2);
+			b2PolygonShape shape;
+			shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
+			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
+			m_teeter->SetAwake(true);
+		} break;
+			
+		case OF_KEY_RIGHT: {
+			m_distance+=0.25;
+			m_teeter->DestroyFixture(m_fixture2);
+			b2PolygonShape shape;
+			shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
+			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
+			m_teeter->SetAwake(true);
+		} break;
+			
+		case 's':
+			if (!contourFinder.blobs.empty()) {
+				m_position = contourFinder.blobs.front().centroid.x;
+			} 
 			break;
 
 	}
