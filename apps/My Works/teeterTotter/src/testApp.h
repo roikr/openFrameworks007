@@ -6,7 +6,8 @@
 #include "Box2D.h"
 #include "Render.h"
 #include "ofxCoordinator.h"
-
+#include "Teeter.h"
+#include "ofxSimpleSegmentator.h"
 
 class testApp : public ofBaseApp {
 	public:
@@ -40,22 +41,16 @@ class testApp : public ofBaseApp {
 		
 		void saveImage();
 		
-		vector<ofxVec3f> points;
-		vector<ofxVec3f> normals;
+		
 		
 		int mode;
 		int displayMode;
 	
-		ofRectangle roi;
+		
 	
 		b2World m_world;
 		b2Body* m_ground;
-		b2Body* m_teeter;
-		
-		b2Fixture* m_fixture1;
-		b2Fixture* m_fixture2;
-		
-		float32 m_distance;
+		Teeter teeter;
 		
 		int32 velocityIterations;
 		int32 positionIterations;
@@ -65,6 +60,9 @@ class testApp : public ofBaseApp {
 		
 		ofxCoordinator coordinator;
 	
-		float32 m_position;
+		float32 m_bias;
+	
+		ofxSimpleSegmentator segmentator;
+		ofPoint mouseDown;
 	
 };

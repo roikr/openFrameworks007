@@ -3,8 +3,7 @@
 enum {
 	TEETER_MODE_IDLE,
 	TEETER_MODE_PLANE,
-	TEETER_MODE_ROI_LEFT_TOP,
-	TEETER_MODE_ROI_RIGHT_BOTTOM
+	TEETER_MODE_ROI
 };
 
 enum {
@@ -36,39 +35,13 @@ void testApp::setupPhysics() {
 	m_ground->CreateFixture(&shape, 0.0f);
 	
 	
-	b2BodyDef teeterDef;
-	teeterDef.type = b2_dynamicBody;
-	teeterDef.position.Set(0.0f,1.0f);
-	m_teeter = m_world.CreateBody(&teeterDef);
-	
-	b2PolygonShape teeterShape;
-	teeterShape.SetAsEdge(b2Vec2(-5.0f, 0.0f), b2Vec2(5.0f, 0.0f));
-	
-	b2FixtureDef teeterFixtureDef;
-	teeterFixtureDef.shape = &teeterShape;
-	teeterFixtureDef.density = 1.0f;
-	teeterFixtureDef.friction = 1.0f;
-	m_teeter->CreateFixture(&teeterFixtureDef);
-	
-	
-	b2RevoluteJointDef jointDef;
-	jointDef.collideConnected = true;
-	jointDef.Initialize(m_ground,m_teeter,b2Vec2(0.0f,1.0f)); // teeter->GetWorldCenter()
-	
-	m_world.CreateJoint(&jointDef);
-	
-	
-	shape.SetAsBox(0.25f, 1.0f, b2Vec2(-4.0f, 1.0f), 0.0f);
-	m_fixture1 = m_teeter->CreateFixture(&shape, 5.0f);
-	
-	m_distance = 4.0f;
-	shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
-	m_fixture2 = m_teeter->CreateFixture(&shape, 7.5f);
+	teeter.setup(m_world, m_ground, 5);
 	
 	
 	velocityIterations = 6;
 	positionIterations = 2;
 	timeStep = 1.0f/60.0f;
+	m_bias = 1;
 	
 }
 
@@ -85,7 +58,7 @@ void testApp::setup() {
 	ofSetFrameRate(60);
 
 	// zero the tilt on startup
-	angle = -10;
+	angle = -30;
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
@@ -101,6 +74,8 @@ void testApp::setup() {
 	
 	setupPhysics();
 	
+	segmentator.load();
+	
 	ofBackground(0, 0, 0);
 	
 }
@@ -113,41 +88,22 @@ void testApp::update() {
 	if(kinect.isFrameNew())	// there is a new frame and we are connected
 	{
 
-		if (!normals.empty()) {
+		if (segmentator.getIsReady()) {
 			grayImage.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
-			
-			
-			
 			unsigned char * pix = grayImage.getPixels();
-			
-			
-			
 			int numPixels = grayImage.getWidth() * grayImage.getHeight();
-			
-			
 			
 			for(int i = 0; i < grayImage.getHeight(); i++){
 				for(int j = 0; j < grayImage.getWidth(); j++){
 					int c = i*(int)grayImage.getWidth()+j;
-					if (i>roi.y && i<roi.y+roi.height && j>roi.x && j<roi.x+roi.width) {
-						
-						ofxVec3f pos = kinect.getWorldCoordinateFor(j, i);
-
-						int k; 
-						for (k=0; k<5; k++) {
-							if (pos.dot(normals[k]) > points[k % 4].dot(normals[k] - 0.01) ) {
-								break;
-							}
+					ofPoint pnt=ofPoint(j,i);
+					if (segmentator.getIsPointInside(pnt)) {
+						ofxVec3f vec = kinect.getWorldCoordinateFor(j, i);
+						if (segmentator.getIsVectorInside(vec)){
+							continue;
 						}
-						pix[c] =  k==5 ? pix[c] : 0;
-					} else {
-						pix[c] = 0;
 					}
-
-					
-					
-										
-					
+					pix[c] = 0;
 				}
 			}
 			
@@ -160,55 +116,17 @@ void testApp::update() {
 			// also, find holes is set to true so we will get interior contours as well....
 			contourFinder.findContours(grayImage, 1000, (kinect.width*kinect.height)/2, 1000, false);
 			
-		}
-		
-		
-		
-		/*
-		//we do two thresholds - one for the far plane and one for the near plane
-		//we then do a cvAnd to get the pixels which are a union of the two thresholds.	
-		if( bThreshWithOpenCV ){
-			grayThreshFar = grayImage;
-			grayThresh = grayImage;
-			grayThresh.threshold(nearThreshold, true);
-			grayThreshFar.threshold(farThreshold);
-			cvAnd(grayThresh.getCvImage(), grayThreshFar.getCvImage(), grayImage.getCvImage(), NULL);
-		}else{
-		
-			//or we do it ourselves - show people how they can work with the pixels
-		
-			unsigned char * pix = grayImage.getPixels();
-			int numPixels = grayImage.getWidth() * grayImage.getHeight();
-
-			for(int i = 0; i < numPixels; i++){
-				if( pix[i] < nearThreshold && pix[i] > farThreshold ){
-					pix[i] = 255;
-				}else{
-					pix[i] = 0;
-				}
+			if (!contourFinder.blobs.empty() && displayMode == DISPLAY_MODE_GAME) {
+				ofxCvBlob &blob = contourFinder.blobs.front();
+				teeter.updateBlob(blob);
 			}
 		}
-
-		//update the cv image
-		grayImage.flagImageChanged();
-	
-		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
-    	// also, find holes is set to true so we will get interior contours as well....
-    	contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
-		 */
+		
+		
+		
 	}
 	
-	if (!contourFinder.blobs.empty() && displayMode == DISPLAY_MODE_GAME) {
-		float32 distance = 4.0f+(contourFinder.blobs.front().centroid.x - m_position)/100;
-		if (distance!=m_distance) {
-			m_distance = distance;
-			m_teeter->DestroyFixture(m_fixture2);
-			b2PolygonShape shape;
-			shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
-			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
-			m_teeter->SetAwake(true);
-		}
-	} 
+	
 	
 	m_world.Step(timeStep, velocityIterations, positionIterations);
 	m_world.ClearForces();
@@ -216,13 +134,13 @@ void testApp::update() {
 	
 }
 
-void outVector(stringstream &reportStream,ofxVec3f vec) {
-	reportStream << "(" << vec.x << "," << vec.y << "," << vec.z << ")";
-}
+
 
 //--------------------------------------------------------------
 void testApp::draw() {
 	ofSetColor(255, 255, 255);
+	ofRectangle roi;
+	segmentator.getROI(roi);
 	
 	switch (displayMode) {
 		case DISPLAY_MODE_POINT_CLOUD:
@@ -232,62 +150,25 @@ void testApp::draw() {
 			drawPointCloud();
 			ofPopMatrix();
 			break;
-		case DISPLAY_MODE_CALIB:
+		case DISPLAY_MODE_CALIB: {
 			kinect.drawDepth(10, 10, 400, 300);
 			kinect.draw(420, 10, 400, 300);
 			
 			
 			grayImage.draw(10, 320, 400, 300);
-			
+			contourFinder.draw(10,320, 400, 300);
 			
 			//grayImage.drawROI(10, 320, 400, 300);
-			contourFinder.draw(10+roi.x*400/kinect.getWidth(), 320+roi.y*300/kinect.getHeight(), 400, 300);
-			break;
+			
+			//contourFinder.draw(10+roi.x*400/kinect.getWidth(), 320+roi.y*300/kinect.getHeight(), 400, 300);
+		}	break;
 
 		case DISPLAY_MODE_GAME: {
-			if (!contourFinder.blobs.empty()) {
-				ofxCvBlob &blob = contourFinder.blobs.front();
-				float x = 10;
-				float y =10;
-				float scalex = 400.0f/grayImage.getWidth();
-				float scaley = 300.0f/grayImage.getHeight();
-				
-				
-				ofPushStyle();
-				// ---------------------------- draw the bounding rectangle
-				ofSetColor(0xDD00CC);
-				glPushMatrix();
-				glTranslatef( x, y, 0.0 );
-				glScalef( scalex, scaley, 0.0 );
-				glTranslatef(roi.x, roi.y, 0.0);
-				//			ofNoFill();
-				//			ofRect( blob.boundingRect.x, blob.boundingRect.y,  blob.boundingRect.width, blob.boundingRect.height );
-				//			
-				
-				
-				// ---------------------------- draw the blobs
-				ofSetColor(0xFFFFFF);
-				
-				
-				ofFill();
-				ofBeginShape();
-				for( int j=0; j<blob.nPts; j++ ) {
-					ofVertex( blob.pts[j].x, blob.pts[j].y );
-				}
-				ofEndShape();
-				
-				ofSetColor(0xFF0000);
-				ofRect( blob.centroid.x-2, blob.centroid.y-2,  4, 4 );
-				
-				glPopMatrix();
-				ofPopStyle();
-				
-				
-			}
 			
 			ofEnableSmoothing();
 			coordinator.pushTransform();
 			m_world.DrawDebugData();
+			teeter.draw();
 			coordinator.popTransform();
 			
 			ofDisableSmoothing();
@@ -320,24 +201,10 @@ void testApp::draw() {
 				<<"num blobs found " << contourFinder.nBlobs
 				 	<< ", fps: " << ofGetFrameRate() << endl
 				 << "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
-	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
-	<< "(" << roi.x << "," << roi.y << "," << roi.width << "," << roi.height << ")" << endl
-	<< "m_position: " << m_position << "m_distance: " << m_distance << endl;
+	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
+	//<< "diff: " << m_position-m_center << ", m_position: " << m_position <<  ", m_center: " << m_center << ", m_bias: " << m_bias << endl;
 	
-	/*
-	if (!normals.empty()) {
-		reportStream << "points: ";
-		outVector(reportStream, points[0]);
-		reportStream << " ";
-		outVector(reportStream, points[1]);
-		reportStream << " ";
-		outVector(reportStream, points[2]);
-		reportStream << " ";
-		outVector(reportStream, points[3]);
-		reportStream << endl << "normals: ";
-		outVector(reportStream, normals[0]);
-	}
-	 */
+	
 	
 	
 				
@@ -363,30 +230,8 @@ void testApp::drawPointCloud() {
 	glEnd();
 }
 
-//--------------------------------------------------------------
-void testApp::exit() {
-	kinect.setCameraTiltAngle(0); // zero the tilt on exit
-	kinect.close();
-}
 
-void testApp::saveImage() {
-	ofImage image;
-	image.setFromPixels(kinect.getCalibratedRGBPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
-	image.setImageType(OF_IMAGE_COLOR_ALPHA);
-	
-	
-	unsigned char * pix = kinect.getDepthPixels();
-	int numPixels = kinect.getWidth() * kinect.getHeight();
-	
-	unsigned char * imgPix = image.getPixels();
-	
-	for(int i = 0; i < numPixels; i++){
-		imgPix[i*4+3] = pix[i];
-	}
-	
-	image.saveImage("grab.png");
-	
-}
+
 
 //--------------------------------------------------------------
 void testApp::keyPressed (int key) {
@@ -426,41 +271,34 @@ void testApp::keyPressed (int key) {
 			
 		case 'f':
 			mode = TEETER_MODE_PLANE;
-			points.clear();
-			normals.clear();
+			segmentator.clear();
+			break;
+		case 'k':
+			segmentator.save();
 			break;
 			
 		case 'r':
-			mode = TEETER_MODE_ROI_LEFT_TOP;
-			
+			mode = TEETER_MODE_ROI;
 			break;
 			
 		case 'm':
 			displayMode = (displayMode+1) % 3;
 			break;
 
-		case OF_KEY_LEFT: {
-			m_distance-=0.25;
-			m_teeter->DestroyFixture(m_fixture2);
-			b2PolygonShape shape;
-			shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
-			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
-			m_teeter->SetAwake(true);
-		} break;
+		case OF_KEY_LEFT: 
+			m_bias-=0.1;
+			teeter.displace(m_bias);
 			
-		case OF_KEY_RIGHT: {
-			m_distance+=0.25;
-			m_teeter->DestroyFixture(m_fixture2);
-			b2PolygonShape shape;
-			shape.SetAsBox(0.25f, 1.0f, b2Vec2(m_distance, 1.0f), 0.0f);
-			m_fixture2 = m_teeter->CreateFixture(&shape, 5.0f);
-			m_teeter->SetAwake(true);
-		} break;
+			break;
+			
+		case OF_KEY_RIGHT: 
+			m_bias+=0.1;
+			teeter.displace(m_bias);
+			break;
 			
 		case 's':
-			if (!contourFinder.blobs.empty()) {
-				m_position = contourFinder.blobs.front().centroid.x;
-			} 
+			teeter.setCenter();
+			
 			break;
 
 	}
@@ -486,44 +324,20 @@ void testApp::mousePressed(int x, int y, int button)
 	
 	
 	switch (mode) {
-		case TEETER_MODE_PLANE:
-			points.push_back(kinect.getWorldCoordinateFor(kx*kinect.getWidth(), ky*kinect.getHeight()));
+		case TEETER_MODE_PLANE: {
+			ofxVec3f vec = kinect.getWorldCoordinateFor(kx*kinect.getWidth(), ky*kinect.getHeight());
+			segmentator.addVector(vec);
 			
-			if (points.size()>=4) {
+			if (segmentator.getIsReady()) {
 				mode=TEETER_MODE_IDLE;
-				ofxVec3f floorNormal = -(points[1]-points[0]).cross(points[2]-points[0]);
-				floorNormal.normalize();
 				
-				
-				for (int i=0; i<4; i++) {
-					ofxVec3f normal = -(points[(i+1) % 4]-points[i]).cross(floorNormal);
-					normal.normalize();
-					normals.push_back(normal);
-				}
-							
-				normals.push_back(-floorNormal);
-				//if (m_normal[2] < 0) {
-//					m_normal = -m_normal;
-//				}
-				
-				//m_ground_plane = Plane(normal, p0);
 			}
+		} break;
+			
+		case TEETER_MODE_ROI:
+			mouseDown = ofPoint(x,y);
+						
 			break;
-			
-		case TEETER_MODE_ROI_LEFT_TOP:
-			roi.x = kx*kinect.getWidth();
-			roi.y = ky*kinect.getHeight();
-			mode =TEETER_MODE_ROI_RIGHT_BOTTOM;
-			break;
-			
-		case TEETER_MODE_ROI_RIGHT_BOTTOM:
-			roi.width = kx*kinect.getWidth() - roi.x;
-			roi.height = ky*kinect.getHeight() - roi.y;
-			grayImage.setROI(roi);
-			mode =TEETER_MODE_IDLE;
-			break;
-			
-			
 			
 		default:
 			break;
@@ -533,7 +347,21 @@ void testApp::mousePressed(int x, int y, int button)
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button)
 {
-
+	if (mode == TEETER_MODE_ROI) {
+		ofRectangle rect;
+		
+		rect.x = (mouseDown.x-10.0)/400.0*kinect.getWidth();
+		rect.y = (mouseDown.y-10.0)/300.0*kinect.getHeight();
+		rect.width = (x-mouseDown.x)/400.0*kinect.getWidth();
+		rect.height = (y-mouseDown.y)/300.0*kinect.getHeight();
+		segmentator.setROI(rect);
+		//grayImage.setROI(rect);
+		mode =TEETER_MODE_IDLE;
+	}
+	
+	
+	
+	
 }
 
 //--------------------------------------------------------------
@@ -542,3 +370,30 @@ void testApp::windowResized(int w, int h)
 
 }
 
+
+
+//--------------------------------------------------------------
+void testApp::exit() {
+	kinect.setCameraTiltAngle(0); // zero the tilt on exit
+	kinect.close();
+}
+
+
+void testApp::saveImage() {
+	ofImage image;
+	image.setFromPixels(kinect.getCalibratedRGBPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
+	image.setImageType(OF_IMAGE_COLOR_ALPHA);
+	
+	
+	unsigned char * pix = kinect.getDepthPixels();
+	int numPixels = kinect.getWidth() * kinect.getHeight();
+	
+	unsigned char * imgPix = image.getPixels();
+	
+	for(int i = 0; i < numPixels; i++){
+		imgPix[i*4+3] = pix[i];
+	}
+	
+	image.saveImage("grab.png");
+}
+	
