@@ -11,13 +11,7 @@
 #include "ofxXmlSettings.h"
 
 
-void ofxInteractiveTutorial::addSlide(string& text,int delay,int tag) {
-	slide s;
-	s.text = text;
-	s.delay = delay;
-	s.tag = tag;
-	slides.push_back(s);
-}
+
 
 void ofxInteractiveTutorial::loadFile(string filename) {
 	this->filename = filename;
@@ -31,8 +25,9 @@ void ofxInteractiveTutorial::loadFile(string filename) {
 	xml.pushTag("tutorial");
 	
 	for (int i=0; i<xml.getNumTags("slide"); i++) {
-		slide s;
+		tutorialSlide s;
 		s.text = xml.getValue("slide", "", i);
+		s.predelay = xml.getAttribute("slide", "predelay", 0,i);
 		s.delay = xml.getAttribute("slide", "delay", 0,i);
 		s.tag = xml.getAttribute("slide", "tag", 0,i);
 		slides.push_back(s);
@@ -44,7 +39,14 @@ void ofxInteractiveTutorial::loadFile(string filename) {
 
 void ofxInteractiveTutorial::start() {
 	citer = slides.begin();
-	state = TUTORIAL_READY;
+	state = citer->predelay ? TUTORIAL_PRE_DELAY : TUTORIAL_READY;
+	bNeedRefresh = true;
+	cout << "ofxInteractiveTutorial::start - refresh" << endl;
+	
+	
+	if (state == TUTORIAL_PRE_DELAY) {
+		timerStart = ofGetElapsedTimeMillis();
+	}
 }
 
 
@@ -56,34 +58,58 @@ void ofxInteractiveTutorial::skip() {
 	
 	timerStart = ofGetElapsedTimeMillis();
 	state = TUTORIAL_TIMER_STARTED;
-	
+	bNeedRefresh = true;
+	cout << "ofxInteractiveTutorial::skip - refresh" << endl;
 }
 
 
-void ofxInteractiveTutorial::next() {
-	citer++;
-	
-	if (citer==slides.end()) {
-		state =  TUTORIAL_IDLE;
-		timesCompleted++;
-		ofxXmlSettings xml;
-		bool bLoaded = xml.loadFile(filename);
-		assert(bLoaded);
-		xml.setAttribute("tutorial", "timesCompleted", timesCompleted,0);
-		xml.saveFile(filename);
-		
-	} else {
-		state = TUTORIAL_READY;
-	}
-}
+
 
 void ofxInteractiveTutorial::update() {
-	if (citer!=slides.end() && state == TUTORIAL_TIMER_STARTED && ofGetElapsedTimeMillis()-timerStart > citer->delay) {
-		
-		next();
-		
-		//cout << *citer << endl;
+	if (citer==slides.end()) {
+		return;
 	}
+	
+	
+	switch (state) {
+		case TUTORIAL_TIMER_STARTED:
+			if (ofGetElapsedTimeMillis()-timerStart > citer->delay) {
+				bNeedRefresh = true;
+				cout << "ofxInteractiveTutorial::update - TUTORIAL_TIMER_STARTED - eneded - refresh" << endl;
+				citer++;
+				
+				if (citer==slides.end()) {
+					state =  TUTORIAL_IDLE;
+					timesCompleted++;
+					ofxXmlSettings xml;
+					bool bLoaded = xml.loadFile(filename);
+					assert(bLoaded);
+					xml.setAttribute("tutorial", "timesCompleted", timesCompleted,0);
+					xml.saveFile(filename);
+					
+				} else {
+					state = citer->predelay ? TUTORIAL_PRE_DELAY : TUTORIAL_READY;
+					
+					if (state == TUTORIAL_PRE_DELAY) {
+						timerStart = ofGetElapsedTimeMillis();
+					}
+				}
+				
+				//cout << *citer << endl;
+			}
+			
+			break;
+		case TUTORIAL_PRE_DELAY:
+			if (ofGetElapsedTimeMillis()-timerStart > citer->predelay) {
+				state = TUTORIAL_READY;
+				bNeedRefresh = true;
+				cout << "ofxInteractiveTutorial::update - TUTORIAL_PRE_DELAY - ended - refresh" << endl;
+			}
+		default:
+			break;
+	}
+	
+	
 }
 
 
@@ -113,5 +139,13 @@ void ofxInteractiveTutorial::setState(int state) {
 
 int ofxInteractiveTutorial::getTimesCompleted() {
 	return timesCompleted;
+}
+
+bool ofxInteractiveTutorial::getIsNeedRefresh() {
+	return bNeedRefresh;
+}
+
+void ofxInteractiveTutorial::setRefreshed() {
+	bNeedRefresh = false;
 }
 
