@@ -36,22 +36,30 @@ void ofxInteractiveSlides::loadFile(string filename) {
 	
 	xml.popTag();
 	
-	
+	citer==slides.end();
 	
 }
 
-
+void ofxInteractiveSlides::reset() {
+	timerStart = ofGetElapsedTimeMillis();
+}
 
 void ofxInteractiveSlides::start(int slideNum) {
-	if (state==SLIDE_IDLE && !slides[slideNum].done) {
-		citer = slides.begin()+slideNum;
-		state = citer->predelay ? SLIDE_PRE_DELAY : SLIDE_READY;
-		bNeedRefresh = true;
+	vector<slide>::iterator iter = slides.begin()+slideNum;
+	
+	if (state==SLIDE_IDLE && !iter->done) {
+		
+		if (!iter->delay || ofGetElapsedTimeMillis()-timerStart>iter->delay) {
+			citer = iter;
+			state = citer->predelay ? SLIDE_PRE_DELAY : SLIDE_READY;
+			bNeedRefresh = true;
+		}
+		
 	}
 	
 		
 	if (state == SLIDE_PRE_DELAY) {
-		timerStart = ofGetElapsedTimeMillis();
+		preTimerStart = ofGetElapsedTimeMillis();
 	}
 	
 	
@@ -59,51 +67,27 @@ void ofxInteractiveSlides::start(int slideNum) {
 
 void ofxInteractiveSlides::done(int slideNum) {
 	if (state!=SLIDE_DONE) {
-		slides[slideNum].done = true;
-		state=SLIDE_IDLE;
-		citer = slides.begin();
-		
-		vector<slide>::iterator iter;
-		for (iter=slides.begin();iter!=slides.end();iter++ ) {
-			if (!iter->done) {
-				break;
-			}
+		vector<slide>::iterator iter = slides.begin()+slideNum;
+		if (citer!=slides.end() && iter==citer) {
+			skip();
+		} else {
+			iter->done = true;
+			eval();
 		}
-		
-		if (iter==slides.end()) {
-			state =  SLIDE_DONE;
-			timesCompleted++;
-			ofxXmlSettings xml;
-			bool bLoaded = xml.loadFile(filename);
-			assert(bLoaded);
-			xml.setAttribute("slide", "timesCompleted", timesCompleted,0);
-			xml.saveFile(filename);
-			
-		} 
-		
-		bNeedRefresh = true;
-		
 	}
-}
-
-bool ofxInteractiveSlides::getIsDone(int slideNum) {
-	
-	return slides[slideNum].done;
 }
 
 void ofxInteractiveSlides::skip() {
-	if (state==SLIDE_DONE ) {
-		return;
-	}
+	assert(state!=SLIDE_DONE);
 	
 	
+	citer->done = true;
+	citer = slides.end();
 	timerStart = ofGetElapsedTimeMillis();
-	state = SLIDE_TIMER_STARTED;
+	state = SLIDE_IDLE;
 	bNeedRefresh = true;
+	eval();
 }
-
-
-
 
 void ofxInteractiveSlides::update() {
 	if (state==SLIDE_IDLE || state==SLIDE_DONE) {
@@ -112,27 +96,47 @@ void ofxInteractiveSlides::update() {
 	
 	
 	switch (state) {
-		case SLIDE_TIMER_STARTED: 
-			if (ofGetElapsedTimeMillis()-timerStart > citer->delay) {
-				state=SLIDE_IDLE;
-				citer = slides.end();
-				bNeedRefresh = true;
-				//cout << *citer << endl;
-			}
-			
-			break;
 		case SLIDE_PRE_DELAY:
-			if (ofGetElapsedTimeMillis()-timerStart > citer->predelay) {
+			if (ofGetElapsedTimeMillis()-preTimerStart > citer->predelay) {
 				state = SLIDE_READY;
 				bNeedRefresh = true;
 			}
 		default:
 			break;
 	}
-	
-	
-	
 }
+
+
+void ofxInteractiveSlides::eval() {
+	vector<slide>::iterator iter;
+	for (iter=slides.begin();iter!=slides.end();iter++ ) {
+		if (!iter->done) {
+			break;
+		}
+	}
+	
+	if (iter==slides.end()) {
+		state =  SLIDE_DONE;
+		timesCompleted++;
+		ofxXmlSettings xml;
+		bool bLoaded = xml.loadFile(filename);
+		assert(bLoaded);
+		xml.setAttribute("slide", "timesCompleted", timesCompleted,0);
+		xml.saveFile(filename);
+		
+	} 
+}
+
+bool ofxInteractiveSlides::getIsDone(int slideNum) {
+	
+	return slides[slideNum].done;
+}
+
+
+
+
+
+
 
 
 int	ofxInteractiveSlides::getCurrentSlideNumber() {

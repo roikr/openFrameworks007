@@ -19,7 +19,6 @@ enum {
 	SLIDE_IDLE,
 	SLIDE_PRE_DELAY,
 	SLIDE_READY,
-	SLIDE_TIMER_STARTED,
 	SLIDE_DONE
 };
 
@@ -36,10 +35,12 @@ public:
 	ofxInteractiveSlides() : state(SLIDE_IDLE),bNeedRefresh(false) {};	
 	
 	void loadFile(string filename);
+	void reset();
 	void start(int slideNum);
 	void skip();
 	void done(int slideNum);
 	void update();
+	
 	int	 getCurrentSlideNumber();
 	bool getIsDone(int slideNum);
 	int	 getCurrentSlideTag();
@@ -50,15 +51,14 @@ public:
 	void setRefreshed();
 	
 private:
-	
-	void next();
+	void eval();
 	
 	void setState(int state);
 
 	vector<slide> slides;
 	vector<slide>::iterator citer;
 	
-		
+	int preTimerStart;	
 	int timerStart;
 	int state;
 	int timesCompleted;
