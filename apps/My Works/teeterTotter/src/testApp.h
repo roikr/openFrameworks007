@@ -3,13 +3,17 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
-
-
+#include "Box2D.h"
+#include "Render.h"
+#include "ofxCoordinator.h"
+#include "Teeter.h"
+#include "ofxSimpleSegmentator.h"
 
 class testApp : public ofBaseApp {
 	public:
-
+		testApp() : m_world(b2Vec2(0.0f,-10.0f),true) {};
 		void setup();
+	void setupPhysics();
 		void update();
 		void draw();
 		void exit();
@@ -37,12 +41,28 @@ class testApp : public ofBaseApp {
 		
 		void saveImage();
 		
-		vector<ofxVec3f> points;
-		vector<ofxVec3f> normals;
+		
 		
 		int mode;
 		int displayMode;
 	
-		ofRectangle roi;
 		
+	
+		b2World m_world;
+		b2Body* m_ground;
+		Teeter teeter;
+		
+		int32 velocityIterations;
+		int32 positionIterations;
+		float32 timeStep;
+		
+		DebugDraw m_debugDraw;
+		
+		ofxCoordinator coordinator;
+	
+		float32 m_bias;
+	
+		ofxSimpleSegmentator segmentator;
+		ofPoint mouseDown;
+	
 };
