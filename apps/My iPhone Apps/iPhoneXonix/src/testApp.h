@@ -4,7 +4,7 @@
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
 #include "ofxLine.h"
-#include "ofxiFBO.h"
+#include "ofxiTFBO.h"
 #include "cv.h"
 
 
@@ -43,7 +43,7 @@ public:
 	
 	bool bConnected;
 	
-	ofxiFBO fbo;
+	ofxiTFBO fbo;
 	
 	bool bFill;
 	bool bFilled;
@@ -53,6 +53,7 @@ public:
 	vector<evil> evils;
 	
 	IplImage* imagen;
+	
 };
 
 

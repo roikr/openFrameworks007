@@ -11,7 +11,7 @@ void testApp::setup(){
 	w = ofGetWidth();
 	h = ofGetHeight();
 	
-	imagen = cvCreateImage( cvSize(w,h), IPL_DEPTH_8U, 3 );
+	imagen = cvCreateImage( cvSize(w,h), IPL_DEPTH_8U, 1 );
 	
 	texSize = 512;
 	tex.allocate(texSize,texSize,GL_RGBA);
@@ -149,19 +149,56 @@ void testApp::draw(){
 		
 		for (int i=0; i<h;i++) {
 			for (int j=0; j<w; j++) {
-				imagen->imageData[(i*w+j)*3] = pixels[(i*texSize+j)*4];
-				imagen->imageData[(i*w+j)*3+1] = pixels[(i*texSize+j)*4+1];
-				imagen->imageData[(i*w+j)*3+2] = pixels[(i*texSize+j)*4+2];
-				
+				imagen->imageData[i*w+j] = pixels[(i*texSize+j)*4];
 			}
 		}
-		cvFloodFill(imagen, cvPoint(fill1.x, fill1.y), CV_RGB( 0, 255, 0 )  );
-		cvFloodFill(imagen, cvPoint(fill2.x, fill2.y), CV_RGB( 255, 0, 0 )  );
+		
+		vector<evil >::iterator eiter;
+		//for (eiter = evils.begin(); eiter!=evils.end(); eiter++) {
+//			imagen->imageData[(int)eiter->pos.y * w + (int)eiter->pos.x ]=192;
+//		}
+		
+		IplImage* tempImagen = cvCloneImage(imagen);
+		
+		cvFloodFill(tempImagen, cvPoint(fill1.x, fill1.y), cvScalarAll(64)  );
+		
+		for (eiter = evils.begin(); eiter!=evils.end(); eiter++) {
+			if ((unsigned char)tempImagen->imageData[(int)eiter->pos.y * w + (int)eiter->pos.x ]==64) {
+				break;
+			}
+		}
+		
+		if (eiter==evils.end()) {
+			imagen = cvCloneImage(tempImagen);
+		} else {
+			tempImagen = cvCloneImage(imagen);
+		}
+
+		
+		
+		cvFloodFill(tempImagen, cvPoint(fill2.x, fill2.y), cvScalarAll(128)  );
+		
+		
+		for (eiter = evils.begin(); eiter!=evils.end(); eiter++) {
+			if ((unsigned char)tempImagen->imageData[(int)eiter->pos.y * w + (int)eiter->pos.x ]==128) {
+				break;
+			}
+		}
+		
+		if (eiter==evils.end()) {
+			imagen = cvCloneImage(tempImagen);
+		}
+		
+		
+		
+		//cvFloodFill(imagen, cvPoint(fill2.x, fill2.y), cvScalarAll(255)  );
+		
+		
+		
 		for (int i=0; i<h;i++) {
 			for (int j=0; j<w; j++) {
-				pixels[(i*texSize+j)*4] = imagen->imageData[(i*w+j)*3];
-				pixels[(i*texSize+j)*4+1] = imagen->imageData[(i*w+j)*3+1];
-				pixels[(i*texSize+j)*4+2] = imagen->imageData[(i*w+j)*3+2];
+				pixels[(i*texSize+j)*4] = imagen->imageData[i*w+j];
+				
 				
 			}
 		}
@@ -286,8 +323,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-	bFill = true;
-	fill1=ofPoint(touch.x,touch.y);
+	
 	
 	
 }
