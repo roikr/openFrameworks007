@@ -16,7 +16,7 @@
 #define SINT16_MAX 32767.0
 #define LOADING_BUFFER_SIZE 8192
 
-#define LOG_AUDIO_FILE
+//#define LOG_AUDIO_FILE
 
 #include <iostream>
 

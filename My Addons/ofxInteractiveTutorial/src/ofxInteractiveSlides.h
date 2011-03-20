@@ -61,7 +61,6 @@ private:
 	int preTimerStart;	
 	int timerStart;
 	int state;
-	int timesCompleted;
 	string filename;
 	
 	bool bNeedRefresh;

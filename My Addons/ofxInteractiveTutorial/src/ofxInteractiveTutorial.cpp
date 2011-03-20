@@ -11,6 +11,7 @@
 #include "ofxXmlSettings.h"
 
 
+//#define LOG_INTERACTIVE_TUTORIAL
 
 
 void ofxInteractiveTutorial::loadFile(string filename) {
@@ -41,7 +42,10 @@ void ofxInteractiveTutorial::start() {
 	citer = slides.begin();
 	state = citer->predelay ? TUTORIAL_PRE_DELAY : TUTORIAL_READY;
 	bNeedRefresh = true;
+	
+#ifdef LOG_INTERACTIVE_TUTORIAL
 	cout << "ofxInteractiveTutorial::start - refresh" << endl;
+#endif
 	
 	
 	if (state == TUTORIAL_PRE_DELAY) {
@@ -59,7 +63,9 @@ void ofxInteractiveTutorial::skip() {
 	timerStart = ofGetElapsedTimeMillis();
 	state = TUTORIAL_TIMER_STARTED;
 	bNeedRefresh = true;
+#ifdef LOG_INTERACTIVE_TUTORIAL
 	cout << "ofxInteractiveTutorial::skip - refresh" << endl;
+#endif
 }
 
 
@@ -75,7 +81,9 @@ void ofxInteractiveTutorial::update() {
 		case TUTORIAL_TIMER_STARTED:
 			if (ofGetElapsedTimeMillis()-timerStart > citer->delay) {
 				bNeedRefresh = true;
+#ifdef LOG_INTERACTIVE_TUTORIAL
 				cout << "ofxInteractiveTutorial::update - TUTORIAL_TIMER_STARTED - eneded - refresh" << endl;
+#endif
 				citer++;
 				
 				if (citer==slides.end()) {
@@ -103,7 +111,9 @@ void ofxInteractiveTutorial::update() {
 			if (ofGetElapsedTimeMillis()-timerStart > citer->predelay) {
 				state = TUTORIAL_READY;
 				bNeedRefresh = true;
+#ifdef LOG_INTERACTIVE_TUTORIAL
 				cout << "ofxInteractiveTutorial::update - TUTORIAL_PRE_DELAY - ended - refresh" << endl;
+#endif
 			}
 		default:
 			break;
