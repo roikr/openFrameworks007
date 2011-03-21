@@ -10,6 +10,9 @@
 
 struct evil {
 	ofPoint pos;
+	ofPoint cpos;
+	ofPoint vel;
+	int time;
 };
 
 class testApp : public ofxiPhoneApp {

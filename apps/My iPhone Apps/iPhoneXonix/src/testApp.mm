@@ -36,7 +36,9 @@ void testApp::setup(){
 	
 	for (int i=0; i<5; i++) {
 		evil e;
-		e.pos = ofPoint(ofRandom(25, ofGetWidth()-25),ofRandom(25, ofGetHeight()-25));
+		e.cpos = e.pos = ofPoint(ofRandom(25, ofGetWidth()-25),ofRandom(25, ofGetHeight()-25));
+		e.vel = ofPoint(ofRandom(20, 50)*(ofRandomf()>0.5 ? -1.0f :1.0f), ofRandom(20, 50)*(ofRandomf()>0.5 ? -1.0f :1.0f));
+		e.time = ofGetElapsedTimeMillis();
 		evils.push_back(e);
 	}
 	
@@ -49,7 +51,30 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 	
-	
+	for (vector<evil>::iterator iter=evils.begin(); iter!=evils.end(); iter++) {
+		float timeDiff = (ofGetElapsedTimeMillis()-iter->time)/1000.0;
+		ofPoint temp = iter->pos+iter->vel*timeDiff;
+		
+		ofxLine line = ofxLine(iter->cpos,temp);
+		vector<ofxLine >::iterator liter;
+		for (liter = lines.begin(); liter!=lines.end(); liter++) {
+			ofPoint p;
+			if (line.getInterception(*liter,p)) {
+				float t = (p.x-iter->pos.x)/(temp.x-iter->pos.x);
+				cout << t << " " << timeDiff << endl;
+				iter->vel *=-1;
+				temp = iter->pos = p+iter->vel*(1.0f-t)*timeDiff;
+				
+				iter->time = ofGetElapsedTimeMillis();
+				break;
+			}
+		}
+		
+		
+		iter->cpos = temp;
+		
+		
+	}
 	
 	//texGray.loadData(grayPixels, w,h, GL_LUMINANCE); 
 	
@@ -234,7 +259,7 @@ void testApp::draw(){
 	
 	ofNoFill();
 	for (vector<evil >::iterator eiter = evils.begin(); eiter!=evils.end(); eiter++) {
-		ofCircle(eiter->pos.x, eiter->pos.y, 5);
+		ofCircle(eiter->cpos.x, eiter->cpos.y, 3);
 	}
 	
 }
