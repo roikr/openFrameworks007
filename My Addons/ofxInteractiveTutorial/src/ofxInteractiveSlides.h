@@ -1,5 +1,5 @@
 /*
- *  ofxInteractiveTutorial.h
+ *  ofxInteractiveSlides.h
  *  interactiveTutorialExample
  *
  *  Created by Roee Kremer on 1/11/11.
@@ -16,32 +16,34 @@
 using namespace std;
 
 enum {
-	TUTORIAL_IDLE,
-	TUTORIAL_PRE_DELAY,
-	TUTORIAL_READY,
-	TUTORIAL_TIMER_STARTED,
+	SLIDE_IDLE,
+	SLIDE_PRE_DELAY,
+	SLIDE_READY,
+	SLIDE_DONE
 };
 
-struct tutorialSlide {
+struct slide {
 	int tag;
 	int predelay;
 	int delay;
 	string text;
+	bool done; // for extra
 };
 
-class ofxInteractiveTutorial {
+class ofxInteractiveSlides {
 public:
-	ofxInteractiveTutorial() : state(TUTORIAL_IDLE),bNeedRefresh(false) {};	
+	ofxInteractiveSlides() : state(SLIDE_IDLE),bNeedRefresh(false) {};	
 	
 	void loadFile(string filename);
-	void start();
+	void reset();
+	void start(int slideNum);
 	void skip();
-	
+	void done(int slideNum);
 	void update();
 	
-	int	 getCurrentSlideTag();
 	int	 getCurrentSlideNumber();
-	
+	bool getIsDone(int slideNum);
+	int	 getCurrentSlideTag();
 	int getTimesCompleted();
 	int getState();
 	
@@ -49,20 +51,20 @@ public:
 	void setRefreshed();
 	
 private:
-	
-	string getCurrentSlideText();
+	void eval();
 	
 	void setState(int state);
 
-	vector<tutorialSlide> slides;
-	vector<tutorialSlide>::iterator citer;
+	vector<slide> slides;
+	vector<slide>::iterator citer;
 	
+	int preTimerStart;	
 	int timerStart;
 	int state;
-	int timesCompleted;
 	string filename;
 	
 	bool bNeedRefresh;
+	
 	
 };
 
