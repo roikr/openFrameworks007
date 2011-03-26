@@ -13,8 +13,7 @@
 Teeter::Teeter(b2World *m_world,float32 t,b2Body *parent,b2Vec2 position,bool bLeaf) {
 	float32 p =t/2;
 	this->position = position;
-	
-	
+		
 	
 	b2BodyDef teeterDef;
 	teeterDef.type = b2_dynamicBody;
@@ -76,6 +75,8 @@ Teeter::Teeter(b2World *m_world,float32 t,b2Body *parent,b2Vec2 position,bool bL
 	bias = 1.0f;
 	bDown = false;
 	stepCount = 0;
+	scale = 4.0f/teeterMeasure;
+
 }
 
 

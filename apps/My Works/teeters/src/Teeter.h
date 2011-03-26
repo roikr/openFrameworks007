@@ -30,6 +30,7 @@ public:
 	b2Body * teeter;
 	bool bDown;
 	b2Vec2 position;
+	float32 scale;
 	float32 teeterMeasure;
 
 private:

@@ -1,5 +1,5 @@
 #include "testApp.h"
-
+#include "easing.h"
 //--------------------------------------------------------------
 void testApp::setup(){
 	
@@ -47,8 +47,6 @@ void testApp::setup(){
 	teeters.push_back(teeter);
 
 	current = teeters.begin();
-	centerPos = (*current)->position;
-	scale = 4.0f/(*current)->teeterMeasure;
 	
 	ofSetFrameRate(60);
 	
@@ -60,7 +58,7 @@ void testApp::setup(){
 	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 20);
 
 	
-	
+	bTrans = false;
 	ofBackground(0, 0, 0);
 	
 }
@@ -85,6 +83,21 @@ void testApp::update(){
 //	float angle = body->GetAngle();
 //	printf("%4.2f %4.2f %4.2f\n",position.x,position.y,angle);
 	
+	if (bTrans) {
+		float t = (float)(ofGetElapsedTimeMillis() - animStart)/1000.0;
+		if (t >= 1) {
+			current=current-1;
+			bTrans = false;
+		} else {
+			
+			
+			scale = easeInOutQuad(t,scale,(*(current-1))->scale);
+			position.x = easeInOutQuad(t,position.x,(*(current-1))->position.x);
+			position.y = easeInOutQuad(t,position.y,(*(current-1))->position.y);
+		}
+		
+	}
+	
 }
 
 //--------------------------------------------------------------
@@ -95,8 +108,16 @@ void testApp::draw(){
 //	float scale = 1;
 //	ofScale(scale, -scale, 1.0);
 	coordinator.pushTransform();
-	ofScale(scale, scale, 1.0f);
-	ofTranslate(-centerPos.x, -centerPos.y, 0.0f);
+	
+	if (bTrans) {
+		ofScale(scale, scale, 1.0f);
+		ofTranslate(-position.x, -position.y, 0.0f);
+	} else {
+		ofScale((*current)->scale, (*current)->scale, 1.0f);
+		ofTranslate(-(*current)->position.x, -(*current)->position.y, 0.0f);
+	}
+
+	
 	
 	
 	m_world.DrawDebugData();
@@ -169,11 +190,15 @@ void testApp::keyPressed(int key){
 			current = teeters.begin()+2;
 			break;
 			
-		case 'z':
-			centerPos = (*current)->position;
-			scale = 4.0f/(*current)->teeterMeasure;
-
+		case 'n':
+			if (current!=teeters.begin()) {
+				scale = (*current)->scale;
+				position = (*current)->position;
+				animStart = ofGetElapsedTimeMillis();
+				bTrans = true;
+			}
 			break;
+
 			
 		case 't':
 			(*current)->joint->EnableLimit(!(*current)->joint->IsLimitEnabled());
