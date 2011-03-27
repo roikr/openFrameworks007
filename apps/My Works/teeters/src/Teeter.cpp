@@ -124,8 +124,13 @@ void Teeter::update(int32 m_stepCount) {
 
 void Teeter::updateBlob(ofxCvBlob& blob) {
 	this->blob = blob;
-	bias = (blob.centroid.x-centerBlob.centroid.x)/10;
-	displace();
+	float32 center = blob.centroid.x-centerBlob.centroid.x;
+	if (center > -20 && center < 20) {
+		bias = 1+center/20;
+		displace();
+	}
+	
+	
 }
 
 void Teeter::setCenter() {
