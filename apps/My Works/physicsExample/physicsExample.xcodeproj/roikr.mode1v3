@@ -301,7 +301,7 @@
 							<real>250</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>1723 305 1092 745 1680 250 1280 800 </string>
+						<string>382 198 1092 745 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -331,7 +331,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E4741B49132912E700F8592B</string>
+										<string>E46B658D1339F361002C3285</string>
 										<key>history</key>
 										<array>
 											<string>E43FE2EE12DB0B680087544C</string>
@@ -344,7 +344,7 @@
 											<string>E49F46FA13282F3D009F01E3</string>
 											<string>E49F46FB13282F3D009F01E3</string>
 											<string>E49F46FC13282F3D009F01E3</string>
-											<string>E41FCB6B132839F900575661</string>
+											<string>E46B65811339F2BD002C3285</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -358,7 +358,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {820, 699}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1723 305 1092 745 1680 250 1280 800 </string>
+								<string>382 198 1092 745 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -378,7 +378,7 @@
 								<key>Frame</key>
 								<string>{{0, 704}, {820, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1723 305 1092 745 1680 250 1280 800 </string>
+								<string>382 198 1092 745 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -402,9 +402,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>E4741B4A132912E700F8592B</string>
+				<string>E46B658E1339F361002C3285</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>E4741B4B132912E700F8592B</string>
+				<string>E46B658F1339F361002C3285</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -546,7 +546,7 @@
 		<string>/Users/roikr/Developer/of_preRelease_v0062_osxSL_FAT/apps/My Works/physicsExample/physicsExample.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>1723 305 1092 745 1680 250 1280 800 </string>
+	<string>382 198 1092 745 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -623,7 +623,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>E49C365D11CE02ED007306B8</string>
-				<string>E4741B4C132912E700F8592B</string>
+				<string>E46B65901339F361002C3285</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -745,13 +745,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>E41FCB6C132839F900575661</string>
+				<string>E46B65771339F29C002C3285</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>E41FCB6D132839F900575661</string>
-				<string>E41FCB6E132839F900575661</string>
-				<string>E41FCB6F132839F900575661</string>
-				<string>E41FCB70132839F900575661</string>
-				<string>E41FCB71132839F900575661</string>
+				<string>E46B65781339F29C002C3285</string>
+				<string>E46B65791339F29C002C3285</string>
+				<string>E46B657A1339F29C002C3285</string>
+				<string>E46B657B1339F29C002C3285</string>
+				<string>E46B657C1339F29C002C3285</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -905,7 +905,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>E41FCB72132839F900575661</string>
+				<string>E46B657D1339F29C002C3285</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>

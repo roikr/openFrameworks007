@@ -58,7 +58,7 @@ void testApp::setup() {
 	ofSetFrameRate(60);
 
 	// zero the tilt on startup
-	angle = -30;
+	angle = -10;
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
