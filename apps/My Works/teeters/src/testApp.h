@@ -24,6 +24,8 @@ class testApp : public ofBaseApp, public b2ContactListener{
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 	
+		void nextTeeter();
+	
 		void BeginContact(b2Contact* contact);
 		void EndContact(b2Contact* contact);
 	

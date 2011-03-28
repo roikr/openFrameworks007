@@ -24,30 +24,38 @@ enum {
 class Teeter  {
 public:
 	Teeter(b2World *m_world,float32 t,b2Body *parent,b2Vec2 position,bool bLeaf = false);
-	void draw();
+	
 	void log(ostringstream& ss);
 	void update();
 	
 	void start();
 
+	void drawBlob();
 	void updateBlob(ofxCvBlob& blob);
-	void setCenter();
 	void displace(float32 bias);
 	b2RevoluteJoint * getJoint();
+	
 
 	void setState(int state);
 	int getState();
+	void getTransform(b2Vec2 &pos,float32 &scale);
+	void transform();
+	b2Body *getBody();
 	
-	b2Body * teeter;
 	
-	b2Vec2 position;
-	float32 scale;
-	float32 teeterMeasure;
+	
+	
+	
 	
 	
 	
 private:
 	
+	b2Vec2 position;
+	float32 scale;
+	
+	b2Body * teeter;
+	float32 teeterMeasure;
 	
 	int state;
 	

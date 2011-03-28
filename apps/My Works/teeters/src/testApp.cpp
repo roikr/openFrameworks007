@@ -40,10 +40,10 @@ void testApp::setup(){
 	Teeter *teeter = new Teeter(&m_world,4.0f,ground,b2Vec2(0.0f,0.0f));
 	teeters.push_back(teeter);
 	
-	teeter = new Teeter(&m_world,3.0f,teeter->teeter,b2Vec2(-10.0f,4.0f));
+	teeter = new Teeter(&m_world,3.0f,teeter->getBody(),b2Vec2(-10.0f,4.0f));
 	teeters.push_back(teeter);
 	
-	teeter = new Teeter(&m_world,2.0f,teeter->teeter,b2Vec2(-15.0f,7.0f),true);
+	teeter = new Teeter(&m_world,2.0f,teeter->getBody(),b2Vec2(-15.0f,7.0f),true);
 	teeters.push_back(teeter);
 
 	current = teeters.end()-1;
@@ -87,15 +87,16 @@ void testApp::update(){
 	if (bTrans) {
 		float t = (float)(ofGetElapsedTimeMillis() - animStart)/1000.0;
 		if (t >= 1) {
-			current=current-1;
+			
 			bTrans = false;
 		} else {
 			
-			
-			scale = easeInOutQuad(t,scale,(*(current-1))->scale);
-			position.x = easeInOutQuad(t,position.x,(*(current-1))->position.x);
-			position.y = easeInOutQuad(t,position.y,(*(current-1))->position.y);
-		}
+			b2Vec2 npos;
+			float32 nscale;
+			(*current)->getTransform(npos,nscale);
+			scale = easeInOutQuad(t,scale,nscale);
+			position.x = easeInOutQuad(t,position.x,npos.x);
+			position.y = easeInOutQuad(t,position.y,npos.y);		}
 		
 	}
 	
@@ -114,8 +115,7 @@ void testApp::draw(){
 		ofScale(scale, scale, 1.0f);
 		ofTranslate(-position.x, -position.y, 0.0f);
 	} else {
-		ofScale((*current)->scale, (*current)->scale, 1.0f);
-		ofTranslate(-(*current)->position.x, -(*current)->position.y, 0.0f);
+		(*current)->transform();
 	}
 
 	
@@ -168,6 +168,14 @@ void testApp::EndContact(b2Contact* contact)
 	
 }
 
+void testApp::nextTeeter() {
+	if (current!=teeters.begin()) {
+		(*current)->getTransform(position,scale);
+		current--;
+		animStart = ofGetElapsedTimeMillis();
+		bTrans = true;
+	}
+}
 
 
 //--------------------------------------------------------------
@@ -185,12 +193,7 @@ void testApp::keyPressed(int key){
 			break;
 			
 		case 'n':
-			if (current!=teeters.begin() && !bTrans) {
-				scale = (*current)->scale;
-				position = (*current)->position;
-				animStart = ofGetElapsedTimeMillis();
-				bTrans = true;
-			}
+			nextTeeter();
 			break;
 
 			

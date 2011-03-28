@@ -53,10 +53,10 @@ void testApp::setupPhysics() {
 	Teeter *teeter = new Teeter(&m_world,4.0f,ground,b2Vec2(0.0f,0.0f));
 	teeters.push_back(teeter);
 	
-	teeter = new Teeter(&m_world,3.0f,teeter->teeter,b2Vec2(-10.0f,4.0f));
+	teeter = new Teeter(&m_world,3.0f,teeter->getBody(),b2Vec2(-10.0f,4.0f));
 	teeters.push_back(teeter);
 	
-	teeter = new Teeter(&m_world,2.0f,teeter->teeter,b2Vec2(-15.0f,7.0f),true);
+	teeter = new Teeter(&m_world,2.0f,teeter->getBody(),b2Vec2(-15.0f,7.0f),true);
 	teeters.push_back(teeter);
 	
 	current = teeters.end()-1;
@@ -165,9 +165,7 @@ void testApp::update() {
 		++m_stepCount;
 	}
 	
-	for (vector<Teeter*>::iterator iter = teeters.begin();iter!=teeters.end();iter++) {
-		(*iter)->update(m_stepCount);
-	}
+	(*current)->update();
 	
 	
 	m_world.ClearForces();
@@ -175,14 +173,15 @@ void testApp::update() {
 	if (bTrans) {
 		float t = (float)(ofGetElapsedTimeMillis() - animStart)/1000.0;
 		if (t >= 1) {
-			current=current-1;
 			bTrans = false;
 		} else {
 			
-			
-			scale = easeInOutQuad(t,scale,(*(current-1))->scale);
-			position.x = easeInOutQuad(t,position.x,(*(current-1))->position.x);
-			position.y = easeInOutQuad(t,position.y,(*(current-1))->position.y);
+			b2Vec2 npos;
+			float32 nscale;
+			(*current)->getTransform(npos,nscale);
+			scale = easeInOutQuad(t,scale,nscale);
+			position.x = easeInOutQuad(t,position.x,npos.x);
+			position.y = easeInOutQuad(t,position.y,npos.y);
 		}
 		
 	}
@@ -230,15 +229,18 @@ void testApp::draw() {
 				ofScale(scale, scale, 1.0f);
 				ofTranslate(-position.x, -position.y, 0.0f);
 			} else {
-				ofScale((*current)->scale, (*current)->scale, 1.0f);
-				ofTranslate(-(*current)->position.x, -(*current)->position.y, 0.0f);
+				(*current)->transform();
+				
 			}
 			
 			
 			
 			
 			m_world.DrawDebugData();
-			(*current)->draw();
+			for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
+				(*iter)->drawBlob();
+			}
+			
 			coordinator.popTransform();
 			//	ofPopMatrix();
 			ofDisableSmoothing();
@@ -247,8 +249,7 @@ void testApp::draw() {
 			std::ostringstream ss;
 			
 			ss << ofGetFrameRate() << " " << m_stepCount << endl;
-			ss << (*current)->stepCount << endl;
-			
+			(*current)->log(ss);
 			
 			ofDrawBitmapString(ss.str(), 20, 20);
 			
@@ -313,12 +314,9 @@ void testApp::BeginContact(b2Contact* contact)
 	
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
-		for (vector<Teeter*>::iterator iter = teeters.begin();iter!=teeters.end();iter++) {
-			if (((*iter)->joint == fixtureA->GetUserData() || (*iter)->joint == fixtureB->GetUserData()) && !(*iter)->joint->IsLimitEnabled()) {
-				(*iter)->bDown = true;
-				cout << "contact" << endl;
-				break;
-			}
+		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			(*current)->setState(TEETER_STATE_BROKEN);
+			cout << "contact" << endl;
 		}
 	}
 	
@@ -330,22 +328,24 @@ void testApp::EndContact(b2Contact* contact)
 	b2Fixture* fixtureB = contact->GetFixtureB();
 	
 	
-	
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
-		for (vector<Teeter*>::iterator iter = teeters.begin();iter!=teeters.end();iter++) {
-			if (((*iter)->joint == fixtureA->GetUserData() || (*iter)->joint == fixtureB->GetUserData()) && !(*iter)->joint->IsLimitEnabled()) {
-				(*iter)->bDown = false;
-				cout << "no contact" << endl;
-				break;
-			}
+		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			cout << "no contact" << endl;
 		}
 	}
 	
 }
 
 
-
+void testApp::nextTeeter() {
+	if (current!=teeters.begin()) {
+		(*current)->getTransform(position,scale);
+		current--;
+		animStart = ofGetElapsedTimeMillis();
+		bTrans = true;
+	}
+}
 
 //--------------------------------------------------------------
 void testApp::keyPressed (int key) {
@@ -405,11 +405,7 @@ void testApp::keyPressed (int key) {
 				
 		case DISPLAY_MODE_GAME:
 			switch (key) {
-				case 's':
-					(*current)->setCenter();
-					break;
-					
-					
+									
 				case '1':
 					current = teeters.begin();
 					break;
@@ -420,37 +416,20 @@ void testApp::keyPressed (int key) {
 					current = teeters.begin()+2;
 					break;
 					
+				case 's':
+					(*current)->start();
+					
+					break;
+					
 				case 'n':
-					if (current!=teeters.begin()) {
-						scale = (*current)->scale;
-						position = (*current)->position;
-						animStart = ofGetElapsedTimeMillis();
-						bTrans = true;
-					}
+					nextTeeter();
 					break;
 					
 					
-				case 't':
-					(*current)->joint->EnableLimit(!(*current)->joint->IsLimitEnabled());
-					(*current)->stepCount = m_stepCount;
+				
 					
-					break;
-				case 'e':
-					(*current)->joint->EnableLimit(false);
-					//current->teeter->ApplyTorque(100);
-					break;
 					
-				case OF_KEY_RIGHT: {
-					(*current)->bias-=0.05f;
-					(*current)->displace();
-					
-				} break;
-					
-				case OF_KEY_LEFT: {
-					(*current)->bias+=0.05f;
-					(*current)->displace();
-				} break;
-					
+									
 			} break;
 
 		

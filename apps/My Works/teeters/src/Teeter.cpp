@@ -112,6 +112,7 @@ void Teeter::displace(float32 bias) {
 void Teeter::start() {
 	state = TEETER_STATE_STARTED;
 	joint->EnableLimit(false);
+//	centerBlob = blob;
 }
 
 
@@ -176,6 +177,9 @@ int Teeter::getState() {
 
 void Teeter::updateBlob(ofxCvBlob& blob) {
 	this->blob = blob;
+	if (state==TEETER_STATE_RESTED) {
+		centerBlob = blob;
+	}
 	float32 center = blob.centroid.x-centerBlob.centroid.x;
 	if (center > -20 && center < 20) {
 		bias = 1+center/20;
@@ -190,13 +194,7 @@ b2RevoluteJoint * Teeter::getJoint() {
 }
 
 
-
-void Teeter::setCenter() {
-	centerBlob = blob;
-}
-
-
-void Teeter::draw() {
+void Teeter::drawBlob() {
 	const b2Transform& xf = teeter->GetTransform();
 	
 	b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
@@ -210,23 +208,29 @@ void Teeter::draw() {
 	}
 	
 	ofPushMatrix();
-	ofTranslate((vertices[0].x+vertices[1].x)/2, vertices[0].y, 0);
-	float degree = atan2(vertices[1].y-vertices[0].y, vertices[1].x-vertices[0].x) / M_PI * 180;
-	ofRotate(degree);
+	
+	if (state==TEETER_STATE_RESTED) {
+		ofTranslate((vertices[0].x+vertices[1].x)/2, position.y, 0);
+		
+		float32 blobFactor = 0.1 / scale; // to cancel current teeter scaling
+		ofScale(blobFactor, -blobFactor,1.0f);
+		ofTranslate(-(centerBlob.boundingRect.x+centerBlob.boundingRect.width/2), -(blob.boundingRect.y+blob.boundingRect.height), 0);
+		
+	} else {
+		ofTranslate((vertices[0].x+vertices[1].x)/2, vertices[0].y, 0);
+		float degree = atan2(vertices[1].y-vertices[0].y, vertices[1].x-vertices[0].x) / M_PI * 180;
+		ofRotate(degree);
+		float32 blobFactor = 0.1 / scale; // to cancel current teeter scaling
+		ofScale(blobFactor, -blobFactor,1.0f);
+		ofTranslate(-(centerBlob.boundingRect.x+centerBlob.boundingRect.width/2), -(blob.boundingRect.y+blob.boundingRect.height), 0);
+		
+	}
 
 	
 	
 	
-	ofScale(0.02f, -0.02f,1.0f);
-	
-	ofTranslate(-(centerBlob.boundingRect.x+centerBlob.boundingRect.width/2), -(blob.boundingRect.y+blob.boundingRect.height), 0);
 	ofPushStyle();
-	
-	
-	
-	
 	ofSetColor(0xFFFFFF);
-	
 	
 	ofFill();
 	ofBeginShape();
@@ -244,6 +248,20 @@ void Teeter::draw() {
 	ofPopMatrix();
 	//m_debugDraw->DrawSolidPolygon(vertices, vertexCount, color);
 	
+}
+
+void Teeter::getTransform(b2Vec2 &pos,float32 &scale) {
+	pos = position;
+	scale = this->scale;
+}
+
+void Teeter::transform() {
+	ofScale(scale, scale, 1.0f);
+	ofTranslate(-position.x, -position.y, 0.0f);
+}
+
+b2Body *Teeter::getBody() {		
+	return teeter;
 }
 
 void Teeter::log(ostringstream& ss) {
