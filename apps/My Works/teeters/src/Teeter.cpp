@@ -13,8 +13,7 @@
 Teeter::Teeter(b2World *m_world,float32 t,b2Body *parent,b2Vec2 position,bool bLeaf) {
 	float32 p =t/2;
 	this->position = position;
-	
-	
+		
 	
 	b2BodyDef teeterDef;
 	teeterDef.type = b2_dynamicBody;
@@ -74,13 +73,18 @@ Teeter::Teeter(b2World *m_world,float32 t,b2Body *parent,b2Vec2 position,bool bL
 	teeterMeasure = t;
 	payloadMeasure = p;
 	bias = 1.0f;
-	bDown = false;
-	stepCount = 0;
+	
+	scale = 4.0f/teeterMeasure;
+	state = TEETER_STATE_RESTED;
+	
+	for (int i=0; i<30; i++) {
+		speeds.push_back(0.0f);
+	}
 }
 
 
-void Teeter::displace() {
-	
+void Teeter::displace(float32 bias) {
+	this->bias = bias;
 	float32 t = teeterMeasure;
 	float32 p = payloadMeasure;
 	
@@ -101,38 +105,96 @@ void Teeter::displace() {
 	
 	teeter->SetAwake(true);
 	
+	
+	
+}
+
+void Teeter::start() {
+	state = TEETER_STATE_STARTED;
+	joint->EnableLimit(false);
+//	centerBlob = blob;
 }
 
 
-void Teeter::update(int32 m_stepCount) {
-	if (!joint->IsLimitEnabled() && !bDown) {
-		if (fabs(joint->GetJointSpeed())>b2_epsilon) {
+
+void Teeter::update() {
+	
+	
+	switch (state) {
+		case TEETER_STATE_STARTED: {
+
+			float32 speed = joint->GetJointSpeed();
+			if (fabs(speed) * 180.0/b2_pi > 0.5) {
+				state = TEETER_STATE_UNBALLANCED;
+				
 			
-			stepCount = m_stepCount;
-		}
+				maxSpeed = fabs(speed);
+				
+				for (vector<float32>::iterator iter=speeds.begin();iter!=speeds.end();iter++) {
+					*iter = speed; 
+				}
+				siter = speeds.begin();
+			}
+			
+		}	break;
+			
+		case TEETER_STATE_UNBALLANCED: {
+			(*siter) = joint->GetJointSpeed();
+			siter++;
+			if (siter==speeds.end()) {
+				siter=speeds.begin();
+			}
+			
+			maxSpeed = fabs(speeds.front());
+			for (vector<float32>::iterator iter=speeds.begin()+1;iter!=speeds.end();iter++) {
+				maxSpeed = fmax(maxSpeed,fabs(*iter)); 
+			}
+			
+			
+			if (maxSpeed * 180.0 /  b2_pi < 0.1) {
+				state = TEETER_STATE_BALLANCED;
+				float32 angle = joint->GetJointAngle();
+				joint->SetLimits(angle-b2_pi/72.0f,angle+b2_pi/72.0f); 
+				joint->EnableLimit(true);
+			}
+		}	break;	
 		
-		if (m_stepCount - stepCount > 60) {
-			cout << "no rotation" << endl;
-			float32 angle = joint->GetJointAngle();
-			joint->SetLimits(angle-b2_pi/72.0f,angle+b2_pi/72.0f); // -b2_pi/72.0f
-			joint->EnableLimit(true);
-		}
-		
+		default:
+			break;
 	}
+	
+}
+
+
+
+void Teeter::setState(int state) {
+	this->state = state;
+}
+
+int Teeter::getState() {
+	return this->state;
 }
 
 void Teeter::updateBlob(ofxCvBlob& blob) {
 	this->blob = blob;
-	bias = (blob.centroid.x-centerBlob.centroid.x)/10;
-	displace();
+	if (state==TEETER_STATE_RESTED) {
+		centerBlob = blob;
+	}
+	float32 center = blob.centroid.x-centerBlob.centroid.x;
+	if (center > -20 && center < 20) {
+		bias = 1+center/20;
+		displace(bias);
+	}
+	
+	
 }
 
-void Teeter::setCenter() {
-	centerBlob = blob;
+b2RevoluteJoint * Teeter::getJoint() {
+	return this->joint;
 }
 
 
-void Teeter::draw() {
+void Teeter::drawBlob() {
 	const b2Transform& xf = teeter->GetTransform();
 	
 	b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
@@ -146,23 +208,29 @@ void Teeter::draw() {
 	}
 	
 	ofPushMatrix();
-	ofTranslate((vertices[0].x+vertices[1].x)/2, vertices[0].y, 0);
-	float degree = atan2(vertices[1].y-vertices[0].y, vertices[1].x-vertices[0].x) / M_PI * 180;
-	ofRotate(degree);
+	
+	if (state==TEETER_STATE_RESTED) {
+		ofTranslate((vertices[0].x+vertices[1].x)/2, position.y, 0);
+		
+		float32 blobFactor = 0.1 / scale; // to cancel current teeter scaling
+		ofScale(blobFactor, -blobFactor,1.0f);
+		ofTranslate(-(centerBlob.boundingRect.x+centerBlob.boundingRect.width/2), -(blob.boundingRect.y+blob.boundingRect.height), 0);
+		
+	} else {
+		ofTranslate((vertices[0].x+vertices[1].x)/2, vertices[0].y, 0);
+		float degree = atan2(vertices[1].y-vertices[0].y, vertices[1].x-vertices[0].x) / M_PI * 180;
+		ofRotate(degree);
+		float32 blobFactor = 0.1 / scale; // to cancel current teeter scaling
+		ofScale(blobFactor, -blobFactor,1.0f);
+		ofTranslate(-(centerBlob.boundingRect.x+centerBlob.boundingRect.width/2), -(blob.boundingRect.y+blob.boundingRect.height), 0);
+		
+	}
 
 	
 	
 	
-	ofScale(0.02f, -0.02f,1.0f);
-	
-	ofTranslate(-(centerBlob.boundingRect.x+centerBlob.boundingRect.width/2), -(blob.boundingRect.y+blob.boundingRect.height), 0);
 	ofPushStyle();
-	
-	
-	
-	
 	ofSetColor(0xFFFFFF);
-	
 	
 	ofFill();
 	ofBeginShape();
@@ -180,6 +248,22 @@ void Teeter::draw() {
 	ofPopMatrix();
 	//m_debugDraw->DrawSolidPolygon(vertices, vertexCount, color);
 	
-	
-		
+}
+
+void Teeter::getTransform(b2Vec2 &pos,float32 &scale) {
+	pos = position;
+	scale = this->scale;
+}
+
+void Teeter::transform() {
+	ofScale(scale, scale, 1.0f);
+	ofTranslate(-position.x, -position.y, 0.0f);
+}
+
+b2Body *Teeter::getBody() {		
+	return teeter;
+}
+
+void Teeter::log(ostringstream& ss) {
+	ss << "state: " << getState() << ", speed: " << joint->GetJointSpeed()*180.0/b2_pi	<< ", maxSpeed: " << maxSpeed*180.0/b2_pi	<< endl;
 }

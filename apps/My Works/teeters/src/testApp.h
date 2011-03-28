@@ -24,6 +24,8 @@ class testApp : public ofBaseApp, public b2ContactListener{
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 	
+		void nextTeeter();
+	
 		void BeginContact(b2Contact* contact);
 		void EndContact(b2Contact* contact);
 	
@@ -41,11 +43,16 @@ class testApp : public ofBaseApp, public b2ContactListener{
 	
 	vector<Teeter*> teeters;
 	vector<Teeter*>::iterator current;
+	vector<Teeter*>::iterator next;
+	
+	bool bTrans;
+	int animStart;
+	b2Vec2 position;
+	float32 scale;
 	
 	int32 m_stepCount;
+	float32 bias;
 	
-	b2Vec2 centerPos;
-	float32 scale;
 	
 };
 

@@ -1,5 +1,5 @@
 #include "testApp.h"
-
+#include "easing.h"
 enum {
 	TEETER_MODE_IDLE,
 	TEETER_MODE_PLANE,
@@ -16,32 +16,62 @@ enum {
 //--------------------------------------------------------------
 void testApp::setupPhysics() {
 	
+	m_world.SetContactListener(this);
 	m_world.SetDebugDraw(&m_debugDraw);
 	
 	uint32 flags = b2DebugDraw::e_shapeBit | b2DebugDraw::e_jointBit | b2DebugDraw::e_centerOfMassBit ;
 	
-	//flags += settings->drawJoints			* b2DebugDraw::e_jointBit;
+	//	flags += settings->drawJoints			* b2DebugDraw::e_jointBit;
 	//	flags += settings->drawAABBs			* b2DebugDraw::e_aabbBit;
 	//	flags += settings->drawPairs			* b2DebugDraw::e_pairBit;
 	//	flags += settings->drawCOMs				* b2DebugDraw::e_centerOfMassBit;
 	m_debugDraw.SetFlags(flags);
 	
 	
-	b2PolygonShape shape;
-	shape.SetAsEdge(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+	b2Body* ground = NULL;
+	{
+		
+		
+		b2BodyDef bd;
+		//bd.type = b2_dynamicBody;
+		ground = m_world.CreateBody(&bd);
+		
+		b2PolygonShape groundShape;
+		groundShape.SetAsEdge(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+		
+		b2FixtureDef groundFixtureDef;
+		groundFixtureDef.shape=&groundShape;
+		groundFixtureDef.filter.categoryBits = 0x0007;
+		groundFixtureDef.filter.maskBits = 0x0007;
+		ground->CreateFixture(&groundFixtureDef);
+		
+		
+		
+	}
 	
-	b2BodyDef bd;
-	m_ground = m_world.CreateBody(&bd);
-	m_ground->CreateFixture(&shape, 0.0f);
 	
+	Teeter *teeter = new Teeter(&m_world,4.0f,ground,b2Vec2(0.0f,0.0f));
+	teeters.push_back(teeter);
 	
-	teeter.setup(m_world, m_ground, 5);
+	teeter = new Teeter(&m_world,3.0f,teeter->getBody(),b2Vec2(-10.0f,4.0f));
+	teeters.push_back(teeter);
 	
+	teeter = new Teeter(&m_world,2.0f,teeter->getBody(),b2Vec2(-15.0f,7.0f),true);
+	teeters.push_back(teeter);
+	
+	current = teeters.end()-1;
+	
+	ofSetFrameRate(60);
 	
 	velocityIterations = 6;
 	positionIterations = 2;
 	timeStep = 1.0f/60.0f;
-	m_bias = 1;
+	m_stepCount = 0;
+	
+	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 20);
+	
+	
+	bTrans = false;
 	
 }
 
@@ -64,7 +94,7 @@ void testApp::setup() {
 	// start from the front
 	pointCloudRotationY = 180;
 	
-	drawPC = false;
+	
 	
 	mode = TEETER_MODE_IDLE;
 	displayMode = DISPLAY_MODE_CALIB;
@@ -118,7 +148,7 @@ void testApp::update() {
 			
 			if (!contourFinder.blobs.empty() && displayMode == DISPLAY_MODE_GAME) {
 				ofxCvBlob &blob = contourFinder.blobs.front();
-				teeter.updateBlob(blob);
+				(*current)->updateBlob(blob);
 			}
 		}
 		
@@ -129,9 +159,32 @@ void testApp::update() {
 	
 	
 	m_world.Step(timeStep, velocityIterations, positionIterations);
+	
+	if (timeStep > 0.0f)
+	{
+		++m_stepCount;
+	}
+	
+	(*current)->update();
+	
+	
 	m_world.ClearForces();
 	
-	
+	if (bTrans) {
+		float t = (float)(ofGetElapsedTimeMillis() - animStart)/1000.0;
+		if (t >= 1) {
+			bTrans = false;
+		} else {
+			
+			b2Vec2 npos;
+			float32 nscale;
+			(*current)->getTransform(npos,nscale);
+			scale = easeInOutQuad(t,scale,nscale);
+			position.x = easeInOutQuad(t,position.x,npos.x);
+			position.y = easeInOutQuad(t,position.y,npos.y);
+		}
+		
+	}
 }
 
 
@@ -166,18 +219,37 @@ void testApp::draw() {
 		case DISPLAY_MODE_GAME: {
 			
 			ofEnableSmoothing();
+			//	ofPushMatrix();
+			//	ofTranslate(ofGetWidth()/2, ofGetHeight(), 0);
+			//	float scale = 1;
+			//	ofScale(scale, -scale, 1.0);
 			coordinator.pushTransform();
-			m_world.DrawDebugData();
-			teeter.draw();
-			coordinator.popTransform();
 			
+			if (bTrans) {
+				ofScale(scale, scale, 1.0f);
+				ofTranslate(-position.x, -position.y, 0.0f);
+			} else {
+				(*current)->transform();
+				
+			}
+			
+			
+			
+			
+			m_world.DrawDebugData();
+			for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
+				(*iter)->drawBlob();
+			}
+			
+			coordinator.popTransform();
+			//	ofPopMatrix();
 			ofDisableSmoothing();
 			
 			ofSetColor(255, 255, 255);
 			std::ostringstream ss;
 			
-			ss << ofGetFrameRate();
-			
+			ss << ofGetFrameRate() << " " << m_stepCount << endl;
+			(*current)->log(ss);
 			
 			ofDrawBitmapString(ss.str(), 20, 20);
 			
@@ -233,74 +305,134 @@ void testApp::drawPointCloud() {
 
 
 
+// Implement contact listener.
+void testApp::BeginContact(b2Contact* contact)
+{
+	b2Fixture* fixtureA = contact->GetFixtureA();
+	b2Fixture* fixtureB = contact->GetFixtureB();
+	
+	
+	if (fixtureA->GetUserData() && fixtureB->GetUserData())
+	{
+		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			(*current)->setState(TEETER_STATE_BROKEN);
+			cout << "contact" << endl;
+		}
+	}
+	
+}
+
+void testApp::EndContact(b2Contact* contact)
+{
+	b2Fixture* fixtureA = contact->GetFixtureA();
+	b2Fixture* fixtureB = contact->GetFixtureB();
+	
+	
+	if (fixtureA->GetUserData() && fixtureB->GetUserData())
+	{
+		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			cout << "no contact" << endl;
+		}
+	}
+	
+}
+
+
+void testApp::nextTeeter() {
+	if (current!=teeters.begin()) {
+		(*current)->getTransform(position,scale);
+		current--;
+		animStart = ofGetElapsedTimeMillis();
+		bTrans = true;
+	}
+}
+
 //--------------------------------------------------------------
 void testApp::keyPressed (int key) {
-	switch (key) {
-				break;
-		case'p':
-			drawPC = !drawPC;
-			break;
 	
-		case 'w':
-			kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
-			break;
-		case 'o':
-			kinect.setCameraTiltAngle(angle);	// go back to prev tilt
-			kinect.open();
-			break;
-		case 'c':
-			kinect.setCameraTiltAngle(0);		// zero the tilt
-			kinect.close();
-			break;
+	if (key=='m') {
+		displayMode = (displayMode+1) % 3;
+		return;
+	}
+	
+	switch (displayMode) {
+		case DISPLAY_MODE_CALIB:
+			switch (key) {
 
-		case OF_KEY_UP:
-			angle++;
-			if(angle>30) angle=30;
-			kinect.setCameraTiltAngle(angle);
-			break;
+				case 'w':
+					kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
+					break;
+				case 'o':
+					kinect.setCameraTiltAngle(angle);	// go back to prev tilt
+					kinect.open();
+					break;
+				case 'c':
+					kinect.setCameraTiltAngle(0);		// zero the tilt
+					kinect.close();
+					break;
+					
+				case OF_KEY_UP:
+					angle++;
+					if(angle>30) angle=30;
+					kinect.setCameraTiltAngle(angle);
+					break;
+					
+				case OF_KEY_DOWN:
+					angle--;
+					if(angle<-30) angle=-30;
+					kinect.setCameraTiltAngle(angle);
+					break;
+					
+				case 'g':
+					saveImage();
+					break;
+					
+				case 'f':
+					mode = TEETER_MODE_PLANE;
+					segmentator.clear();
+					break;
+				case 'k':
+					segmentator.save();
+					break;
+					
+				case 'r':
+					mode = TEETER_MODE_ROI;
+					break;
+				
+			} break;
+			
+			
+				
+		case DISPLAY_MODE_GAME:
+			switch (key) {
+									
+				case '1':
+					current = teeters.begin();
+					break;
+				case '2':
+					current = teeters.begin()+1;
+					break;
+				case '3':
+					current = teeters.begin()+2;
+					break;
+					
+				case 's':
+					(*current)->start();
+					
+					break;
+					
+				case 'n':
+					nextTeeter();
+					break;
+					
+					
+				
+					
+					
+									
+			} break;
 
-		case OF_KEY_DOWN:
-			angle--;
-			if(angle<-30) angle=-30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-			
-		case 'g':
-			saveImage();
-			break;
-			
-		case 'f':
-			mode = TEETER_MODE_PLANE;
-			segmentator.clear();
-			break;
-		case 'k':
-			segmentator.save();
-			break;
-			
-		case 'r':
-			mode = TEETER_MODE_ROI;
-			break;
-			
-		case 'm':
-			displayMode = (displayMode+1) % 3;
-			break;
-
-		case OF_KEY_LEFT: 
-			m_bias-=0.1;
-			teeter.displace(m_bias);
-			
-			break;
-			
-		case OF_KEY_RIGHT: 
-			m_bias+=0.1;
-			teeter.displace(m_bias);
-			break;
-			
-		case 's':
-			teeter.setCenter();
-			
-			break;
-
+		
 	}
 }
 

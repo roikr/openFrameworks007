@@ -7,7 +7,7 @@ void testApp::setup(){
 	
 	uint32 flags = b2DebugDraw::e_shapeBit | b2DebugDraw::e_jointBit | b2DebugDraw::e_centerOfMassBit ;
 	
-	//flags += settings->drawJoints			* b2DebugDraw::e_jointBit;
+//	flags += settings->drawJoints			* b2DebugDraw::e_jointBit;
 //	flags += settings->drawAABBs			* b2DebugDraw::e_aabbBit;
 //	flags += settings->drawPairs			* b2DebugDraw::e_pairBit;
 //	flags += settings->drawCOMs				* b2DebugDraw::e_centerOfMassBit;

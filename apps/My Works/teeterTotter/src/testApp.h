@@ -9,7 +9,7 @@
 #include "Teeter.h"
 #include "ofxSimpleSegmentator.h"
 
-class testApp : public ofBaseApp {
+class testApp : public ofBaseApp, b2ContactListener{
 	public:
 		testApp() : m_world(b2Vec2(0.0f,-10.0f),true) {};
 		void setup();
@@ -26,6 +26,13 @@ class testApp : public ofBaseApp {
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
+	
+		void nextTeeter();
+	
+		void BeginContact(b2Contact* contact);
+		void EndContact(b2Contact* contact);
+	
+	
 
 		ofxKinect kinect;
 
@@ -34,7 +41,6 @@ class testApp : public ofBaseApp {
 		ofxCvContourFinder 	contourFinder;
 		
 		
-		bool				drawPC;
 		int					angle;
 		int 				pointCloudRotationY;
 	
@@ -50,7 +56,7 @@ class testApp : public ofBaseApp {
 	
 		b2World m_world;
 		b2Body* m_ground;
-		Teeter teeter;
+		
 		
 		int32 velocityIterations;
 		int32 positionIterations;
@@ -60,7 +66,17 @@ class testApp : public ofBaseApp {
 		
 		ofxCoordinator coordinator;
 	
-		float32 m_bias;
+		vector<Teeter*> teeters;
+		vector<Teeter*>::iterator current;
+		vector<Teeter*>::iterator next;
+		
+		bool bTrans;
+		int animStart;
+		b2Vec2 position;
+		float32 scale;
+		
+		int32 m_stepCount;
+	
 	
 		ofxSimpleSegmentator segmentator;
 		ofPoint mouseDown;

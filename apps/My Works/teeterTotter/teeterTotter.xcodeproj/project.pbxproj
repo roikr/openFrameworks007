@@ -26,6 +26,9 @@
 		E446675A0F5B3E04005D0BF0 /* ofxCvGrayscaleImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44666840F5B3E04005D0BF0 /* ofxCvGrayscaleImage.cpp */; };
 		E446675B0F5B3E04005D0BF0 /* ofxCvImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44666860F5B3E04005D0BF0 /* ofxCvImage.cpp */; };
 		E446675C0F5B3E04005D0BF0 /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44666890F5B3E04005D0BF0 /* ofxCvShortImage.cpp */; };
+		E4581CD9133F2F1C008C6762 /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4581CD5133F2F1C008C6762 /* easing.cpp */; };
+		E4581CDF133F3011008C6762 /* Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4581CDB133F3011008C6762 /* Render.cpp */; };
+		E4581CE0133F3011008C6762 /* Teeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4581CDD133F3011008C6762 /* Teeter.cpp */; };
 		E45BE0AA0E8CC67C009D7055 /* GLee.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE0A90E8CC67C009D7055 /* GLee.a */; };
 		E45BE2E40E8CC69C009D7055 /* rtAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE2E30E8CC69C009D7055 /* rtAudio.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -37,7 +40,6 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
-		E4741B891329139400F8592B /* Teeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741B881329139400F8592B /* Teeter.cpp */; };
 		E4741BB21329214900F8592B /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741BAB1329214900F8592B /* tinyxml.cpp */; };
 		E4741BB31329214900F8592B /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741BAD1329214900F8592B /* tinyxmlerror.cpp */; };
 		E4741BB41329214900F8592B /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741BAE1329214900F8592B /* tinyxmlparser.cpp */; };
@@ -80,7 +82,6 @@
 		E49F4598132820F9009F01E3 /* b2RevoluteJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49F4573132820F9009F01E3 /* b2RevoluteJoint.cpp */; };
 		E49F4599132820F9009F01E3 /* b2WeldJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49F4575132820F9009F01E3 /* b2WeldJoint.cpp */; };
 		E49F46E913282D38009F01E3 /* ofxCoordinator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49F46E713282D38009F01E3 /* ofxCoordinator.cpp */; };
-		E49F46F013282DCA009F01E3 /* Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49F46EE13282DCA009F01E3 /* Render.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */; };
 		E4C2422B10CC554B004149E2 /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2421E10CC549C004149E2 /* openFrameworksDebug.a */; };
@@ -210,6 +211,12 @@
 		E44666890F5B3E04005D0BF0 /* ofxCvShortImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxCvShortImage.cpp; path = ../../../addons/ofxOpenCv/src/ofxCvShortImage.cpp; sourceTree = SOURCE_ROOT; };
 		E446668A0F5B3E04005D0BF0 /* ofxCvShortImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxCvShortImage.h; path = ../../../addons/ofxOpenCv/src/ofxCvShortImage.h; sourceTree = SOURCE_ROOT; };
 		E446668B0F5B3E04005D0BF0 /* ofxOpenCv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxOpenCv.h; path = ../../../addons/ofxOpenCv/src/ofxOpenCv.h; sourceTree = SOURCE_ROOT; };
+		E4581CD5133F2F1C008C6762 /* easing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = easing.cpp; sourceTree = "<group>"; };
+		E4581CD6133F2F1C008C6762 /* easing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
+		E4581CDB133F3011008C6762 /* Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Render.cpp; path = ../teeters/src/Render.cpp; sourceTree = SOURCE_ROOT; };
+		E4581CDC133F3011008C6762 /* Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Render.h; path = ../teeters/src/Render.h; sourceTree = SOURCE_ROOT; };
+		E4581CDD133F3011008C6762 /* Teeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Teeter.cpp; path = ../teeters/src/Teeter.cpp; sourceTree = SOURCE_ROOT; };
+		E4581CDE133F3011008C6762 /* Teeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Teeter.h; path = ../teeters/src/Teeter.h; sourceTree = SOURCE_ROOT; };
 		E45BE0390E8CC647009D7055 /* FreeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FreeImage.h; path = ../../../libs/freeimage/include/FreeImage.h; sourceTree = SOURCE_ROOT; };
 		E45BE03F0E8CC650009D7055 /* fmod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fmod.h; path = ../../../libs/fmodex/include/fmod.h; sourceTree = SOURCE_ROOT; };
 		E45BE0400E8CC650009D7055 /* fmod.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fmod.hpp; path = ../../../libs/fmodex/include/fmod.hpp; sourceTree = SOURCE_ROOT; };
@@ -231,8 +238,6 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E4741B871329139400F8592B /* Teeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Teeter.h; sourceTree = "<group>"; };
-		E4741B881329139400F8592B /* Teeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Teeter.cpp; sourceTree = "<group>"; };
 		E4741BA91329214900F8592B /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E4741BAB1329214900F8592B /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		E4741BAC1329214900F8592B /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -316,8 +321,6 @@
 		E49F4576132820F9009F01E3 /* b2WeldJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2WeldJoint.h; sourceTree = "<group>"; };
 		E49F46E713282D38009F01E3 /* ofxCoordinator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxCoordinator.cpp; sourceTree = "<group>"; };
 		E49F46E813282D38009F01E3 /* ofxCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCoordinator.h; sourceTree = "<group>"; };
-		E49F46EE13282DCA009F01E3 /* Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Render.cpp; sourceTree = "<group>"; };
-		E49F46EF13282DCA009F01E3 /* Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Render.h; sourceTree = "<group>"; };
 		E4B69B5B0A3A1756003C02F2 /* teeterTotterDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = teeterTotterDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
@@ -535,6 +538,7 @@
 		E44665C70F5B3E03005D0BF0 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4581CD4133F2F1C008C6762 /* common */,
 				E4741BA81329214900F8592B /* ofxXmlSettings */,
 				E49F46E513282D38009F01E3 /* ofxCoordinator */,
 				E49F4529132820F9009F01E3 /* Box2D */,
@@ -639,6 +643,16 @@
 			);
 			name = src;
 			path = ../../../addons/ofxOpenCv/src;
+			sourceTree = SOURCE_ROOT;
+		};
+		E4581CD4133F2F1C008C6762 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				E4581CD5133F2F1C008C6762 /* easing.cpp */,
+				E4581CD6133F2F1C008C6762 /* easing.h */,
+			);
+			name = common;
+			path = "../../../My Addons/common";
 			sourceTree = SOURCE_ROOT;
 		};
 		E45BE0360E8CC5DE009D7055 /* libs */ = {
@@ -1016,15 +1030,15 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E4581CDB133F3011008C6762 /* Render.cpp */,
+				E4581CDC133F3011008C6762 /* Render.h */,
+				E4581CDD133F3011008C6762 /* Teeter.cpp */,
+				E4581CDE133F3011008C6762 /* Teeter.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
-				E4741B871329139400F8592B /* Teeter.h */,
-				E4741B881329139400F8592B /* Teeter.cpp */,
 				E4741BB61329267300F8592B /* ofxSimpleSegmentator.h */,
 				E4741BB71329267300F8592B /* ofxSimpleSegmentator.cpp */,
-				E49F46EF13282DCA009F01E3 /* Render.h */,
-				E49F46EE13282DCA009F01E3 /* Render.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1244,13 +1258,14 @@
 				E49F4598132820F9009F01E3 /* b2RevoluteJoint.cpp in Sources */,
 				E49F4599132820F9009F01E3 /* b2WeldJoint.cpp in Sources */,
 				E49F46E913282D38009F01E3 /* ofxCoordinator.cpp in Sources */,
-				E49F46F013282DCA009F01E3 /* Render.cpp in Sources */,
-				E4741B891329139400F8592B /* Teeter.cpp in Sources */,
 				E4741BB21329214900F8592B /* tinyxml.cpp in Sources */,
 				E4741BB31329214900F8592B /* tinyxmlerror.cpp in Sources */,
 				E4741BB41329214900F8592B /* tinyxmlparser.cpp in Sources */,
 				E4741BB51329214900F8592B /* ofxXmlSettings.cpp in Sources */,
 				E4741BB81329267300F8592B /* ofxSimpleSegmentator.cpp in Sources */,
+				E4581CD9133F2F1C008C6762 /* easing.cpp in Sources */,
+				E4581CDF133F3011008C6762 /* Render.cpp in Sources */,
+				E4581CE0133F3011008C6762 /* Teeter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
