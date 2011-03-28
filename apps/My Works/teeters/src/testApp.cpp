@@ -46,7 +46,7 @@ void testApp::setup(){
 	teeter = new Teeter(&m_world,2.0f,teeter->teeter,b2Vec2(-15.0f,7.0f),true);
 	teeters.push_back(teeter);
 
-	current = teeters.begin();
+	current = teeters.end()-1;
 	
 	ofSetFrameRate(60);
 	
@@ -54,6 +54,7 @@ void testApp::setup(){
 	positionIterations = 2;
 	timeStep = 1.0f/60.0f;
 	m_stepCount = 0;
+	bias = 1.0f;
 	
 	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 20);
 
@@ -72,9 +73,9 @@ void testApp::update(){
 		++m_stepCount;
 	}
 	
-	for (vector<Teeter*>::iterator iter = teeters.begin();iter!=teeters.end();iter++) {
-		(*iter)->update(m_stepCount);
-	}
+	
+	(*current)->update();
+	
 	m_world.ClearForces();
 	
 	//m_debugDraw.DrawString(5, m_textLine, "stepCount: %d, speed: %3.1f down: %d",m_stepCount-current->stepCount,current->joint->GetJointSpeed(),current->bDown ? 1 : 0);
@@ -129,9 +130,9 @@ void testApp::draw(){
 	std::ostringstream ss;
 	
 	ss << ofGetFrameRate() << " " << m_stepCount << endl;
-	ss << (*current)->stepCount << endl;
-
 	
+	(*current)->log(ss);
+		
 	ofDrawBitmapString(ss.str(), 20, 20);
 }
 
@@ -144,12 +145,9 @@ void testApp::BeginContact(b2Contact* contact)
 	
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
-		for (vector<Teeter*>::iterator iter = teeters.begin();iter!=teeters.end();iter++) {
-			if (((*iter)->joint == fixtureA->GetUserData() || (*iter)->joint == fixtureB->GetUserData()) && !(*iter)->joint->IsLimitEnabled()) {
-				(*iter)->bDown = true;
-				cout << "contact" << endl;
-				break;
-			}
+		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			(*current)->setState(TEETER_STATE_BROKEN);
+			cout << "contact" << endl;
 		}
 	}
 	
@@ -161,19 +159,15 @@ void testApp::EndContact(b2Contact* contact)
 	b2Fixture* fixtureB = contact->GetFixtureB();
 	
 	
-	
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
-		for (vector<Teeter*>::iterator iter = teeters.begin();iter!=teeters.end();iter++) {
-			if (((*iter)->joint == fixtureA->GetUserData() || (*iter)->joint == fixtureB->GetUserData()) && !(*iter)->joint->IsLimitEnabled()) {
-				(*iter)->bDown = false;
-				cout << "no contact" << endl;
-				break;
-			}
+		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			cout << "no contact" << endl;
 		}
 	}
 	
 }
+
 
 
 //--------------------------------------------------------------
@@ -191,7 +185,7 @@ void testApp::keyPressed(int key){
 			break;
 			
 		case 'n':
-			if (current!=teeters.begin()) {
+			if (current!=teeters.begin() && !bTrans) {
 				scale = (*current)->scale;
 				position = (*current)->position;
 				animStart = ofGetElapsedTimeMillis();
@@ -200,25 +194,21 @@ void testApp::keyPressed(int key){
 			break;
 
 			
-		case 't':
-			(*current)->joint->EnableLimit(!(*current)->joint->IsLimitEnabled());
-			(*current)->stepCount = m_stepCount;
+		case 's':
+			(*current)->start();
 			
 			break;
-		case 'e':
-			(*current)->joint->EnableLimit(false);
-			//current->teeter->ApplyTorque(100);
-			break;
+
 			
-		case 'q': {
-			(*current)->bias-=0.05f;
-			(*current)->displace();
+		case OF_KEY_LEFT: {
+			bias-=0.05f;
+			(*current)->displace(bias);
 			
 		} break;
 			
-		case 'w': {
-			(*current)->bias+=0.05f;
-			(*current)->displace();
+		case OF_KEY_RIGHT: {
+			bias+=0.05f;
+			(*current)->displace(bias);
 		} break;
 	}
 }

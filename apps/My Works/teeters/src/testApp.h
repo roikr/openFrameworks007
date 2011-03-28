@@ -49,6 +49,7 @@ class testApp : public ofBaseApp, public b2ContactListener{
 	float32 scale;
 	
 	int32 m_stepCount;
+	float32 bias;
 	
 	
 };

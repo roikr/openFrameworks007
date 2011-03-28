@@ -672,13 +672,13 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E46B65A01339F456002C3285 /* Teeter.cpp */,
 				E46B65A11339F456002C3285 /* Teeter.h */,
-				E43FE2D812DB091C0087544C /* Render.cpp */,
+				E46B65A01339F456002C3285 /* Teeter.cpp */,
 				E43FE2D912DB091C0087544C /* Render.h */,
+				E43FE2D812DB091C0087544C /* Render.cpp */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
-				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
+				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
