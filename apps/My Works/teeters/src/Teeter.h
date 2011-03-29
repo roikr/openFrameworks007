@@ -13,11 +13,12 @@
 #include "ofxOpenCv.h"
 
 enum {
-	TEETER_STATE_RESTED,
+	TEETER_STATE_RESTING,
 	TEETER_STATE_STARTED,
 	TEETER_STATE_UNBALLANCED,
+	TEETER_STATE_TOUCHING,
 	TEETER_STATE_BALLANCED,
-	TEETER_STATE_BROKEN
+	
 
 };
 
@@ -28,9 +29,10 @@ public:
 	void log(ostringstream& ss);
 	void update();
 	
+	void setFocus(float centerX);
 	void start();
 
-	void drawBlob();
+	void draw();
 	void updateBlob(ofxCvBlob& blob);
 	void displace(float32 bias);
 	b2RevoluteJoint * getJoint();
@@ -41,12 +43,6 @@ public:
 	void getTransform(b2Vec2 &pos,float32 &scale);
 	void transform();
 	b2Body *getBody();
-	
-	
-	
-	
-	
-	
 	
 	
 private:
@@ -73,6 +69,7 @@ private:
 	
 	
 	ofxCvBlob blob;
-	ofxCvBlob centerBlob;
+	
+	float centerX;
 	
 };

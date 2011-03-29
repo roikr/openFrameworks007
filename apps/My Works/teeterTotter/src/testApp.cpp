@@ -1,9 +1,9 @@
 #include "testApp.h"
 #include "easing.h"
 enum {
-	TEETER_MODE_IDLE,
-	TEETER_MODE_PLANE,
-	TEETER_MODE_ROI
+	MOUSE_MODE_IDLE,
+	MOUSE_MODE_PLANE,
+	MOUSE_MODE_ROI
 };
 
 enum {
@@ -11,6 +11,13 @@ enum {
 	DISPLAY_MODE_GAME,
 	DISPLAY_MODE_POINT_CLOUD
 };
+
+enum {
+	BLOB_STATE_INACTIVE,
+	BLOB_STATE_ACTIVE,
+	BLOB_STATE_CENTERED
+};
+
 
 
 //--------------------------------------------------------------
@@ -43,7 +50,7 @@ void testApp::setupPhysics() {
 		groundFixtureDef.shape=&groundShape;
 		groundFixtureDef.filter.categoryBits = 0x0007;
 		groundFixtureDef.filter.maskBits = 0x0007;
-		ground->CreateFixture(&groundFixtureDef);
+		m_groundFixture = ground->CreateFixture(&groundFixtureDef);
 		
 		
 		
@@ -88,7 +95,7 @@ void testApp::setup() {
 	ofSetFrameRate(60);
 
 	// zero the tilt on startup
-	angle = -30;
+	angle = -10;
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
@@ -96,15 +103,19 @@ void testApp::setup() {
 	
 	
 	
-	mode = TEETER_MODE_IDLE;
+	mode = MOUSE_MODE_IDLE;
 	displayMode = DISPLAY_MODE_CALIB;
 	
 	
 	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 50);
 	
 	setupPhysics();
-	
 	segmentator.load();
+	ofRectangle rect;
+	segmentator.getROI(rect);
+	(*current)->setFocus(rect.x+rect.width/2);
+	
+	
 	
 	ofBackground(0, 0, 0);
 	
@@ -214,6 +225,21 @@ void testApp::draw() {
 			//grayImage.drawROI(10, 320, 400, 300);
 			
 			//contourFinder.draw(10+roi.x*400/kinect.getWidth(), 320+roi.y*300/kinect.getHeight(), 400, 300);
+			
+			ofSetColor(255, 255, 255);
+			stringstream reportStream;
+			reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
+			<< ofToString(kinect.getMksAccel().y, 2) << " / " 
+			<< ofToString(kinect.getMksAccel().z, 2) << endl
+			<< "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl
+			<<"num blobs found " << contourFinder.nBlobs
+			<< ", fps: " << ofGetFrameRate() << endl
+			<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
+			<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
+			//<< "diff: " << m_position-m_center << ", m_position: " << m_position <<  ", m_center: " << m_center << ", m_bias: " << m_bias << endl;
+			ofDrawBitmapString(reportStream.str(),20,666);
+
+			
 		}	break;
 
 		case DISPLAY_MODE_GAME: {
@@ -235,17 +261,21 @@ void testApp::draw() {
 			
 			
 			
+		
 			
 			m_world.DrawDebugData();
 			for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
-				(*iter)->drawBlob();
+				
+								
+				
+				(*iter)->draw();
 			}
 			
 			coordinator.popTransform();
 			//	ofPopMatrix();
 			ofDisableSmoothing();
 			
-			ofSetColor(255, 255, 255);
+			ofSetColor(0, 0, 0);
 			std::ostringstream ss;
 			
 			ss << ofGetFrameRate() << " " << m_stepCount << endl;
@@ -261,26 +291,6 @@ void testApp::draw() {
 			break;
 	}
 			
-
-			
-
-	ofSetColor(255, 255, 255);
-	stringstream reportStream;
-	reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
-								 << ofToString(kinect.getMksAccel().y, 2) << " / " 
-								 << ofToString(kinect.getMksAccel().z, 2) << endl
-				 << "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl
-				<<"num blobs found " << contourFinder.nBlobs
-				 	<< ", fps: " << ofGetFrameRate() << endl
-				 << "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
-	<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
-	//<< "diff: " << m_position-m_center << ", m_position: " << m_position <<  ", m_center: " << m_center << ", m_bias: " << m_bias << endl;
-	
-	
-	
-	
-				
-	ofDrawBitmapString(reportStream.str(),20,666);
 }
 
 void testApp::drawPointCloud() {
@@ -315,7 +325,7 @@ void testApp::BeginContact(b2Contact* contact)
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
 		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
-			(*current)->setState(TEETER_STATE_BROKEN);
+			(*current)->setState(TEETER_STATE_TOUCHING);
 			cout << "contact" << endl;
 		}
 	}
@@ -328,11 +338,13 @@ void testApp::EndContact(b2Contact* contact)
 	b2Fixture* fixtureB = contact->GetFixtureB();
 	
 	
-	if (fixtureA->GetUserData() && fixtureB->GetUserData())
+	if ( (fixtureA->GetUserData() && fixtureB->GetUserData()) || fixtureA == m_groundFixture || fixtureB == m_groundFixture)
 	{
 		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			(*current)->setState(TEETER_STATE_UNBALLANCED);
 			cout << "no contact" << endl;
 		}
+		
 	}
 	
 }
@@ -342,6 +354,9 @@ void testApp::nextTeeter() {
 	if (current!=teeters.begin()) {
 		(*current)->getTransform(position,scale);
 		current--;
+		ofRectangle rect;
+		segmentator.getROI(rect);
+		(*current)->setFocus(rect.x+rect.width/2);
 		animStart = ofGetElapsedTimeMillis();
 		bTrans = true;
 	}
@@ -352,6 +367,16 @@ void testApp::keyPressed (int key) {
 	
 	if (key=='m') {
 		displayMode = (displayMode+1) % 3;
+		
+		switch (displayMode) {
+			case DISPLAY_MODE_GAME:
+				ofBackground(255, 255, 255);
+				break;
+			default:
+				ofBackground(0, 0, 0);
+				break;
+		}
+		
 		return;
 	}
 	
@@ -388,7 +413,7 @@ void testApp::keyPressed (int key) {
 					break;
 					
 				case 'f':
-					mode = TEETER_MODE_PLANE;
+					mode = MOUSE_MODE_PLANE;
 					segmentator.clear();
 					break;
 				case 'k':
@@ -396,7 +421,7 @@ void testApp::keyPressed (int key) {
 					break;
 					
 				case 'r':
-					mode = TEETER_MODE_ROI;
+					mode = MOUSE_MODE_ROI;
 					break;
 				
 			} break;
@@ -456,17 +481,17 @@ void testApp::mousePressed(int x, int y, int button)
 	
 	
 	switch (mode) {
-		case TEETER_MODE_PLANE: {
+		case MOUSE_MODE_PLANE: {
 			ofxVec3f vec = kinect.getWorldCoordinateFor(kx*kinect.getWidth(), ky*kinect.getHeight());
 			segmentator.addVector(vec);
 			
 			if (segmentator.getIsReady()) {
-				mode=TEETER_MODE_IDLE;
+				mode=MOUSE_MODE_IDLE;
 				
 			}
 		} break;
 			
-		case TEETER_MODE_ROI:
+		case MOUSE_MODE_ROI:
 			mouseDown = ofPoint(x,y);
 						
 			break;
@@ -479,7 +504,7 @@ void testApp::mousePressed(int x, int y, int button)
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button)
 {
-	if (mode == TEETER_MODE_ROI) {
+	if (mode == MOUSE_MODE_ROI) {
 		ofRectangle rect;
 		
 		rect.x = (mouseDown.x-10.0)/400.0*kinect.getWidth();
@@ -488,7 +513,7 @@ void testApp::mouseReleased(int x, int y, int button)
 		rect.height = (y-mouseDown.y)/300.0*kinect.getHeight();
 		segmentator.setROI(rect);
 		//grayImage.setROI(rect);
-		mode =TEETER_MODE_IDLE;
+		mode =MOUSE_MODE_IDLE;
 	}
 	
 	

@@ -56,6 +56,7 @@ class testApp : public ofBaseApp, b2ContactListener{
 	
 		b2World m_world;
 		b2Body* m_ground;
+		b2Fixture *m_groundFixture;
 		
 		
 		int32 velocityIterations;
@@ -80,5 +81,7 @@ class testApp : public ofBaseApp, b2ContactListener{
 	
 		ofxSimpleSegmentator segmentator;
 		ofPoint mouseDown;
+	
+		int blobState;
 	
 };

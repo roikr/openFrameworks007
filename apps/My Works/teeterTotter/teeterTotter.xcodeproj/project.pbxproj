@@ -1030,15 +1030,15 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4581CDB133F3011008C6762 /* Render.cpp */,
-				E4581CDC133F3011008C6762 /* Render.h */,
-				E4581CDD133F3011008C6762 /* Teeter.cpp */,
-				E4581CDE133F3011008C6762 /* Teeter.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
+				E4581CDD133F3011008C6762 /* Teeter.cpp */,
+				E4581CDE133F3011008C6762 /* Teeter.h */,
 				E4741BB61329267300F8592B /* ofxSimpleSegmentator.h */,
 				E4741BB71329267300F8592B /* ofxSimpleSegmentator.cpp */,
+				E4581CDB133F3011008C6762 /* Render.cpp */,
+				E4581CDC133F3011008C6762 /* Render.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
