@@ -41,6 +41,8 @@ public:
 	void done(int slideNum);
 	void update();
 	
+	void restart(); // reset done
+	
 	int	 getCurrentSlideNumber();
 	bool getIsDone(int slideNum);
 	int	 getCurrentSlideTag();
