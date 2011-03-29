@@ -38,6 +38,12 @@ void ofxInteractiveSlides::loadFile(string filename) {
 	
 }
 
+void ofxInteractiveSlides::restart() {
+	for (vector<slide>::iterator iter=slides.begin();iter!=slides.end();iter++ ) {
+		iter->done = false;
+	}
+}
+
 void ofxInteractiveSlides::reset() {
 	timerStart = ofGetElapsedTimeMillis();
 	state = SLIDE_IDLE;
