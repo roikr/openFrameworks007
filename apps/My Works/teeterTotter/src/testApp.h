@@ -31,7 +31,8 @@ class testApp : public ofBaseApp, b2ContactListener{
 	
 		void BeginContact(b2Contact* contact);
 		void EndContact(b2Contact* contact);
-	
+		
+		void DrawShape(b2Fixture* fixture, const b2Transform& xf);
 	
 
 		ofxKinect kinect;
@@ -40,23 +41,18 @@ class testApp : public ofBaseApp, b2ContactListener{
 		ofxCvGrayscaleImage 	grayImage;
 		ofxCvContourFinder 	contourFinder;
 		
-		
 		int					angle;
 		int 				pointCloudRotationY;
 	
-		
 		void saveImage();
-		
-		
 		
 		int mode;
 		int displayMode;
 	
-		
-	
 		b2World m_world;
-		b2Body* m_ground;
-		b2Fixture *m_groundFixture;
+		b2Body* ground;
+		b2Fixture *baseFixture;
+		b2Fixture *groundFixture;
 		
 		
 		int32 velocityIterations;

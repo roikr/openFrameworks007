@@ -29,9 +29,11 @@ class testApp : public ofBaseApp, public b2ContactListener{
 		void BeginContact(b2Contact* contact);
 		void EndContact(b2Contact* contact);
 	
+		void DrawShape(b2Fixture* fixture, const b2Transform& xf);
 	
 	b2World m_world;
-	b2Body* m_ground;
+	b2Body* ground;
+	b2Fixture *baseFixture;
 		
 	int32 velocityIterations;
 	int32 positionIterations;

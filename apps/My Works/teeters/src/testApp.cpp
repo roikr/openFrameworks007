@@ -15,9 +15,7 @@ void testApp::setup(){
 	m_debugDraw.SetFlags(flags);
 	
 	
-	b2Body* ground = NULL;
-	{
-		
+			
 		
 		b2BodyDef bd;
 		//bd.type = b2_dynamicBody;
@@ -25,26 +23,33 @@ void testApp::setup(){
 		
 		b2PolygonShape groundShape;
 		groundShape.SetAsEdge(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+		ground->CreateFixture(&groundShape,1.0f);
 		
-		b2FixtureDef groundFixtureDef;
-		groundFixtureDef.shape=&groundShape;
-		groundFixtureDef.filter.categoryBits = 0x0007;
-		groundFixtureDef.filter.maskBits = 0x0007;
-		ground->CreateFixture(&groundFixtureDef);
+		float32 nextt = 4.0f;
+		float32 nextp = nextt/2.0f;
+		b2Vec2 p1(-nextp/2.0f,0.0f);
+		b2Vec2 p2(nextp/2.0f,0.0f);
+		b2Vec2 p3(0.0f, 1.5*nextt-(nextp/10.f));
 		
+		b2Vec2 vertices[3];
 		
+		vertices[0] = p1;
+		vertices[1] = p2;
+		vertices[2] = p3;
 		
-	}
+		b2PolygonShape baseShape;
+		baseShape.Set(vertices, 3);
+		baseFixture = ground->CreateFixture(&baseShape,1.0f);
 	
-	
-	Teeter *teeter = new Teeter(&m_world,4.0f,ground,b2Vec2(0.0f,0.0f));
+		
+	Teeter *teeter = new Teeter(&m_world,4.0f,b2Vec2(0.0f,0.0f),ground,false,3.0f);
+	teeters.push_back(teeter);
+	teeter = new Teeter(&m_world,3.0f,teeter->getNextPosition(),teeter->getTeeterBody(),false,2.0f);
+	teeters.push_back(teeter);
+	teeter = new Teeter(&m_world,2.0f,teeter->getNextPosition(),teeter->getTeeterBody(),true,0.0f);
 	teeters.push_back(teeter);
 	
-	teeter = new Teeter(&m_world,3.0f,teeter->getBody(),b2Vec2(-10.0f,4.0f));
-	teeters.push_back(teeter);
 	
-	teeter = new Teeter(&m_world,2.0f,teeter->getBody(),b2Vec2(-15.0f,7.0f),true);
-	teeters.push_back(teeter);
 
 	current = teeters.end()-1;
 	
@@ -61,6 +66,8 @@ void testApp::setup(){
 	
 	bTrans = false;
 	ofBackground(0, 0, 0);
+	
+	(*current)->setFocus(0.0f);
 	
 }
 
@@ -102,9 +109,46 @@ void testApp::update(){
 	
 }
 
+
+
+void testApp::DrawShape(b2Fixture* fixture, const b2Transform& xf)
+{
+	
+	b2Color color(0.6f, 0.6f, 0.6f);
+	b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
+	int32 vertexCount = poly->m_vertexCount;
+	b2Assert(vertexCount <= b2_maxPolygonVertices);
+	b2Vec2 vertices[b2_maxPolygonVertices];
+	
+	for (int32 i = 0; i < vertexCount; ++i)
+	{
+		vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+	}
+	
+	glEnable(GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
+	glBegin(GL_TRIANGLE_FAN);
+	for (int32 i = 0; i < vertexCount; ++i)
+	{
+		glVertex2f(vertices[i].x, vertices[i].y);
+	}
+	glEnd();
+	glDisable(GL_BLEND);
+	
+	glColor4f(color.r, color.g, color.b, 1.0f);
+	glBegin(GL_LINE_LOOP);
+	for (int32 i = 0; i < vertexCount; ++i)
+	{
+		glVertex2f(vertices[i].x, vertices[i].y);
+	}
+	glEnd();
+	
+}
+
 //--------------------------------------------------------------
 void testApp::draw(){
-	ofEnableSmoothing();
+	
 //	ofPushMatrix();
 //	ofTranslate(ofGetWidth()/2, ofGetHeight(), 0);
 //	float scale = 1;
@@ -119,12 +163,27 @@ void testApp::draw(){
 	}
 
 	
+	glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT);	
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	glEnable(GL_LINE_SMOOTH);
+	
+	//why do we need this?
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+//	m_world.DrawDebugData();
+	
+	DrawShape(baseFixture,ground->GetTransform());
 	
 	
-	m_world.DrawDebugData();
+	for (vector<Teeter*>::iterator iter=teeters.begin(); iter!=teeters.end(); iter++) {
+		(*iter)->draw();
+	}
+	
+	glPopAttrib();
 	coordinator.popTransform();
 //	ofPopMatrix();
-	ofDisableSmoothing();
+	
 	
 	ofSetColor(255, 255, 255);
 	std::ostringstream ss;
@@ -146,7 +205,7 @@ void testApp::BeginContact(b2Contact* contact)
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
 		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
-			(*current)->setState(TEETER_STATE_BROKEN);
+			(*current)->setState(TEETER_STATE_TOUCHING);
 			cout << "contact" << endl;
 		}
 	}
@@ -162,6 +221,7 @@ void testApp::EndContact(b2Contact* contact)
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
 		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+			(*current)->setState(TEETER_STATE_UNBALLANCED);
 			cout << "no contact" << endl;
 		}
 	}
@@ -172,6 +232,7 @@ void testApp::nextTeeter() {
 	if (current!=teeters.begin()) {
 		(*current)->getTransform(position,scale);
 		current--;
+		(*current)->setFocus(0.0f);
 		animStart = ofGetElapsedTimeMillis();
 		bTrans = true;
 	}
@@ -198,10 +259,22 @@ void testApp::keyPressed(int key){
 
 			
 		case 's':
+			bias =1.0f;
 			(*current)->start();
 			
 			break;
+			
+		case 'j': {
+			for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
+				(*iter)->breakTeeter();
+			}
+//			int32 stage = distance(teeters.begin(),current);
+//			(*current)->getBody()->ApplyTorque(-50000.0f*(teeters.size()-stage));
+			(*current)->jump();
+			
+		} break;
 
+		
 			
 		case OF_KEY_LEFT: {
 			bias-=0.05f;
