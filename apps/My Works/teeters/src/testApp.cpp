@@ -59,7 +59,7 @@ void testApp::setup(){
 	positionIterations = 2;
 	timeStep = 1.0f/60.0f;
 	m_stepCount = 0;
-	bias = 1.0f;
+	bias = 0.0f;
 	
 	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 20);
 
@@ -259,7 +259,7 @@ void testApp::keyPressed(int key){
 
 			
 		case 's':
-			bias =1.0f;
+			bias =0.0f;
 			(*current)->start();
 			
 			break;

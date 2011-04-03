@@ -18,6 +18,8 @@ enum {
 	BLOB_STATE_CENTERED
 };
 
+	
+
 
 
 //--------------------------------------------------------------
@@ -83,6 +85,8 @@ void testApp::setupPhysics() {
 	bTrans = false;
 	(*current)->setFocus(0.0f);
 	
+	blobState = BLOB_STATE_INACTIVE;
+	
 }
 
 //--------------------------------------------------------------
@@ -98,7 +102,7 @@ void testApp::setup() {
 	ofSetFrameRate(60);
 
 	// zero the tilt on startup
-	angle = -30 ;
+	angle = -15 ;
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
@@ -152,18 +156,24 @@ void testApp::update() {
 			}
 			
 			//update the cv image
-			grayImage.erode_3x3();
-			grayImage.dilate_3x3();
+//			grayImage.erode_3x3();
+//			grayImage.dilate_3x3();
+//			grayImage.erode_3x3();
+//			grayImage.dilate_3x3();
 			grayImage.flagImageChanged();
 			
 			// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 			// also, find holes is set to true so we will get interior contours as well....
-			contourFinder.findContours(grayImage, 500, (kinect.width*kinect.height)/2, 500, false);
+			contourFinder.findContours(grayImage, 500, (kinect.width*kinect.height)/2, 1, false);
 			
-			if (!contourFinder.blobs.empty() && displayMode == DISPLAY_MODE_GAME) {
-				ofxCvBlob &blob = contourFinder.blobs.front();
-				(*current)->updateBlob(blob);
+			if (!contourFinder.blobs.empty()) {
+				(*current)->updateBlob(contourFinder.blobs.front());
+				
+				
+			} else {
+				blobState = BLOB_STATE_INACTIVE;
 			}
+
 		}
 		
 		
@@ -173,16 +183,19 @@ void testApp::update() {
 	
 	
 	m_world.Step(timeStep, velocityIterations, positionIterations);
+	m_world.ClearForces();
+	
+
 	
 	if (timeStep > 0.0f)
 	{
 		++m_stepCount;
 	}
 	
-	(*current)->update();
+	for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
+		(*iter)->update();
+	}
 	
-	
-	m_world.ClearForces();
 	
 	if (bTrans) {
 		float t = (float)(ofGetElapsedTimeMillis() - animStart)/1000.0;
@@ -216,8 +229,8 @@ void testApp::DrawShape(b2Fixture* fixture, const b2Transform& xf)
 		vertices[i] = b2Mul(xf, poly->m_vertices[i]);
 	}
 	
-	glEnable(GL_BLEND);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glEnable(GL_BLEND);
+//	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
 	glBegin(GL_TRIANGLE_FAN);
 	for (int32 i = 0; i < vertexCount; ++i)
@@ -225,14 +238,14 @@ void testApp::DrawShape(b2Fixture* fixture, const b2Transform& xf)
 		glVertex2f(vertices[i].x, vertices[i].y);
 	}
 	glEnd();
-	glDisable(GL_BLEND);
+//	glDisable(GL_BLEND);
 	
-	glColor4f(color.r, color.g, color.b, 1.0f);
-	glBegin(GL_LINE_LOOP);
-	for (int32 i = 0; i < vertexCount; ++i)
-	{
-		glVertex2f(vertices[i].x, vertices[i].y);
-	}
+//	glColor4f(color.r, color.g, color.b, 1.0f);
+//	glBegin(GL_LINE_LOOP);
+//	for (int32 i = 0; i < vertexCount; ++i)
+//	{
+//		glVertex2f(vertices[i].x, vertices[i].y);
+//	}
 	glEnd();
 	
 }
@@ -275,6 +288,12 @@ void testApp::draw() {
 			<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
 			<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
 			//<< "diff: " << m_position-m_center << ", m_position: " << m_position <<  ", m_center: " << m_center << ", m_bias: " << m_bias << endl;
+			
+			if (!contourFinder.blobs.empty()) {
+				ofxCvBlob &b = contourFinder.blobs.front();
+				reportStream << "area: " << b.area << endl;
+			} 
+			
 			ofDrawBitmapString(reportStream.str(),20,666);
 
 			
@@ -307,20 +326,21 @@ void testApp::draw() {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			
+			DrawShape(baseFixture,ground->GetTransform());
+			
+			for (vector<Teeter*>::iterator iter=teeters.begin(); iter!=teeters.end(); iter++) {
+				(*iter)->draw();
+			}
+			
 			
 			
 			for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
-				(*iter)->draw();
+				(*iter)->drawPlayer();
 			}
 			
 			glPopAttrib();
 			
-			for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
-				(*iter)->drawPayload();
-			}
-			
-			
-			m_world.DrawDebugData();
+			//m_world.DrawDebugData();
 			
 			coordinator.popTransform();
 			//	ofPopMatrix();
@@ -377,7 +397,7 @@ void testApp::BeginContact(b2Contact* contact)
 	{
 		//if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
 		if ( (fixtureA->GetUserData() && fixtureB->GetUserData()) || fixtureA == groundFixture || fixtureB == groundFixture) {
-			(*current)->setState(TEETER_STATE_TOUCHING);
+//			(*current)->setState(TEETER_STATE_TOUCHING);
 			cout << "contact" << endl;
 		}
 	}
@@ -393,7 +413,7 @@ void testApp::EndContact(b2Contact* contact)
 	if ( (fixtureA->GetUserData() && fixtureB->GetUserData()) || fixtureA == groundFixture || fixtureB == groundFixture)
 	{
 		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
-			(*current)->setState(TEETER_STATE_UNBALLANCED);
+//			(*current)->setState(TEETER_STATE_UNBALLANCED);
 			cout << "no contact" << endl;
 		}
 		
@@ -506,7 +526,17 @@ void testApp::keyPressed (int key) {
 				case 't':
 					ofToggleFullscreen();
 					break;
-				
+					
+				case 'l':
+				{
+					for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
+						(*iter)->breakTeeter();
+					}
+					//			int32 stage = distance(teeters.begin(),current);
+					//			(*current)->getBody()->ApplyTorque(-50000.0f*(teeters.size()-stage));
+					
+					
+				} break;
 				case 'j': {
 					for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
 						(*iter)->breakTeeter();

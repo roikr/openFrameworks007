@@ -35,7 +35,7 @@ public:
 	void start();
 
 	void draw();
-	void drawPayload();
+	void drawPlayer();
 	
 	void DrawShape(b2Fixture* fixture, const b2Transform& xf);
 	void updateBlob(ofxCvBlob& blob);
@@ -57,8 +57,6 @@ public:
 private:
 	
 	b2Vec2 nextPosition;
-	
-	void createPlayer(b2Body *body);
 	
 	b2World *m_world;
 	
@@ -102,4 +100,9 @@ private:
 	float32 m_angularVelocity;
 	
 	b2PolygonShape payloadShape;
+	b2PolygonShape playerShape;
+	
+	int loopState;
+	int loopFrame;
+	vector<ofxCvBlob *>::iterator lbiter;
 };
