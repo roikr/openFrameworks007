@@ -12,14 +12,17 @@
 #include "Box2D.h"
 #include "ofxOpenCv.h"
 
+#define SCALING_FACTOR 0.8f
+#define NUM_BLOBS 30
+
 enum {
 	TEETER_STATE_LOCKED,
 	TEETER_STATE_RESTING,
 	TEETER_STATE_STARTED,
 	TEETER_STATE_UNBALLANCED,
-	TEETER_STATE_TOUCHING,
+	TEETER_STATE_BROKEN,
 	TEETER_STATE_BALLANCED,
-	TEETER_STATE_BROKEN
+	
 	
 
 };
@@ -27,21 +30,29 @@ enum {
 class Teeter  {
 public:
 	Teeter(b2World *m_world,float32 t,b2Vec2 position,b2Body *parent,bool bLeaf,float32 nextt);
+	~Teeter();
+	
 
-	void log(ostringstream& ss);
+	
 	void update();
 	
-	void setFocus(float centerX);
+	void reset();
+	
+	void setFocus(ofRectangle& rect);
 	void start();
 
 	void draw();
 	void drawPlayer();
 	
 	void DrawShape(b2Fixture* fixture, const b2Transform& xf);
+	
+	void noBlob();
 	void updateBlob(ofxCvBlob& blob);
 	void displace(float32 bias);
+	
 	void breakTeeter();
-	void jump();
+	void leave();
+	void jump(int multiplier);
 	b2RevoluteJoint * getJoint();
 	
 
@@ -50,11 +61,14 @@ public:
 	void getTransform(b2Vec2 &pos,float32 &scale);
 	void transform();
 	b2Body *getTeeterBody();
-	
-	
 	b2Vec2 getNextPosition();
+	
+	
+	void debug(ostringstream& ss);
 		
 private:
+	
+	void translateFixture(b2Fixture* fixture, const b2Transform& xf);
 	
 	b2Vec2 nextPosition;
 	
@@ -76,7 +90,6 @@ private:
 	vector<float32>::iterator siter;
 	
 
-	float32 bias;
 	b2RevoluteJoint *joint;
 	
 	
@@ -89,7 +102,7 @@ private:
 	vector<ofxCvBlob *>::iterator cbiter; // current blob iter
 	
 	
-	float centerX;
+	ofRectangle rect; // blob ref rect
 	
 	bool bLeaf;
 	ofImage *leafImage;
@@ -105,4 +118,7 @@ private:
 	int loopState;
 	int loopFrame;
 	vector<ofxCvBlob *>::iterator lbiter;
+	
+	int centerTime;
+	bool bBlob;
 };

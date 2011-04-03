@@ -7,19 +7,46 @@ enum {
 };
 
 enum {
-	DISPLAY_MODE_CALIB,
+	
 	DISPLAY_MODE_GAME,
+	DISPLAY_MODE_DEBUG_GAME,
+	DISPLAY_MODE_CALIB,
 	DISPLAY_MODE_POINT_CLOUD
 };
 
-enum {
-	BLOB_STATE_INACTIVE,
-	BLOB_STATE_ACTIVE,
-	BLOB_STATE_CENTERED
-};
 
 	
 
+void testApp::createTeeters() {
+	
+	if (!teeters.empty()) {
+		for (vector<Teeter*>::iterator iter=teeters.begin(); iter!=teeters.end(); iter++) {
+			delete (*iter);
+		}
+		teeters.clear();
+	}
+	
+	float32 m = 4.0f;
+	Teeter *teeter = new Teeter(&m_world,m,b2Vec2(0.0f,0.0f),ground,false,SCALING_FACTOR*m);
+	teeters.push_back(teeter);
+	
+	for (int i=0; i<NUM_TEETERS-2; i++) {
+		m*=SCALING_FACTOR;
+		teeter = new Teeter(&m_world,m,teeter->getNextPosition(),teeter->getTeeterBody(),false,SCALING_FACTOR*m);
+		teeters.push_back(teeter);
+	}
+	m*=SCALING_FACTOR;
+	teeter = new Teeter(&m_world,m,teeter->getNextPosition(),teeter->getTeeterBody(),true,0.0f);
+	teeters.push_back(teeter);
+	
+	
+	citer = teeters.end()-1;
+	
+	bTrans = false;
+	bJump = false;
+	bReset = false;
+	(*citer)->setFocus(rect);
+}
 
 
 //--------------------------------------------------------------
@@ -42,7 +69,7 @@ void testApp::setupPhysics() {
 	ground = m_world.CreateBody(&bd);
 	
 	b2PolygonShape groundShape;
-	groundShape.SetAsEdge(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+	groundShape.SetAsEdge(b2Vec2(-400.0f, 0.0f), b2Vec2(400.0f, 0.0f));
 	groundFixture=ground->CreateFixture(&groundShape,1.0f);
 	
 	float32 nextt = 4.0f;
@@ -62,30 +89,14 @@ void testApp::setupPhysics() {
 	baseFixture = ground->CreateFixture(&baseShape,1.0f);
 	
 	
-	Teeter *teeter = new Teeter(&m_world,4.0f,b2Vec2(0.0f,0.0f),ground,false,3.0f);
-	teeters.push_back(teeter);
-	teeter = new Teeter(&m_world,3.0f,teeter->getNextPosition(),teeter->getTeeterBody(),false,2.0f);
-	teeters.push_back(teeter);
-	teeter = new Teeter(&m_world,2.0f,teeter->getNextPosition(),teeter->getTeeterBody(),true,0.0f);
-	teeters.push_back(teeter);
-	
-	
-	current = teeters.end()-1;
 	
 	ofSetFrameRate(60);
 	
 	velocityIterations = 6;
 	positionIterations = 2;
 	timeStep = 1.0f/60.0f;
-	m_stepCount = 0;
-	
+		
 	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 20);
-	
-	
-	bTrans = false;
-	(*current)->setFocus(0.0f);
-	
-	blobState = BLOB_STATE_INACTIVE;
 	
 }
 
@@ -111,20 +122,21 @@ void testApp::setup() {
 	
 	
 	mode = MOUSE_MODE_IDLE;
-	displayMode = DISPLAY_MODE_CALIB;
+	displayMode = DISPLAY_MODE_GAME;
 	
 	
 	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 50);
 	
 	setupPhysics();
+	createTeeters();
 	segmentator.load();
-	ofRectangle rect;
 	segmentator.getROI(rect);
-	(*current)->setFocus(rect.x+rect.width/2);
+	(*citer)->setFocus(rect);
 	
 	
 	
-	ofBackground(0, 0, 0);
+	
+	ofBackground(255, 255, 255);
 	
 }
 
@@ -164,15 +176,48 @@ void testApp::update() {
 			
 			// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 			// also, find holes is set to true so we will get interior contours as well....
-			contourFinder.findContours(grayImage, 500, (kinect.width*kinect.height)/2, 1, false);
+			contourFinder.findContours(grayImage, 5000, (kinect.width*kinect.height)/2, 1, false);
 			
-			if (!contourFinder.blobs.empty()) {
-				(*current)->updateBlob(contourFinder.blobs.front());
+			if (contourFinder.blobs.empty() ) {
+				switch ((*citer)->getState() ) {
+					case TEETER_STATE_BALLANCED:
+						if (!bReset) {
+							next();
+						}
+						
+						break;
+						
+					case TEETER_STATE_STARTED:
+					case TEETER_STATE_UNBALLANCED:
+						(*citer)->noBlob();
+						leave();
+						break;
+					default:						
+						(*citer)->noBlob();
+						break;
+				}
+
+			} else{
+				ofxCvBlob &blob = contourFinder.blobs.front();
+				(*citer)->updateBlob(blob);
 				
+				switch ((*citer)->getState()){
+					case TEETER_STATE_STARTED:
+					case TEETER_STATE_UNBALLANCED:
+						if (!bJump) {
+							bJump =  (rect.y+rect.height) - (blob.boundingRect.y+blob.boundingRect.height) > 20;
+						} else {
+							if ((rect.y+rect.height) - (blob.boundingRect.y+blob.boundingRect.height) < 10) {
+								jump();
+								bJump = false;
+							}
+						}
+						break;
+
+				}
+
 				
-			} else {
-				blobState = BLOB_STATE_INACTIVE;
-			}
+			} 
 
 		}
 		
@@ -187,12 +232,8 @@ void testApp::update() {
 	
 
 	
-	if (timeStep > 0.0f)
-	{
-		++m_stepCount;
-	}
-	
-	for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
+		
+	for (vector<Teeter*>::iterator iter=citer; iter!=teeters.end(); iter++) {
 		(*iter)->update();
 	}
 	
@@ -205,11 +246,20 @@ void testApp::update() {
 			
 			b2Vec2 npos;
 			float32 nscale;
-			(*current)->getTransform(npos,nscale);
+			(*citer)->getTransform(npos,nscale);
 			scale = easeInOutQuad(t,scale,nscale);
 			position.x = easeInOutQuad(t,position.x,npos.x);
 			position.y = easeInOutQuad(t,position.y,npos.y);
 		}
+		
+	}
+	
+	if (bReset) {
+		if (ofGetElapsedTimeMillis()-animStart>RESET_DELAY) {
+			createTeeters();
+		}
+		
+		
 		
 	}
 }
@@ -218,7 +268,7 @@ void testApp::update() {
 void testApp::DrawShape(b2Fixture* fixture, const b2Transform& xf)
 {
 	
-	b2Color color(0.6f, 0.6f, 0.6f);
+	b2Color color(0.0f, 0.0f, 0.0f);
 	b2PolygonShape* poly = (b2PolygonShape*)fixture->GetShape();
 	int32 vertexCount = poly->m_vertexCount;
 	b2Assert(vertexCount <= b2_maxPolygonVertices);
@@ -231,7 +281,7 @@ void testApp::DrawShape(b2Fixture* fixture, const b2Transform& xf)
 	
 //	glEnable(GL_BLEND);
 //	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(0.5f * color.r, 0.5f * color.g, 0.5f * color.b, 0.5f);
+	glColor3f(color.r, color.g,  color.b);
 	glBegin(GL_TRIANGLE_FAN);
 	for (int32 i = 0; i < vertexCount; ++i)
 	{
@@ -254,8 +304,7 @@ void testApp::DrawShape(b2Fixture* fixture, const b2Transform& xf)
 //--------------------------------------------------------------
 void testApp::draw() {
 	ofSetColor(255, 255, 255);
-	ofRectangle roi;
-	segmentator.getROI(roi);
+	
 	
 	switch (displayMode) {
 		case DISPLAY_MODE_POINT_CLOUD:
@@ -299,9 +348,11 @@ void testApp::draw() {
 			
 		}	break;
 
-		case DISPLAY_MODE_GAME: {
+		case DISPLAY_MODE_GAME:
+		case DISPLAY_MODE_DEBUG_GAME:
+		{
 			
-			ofEnableSmoothing();
+			
 			//	ofPushMatrix();
 			//	ofTranslate(ofGetWidth()/2, ofGetHeight(), 0);
 			//	float scale = 1;
@@ -312,7 +363,7 @@ void testApp::draw() {
 				ofScale(scale, scale, 1.0f);
 				ofTranslate(-position.x, -position.y, 0.0f);
 			} else {
-				(*current)->transform();
+				(*citer)->transform();
 				
 			}
 			
@@ -334,7 +385,7 @@ void testApp::draw() {
 			
 			
 			
-			for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
+			for (vector<Teeter*>::iterator iter=citer; iter!=teeters.end(); iter++) {
 				(*iter)->drawPlayer();
 			}
 			
@@ -344,15 +395,18 @@ void testApp::draw() {
 			
 			coordinator.popTransform();
 			//	ofPopMatrix();
-			ofDisableSmoothing();
 			
-			ofSetColor(0, 0, 0);
-			std::ostringstream ss;
 			
-			ss << ofGetFrameRate() << " " << m_stepCount << endl;
-			(*current)->log(ss);
+			if (displayMode == DISPLAY_MODE_DEBUG_GAME) {
+				ofSetColor(0, 0, 0);
+				std::ostringstream ss;
+				
+				ss << ofGetFrameRate() <<  endl;
+				(*citer)->debug(ss);
+				
+				ofDrawBitmapString(ss.str(), 20, 20);
+			}
 			
-			ofDrawBitmapString(ss.str(), 20, 20);
 			
 		} break;
 	
@@ -395,9 +449,9 @@ void testApp::BeginContact(b2Contact* contact)
 	
 	if (fixtureA->GetUserData() && fixtureB->GetUserData())
 	{
-		//if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
+		//if ((*citer)->getJoint() == fixtureA->GetUserData() || (*citer)->getJoint() == fixtureB->GetUserData() ) {
 		if ( (fixtureA->GetUserData() && fixtureB->GetUserData()) || fixtureA == groundFixture || fixtureB == groundFixture) {
-//			(*current)->setState(TEETER_STATE_TOUCHING);
+
 			cout << "contact" << endl;
 		}
 	}
@@ -412,8 +466,8 @@ void testApp::EndContact(b2Contact* contact)
 	
 	if ( (fixtureA->GetUserData() && fixtureB->GetUserData()) || fixtureA == groundFixture || fixtureB == groundFixture)
 	{
-		if ((*current)->getJoint() == fixtureA->GetUserData() || (*current)->getJoint() == fixtureB->GetUserData() ) {
-//			(*current)->setState(TEETER_STATE_UNBALLANCED);
+		if ((*citer)->getJoint() == fixtureA->GetUserData() || (*citer)->getJoint() == fixtureB->GetUserData() ) {
+
 			cout << "no contact" << endl;
 		}
 		
@@ -422,27 +476,53 @@ void testApp::EndContact(b2Contact* contact)
 }
 
 
-void testApp::nextTeeter() {
-	if (current!=teeters.begin()) {
-		(*current)->getTransform(position,scale);
-		current--;
-		(*current)->setFocus(0.0f);
-		ofRectangle rect;
-		segmentator.getROI(rect);
-		(*current)->setFocus(rect.x+rect.width/2);
+void testApp::next() {
+	if (citer!=teeters.begin()) {
+		(*citer)->getTransform(position,scale);
+		citer--;
+		
+		(*citer)->setFocus(rect);
 		animStart = ofGetElapsedTimeMillis();
 		bTrans = true;
+	} else {
+		bReset = true;	
+		animStart = ofGetElapsedTimeMillis();
 	}
+
 }
+
+void testApp::jump() {
+	
+	for (vector<Teeter*>::iterator iter=citer; iter!=teeters.end(); iter++) {
+		(*iter)->breakTeeter();
+	}
+	
+	(*citer)->jump(distance(citer,teeters.end()));
+	
+	bReset = true;	
+	animStart = ofGetElapsedTimeMillis();
+}
+
+void testApp::leave() {
+	for (vector<Teeter*>::iterator iter=citer; iter!=teeters.end(); iter++) {
+		(*iter)->breakTeeter();
+	}
+	(*citer)->leave();
+	
+	bReset = true;	
+	animStart = ofGetElapsedTimeMillis();
+}
+
 
 //--------------------------------------------------------------
 void testApp::keyPressed (int key) {
 	
 	if (key=='m') {
-		displayMode = (displayMode+1) % 3;
+		displayMode = (displayMode+1) % 4;
 		
 		switch (displayMode) {
 			case DISPLAY_MODE_GAME:
+			case DISPLAY_MODE_DEBUG_GAME:
 				ofBackground(255, 255, 255);
 				break;
 			default:
@@ -502,25 +582,28 @@ void testApp::keyPressed (int key) {
 			
 				
 		case DISPLAY_MODE_GAME:
+		case DISPLAY_MODE_DEBUG_GAME:
+			
+
 			switch (key) {
 									
 				case '1':
-					current = teeters.begin();
+					citer = teeters.begin();
 					break;
 				case '2':
-					current = teeters.begin()+1;
+					citer = teeters.begin()+1;
 					break;
 				case '3':
-					current = teeters.begin()+2;
+					citer = teeters.begin()+2;
 					break;
 					
 				case 's':
-					(*current)->start();
+					(*citer)->start();
 					
 					break;
 					
 				case 'n':
-					nextTeeter();
+					next();
 					break;
 					
 				case 't':
@@ -528,26 +611,16 @@ void testApp::keyPressed (int key) {
 					break;
 					
 				case 'l':
-				{
-					for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
-						(*iter)->breakTeeter();
-					}
-					//			int32 stage = distance(teeters.begin(),current);
-					//			(*current)->getBody()->ApplyTorque(-50000.0f*(teeters.size()-stage));
+					leave();
+					break;
+				case 'j': 
+					jump();
+					break;
 					
-					
-				} break;
-				case 'j': {
-					for (vector<Teeter*>::iterator iter=current; iter!=teeters.end(); iter++) {
-						(*iter)->breakTeeter();
-					}
-					//			int32 stage = distance(teeters.begin(),current);
-					//			(*current)->getBody()->ApplyTorque(-50000.0f*(teeters.size()-stage));
-					(*current)->jump();
-					
-				} break;
-					
-					
+				case 'r':
+					createTeeters();
+					break;
+
 									
 			} break;
 
@@ -606,6 +679,7 @@ void testApp::mouseReleased(int x, int y, int button)
 		rect.width = (x-mouseDown.x)/400.0*kinect.getWidth();
 		rect.height = (y-mouseDown.y)/300.0*kinect.getHeight();
 		segmentator.setROI(rect);
+		this->rect = rect;
 		//grayImage.setROI(rect);
 		mode =MOUSE_MODE_IDLE;
 	}

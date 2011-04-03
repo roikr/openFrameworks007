@@ -9,11 +9,16 @@
 #include "Teeter.h"
 #include "ofxSimpleSegmentator.h"
 
+
+#define RESET_DELAY 5000
+#define NUM_TEETERS 12
+
 class testApp : public ofBaseApp, b2ContactListener{
 	public:
 		testApp() : m_world(b2Vec2(0.0f,-10.0f),true) {};
 		void setup();
-	void setupPhysics();
+		void setupPhysics();
+		void createTeeters();
 		void update();
 		void draw();
 		void exit();
@@ -27,7 +32,10 @@ class testApp : public ofBaseApp, b2ContactListener{
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 	
-		void nextTeeter();
+		void next();
+		void jump();
+		void leave();
+	
 	
 		void BeginContact(b2Contact* contact);
 		void EndContact(b2Contact* contact);
@@ -64,20 +72,22 @@ class testApp : public ofBaseApp, b2ContactListener{
 		ofxCoordinator coordinator;
 	
 		vector<Teeter*> teeters;
-		vector<Teeter*>::iterator current;
-		vector<Teeter*>::iterator next;
+		vector<Teeter*>::iterator citer;
+		
 		
 		bool bTrans;
 		int animStart;
+		bool bJump;
+		bool bReset;
+	
 		b2Vec2 position;
 		float32 scale;
-		
-		int32 m_stepCount;
-	
 	
 		ofxSimpleSegmentator segmentator;
 		ofPoint mouseDown;
 	
-		int blobState;
+		ofRectangle rect;
+			
+		
 	
 };
