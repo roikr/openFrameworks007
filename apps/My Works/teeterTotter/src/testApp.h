@@ -95,4 +95,6 @@ class testApp : public ofBaseApp, b2ContactListener{
 		int outTimer;
 		int resetTimer;
 	
+		float32 startBlobY;
+	
 };

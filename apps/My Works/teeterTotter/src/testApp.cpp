@@ -45,7 +45,7 @@ void testApp::createTeeters() {
 	bTrans = false;
 	bJump = false;
 	bReset = false;
-	(*citer)->setFocus(rect);
+	(*citer)->setFocus(b2Vec2(rect.x+rect.width/2,rect.y+rect.height));
 }
 
 
@@ -113,8 +113,8 @@ void testApp::setup() {
 	ofSetFrameRate(60);
 
 	// zero the tilt on startup
-	angle = -15 ;
-	kinect.setCameraTiltAngle(angle);
+	angle = 0 ;
+//	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
 	pointCloudRotationY = 180;
@@ -127,14 +127,11 @@ void testApp::setup() {
 	
 	coordinator.setup(ofGetWidth(), ofGetHeight(), ofPoint(ofGetWidth()/2,ofGetHeight()), 50);
 	
-	setupPhysics();
-	createTeeters();
 	segmentator.load();
 	segmentator.getROI(rect);
-	(*citer)->setFocus(rect);
 	
-	
-	
+	setupPhysics();
+	createTeeters();
 	
 	ofBackground(255, 255, 255);
 	
@@ -214,7 +211,8 @@ void testApp::update() {
 							centerTimer = ofGetElapsedTimeMillis();
 						} else {
 							if (ofGetElapsedTimeMillis() - centerTimer>CENTER_DELAY) {
-								(*citer)->start();
+								startBlobY =blob.boundingRect.y+blob.boundingRect.height ;
+								(*citer)->start(startBlobY);
 							}
 						}
 						break;
@@ -223,9 +221,9 @@ void testApp::update() {
 					case TEETER_STATE_UNBALLANCED:
 						outTimer = ofGetElapsedTimeMillis();
 						if (!bJump) {
-							bJump =  (rect.y+rect.height) - (blob.boundingRect.y+blob.boundingRect.height) > 20;
+							bJump =  startBlobY - (blob.boundingRect.y+blob.boundingRect.height) > 20;
 						} else {
-							if ((rect.y+rect.height) - (blob.boundingRect.y+blob.boundingRect.height) < 10) {
+							if (startBlobY - (blob.boundingRect.y+blob.boundingRect.height) < 10) {
 								jump();
 								bJump = false;
 							}
@@ -340,6 +338,11 @@ void testApp::draw() {
 			grayImage.draw(10, 320, 400, 300);
 			contourFinder.draw(10,320, 400, 300);
 			
+			ofNoFill();
+			ofRect(rect.x*400.0/kinect.getWidth()+10,rect.y*300/kinect.getHeight()+10,rect.width*400.0/kinect.getWidth(),rect.height*300/kinect.getHeight());
+			
+			
+			
 			//grayImage.drawROI(10, 320, 400, 300);
 			
 			//contourFinder.draw(10+roi.x*400/kinect.getWidth(), 320+roi.y*300/kinect.getHeight(), 400, 300);
@@ -353,7 +356,11 @@ void testApp::draw() {
 			<<"num blobs found " << contourFinder.nBlobs
 			<< ", fps: " << ofGetFrameRate() << endl
 			<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl
-			<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl;
+			<< "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
+			<< "press f to enter floor segmentation mode (4 CW clicks)" << endl
+			<< "press r to enter 2D segmentation mode (drag rectangle)" << endl
+			<< "press k to save segmentation data" << endl;
+			
 			//<< "diff: " << m_position-m_center << ", m_position: " << m_position <<  ", m_center: " << m_center << ", m_bias: " << m_bias << endl;
 			
 			if (!contourFinder.blobs.empty()) {
@@ -361,7 +368,7 @@ void testApp::draw() {
 				reportStream << "area: " << b.area << endl;
 			} 
 			
-			ofDrawBitmapString(reportStream.str(),20,666);
+			ofDrawBitmapString(reportStream.str(),20,600);
 
 			
 		}	break;
@@ -503,7 +510,7 @@ void testApp::next() {
 		(*citer)->getTransform(position,scale);
 		citer--;
 		
-		(*citer)->setFocus(rect);
+		(*citer)->setFocus(b2Vec2(rect.x+rect.width/2,rect.y+rect.height));
 		animStart = ofGetElapsedTimeMillis();
 		bTrans = true;
 	} else {
@@ -606,21 +613,7 @@ void testApp::keyPressed (int key) {
 
 			switch (key) {
 									
-				case '1':
-					citer = teeters.begin();
-					break;
-				case '2':
-					citer = teeters.begin()+1;
-					break;
-				case '3':
-					citer = teeters.begin()+2;
-					break;
-					
-				case 's':
-					(*citer)->start();
-					
-					break;
-					
+				
 				case 'n':
 					next();
 					break;
@@ -655,7 +648,17 @@ void testApp::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button)
 {
-
+	if (mode == MOUSE_MODE_ROI) {
+		ofRectangle rect;
+		
+		rect.x = (mouseDown.x-10.0)/400.0*kinect.getWidth();
+		rect.y = (mouseDown.y-10.0)/300.0*kinect.getHeight();
+		rect.width = (x-mouseDown.x)/400.0*kinect.getWidth();
+		rect.height = (y-mouseDown.y)/300.0*kinect.getHeight();
+		segmentator.setROI(rect);
+		this->rect = rect;
+	}
+	
 }
 
 //--------------------------------------------------------------
@@ -690,20 +693,10 @@ void testApp::mousePressed(int x, int y, int button)
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button)
 {
-	if (mode == MOUSE_MODE_ROI) {
-		ofRectangle rect;
 		
-		rect.x = (mouseDown.x-10.0)/400.0*kinect.getWidth();
-		rect.y = (mouseDown.y-10.0)/300.0*kinect.getHeight();
-		rect.width = (x-mouseDown.x)/400.0*kinect.getWidth();
-		rect.height = (y-mouseDown.y)/300.0*kinect.getHeight();
-		segmentator.setROI(rect);
-		this->rect = rect;
-		//grayImage.setROI(rect);
+	if (mode == MOUSE_MODE_ROI) {
 		mode =MOUSE_MODE_IDLE;
 	}
-	
-	
 	
 	
 }
@@ -718,7 +711,7 @@ void testApp::windowResized(int w, int h)
 
 //--------------------------------------------------------------
 void testApp::exit() {
-	kinect.setCameraTiltAngle(0); // zero the tilt on exit
+	//kinect.setCameraTiltAngle(0); // zero the tilt on exit
 	kinect.close();
 }
 

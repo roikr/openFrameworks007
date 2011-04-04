@@ -56,7 +56,7 @@ Teeter::Teeter(b2World *m_world,float32 t,b2Vec2 position,b2Body *parent,bool bL
 	
 	
 	
-	playerShape.SetAsBox(p, 3*p, b2Vec2(5.0f*t-p, 3*p+p/10), 0.0f);
+	playerShape.SetAsBox(p, 3*p, b2Vec2(PAYLOAD_OFFSET*5.0f*t-p, 3*p+p/10), 0.0f);
 	playerFixture = 0;
 	
 	leafImage = 0;
@@ -66,7 +66,7 @@ Teeter::Teeter(b2World *m_world,float32 t,b2Vec2 position,b2Body *parent,bool bL
 	
 	if (bLeaf) {
 		
-		payloadShape.SetAsBox(p, p, b2Vec2(-5.0f*t+p, p+p/10), 0.0f);
+		payloadShape.SetAsBox(p, p, b2Vec2(PAYLOAD_OFFSET*-5.0f*t+p, p+p/10), 0.0f);
 		leafImage = new ofImage();
 		leafImage->loadImage("weight.png");
 	} else {
@@ -88,8 +88,6 @@ Teeter::Teeter(b2World *m_world,float32 t,b2Vec2 position,b2Body *parent,bool bL
 	
 	payloadFixture = teeter->CreateFixture(&payloadShape,1.0f);
 	
-
-	
 	scale = 4.0f/t;
 	state = TEETER_STATE_LOCKED;
 	
@@ -98,8 +96,6 @@ Teeter::Teeter(b2World *m_world,float32 t,b2Vec2 position,b2Body *parent,bool bL
 	}
 	
 	siter=speeds.begin();
-	
-	
 	
 	cbiter = blobs.end();
 	bBlob = false;
@@ -261,13 +257,14 @@ void Teeter::update() {
 }
 
 
-void Teeter::setFocus(ofRectangle &rect) {
+void Teeter::setFocus(b2Vec2 centerPos) {
 	state = TEETER_STATE_RESTING;
 	joint->SetLimits(-18.0/180.0*b2_pi,18.0/180.0*b2_pi); 
-	this->rect = rect;
+	this->centerPos = centerPos;
 }
 
-void Teeter::start() {
+void Teeter::start(float32 blobY) {
+	this->blobY = blobY;
 	state = TEETER_STATE_STARTED;
 	playerFixture = teeter->CreateFixture(&playerShape,1.0f/3);
 	joint->EnableMotor(true);
@@ -283,6 +280,19 @@ void Teeter::noBlob() {
 	bBlob = false;
 }
 
+void Teeter::copyBlob(ofxCvBlob &src,ofxCvBlob &dest) {
+	dest = src;
+	
+	int n=2;
+	for( int j=n; j<src.nPts-n; j++ ) {
+		for (int i=1; i<=n; i++) {
+			dest.pts[j]+=src.pts[j-i]+src.pts[j+i];
+		}
+		dest.pts[j] *= (1.0f/(2.0*n+1));
+		
+	}
+}
+
 void Teeter::updateBlob(ofxCvBlob& blob) {
 	
 	bBlob = true;
@@ -295,7 +305,9 @@ void Teeter::updateBlob(ofxCvBlob& blob) {
 				blobs.push_back(new ofxCvBlob);
 				cbiter=blobs.begin();
 			}
-			(**cbiter) = blob;
+			
+			copyBlob(blob,**cbiter);
+			
 			
 			
 
@@ -318,20 +330,13 @@ void Teeter::updateBlob(ofxCvBlob& blob) {
 				}
 			}
 			
-			(**cbiter) = blob;
+			copyBlob(blob,**cbiter);
 			
-			int n=2;
-			for( int j=n; j<blob.nPts-n; j++ ) {
-				for (int i=1; i<=n; i++) {
-					(*cbiter)->pts[j]+=blob.pts[j-i]+blob.pts[j+i];
-				}
-				(*cbiter)->pts[j] *= (1.0f/(2.0*n+1));
-				
-			}
+			
 			
 			if (state!=TEETER_STATE_BROKEN) {
 									
-				joint->SetMotorSpeed(-( (*cbiter)->centroid.x-(rect.x+rect.width/2))/10.0f*b2_pi/10.0f);
+				joint->SetMotorSpeed(-((*cbiter)->centroid.x-centerPos.x)/20.0f*b2_pi/10.0f);
 					
 				
 				
@@ -449,26 +454,25 @@ void Teeter::drawPlayer() {
 	
 	ofPushMatrix();
 	
-	
+	float32 blobFactor = 0.05 / scale; // to cancel current teeter scaling
 	
 	if (state==TEETER_STATE_RESTING) {
 		//b2Vec2(5.0f*t-2*p/3.0f, p+p/10)
-		ofTranslate(position.x+5.0*t, position.y, 0);
+		ofTranslate(position.x+PAYLOAD_OFFSET*5.0*t, position.y, 0);
 		
+		ofScale(blobFactor, -blobFactor,1.0f);
+		ofTranslate(-centerPos.x, -centerPos.y, 0);
 				
 	} else {
 		if (!playerFixture) {
 			return;
 		}
 		translateFixture(playerFixture, ( state==TEETER_STATE_BROKEN ? player : teeter)->GetTransform());
-		//ofRotate(degree);
-		
+		ofScale(blobFactor, -blobFactor,1.0f);
+		ofTranslate(-centerPos.x, -blobY, 0);
 	}
 	
-	float32 blobFactor = 0.05 / scale; // to cancel current teeter scaling
-	ofScale(blobFactor, -blobFactor,1.0f);
-	//	ofTranslate(-(rect.x+rect.width/2), -(blob.boundingRect.y+blob.boundingRect.height), 0);
-	ofTranslate(-(rect.x+rect.width/2), -(rect.y+rect.height), 0);
+	
 	
 	
 	ofPushStyle();
@@ -501,9 +505,9 @@ void Teeter::drawPlayer() {
 	}
 	ofEndShape();
 	
-	ofSetColor(0xFF0000);
-	ofRect( (*cbiter)->centroid.x-2, (*cbiter)->centroid.y-2,  4, 4 );
-	ofNoFill();
+//	ofSetColor(0xFF0000);
+//	ofRect( (*cbiter)->centroid.x-2, (*cbiter)->centroid.y-2,  4, 4 );
+//	ofNoFill();
 	//	ofRect( blob.boundingRect.x, blob.boundingRect.y,  blob.boundingRect.width, blob.boundingRect.height );
 	
 	ofPopStyle();
@@ -645,7 +649,7 @@ b2Body *Teeter::getTeeterBody() {
 void Teeter::debug(ostringstream& ss) {
 	ss << "state: " << getState() << endl;
 	if (cbiter!=blobs.end()) {
-		ss << "diff: " << (*cbiter)->centroid.x-(rect.x+rect.width/2)<<endl;
+		ss << "diff: " << (*cbiter)->centroid.x-centerPos.x<<endl;
 	}
 	//ss << "centerTime: " << ofGetElapsedTimeMillis() - centerTime << endl;
 	ss <<"minSpeed: " << minSpeed	<< ", maxSpeed: " << maxSpeed << ", angle: " << angle	<< endl; // ", speed: " << joint->GetJointSpeed()*180.0/b2_pi	<<

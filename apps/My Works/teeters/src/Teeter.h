@@ -14,6 +14,7 @@
 
 #define SCALING_FACTOR 0.8f
 #define NUM_BLOBS 300
+#define PAYLOAD_OFFSET 0.8f
 
 enum {
 	TEETER_STATE_LOCKED,
@@ -38,8 +39,8 @@ public:
 	
 	void reset();
 	
-	void setFocus(ofRectangle& rect);
-	void start();
+	void setFocus(b2Vec2 centerPos);
+	void start(float32 blobY);
 
 	void draw();
 	void drawPlayer();
@@ -49,6 +50,9 @@ public:
 	void noBlob();
 	void updateBlob(ofxCvBlob& blob);
 	void displace(float32 bias);
+	
+	void copyBlob(ofxCvBlob &src,ofxCvBlob &dest);
+
 	
 	void breakTeeter();
 	void leave();
@@ -102,7 +106,8 @@ private:
 	vector<ofxCvBlob *>::iterator cbiter; // current blob iter
 	
 	
-	ofRectangle rect; // blob ref rect
+	b2Vec2 centerPos;
+	float32 blobY;
 	
 	bool bLeaf;
 	ofImage *leafImage;
