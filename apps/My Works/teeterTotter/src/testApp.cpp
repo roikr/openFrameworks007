@@ -176,10 +176,15 @@ void testApp::update() {
 			
 			// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 			// also, find holes is set to true so we will get interior contours as well....
-			contourFinder.findContours(grayImage, 5000, (kinect.width*kinect.height)/2, 1, false);
+			contourFinder.findContours(grayImage, 10000, (kinect.width*kinect.height)/2, 1, false);
 			
 			if (contourFinder.blobs.empty() ) {
 				switch ((*citer)->getState() ) {
+					case TEETER_STATE_RESTING:
+						(*citer)->noBlob();
+						centerTimer = ofGetElapsedTimeMillis();
+						break;
+
 					case TEETER_STATE_BALLANCED:
 						if (!bReset) {
 							next();
@@ -190,7 +195,9 @@ void testApp::update() {
 					case TEETER_STATE_STARTED:
 					case TEETER_STATE_UNBALLANCED:
 						(*citer)->noBlob();
-						leave();
+						if	(ofGetElapsedTimeMillis()-outTimer>OUT_DELAY) {
+							leave();
+						}
 						break;
 					default:						
 						(*citer)->noBlob();
@@ -202,8 +209,19 @@ void testApp::update() {
 				(*citer)->updateBlob(blob);
 				
 				switch ((*citer)->getState()){
+					case TEETER_STATE_RESTING:
+						if (fabs(blob.centroid.x-(rect.x+rect.width/2)) > 30) {
+							centerTimer = ofGetElapsedTimeMillis();
+						} else {
+							if (ofGetElapsedTimeMillis() - centerTimer>CENTER_DELAY) {
+								(*citer)->start();
+							}
+						}
+						break;
+
 					case TEETER_STATE_STARTED:
 					case TEETER_STATE_UNBALLANCED:
+						outTimer = ofGetElapsedTimeMillis();
 						if (!bJump) {
 							bJump =  (rect.y+rect.height) - (blob.boundingRect.y+blob.boundingRect.height) > 20;
 						} else {
@@ -255,7 +273,7 @@ void testApp::update() {
 	}
 	
 	if (bReset) {
-		if (ofGetElapsedTimeMillis()-animStart>RESET_DELAY) {
+		if (ofGetElapsedTimeMillis()-resetTimer>RESET_DELAY) {
 			createTeeters();
 		}
 		
@@ -475,6 +493,10 @@ void testApp::EndContact(b2Contact* contact)
 	
 }
 
+void testApp::reset() {
+	bReset = true;	
+	resetTimer = ofGetElapsedTimeMillis();
+}
 
 void testApp::next() {
 	if (citer!=teeters.begin()) {
@@ -485,8 +507,7 @@ void testApp::next() {
 		animStart = ofGetElapsedTimeMillis();
 		bTrans = true;
 	} else {
-		bReset = true;	
-		animStart = ofGetElapsedTimeMillis();
+		reset();
 	}
 
 }
@@ -499,8 +520,7 @@ void testApp::jump() {
 	
 	(*citer)->jump(distance(citer,teeters.end()));
 	
-	bReset = true;	
-	animStart = ofGetElapsedTimeMillis();
+	reset();
 }
 
 void testApp::leave() {
@@ -509,8 +529,7 @@ void testApp::leave() {
 	}
 	(*citer)->leave();
 	
-	bReset = true;	
-	animStart = ofGetElapsedTimeMillis();
+	reset();
 }
 
 

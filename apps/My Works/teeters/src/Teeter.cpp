@@ -264,8 +264,6 @@ void Teeter::update() {
 void Teeter::setFocus(ofRectangle &rect) {
 	state = TEETER_STATE_RESTING;
 	joint->SetLimits(-18.0/180.0*b2_pi,18.0/180.0*b2_pi); 
-	
-	centerTime = ofGetElapsedTimeMillis(); // start look for center
 	this->rect = rect;
 }
 
@@ -283,7 +281,6 @@ void Teeter::start() {
 
 void Teeter::noBlob() {
 	bBlob = false;
-	centerTime = ofGetElapsedTimeMillis();
 }
 
 void Teeter::updateBlob(ofxCvBlob& blob) {
@@ -300,13 +297,7 @@ void Teeter::updateBlob(ofxCvBlob& blob) {
 			}
 			(**cbiter) = blob;
 			
-			if (fabs(blob.centroid.x-(rect.x+rect.width/2)) > 30) {
-				centerTime = ofGetElapsedTimeMillis();
-			} else {
-				if (ofGetElapsedTimeMillis() - centerTime>2000) {
-					start();
-				}
-			}
+			
 
 
 			break;
@@ -613,8 +604,8 @@ void Teeter::leave() {
 }
 
 void Teeter::jump(int multiplier) {
-	float32 power = 5000/exp(multiplier*log(SCALING_FACTOR));
-	player->ApplyForce(b2Vec2(0,-5*power),player->GetWorldCenter());
+	float32 power = 500/exp(multiplier*log(SCALING_FACTOR));
+	player->ApplyForce(b2Vec2(0,-power),player->GetWorldCenter());
 	teeter->ApplyTorque(-power);
 }
 
@@ -656,6 +647,6 @@ void Teeter::debug(ostringstream& ss) {
 	if (cbiter!=blobs.end()) {
 		ss << "diff: " << (*cbiter)->centroid.x-(rect.x+rect.width/2)<<endl;
 	}
-	ss << "centerTime: " << ofGetElapsedTimeMillis() - centerTime << endl;
+	//ss << "centerTime: " << ofGetElapsedTimeMillis() - centerTime << endl;
 	ss <<"minSpeed: " << minSpeed	<< ", maxSpeed: " << maxSpeed << ", angle: " << angle	<< endl; // ", speed: " << joint->GetJointSpeed()*180.0/b2_pi	<<
 }

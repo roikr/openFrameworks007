@@ -13,7 +13,7 @@
 #include "ofxOpenCv.h"
 
 #define SCALING_FACTOR 0.8f
-#define NUM_BLOBS 30
+#define NUM_BLOBS 300
 
 enum {
 	TEETER_STATE_LOCKED,
@@ -119,6 +119,6 @@ private:
 	int loopFrame;
 	vector<ofxCvBlob *>::iterator lbiter;
 	
-	int centerTime;
+	
 	bool bBlob;
 };
