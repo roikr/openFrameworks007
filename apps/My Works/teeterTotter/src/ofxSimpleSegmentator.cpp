@@ -104,7 +104,7 @@ bool ofxSimpleSegmentator::getIsReady() {
 bool ofxSimpleSegmentator::getIsVectorInside(ofxVec3f &vec) {
 		
 	for (int k=0; k<normals.size(); k++) {
-		if (vec.dot(normals[k]) > points[k % 4].dot(normals[k] - 0.01) ) {
+		if (vec.dot(normals[k]) > points[k % 4].dot(normals[k] - 0.012) ) {
 			return false;
 		}
 	}

@@ -11,6 +11,8 @@
 
 
 #define RESET_DELAY 5000
+#define OUT_DELAY 1000
+#define CENTER_DELAY 2000
 #define NUM_TEETERS 12
 
 class testApp : public ofBaseApp, b2ContactListener{
@@ -35,6 +37,7 @@ class testApp : public ofBaseApp, b2ContactListener{
 		void next();
 		void jump();
 		void leave();
+		void reset();
 	
 	
 		void BeginContact(b2Contact* contact);
@@ -88,6 +91,10 @@ class testApp : public ofBaseApp, b2ContactListener{
 	
 		ofRectangle rect;
 			
-		
+		int centerTimer;
+		int outTimer;
+		int resetTimer;
+	
+		float32 startBlobY;
 	
 };
