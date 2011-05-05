@@ -132,7 +132,8 @@ void testApp::setup() {
 	
 	setupPhysics();
 	createTeeters();
-	
+	bShowCursor = false;
+	ofHideCursor();
 	ofBackground(255, 255, 255);
 	
 }
@@ -173,7 +174,7 @@ void testApp::update() {
 			
 			// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 			// also, find holes is set to true so we will get interior contours as well....
-			contourFinder.findContours(grayImage, 10000, (kinect.width*kinect.height)/2, 1, false);
+			contourFinder.findContours(grayImage, MIN_BLOB_AREA, (kinect.width*kinect.height)/2, 1, false);
 			
 			if (contourFinder.blobs.empty() ) {
 				switch ((*citer)->getState() ) {
@@ -602,6 +603,15 @@ void testApp::keyPressed (int key) {
 				case 'r':
 					mode = MOUSE_MODE_ROI;
 					break;
+					
+				case 't':
+					bShowCursor = !bShowCursor;
+					if (bShowCursor) {
+						ofShowCursor();
+					} else{
+						ofHideCursor();
+					}
+
 				
 			} break;
 			

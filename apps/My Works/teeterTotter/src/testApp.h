@@ -14,6 +14,7 @@
 #define OUT_DELAY 1000
 #define CENTER_DELAY 2000
 #define NUM_TEETERS 12
+#define MIN_BLOB_AREA 7500
 
 class testApp : public ofBaseApp, b2ContactListener{
 	public:
@@ -96,5 +97,7 @@ class testApp : public ofBaseApp, b2ContactListener{
 		int resetTimer;
 	
 		float32 startBlobY;
+	
+	bool bShowCursor;
 	
 };
