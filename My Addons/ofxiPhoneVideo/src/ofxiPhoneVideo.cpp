@@ -24,7 +24,7 @@ void ofxiPhoneVideo::drawTexture(int texture) {
 	
 	if (!bHorizontal) {
 		ofTranslate(textureHeight, 0, 0);
-		ofRotateZ(90);
+		ofRotate(90);
 		
 	}
 	
