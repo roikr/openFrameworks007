@@ -9,9 +9,11 @@ void testApp::setup(){
 	
 	xml.pushTag("downloader");
 	background.loadImage(xml.getAttribute("background", "filename", ""));
-	progressBar.loadImage(xml.getAttribute("progress_bar", "filename", ""));
-	progressPos = ofPoint(xml.getAttribute("progress_bar", "x", 0),xml.getAttribute("progress_bar", "y", 0));
+	progressBar.loadImage(xml.getAttribute("progress", "bar", ""));
+	progressBackground.loadImage(xml.getAttribute("progress", "background", ""));
+	progressPos = ofPoint(xml.getAttribute("progress", "x", 0),xml.getAttribute("progress", "y", 0));
 	titleOffset = ofPoint(xml.getAttribute("title_offset", "x", 0),xml.getAttribute("title_offset", "y", 0));
+	ttf.loadFont(xml.getAttribute("font", "filename", ""), xml.getAttribute("font", "size", 20));
 	normal.loadImage(xml.getAttribute("button", "normal", ""));
 	highlighted.loadImage(xml.getAttribute("button", "highlighted", ""));
 	selected.loadImage(xml.getAttribute("button", "selected", ""));
@@ -49,7 +51,7 @@ void testApp::setup(){
 	}
 	
 	xml.popTag();
-	ttf.loadFont("mono.ttf", 20);
+	
 	progress= 0.5;
 }
 
@@ -61,6 +63,58 @@ void testApp::update(){
 
 }
 
+//----------------------------------------------------------
+void testApp::drawTexture(ofTextureData &texData, float x, float y, float w, float h){
+	
+	glEnable(texData.textureTarget);
+	
+	// bind the texture
+	glBindTexture( texData.textureTarget, (GLuint)texData.textureID );
+	
+	GLfloat px0 = 0;		// up to you to get the aspect ratio right
+	GLfloat py0 = 0;
+	GLfloat px1 = w;
+	GLfloat py1 = h;
+	
+		
+	// -------------------------------------------------
+	
+	GLfloat tx0 = 0;
+	GLfloat ty0 = 0;
+//	GLfloat tx1 = texData.tex_t - offsetw;
+//	GLfloat ty1 = texData.tex_u - offseth;
+	GLfloat tx1 = w;
+	GLfloat ty1 = h;
+	
+	glPushMatrix(); 
+	
+	glTranslatef(x,y,0.0f);
+	
+	GLfloat tex_coords[] = {
+		tx0,ty0,
+		tx1,ty0,
+		tx1,ty1,
+		tx0,ty1
+	};
+	GLfloat verts[] = {
+		px0,py0,
+		px1,py0,
+		px1,py1,
+		px0,py1
+	};
+	
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
+	glPopMatrix();
+	glDisable(texData.textureTarget);
+}
+
+
 //--------------------------------------------------------------
 void testApp::draw(){
 
@@ -69,7 +123,9 @@ void testApp::draw(){
 	ofSetColor(0xFFFFFF);
 	background.draw(0, 0);
 	ofEnableAlphaBlending();
-	progressBar.draw(progressPos.x, progressPos.y);
+	progressBackground.draw(progressPos.x, progressPos.y);
+//	progressBar.draw(progressPos.x, progressPos.y);
+	drawTexture(progressBar.getTextureReference().texData, progressPos.x, progressPos.y, progressBar.width*progress, progressBar.height);
 		
 //
 //	//instructions at the bottom

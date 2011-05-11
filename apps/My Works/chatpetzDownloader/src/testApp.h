@@ -38,6 +38,8 @@ class testApp : public ofBaseApp{
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 
+		void drawTexture(ofTextureData &texData, float x, float y, float w, float h);
+
 		ofxXmlSettings xml;
 		ofTrueTypeFont ttf;
 	
@@ -54,6 +56,7 @@ class testApp : public ofBaseApp{
 	float progress;
 	ofPoint progressPos;
 	ofImage progressBar;
+	ofImage progressBackground;
 
 };
 
