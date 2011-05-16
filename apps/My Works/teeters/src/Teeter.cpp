@@ -125,7 +125,14 @@ Teeter::~Teeter() {
 		m_world->DestroyBody(player);
 	}
 
+	for (vector<ofxCvBlob*>::iterator iter = blobs.begin();iter!=blobs.end();iter++) {
+		delete *iter;
+	}
 	
+	if	(bLeaf) {
+		//leafImage->clear();
+		delete leafImage; // clear in the destructor
+	}
 	
 }
 

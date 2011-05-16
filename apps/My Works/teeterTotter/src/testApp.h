@@ -13,8 +13,8 @@
 #define RESET_DELAY 5000
 #define OUT_DELAY 1000
 #define CENTER_DELAY 2000
-#define NUM_TEETERS 12
-#define MIN_BLOB_AREA 7500
+#define NUM_TEETERS 12 // 12
+#define MIN_BLOB_AREA 2500 // 7500
 
 class testApp : public ofBaseApp, b2ContactListener{
 	public:

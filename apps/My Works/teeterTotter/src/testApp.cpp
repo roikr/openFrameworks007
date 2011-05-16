@@ -208,13 +208,18 @@ void testApp::update() {
 				
 				switch ((*citer)->getState()){
 					case TEETER_STATE_RESTING:
-						if (fabs(blob.centroid.x-(rect.x+rect.width/2)) > 30) {
+						
+						/* if (fabs(blob.centroid.x-(rect.x+rect.width/2)) > 30) {
 							centerTimer = ofGetElapsedTimeMillis();
 						} else {
 							if (ofGetElapsedTimeMillis() - centerTimer>CENTER_DELAY) {
 								startBlobY =blob.boundingRect.y+blob.boundingRect.height ;
 								(*citer)->start(startBlobY);
 							}
+						} */
+						if (ofGetElapsedTimeMillis() - centerTimer>CENTER_DELAY) {
+							startBlobY =blob.boundingRect.y+blob.boundingRect.height ;
+							(*citer)->start(startBlobY);
 						}
 						break;
 
