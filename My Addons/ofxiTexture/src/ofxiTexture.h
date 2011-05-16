@@ -21,6 +21,7 @@ class ofxiTexture {
 	
 	bool load(string filename);
 	void draw();
+	void release();
 	
 	GLuint _name;
 	uint32_t _width, _height;

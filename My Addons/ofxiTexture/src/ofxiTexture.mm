@@ -253,3 +253,20 @@ void ofxiTexture::draw() {
 }
 	
 	
+void ofxiTexture::release() {
+	if (_name) {
+		glDeleteTextures(1, &_name);
+		_name = 0;
+		_width = 0;
+		_height = 0;
+#ifdef LOG_OFXI_TEXTURE
+		cout << "ofxiTexture::release: " <<  _name  << endl; 
+#endif
+	} else {
+#ifdef LOG_OFXI_TEXTURE
+		cout << "ofxiTexture::release: already empty" << endl; 
+#endif
+	}
+	
+	
+}
