@@ -34,6 +34,10 @@
 		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E43929311293250B00F855A8 /* ofxPincher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E439292F1293250B00F855A8 /* ofxPincher.cpp */; };
+		E48BFFC41373D1D000518708 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48BFFBC1373D1D000518708 /* CAStreamBasicDescription.cpp */; };
+		E48BFFC51373D1D000518708 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E48BFFBE1373D1D000518708 /* CAXException.cpp */; };
+		E48BFFC61373D1D000518708 /* README in Resources */ = {isa = PBXBuildFile; fileRef = E48BFFC01373D1D000518708 /* README */; };
+		E48BFFC71373D1D000518708 /* ofxAudioFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = E48BFFC31373D1D000518708 /* ofxAudioFile.mm */; };
 		E4A0386312D10D74007EA18F /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A0386212D10D74007EA18F /* ofxiTexture.mm */; };
 		E4A038E912D11A25007EA18F /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A038E512D11A25007EA18F /* easing.cpp */; };
 		E4A038EA12D11A25007EA18F /* ofMainExt.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4A038E812D11A25007EA18F /* ofMainExt.mm */; };
@@ -85,7 +89,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* doronoPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = doronoPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* DoronoPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoronoPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
@@ -162,6 +166,15 @@
 		DA7851281105C039007EFC90 /* gluos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluos.h; sourceTree = "<group>"; };
 		E439292F1293250B00F855A8 /* ofxPincher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPincher.cpp; sourceTree = "<group>"; };
 		E43929301293250B00F855A8 /* ofxPincher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPincher.h; sourceTree = "<group>"; };
+		E48BFFBA1373D1D000518708 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugMacros.h; sourceTree = "<group>"; };
+		E48BFFBB1373D1D000518708 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAMath.h; sourceTree = "<group>"; };
+		E48BFFBC1373D1D000518708 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
+		E48BFFBD1373D1D000518708 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamBasicDescription.h; sourceTree = "<group>"; };
+		E48BFFBE1373D1D000518708 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAXException.cpp; sourceTree = "<group>"; };
+		E48BFFBF1373D1D000518708 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAXException.h; sourceTree = "<group>"; };
+		E48BFFC01373D1D000518708 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		E48BFFC21373D1D000518708 /* ofxAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioFile.h; sourceTree = "<group>"; };
+		E48BFFC31373D1D000518708 /* ofxAudioFile.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxAudioFile.mm; sourceTree = "<group>"; };
 		E4A0386112D10D74007EA18F /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
 		E4A0386212D10D74007EA18F /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E4A038E512D11A25007EA18F /* easing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = easing.cpp; sourceTree = "<group>"; };
@@ -255,7 +268,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* doronoPhone.app */,
+				1D6058910D05DD3D006BFB54 /* DoronoPhone.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -355,6 +368,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E48BFFB81373D1D000518708 /* ofxAudioFile */,
 				E4A039F712D12F65007EA18F /* ofxSndFile */,
 				E4A039E612D12F4D007EA18F /* ofxXmlSettings */,
 				E4A039CE12D12F15007EA18F /* ofxMidi */,
@@ -606,6 +620,39 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E48BFFB81373D1D000518708 /* ofxAudioFile */ = {
+			isa = PBXGroup;
+			children = (
+				E48BFFB91373D1D000518708 /* iPublicUtility */,
+				E48BFFC01373D1D000518708 /* README */,
+				E48BFFC11373D1D000518708 /* src */,
+			);
+			name = ofxAudioFile;
+			path = "../../../My Addons/ofxAudioFile";
+			sourceTree = SOURCE_ROOT;
+		};
+		E48BFFB91373D1D000518708 /* iPublicUtility */ = {
+			isa = PBXGroup;
+			children = (
+				E48BFFBA1373D1D000518708 /* CADebugMacros.h */,
+				E48BFFBB1373D1D000518708 /* CAMath.h */,
+				E48BFFBC1373D1D000518708 /* CAStreamBasicDescription.cpp */,
+				E48BFFBD1373D1D000518708 /* CAStreamBasicDescription.h */,
+				E48BFFBE1373D1D000518708 /* CAXException.cpp */,
+				E48BFFBF1373D1D000518708 /* CAXException.h */,
+			);
+			path = iPublicUtility;
+			sourceTree = "<group>";
+		};
+		E48BFFC11373D1D000518708 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E48BFFC21373D1D000518708 /* ofxAudioFile.h */,
+				E48BFFC31373D1D000518708 /* ofxAudioFile.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4A0385312D10D37007EA18F /* ofxiTexture */ = {
 			isa = PBXGroup;
 			children = (
@@ -774,9 +821,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* doronoPhone */ = {
+		1D6058900D05DD3D006BFB54 /* DoronoPhone */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "doronoPhone" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "DoronoPhone" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -788,9 +835,9 @@
 			dependencies = (
 				BB24E23E10DAA93400E9C588 /* PBXTargetDependency */,
 			);
-			name = doronoPhone;
+			name = DoronoPhone;
 			productName = iPhone;
-			productReference = 1D6058910D05DD3D006BFB54 /* doronoPhone.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* DoronoPhone.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -818,7 +865,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* doronoPhone */,
+				1D6058900D05DD3D006BFB54 /* DoronoPhone */,
 			);
 		};
 /* End PBXProject section */
@@ -844,6 +891,7 @@
 				E4A039F012D12F4D007EA18F /* install.xml in Resources */,
 				E4A9F88712D211CD00F20E4E /* doron.xml in Resources */,
 				E4A9F88812D211CD00F20E4E /* wedding_march_01.mid in Resources */,
+				E48BFFC61373D1D000518708 /* README in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -895,6 +943,9 @@
 				E4A039F312D12F4D007EA18F /* tinyxmlparser.cpp in Sources */,
 				E4A039F412D12F4D007EA18F /* ofxXmlSettings.cpp in Sources */,
 				E4A039FB12D12F65007EA18F /* ofxSndFile.cpp in Sources */,
+				E48BFFC41373D1D000518708 /* CAStreamBasicDescription.cpp in Sources */,
+				E48BFFC51373D1D000518708 /* CAXException.cpp in Sources */,
+				E48BFFC71373D1D000518708 /* ofxAudioFile.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -913,7 +964,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (G22F3GL4MN)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -931,6 +981,7 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../libs/freetype/lib\"",
@@ -965,7 +1016,6 @@
 					"-lsndfile",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "809FA590-A5D0-4BA9-9757-3FD36DDFDEB4";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -975,7 +1025,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (G22F3GL4MN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roee Kremer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
@@ -1019,12 +1069,14 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-w",
+					"-lsndfile",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "809FA590-A5D0-4BA9-9757-3FD36DDFDEB4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "96CC74DF-5FB9-4869-81E7-5A60D0811758";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -1048,7 +1100,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (G22F3GL4MN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roee Kremer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
@@ -1092,9 +1144,14 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-w",
+					"-lsndfile",
+				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "809FA590-A5D0-4BA9-9757-3FD36DDFDEB4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "96CC74DF-5FB9-4869-81E7-5A60D0811758";
 				SDKROOT = iphoneos;
 			};
 			name = Distribution;
@@ -1140,7 +1197,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "doronoPhone" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "DoronoPhone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
