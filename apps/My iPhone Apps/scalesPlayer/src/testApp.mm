@@ -129,7 +129,9 @@ void testApp::audioRequested(float * output, int bufferSize, int nChannels){
 	
 	
 	instrument.preProcess();
-	instrument.mixWithBlocks(lBlock,rBlock);
+	//instrument.mixWithBlocks(lBlock,rBlock);
+	instrument.mixChannel(lBlock, 0, 1);
+	instrument.mixChannel(rBlock, 0, 1);
 	instrument.postProcess();
 	
 	for (int i = 0; i < bufferSize; i++){

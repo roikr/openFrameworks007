@@ -903,7 +903,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A9796A89-168B-44B8-BF3C-97A7B608E436";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "78699773-C21F-4972-BF61-6C9487A12217";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1035,7 +1035,7 @@
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "26312609-D4DC-4334-B323-DE45B09A7C83";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.2;
 			};
 			name = Distribution;
 		};
