@@ -144,8 +144,17 @@ string ofToString(int value){
 //----------------------------------------------------------
 
 void ofBackground(int r, int g, int b) {
-	glClearColor(r,g,b,0);
+	
+	float 			bgColor[4]			= {0,0,0,0};
+	bgColor[0] = (float)r / (float)255.0f;
+	bgColor[1] = (float)g / (float)255.0f;
+	bgColor[2] = (float)b / (float)255.0f;
+	bgColor[3] = 1.0f;
+	// if we are in not-auto mode, then clear with a bg call...
+	
+	glClearColor(bgColor[0],bgColor[1],bgColor[2], bgColor[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 	
 }
 
