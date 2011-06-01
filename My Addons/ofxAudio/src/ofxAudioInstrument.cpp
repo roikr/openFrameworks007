@@ -141,11 +141,20 @@ void ofxAudioInstrument::preProcess() {
 	
 }
 
+/*
 void ofxAudioInstrument::mixWithBlocks(float *left,float *right) {
 	for (vector<note>::iterator iter=playing.begin() ; iter!=playing.end();iter++) {
 		iter->sample->mixWithBlocks(left,right);
 	}
 }
+*/
+
+void ofxAudioInstrument::mixChannel(float * output, int channel, int nChannels) {
+	for (vector<note>::iterator iter=playing.begin() ; iter!=playing.end();iter++) {
+		iter->sample->mixChannel(output,channel,nChannels);
+	}
+}
+
 
 void ofxAudioInstrument::postProcess() { 
 	

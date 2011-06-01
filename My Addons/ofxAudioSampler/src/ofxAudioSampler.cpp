@@ -127,7 +127,7 @@ void ofxAudioSampler::stop() {
 void ofxAudioSampler::normalize() {
 	double peak = 0;
 	for (int i = 0; i < bufferSize * numBuffers; i++){
-		peak = max(peak,sqrt(buffer[i]*buffer[i]));
+		peak = fmax(peak,sqrt(buffer[i]*buffer[i]));
 	}
 	
 	for (int i = 0; i < bufferSize * numBuffers; i++){

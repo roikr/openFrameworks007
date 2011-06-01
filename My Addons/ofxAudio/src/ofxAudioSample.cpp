@@ -44,9 +44,17 @@ void ofxAudioSample::stop() {
 	}
 }
 
+/*
 void ofxAudioSample::mixWithBlocks(float *left,float *right) {
 	for (deque<instance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
 		sample.mix(left,right,iter->block,iter->volume,iter->bStop);
+	}
+}
+*/
+
+void ofxAudioSample::mixChannel(float * output, int channel, int nChannels) {
+	for (deque<instance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+		sample.mixChannel(output,channel,nChannels,iter->block,iter->volume,iter->bStop);
 	}
 }
 

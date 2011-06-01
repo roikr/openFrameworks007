@@ -39,12 +39,18 @@ public:
 	float* getCurrentBlock(int channel);
 	float* getBlock(int block,int channel);
 	
-	void mixWithBlocks(float *left,float *right,float volume=1.0f);
-	void mix(float *left,float *right,int block,float volume,bool ramp);
+	//void mixWithBlocks(float *left,float *right,float volume=1.0f);
+	void channelRequested(float * output, int channel, int nChannels,float volume=1.0f);
+
+	// ROIKR: bug when using audioRequested with 2 channels...
+	void audioRequested (float * output, int channel,int bufferSize, int nChannels); 
 	void postProcess(); // to call after processing
 	
-	// ROIKR: bug when using audioRequested with 2 channels...
-	void audioRequested (float * output, int channel,int bufferSize, int nChannels); // to use without postProcess and for left side only
+	void mix(float *left,float *right,int block,float volume,bool ramp);
+	void mixChannel(float * output, int channel, int nChannels,int block,float volume,bool ramp);
+	
+	
+	
 
 	void openForSave(string filename);
 	void saveWithBlocks(float *left,float*right);

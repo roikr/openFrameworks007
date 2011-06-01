@@ -269,8 +269,7 @@ float* ofxAudioFile::getBlock(int block,int channel) {
 	return (tableBuffer+samplesPerChannel*channel+block*blockLength);
 }
 
-
-
+/*
 void ofxAudioFile::mixWithBlocks(float *left,float *right,float volume) {
 	if (!bIsPlaying) {
 		return;
@@ -289,6 +288,27 @@ void ofxAudioFile::mixWithBlocks(float *left,float *right,float volume) {
 		
 	}
 }
+*/
+
+void ofxAudioFile::channelRequested(float * output, int channel, int nChannels,float volume) {
+	if (!bIsPlaying ) {
+		return;
+	} else {
+		
+		int n = getIsLastBlock() ? (currentBlock+1) * blockLength - samplesPerChannel : blockLength;
+		
+		
+		
+		
+		float *buffer = channels == 2 ? getCurrentBlock(channel) : getCurrentBlock(0);
+		
+		for (int i=0; i<n; i++) {
+			output[i*nChannels+channel]+=buffer[i]*volume;
+		}
+		
+	}
+}
+
 
 void ofxAudioFile::mix(float *left,float *right,int block,float volume,bool ramp) {
 
@@ -317,18 +337,30 @@ void ofxAudioFile::mix(float *left,float *right,int block,float volume,bool ramp
 	}
 }
 
-void ofxAudioFile::postProcess() {
-	if (!bIsPlaying)
-		return;
+void ofxAudioFile::mixChannel(float * output, int channel, int nChannels,int block,float volume,bool ramp) {
 	
-	
-	if (getIsLastBlock()) {
-		bIsPlaying = false;
+	int n = blockLength;
+	if (getIsLastBlock(block)) {
+		n =   (block+1) * blockLength - samplesPerChannel ;
 	}
-	else
-		currentBlock++;
 	
+	float *buffer = channels == 2 ? getBlock(block,channel) : getBlock(block,0);
+		
+	if (ramp) {
+		float step = 1.0/(n-1);
+#ifdef LOG_AUDIO_FILE
+		cout << "ramp" << endl; //<< step << endl;
+#endif
+		for (int i=0; i<n; i++) {
+			output[i*nChannels+channel]+=buffer[i]*volume*((n-1-i)*step);
+		}
+	} else {
+		for (int i=0; i<n; i++) {
+			output[i*nChannels+channel]+=buffer[i]*volume;
+		}
+	}
 }
+
 
 
 void ofxAudioFile::audioRequested (float * output, int channel,int bufferSize, int nChannels) {
@@ -339,7 +371,10 @@ void ofxAudioFile::audioRequested (float * output, int channel,int bufferSize, i
 		int n = getIsLastBlock() ? (currentBlock+1) * blockLength - samplesPerChannel : blockLength;
 		
 		
-		float *buffer = getCurrentBlock(0);
+		
+		
+		float *buffer = channels == 2 ? getCurrentBlock(channel) : getCurrentBlock(0);
+		
 		for (int i=0; i<n; i++) {
 			output[i*nChannels+channel]=buffer[i];
 		}
@@ -350,6 +385,21 @@ void ofxAudioFile::audioRequested (float * output, int channel,int bufferSize, i
 		
 		
 	}
+	
+}
+
+
+
+void ofxAudioFile::postProcess() {
+	if (!bIsPlaying)
+		return;
+	
+	
+	if (getIsLastBlock()) {
+		bIsPlaying = false;
+	}
+	else
+		currentBlock++;
 	
 }
 

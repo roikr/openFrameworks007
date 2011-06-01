@@ -29,7 +29,9 @@ public:
 	void trigger(int velocity,bool retrigger);
 	void stop();
 	
-	void mixWithBlocks(float *left,float *right);
+	//void mixWithBlocks(float *left,float *right);
+	void mixChannel(float * output, int channel, int nChannels);
+
 	void postProcess(); // to call after processing
 
 	
