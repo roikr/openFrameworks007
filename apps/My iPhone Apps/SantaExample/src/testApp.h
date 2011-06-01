@@ -7,7 +7,7 @@
 
 #include "ofxMidiTrack.h"
 #include "ofxAudioTrigger.h"
-#include "ofxSndFile.h"
+#include "ofxAudioFile.h"
 #include "ofxRKTexture.h"
 #include "ofxSlider.h"
 //#include "ofxDynamicCompressor.h"
@@ -112,7 +112,7 @@ public:
 	//float gain;
 	bool bRecording;
 	
-	ofxSndFile song; // just for saving
+	ofxAudioFile song; // just for saving
 	float duration;
 	int currentBlock;    //using to seekFrame and renderAudio for rendering video & audio;
 	int totalBlocks; // calculating by renderAudio before rendering video - 

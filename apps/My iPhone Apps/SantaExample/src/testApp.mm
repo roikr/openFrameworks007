@@ -600,7 +600,7 @@ void testApp::renderAudio() {
 	
 	cout << "renderAudio started" << endl;
 	
-	song.open(ofToDocumentsPath("santa.wav")); 
+	song.openForSave(ofToDocumentsPath("santa.caf"));
 	
 	currentBlock = 0;
 	
