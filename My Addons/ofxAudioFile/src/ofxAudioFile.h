@@ -13,6 +13,7 @@
 #define _AUDIO_FILE
 
 #include <string>
+#include <deque>
 #include <AudioToolbox/AudioToolbox.h>
 
 using namespace std;
@@ -20,61 +21,69 @@ using namespace std;
 //@class AVAssetWriterInput;
 //@class AVAssetWriter;
 
+struct instance {
+	int pos;
+	float volume;
+	float speed;
+	bool bStop;
+};
+
 class ofxAudioFile {
 public:
 	
 	ofxAudioFile();
 	
-	bool load(string filename,int blockLength);
-	void setupForSave(int blockLength); // allocate memory just for current block
+	bool load(string filename,int bufferLength);
+	void setupForSave(int bufferLength); // allocate memory just for current block
 	void exit();
-	float *getTableBuffer();
 	int getSamplesPerChannel();
 	
 	
+	void trigger(float speed,float volume,bool retrigger);
 	void play();
-	bool getIsPlaying();
-	bool getIsLastBlock();
-	bool getIsLastBlock(int block);
-	float* getCurrentBlock(int channel);
-	float* getBlock(int block,int channel);
+	void stop();
+	
 	
 	//void mixWithBlocks(float *left,float *right,float volume=1.0f);
-	void channelRequested(float * output, int channel, int nChannels,float volume=1.0f);
+	//void channelRequested(float * output, int channel, int nChannels,float volume=1.0f);
 
 	// ROIKR: bug when using audioRequested with 2 channels...
-	void audioRequested (float * output, int channel,int bufferSize, int nChannels); 
+	//void audioRequested (float * output, int channel,int bufferSize, int nChannels); 
+		
+	//void mix(float *left,float *right,int block,float volume,bool ramp);
+	void mixChannel(float * output, int channel, int nChannels);
 	void postProcess(); // to call after processing
-	
-	void mix(float *left,float *right,int block,float volume,bool ramp);
-	void mixChannel(float * output, int channel, int nChannels,int block,float volume,bool ramp);
-	
-	
+
 	
 
 	void openForSave(string filename);
 	void saveWithBlocks(float *left,float*right);
 	void close();
 	
+	int getNumPlaying();
+	
 private:
+	float *getTableBuffer();
+	
+	//float* getCurrentBlock(int channel);
+	//float* getBlock(int block,int channel);
+	
 	bool bLoaded;
 	int samplesPerChannel;
 	int bufferLength;
 	
-	int blockLength;
 	SInt16 *saveBuffer;
 	AudioBufferList fillBufList;
 	
 	float *tableBuffer;
 	int channels;
-	bool bIsPlaying;
-	int currentBlock;
-
+	
 	ExtAudioFileRef file;
 //	AVAssetWriterInput *audioInput;
 //	AVAssetWriter *writer;
 	
 	string filename;
+	deque<instance > instances;
 };
 
 #endif 

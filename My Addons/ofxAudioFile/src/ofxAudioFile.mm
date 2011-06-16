@@ -16,7 +16,7 @@
 #define SINT16_MAX 32767.0
 #define LOADING_BUFFER_SIZE 8192
 
-#define LOG_AUDIO_FILE
+//#define LOG_AUDIO_FILE
 
 #include <iostream>
 
@@ -24,17 +24,16 @@ ofxAudioFile::ofxAudioFile() {
 	saveBuffer = NULL;
 	tableBuffer = NULL;
 	bLoaded = false;
-	bIsPlaying = false;
 }
 
 
-bool ofxAudioFile::load(string filename,int blockLength) {
+bool ofxAudioFile::load(string filename,int bufferLength) {
 	
 	OSStatus        error = noErr;
 
-	bIsPlaying = false;
+	//bIsPlaying = false;
 	bLoaded = false;
-	this->blockLength = blockLength;	
+	this->bufferLength = bufferLength;	
 	
 	this->filename = filename;
 	NSString *path = [NSString stringWithFormat:@"%s",filename.c_str()];
@@ -76,8 +75,7 @@ bool ofxAudioFile::load(string filename,int blockLength) {
 		fillBufList.mBuffers[0].mData = srcBuffer;
 		
 		samplesPerChannel = frames;
-		bufferLength = frames * format.NumberChannels();
-		tableBuffer = (float*) malloc(bufferLength * sizeof(float));
+		tableBuffer = (float*) malloc(frames * format.NumberChannels() * sizeof(float));
 		
 		SInt16 *samples = (SInt16*)srcBuffer;
 		
@@ -221,16 +219,15 @@ bool ofxAudioFile::load(string filename,int blockLength) {
  
  */
 
-void ofxAudioFile::setupForSave(int blockLength) {
-	this->blockLength = blockLength;
+void ofxAudioFile::setupForSave(int bufferLength) {
+	this->bufferLength = bufferLength;
 	this->samplesPerChannel = 0;
 	channels = 2;
-	bIsPlaying = false;
-	bufferLength = blockLength * channels; 
-	saveBuffer = (SInt16*) malloc(bufferLength * sizeof(SInt16));
+	
+	saveBuffer = (SInt16*) malloc(bufferLength * channels * sizeof(SInt16));
 	fillBufList.mNumberBuffers = 1;
 	fillBufList.mBuffers[0].mNumberChannels = channels;
-	fillBufList.mBuffers[0].mDataByteSize = bufferLength*channels;
+	fillBufList.mBuffers[0].mDataByteSize = bufferLength*sizeof(SInt16);
 	fillBufList.mBuffers[0].mData = saveBuffer;
 }
 
@@ -242,32 +239,44 @@ int ofxAudioFile::getSamplesPerChannel() {
 	return samplesPerChannel;
 }
 
-
-void ofxAudioFile::play() {
+/*
+void ofxAudioFile::play(float speed) {
 	currentBlock = 0;
+	this->speed = speed;
 	bIsPlaying = true;
 }
+ */
 
-bool ofxAudioFile::getIsPlaying() {
-	return bIsPlaying;
+void ofxAudioFile::play() {
+	trigger(1.0f, 1.0f, true);
 }
 
-bool ofxAudioFile::getIsLastBlock() {
-	return (currentBlock+1) * blockLength >= samplesPerChannel;
-}
-
-bool ofxAudioFile::getIsLastBlock(int block) {
+void ofxAudioFile::trigger(float speed,float volume,bool retrigger) {
+	if (retrigger && !instances.empty()) {
+		instances.back().bStop = true;
+#ifdef LOG_AUDIO_FILE
+		cout << "retrigger, ";
+#endif
+	}
+	instance i;
+	i.pos = 0;
+	i.volume = volume;
+	i.bStop = false;
+	i.speed = speed;
+	instances.push_front(i);
+#ifdef LOG_AUDIO_FILE
+	cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
+#endif
 	
-	return (block+1) * blockLength >= samplesPerChannel;;
 }
 
-float* ofxAudioFile::getCurrentBlock(int channel) {
-	return (tableBuffer+samplesPerChannel*channel+currentBlock*blockLength);
+void ofxAudioFile::stop() {
+	for (deque<instance >::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+		iter->bStop = true;
+	}
 }
 
-float* ofxAudioFile::getBlock(int block,int channel) {
-	return (tableBuffer+samplesPerChannel*channel+block*blockLength);
-}
+
 
 /*
 void ofxAudioFile::mixWithBlocks(float *left,float *right,float volume) {
@@ -290,6 +299,7 @@ void ofxAudioFile::mixWithBlocks(float *left,float *right,float volume) {
 }
 */
 
+/*
 void ofxAudioFile::channelRequested(float * output, int channel, int nChannels,float volume) {
 	if (!bIsPlaying ) {
 		return;
@@ -308,8 +318,9 @@ void ofxAudioFile::channelRequested(float * output, int channel, int nChannels,f
 		
 	}
 }
+*/
 
-
+/*
 void ofxAudioFile::mix(float *left,float *right,int block,float volume,bool ramp) {
 
 	int n = blockLength;
@@ -336,33 +347,42 @@ void ofxAudioFile::mix(float *left,float *right,int block,float volume,bool ramp
 		}
 	}
 }
+*/
 
-void ofxAudioFile::mixChannel(float * output, int channel, int nChannels,int block,float volume,bool ramp) {
+void ofxAudioFile::mixChannel(float * output, int channel, int nChannels) {
 	
-	int n = blockLength;
-	if (getIsLastBlock(block)) {
-		n =   (block+1) * blockLength - samplesPerChannel ;
-	}
 	
-	float *buffer = channels == 2 ? getBlock(block,channel) : getBlock(block,0);
-		
-	if (ramp) {
-		float step = 1.0/(n-1);
-#ifdef LOG_AUDIO_FILE
-		cout << "ramp" << endl; //<< step << endl;
-#endif
-		for (int i=0; i<n; i++) {
-			output[i*nChannels+channel]+=buffer[i]*volume*((n-1-i)*step);
+	for (deque<instance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+		//sample.mixChannel(output,channel,nChannels,iter->block,iter->volume,iter->bStop);
+	
+	
+		int n = bufferLength;
+		if (iter->pos+bufferLength*iter->speed>=samplesPerChannel) {
+			//n =   (block+1) * blockLength - samplesPerChannel ;
+			n = (samplesPerChannel - iter->pos)/iter->speed;
 		}
-	} else {
-		for (int i=0; i<n; i++) {
-			output[i*nChannels+channel]+=buffer[i]*volume;
+		
+		//return (tableBuffer+samplesPerChannel*channel+block*blockLength);
+		float *buffer = tableBuffer+samplesPerChannel*(channels == 2 ? channel : 0)+iter->pos;
+		
+		if (iter->bStop) {
+			float step = 1.0/(n-1);
+#ifdef LOG_AUDIO_FILE
+			cout << "ramp" << endl; //<< step << endl;
+#endif
+			for (int i=0; i<n; i++) {
+				output[i*nChannels+channel]+=buffer[(int)(iter->speed*i)]*iter->volume*((n-1-i)*step);
+			}
+		} else {
+			for (int i=0; i<n; i++) {
+				output[i*nChannels+channel]+=buffer[(int)(iter->speed*i)]*iter->volume;
+			}
 		}
 	}
 }
 
 
-
+/*
 void ofxAudioFile::audioRequested (float * output, int channel,int bufferSize, int nChannels) {
 	if (!bIsPlaying ) {
 		return;
@@ -388,19 +408,25 @@ void ofxAudioFile::audioRequested (float * output, int channel,int bufferSize, i
 	
 }
 
-
+*/
 
 void ofxAudioFile::postProcess() {
-	if (!bIsPlaying)
-		return;
-	
-	
-	if (getIsLastBlock()) {
-		bIsPlaying = false;
+	deque<instance>::iterator iter=instances.begin();
+	while (iter!=instances.end()) {
+		if (iter->pos+bufferLength*iter->speed>=samplesPerChannel || iter->bStop) {
+			iter = instances.erase(iter);
+#ifdef LOG_AUDIO_FILE
+			cout << "done" << endl; //<< step << endl;
+#endif
+		} else {
+			iter->pos+=bufferLength*iter->speed;
+			iter++;
+		}
 	}
-	else
-		currentBlock++;
-	
+}
+
+int ofxAudioFile::getNumPlaying() {
+	return instances.size();
 }
 
 void ofxAudioFile::openForSave(string filename) {
@@ -447,13 +473,13 @@ void ofxAudioFile::saveWithBlocks(float *left,float*right) {
 	int i;
 	int j;
 	
-	for (i = 0, j = 0; i < blockLength; j+=2, i++) {
+	for (i = 0, j = 0; i < bufferLength; j+=2, i++) {
 		saveBuffer[j] = (float)(left[i]*SINT16_MAX);
 		saveBuffer[j+1] = (float)(right[i]*SINT16_MAX);
 	}
 	
 	try {
-		XThrowIfError(ExtAudioFileWrite(file, blockLength, &fillBufList), "ExtAudioFileWrite failed!");
+		XThrowIfError(ExtAudioFileWrite(file, bufferLength, &fillBufList), "ExtAudioFileWrite failed!");
 	}
 		
 	catch (CAXException e) {
@@ -496,6 +522,9 @@ void ofxAudioFile::exit() {
 	}
 	
 }
+
+
+
 
 
 /*

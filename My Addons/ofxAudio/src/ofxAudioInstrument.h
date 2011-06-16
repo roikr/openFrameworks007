@@ -20,12 +20,13 @@ using namespace std;
 
 
 
-class ofxAudioSample;
+class ofxAudioFile;
 
 struct note {
 	int midi;
 	int velocity;
-	ofxAudioSample *sample;
+	int cents;
+	ofxAudioFile *sample;
 };
 
 class ofxAudioInstrument {
@@ -36,7 +37,7 @@ public:
 	void setup(int blockLength,int sampleTriggers); // call before loading samples loaded 
 	
 	void loadSample(string filename,int midi,bool bChokeGroup = false);
-	void noteOn(int midi,int velocity);
+	void noteOn(int midi,int velocity,int cents);
 	void noteOff(int midi);
 	void noteOffAll();
 	
@@ -52,7 +53,7 @@ public:
 	
 	
 private:
-	map<int,ofxAudioSample*> samples;
+	map<int,ofxAudioFile*> samples;
 	set<int> chokeGroup;
 	vector<note> start;
 	vector<note> playing;

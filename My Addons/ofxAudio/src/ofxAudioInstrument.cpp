@@ -9,11 +9,11 @@
 
 
 #include "ofxAudioInstrument.h"
-#include "ofxAudioSample.h"
+#include "ofxAudioFile.h"
 #include <algorithm> // for find
 #include <iostream>
 
-#define LOG_AUDIO_INSTRUMENT
+//#define LOG_AUDIO_INSTRUMENT
 
 void ofxAudioInstrument::setup(int blockLength,int sampleTriggers) {
 	
@@ -27,9 +27,9 @@ void ofxAudioInstrument::setup(int blockLength,int sampleTriggers) {
 void ofxAudioInstrument::loadSample(string filename,int midi,bool bChokeGroup) {
 	
 	//TODO: add check for existing midi note
-	ofxAudioSample *sample = new ofxAudioSample();
+	ofxAudioFile *sample = new ofxAudioFile();
 		
-	if (sample->loadSample(filename,blockLength)) {
+	if (sample->load(filename,blockLength)) {
 		samples[midi] = sample;
 		
 		if (bChokeGroup) {
@@ -46,12 +46,13 @@ void ofxAudioInstrument::loadSample(string filename,int midi,bool bChokeGroup) {
 
 
 
-void ofxAudioInstrument::noteOn(int midi,int velocity) {
+void ofxAudioInstrument::noteOn(int midi,int velocity,int cents) {
 
 	note n;
 	n.midi = midi;
 	n.velocity = velocity;
-	map<int,ofxAudioSample*>::iterator iter = samples.find(midi);
+	n.cents = cents;
+	map<int,ofxAudioFile*>::iterator iter = samples.find(midi);
 	
 	if (iter!=samples.end()) {
 		n.sample = iter->second;
@@ -61,9 +62,11 @@ void ofxAudioInstrument::noteOn(int midi,int velocity) {
 
 }
 
+
+
 void ofxAudioInstrument::noteOff(int midi) {
 	stop.push_back(midi);
-	map<int,ofxAudioSample*>::iterator iter = samples.find(midi);
+	map<int,ofxAudioFile*>::iterator iter = samples.find(midi);
 	if (iter!=samples.end()) {
 		iter->second->stop();
 	}
@@ -90,14 +93,14 @@ void ofxAudioInstrument::preProcess() {
 #ifdef LOG_AUDIO_INSTRUMENT
 		cout << "note on: " << siter->midi << endl;
 #endif
-		
+		 
 		if (piter == playing.end()) { // note is not playing, add it
 			playing.push_back(*siter);
-			playing.back().sample->trigger(siter->velocity,false);
+			playing.back().sample->trigger(exp(siter->cents/1200.0f*log(2)),(float)siter->velocity/127.0,false); // 
 		} else {                     // retrigger
 			piter->velocity = siter->velocity;
 			bool retrigger = piter->sample->getNumPlaying() >= sampleTriggers;
-			piter->sample->trigger(piter->velocity,retrigger);
+			piter->sample->trigger(exp(piter->cents/1200.0f*log(2)),(float)piter->velocity/127.0,retrigger);
 		}
 	}
 	
@@ -192,7 +195,7 @@ bool ofxAudioInstrument::getIsPlaying() {
 
 void ofxAudioInstrument::exit() {
 	//TODO: add check to ensure nothing is playing
-	for(map<int,ofxAudioSample*>::iterator iter = samples.begin();iter!=samples.end();iter++) {
+	for(map<int,ofxAudioFile*>::iterator iter = samples.begin();iter!=samples.end();iter++) {
 		iter->second->exit();
 		delete iter->second;
 	}
