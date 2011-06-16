@@ -1,5 +1,8 @@
 #include "testApp.h"
 
+
+#define MARGIN 50
+#define EVILS_MARGIN MARGIN+5
 //--------------------------------------------------------------
 void testApp::setup(){	
 	// register touch events
@@ -21,12 +24,21 @@ void testApp::setup(){
 	pixels			= new unsigned char [texSize*texSize*4];
 	
 	//texGray.loadData(grayPixels, w,h, GL_LUMINANCE); 
+	reset();
+}
+
+void testApp::reset() {
+	
+	lines.clear();
+	evils.clear();
+	intersections.clear();
+	
 	vector<ofPoint> points;
-	points.push_back(ofPoint(20,20));
-	points.push_back(ofPoint(ofGetWidth()-20,20));
-	points.push_back(ofPoint(ofGetWidth()-20,ofGetHeight()-20));
-	points.push_back(ofPoint(20,ofGetHeight()-20));
-	points.push_back(ofPoint(20,20));
+	points.push_back(ofPoint(MARGIN,MARGIN));
+	points.push_back(ofPoint(ofGetWidth()-MARGIN,MARGIN));
+	points.push_back(ofPoint(ofGetWidth()-MARGIN,ofGetHeight()-MARGIN));
+	points.push_back(ofPoint(MARGIN,ofGetHeight()-MARGIN));
+	points.push_back(ofPoint(MARGIN,MARGIN));
 	
 	for (vector<ofPoint>::iterator piter=points.begin(); (piter+1)!=points.end(); piter++) {
 		ofxLine l = ofxLine(*piter,*(piter+1));
@@ -36,7 +48,7 @@ void testApp::setup(){
 	
 	for (int i=0; i<5; i++) {
 		evil e;
-		e.cpos = e.pos = ofPoint(ofRandom(25, ofGetWidth()-25),ofRandom(25, ofGetHeight()-25));
+		e.cpos = e.pos = ofPoint(ofRandom(EVILS_MARGIN, ofGetWidth()-EVILS_MARGIN),ofRandom(EVILS_MARGIN, ofGetHeight()-EVILS_MARGIN));
 		e.vel = ofPoint(ofRandom(20, 50)*(ofRandomf()>0.5 ? -1.0f :1.0f), ofRandom(20, 50)*(ofRandomf()>0.5 ? -1.0f :1.0f));
 		e.time = ofGetElapsedTimeMillis();
 		evils.push_back(e);
@@ -45,11 +57,13 @@ void testApp::setup(){
 	bConnected = false;
 	bFill = false;
 	bFilled = false;
+	bClear = true;
 }
-
 
 //--------------------------------------------------------------
 void testApp::update(){
+	
+	
 	
 	for (vector<evil>::iterator iter=evils.begin(); iter!=evils.end(); iter++) {
 		float timeDiff = (ofGetElapsedTimeMillis()-iter->time)/1000.0;
@@ -61,7 +75,7 @@ void testApp::update(){
 			ofPoint p;
 			if (line.getInterception(*liter,p)) {
 				float t = (p.x-iter->pos.x)/(temp.x-iter->pos.x);
-				cout << t << " " << timeDiff << endl;
+				//cout << t << " " << timeDiff << endl;
 				iter->vel *=-1;
 				temp = iter->pos = p+iter->vel*(1.0f-t)*timeDiff;
 				
@@ -126,7 +140,19 @@ void testApp::draw(){
 	
 	ofSetColor(0xffffff);
 	
-	
+	if (bClear) {
+		for (int i=0; i<h;i++) {
+			for (int j=0; j<w; j++) {
+				pixels[(i*texSize+j)*4] = imagen->imageData[i*w+j];
+				
+				
+			}
+		}
+		
+		//tex.loadData((unsigned char*) (imagen->imageData), texSize, texSize, GL_RGBA );
+		tex.loadData(pixels, texSize, h, GL_RGBA);
+		bClear = false;
+	}
 	
 	
 	for (vector<ofxLine >::iterator liter = lines.begin(); liter!=lines.end(); liter++) {
@@ -278,6 +304,8 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 	ofPoint pnt2 = ofPoint(touch.x,touch.y);
 	ofxLine line = ofxLine(pnt,pnt2);
 	
+	//printf("(%.1f,%.1f)-(%.1f,%.1f):\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
+	
 	if (strokes.size()>1) {
 		for (vector<ofxLine >::iterator liter = strokes.begin(); (liter+1)!=strokes.end(); liter++) {
 			ofPoint p;
@@ -296,6 +324,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 			ofPoint p;
 			if (line.getInterception(*liter,p)) {
 				bConnected = true;
+				cout << "connected" << endl;
 				intersections.push_back(p);
 				strokes.push_back(ofxLine(p,pnt2));
 				break;
@@ -306,6 +335,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 			ofPoint p;
 			if (line.getInterception(*liter,p)) {
 				bConnected = false;
+				cout << "intercep" << endl;
 				intersections.push_back(p);
 				strokes.push_back(ofxLine(pnt,p));
 				break;
@@ -323,12 +353,13 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 				lines.push_back(*liter);
 			}
 			
+			
 			int i = strokes.size()/2;
 			strokes[i].getCrossBorderPoints(fill1,fill2);
 			strokes.clear();
 			
-			cout << "(" << fill1.x << "," << fill1.y << ") " << "(" << fill2.x << "," << fill2.y << ") " << endl;
-			bFill = true;
+			//cout << "(" << fill1.x << "," << fill1.y << ") " << "(" << fill2.x << "," << fill2.y << ") " << endl;
+			//bFill = true;
 			
 			
 		}
@@ -348,7 +379,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-	
+	reset();
 	
 	
 }

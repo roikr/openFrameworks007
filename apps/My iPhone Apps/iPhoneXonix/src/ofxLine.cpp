@@ -47,13 +47,14 @@ ofxLine::ofxLine(ofPoint &p1,ofPoint &p2) {
 bool ofxLine::getInterception(ofxLine &l,ofPoint &p) {
 	float d = a*l.b-b*l.a;
 	if (d == 0) {
+		//printf("(%.1f,%.1f)-(%.1f,%.1f) (%.1f,%.1f)-(%.1f,%.1f)\n",l.p1.x,l.p1.y,l.p2.x,l.p2.y,p1.x,p1.y,p2.x,p2.y);
 		return false;
 	} 
 	
 	p.y = (a-l.a)/d;
 	p.x = (b-l.b)/-d;
 	
-	//cout << "x: " << p.x << ", y: " << p.y << " ";
+	//cout << "x: " << p.x << ", y: " << p.y << endl;
 	
 	return p.x>=min(p1.x,p2.x) && p.x <= max(p1.x,p2.x) && p.y>=min(p1.y,p2.y) && p.y <= max(p1.y,p2.y) && 
 	p.x>=min(l.p1.x,l.p2.x) && p.x <= max(l.p1.x,l.p2.x) && p.y>=min(l.p1.y,l.p2.y) && p.y <= max(l.p1.y,l.p2.y);

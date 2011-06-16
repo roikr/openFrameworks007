@@ -30,7 +30,7 @@
 		BB24DE3510DA785000E9C588 /* libFreeType_iphone_universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE1310DA785000E9C588 /* libFreeType_iphone_universal.a */; };
 		BB24DE3C10DA785000E9C588 /* libGLU.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE2710DA785000E9C588 /* libGLU.a */; };
 		BB24DE3D10DA785000E9C588 /* libGLU_arm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE2810DA785000E9C588 /* libGLU_arm.a */; };
-		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */; };
+		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Release.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Release.a */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E403968411F2EECE000530DA /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E403967B11F2EECE000530DA /* install.xml */; };
 		E403968511F2EECE000530DA /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E403967D11F2EECE000530DA /* tinyxml.cpp */; };
@@ -38,7 +38,6 @@
 		E403968711F2EECE000530DA /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E403968011F2EECE000530DA /* tinyxmlparser.cpp */; };
 		E403968811F2EECE000530DA /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E403968211F2EECE000530DA /* ofxXmlSettings.cpp */; };
 		E428C6371340DF7B00D6EC27 /* ofxAudioInstrument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428C6271340DF7B00D6EC27 /* ofxAudioInstrument.cpp */; };
-		E428C6381340DF7B00D6EC27 /* ofxAudioSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428C6291340DF7B00D6EC27 /* ofxAudioSample.cpp */; };
 		E428C6391340DF7B00D6EC27 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428C62F1340DF7B00D6EC27 /* CAStreamBasicDescription.cpp */; };
 		E428C63A1340DF7B00D6EC27 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428C6311340DF7B00D6EC27 /* CAXException.cpp */; };
 		E428C63B1340DF7B00D6EC27 /* README in Resources */ = {isa = PBXBuildFile; fileRef = E428C6331340DF7B00D6EC27 /* README */; };
@@ -232,7 +231,7 @@
 				BB24DE3510DA785000E9C588 /* libFreeType_iphone_universal.a in Frameworks */,
 				BB24DE3C10DA785000E9C588 /* libGLU.a in Frameworks */,
 				BB24DE3D10DA785000E9C588 /* libGLU_arm.a in Frameworks */,
-				BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */,
+				BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Release.a in Frameworks */,
 				5E25689710ED26CC00A9501C /* CppUnit.a in Frameworks */,
 				5E25689810ED26CC00A9501C /* PocoFoundation.a in Frameworks */,
 				5E25689910ED26CC00A9501C /* PocoNet.a in Frameworks */,
@@ -532,7 +531,7 @@
 		BB24E23010DAA8A700E9C588 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */,
+				BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Release.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -755,10 +754,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */ = {
+		BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Release.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libofxiPhoneOFLib_iphoneos _Debug.a";
+			path = "libofxiPhoneOFLib_iphoneos _Release.a";
 			remoteRef = BB24E23310DAA8A700E9C588 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -830,7 +829,6 @@
 				E403968711F2EECE000530DA /* tinyxmlparser.cpp in Sources */,
 				E403968811F2EECE000530DA /* ofxXmlSettings.cpp in Sources */,
 				E428C6371340DF7B00D6EC27 /* ofxAudioInstrument.cpp in Sources */,
-				E428C6381340DF7B00D6EC27 /* ofxAudioSample.cpp in Sources */,
 				E428C6391340DF7B00D6EC27 /* CAStreamBasicDescription.cpp in Sources */,
 				E428C63A1340DF7B00D6EC27 /* CAXException.cpp in Sources */,
 				E428C63C1340DF7B00D6EC27 /* ofxAudioFile.mm in Sources */,
@@ -852,6 +850,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (S8LHA25A98)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -869,6 +868,7 @@
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/src",
 				);
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../libs/freetype/lib\"",
@@ -897,13 +897,14 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "";
 				OTHER_LDFLAGS = (
 					"-lsndfile",
 					"-ObjC",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "78699773-C21F-4972-BF61-6C9487A12217";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "652B8C8A-B39F-4204-9460-125C661028E4";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -912,6 +913,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				CODE_SIGN_ENTITLEMENTS = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (G22F3GL4MN)";
 				COPY_PHASE_STRIP = YES;
@@ -956,6 +958,7 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "";
 				OTHER_LDFLAGS = (
 					"-lsndfile",
@@ -963,7 +966,7 @@
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "26312609-D4DC-4334-B323-DE45B09A7C83";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -985,6 +988,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (G22F3GL4MN)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1028,6 +1032,7 @@
 					"\"$(DEVELOPER_DIR)/openFrameworks/libs/poco/lib/win_cb\"",
 					"/Users/roikr/Developer/OpenSource/libsndfile-1.0.21/Xcode/build/Debug-iphoneos",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "";
 				OTHER_LDFLAGS = (
 					"-lsndfile",
@@ -1035,7 +1040,7 @@
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "26312609-D4DC-4334-B323-DE45B09A7C83";
-				SDKROOT = iphoneos4.2;
+				SDKROOT = iphoneos;
 			};
 			name = Distribution;
 		};
@@ -1043,15 +1048,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (S8LHA25A98)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "652B8C8A-B39F-4204-9460-125C661028E4";
+				SDKROOT = iphoneos4.3;
 			};
 			name = Debug;
 		};

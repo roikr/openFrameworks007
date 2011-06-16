@@ -3,9 +3,12 @@
 
 #include "ofMain.h"
 #include "ofxAudioInstrument.h"
+#include "ofxAudioFile.h"
 
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
+
+#define SCALES_PLAYER_INSTRUMENT
 
 class testApp : public ofxiPhoneApp{
 	
@@ -22,7 +25,7 @@ class testApp : public ofxiPhoneApp{
 		void audioRequested 	(float * input, int bufferSize, int nChannels);
 	
 	ofxAudioInstrument instrument;
-	
+	ofxAudioFile sample;
 		
 		void touchDown(ofTouchEventArgs &touch);
 		void touchMoved(ofTouchEventArgs &touch);

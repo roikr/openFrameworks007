@@ -27,6 +27,8 @@ public:
 	void touchMoved(ofTouchEventArgs &touch);
 	void touchUp(ofTouchEventArgs &touch);
 	void touchDoubleTap(ofTouchEventArgs &touch);
+	
+	void reset();
 
 //	void floodFill(int x,int y,int target,int replacement,int stopCondition=0);
 //	int getPixelColor(int x,int y);
@@ -56,6 +58,7 @@ public:
 	vector<evil> evils;
 	
 	IplImage* imagen;
+	bool bClear;
 	
 };
 

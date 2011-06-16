@@ -4,15 +4,16 @@
 void testApp::setup(){
 	
 	
-		
+#ifdef SCALES_PLAYER_INSTRUMENT
 	instrument.setup(256,2);
 	
 	for (int i=48; i<=72; i++) {
 		string filename = ofToDataPath("samples/Littlevoice_"+ofToString(i)+".caf");
 		instrument.loadSample(filename,i);
 	}
-	
-	
+#else
+	sample.load(ofToDataPath("samples/Littlevoice_60.caf"), 256);
+#endif
 	
 	// IMPORTANT!!! if your sound doesn't work in the simulator - read this post - which requires you set the output stream to 24bit 
 	//	http://www.cocos2d-iphone.org/forum/topic/4159
@@ -62,7 +63,11 @@ void testApp::setup(){
 
 void testApp::exit() {
 	
+#ifdef SCALES_PLAYER_INSTRUMENT
 	instrument.exit();
+#else
+	sample.exit();
+#endif
 	delete lAudio;
 	delete rAudio;
 	delete lBlock;
@@ -127,12 +132,17 @@ void testApp::audioRequested(float * output, int bufferSize, int nChannels){
 	
 	
 	
-	
+#ifdef SCALES_PLAYER_INSTRUMENT
 	instrument.preProcess();
 	//instrument.mixWithBlocks(lBlock,rBlock);
 	instrument.mixChannel(lBlock, 0, 1);
 	instrument.mixChannel(rBlock, 0, 1);
 	instrument.postProcess();
+#else
+	sample.mixChannel(lBlock, 0, 1);
+	sample.mixChannel(rBlock, 0, 1);
+	sample.postProcess();
+#endif
 	
 	for (int i = 0; i < bufferSize; i++){
 		lAudio[i] = output[i*nChannels] = lBlock[i] * volume * leftScale;
@@ -150,8 +160,11 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 	lastKey = 48+(int)(touch.y/20) ;
 	lastArp = (int)((ofGetWidth()-touch.x)/120) ;
 	
-	instrument.noteOn(lastKey+lastArp*4, 127);
-			 
+#ifdef SCALES_PLAYER_INSTRUMENT
+	instrument.noteOn(lastKey+lastArp*4, 127,0);
+#else
+	sample.trigger(0.5+touch.y/(float)ofGetHeight(), touch.x/(float)ofGetWidth(), false);
+#endif
 	//instrument.noteOff(iter->note);
 			
 		
@@ -166,9 +179,12 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 	if (key!=lastKey || arp!=lastArp) {
 		lastKey = key;
 		lastArp = arp;
-		instrument.noteOn(lastKey+lastArp*4, 127);
+#ifdef SCALES_PLAYER_INSTRUMENT
+		instrument.noteOn(lastKey+lastArp*4, 127,0);
+#endif
 		
 	}
+	 
 	
 //		int width = ofGetWidth();
 //		pan = (float) touch.x / (float)width;

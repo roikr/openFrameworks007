@@ -20,13 +20,14 @@ public:
 	void draw();
 	void dump();
 	
+	ofPoint p1;
+	ofPoint p2;
 private:
 	float a;
 	float b;
 	float c;
 	
-	ofPoint p1;
-	ofPoint p2;
+	
 	
 	
 	
