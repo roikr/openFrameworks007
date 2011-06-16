@@ -44,21 +44,21 @@ struct ofTouchEventArgs {
 
 
 
-class ofTrueTypeFont{
-	
-public:
-	
-	
-	ofTrueTypeFont();
-	virtual ~ofTrueTypeFont();
-	
-	// 			-- default, non-full char set, anti aliased:
-	void 		loadFont(string filename, int fontsize);
-	
-	void 		drawString(string s, float x, float y);
-	
-	void 		setLineHeight(float height);	
-};
+//class ofTrueTypeFont{
+//	
+//public:
+//	
+//	
+//	ofTrueTypeFont();
+//	virtual ~ofTrueTypeFont();
+//	
+//	// 			-- default, non-full char set, anti aliased:
+//	void 		loadFont(string filename, int fontsize);
+//	
+//	void 		drawString(string s, float x, float y);
+//	
+//	void 		setLineHeight(float height);	
+//};
 
 
 

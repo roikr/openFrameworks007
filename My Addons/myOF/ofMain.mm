@@ -322,11 +322,11 @@ int ofGetElapsedTimeMillis(){
 }
 
 
-ofTrueTypeFont::ofTrueTypeFont() {}
- ofTrueTypeFont::~ofTrueTypeFont() {}
-void 		ofTrueTypeFont::loadFont(string filename, int fontsize) {}
-void 		ofTrueTypeFont::drawString(string s, float x, float y) {}
-void 		ofTrueTypeFont::setLineHeight(float height) {}
+//ofTrueTypeFont::ofTrueTypeFont() {}
+// ofTrueTypeFont::~ofTrueTypeFont() {}
+//void 		ofTrueTypeFont::loadFont(string filename, int fontsize) {}
+//void 		ofTrueTypeFont::drawString(string s, float x, float y) {}
+//void 		ofTrueTypeFont::setLineHeight(float height) {}
 
 
 
