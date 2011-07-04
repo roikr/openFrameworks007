@@ -204,5 +204,37 @@ public:
 	
 };
 
+//----------------------------------------------------------
+// ofColor
+//----------------------------------------------------------
+
+class ofColor{
+public:
+	ofColor(){
+		r = 255;
+		g = 255;
+		b = 255;
+		a = 255;
+	}
+	virtual ~ofColor(){}
+	float r, g, b, a;
+	
+	float & operator[]( int n ){
+		switch( n ){
+			case 0:
+				return r;
+			case 1:
+				return g;
+			case 2:
+				return b;
+			case 3: 
+				return a;
+			default:
+				return r;
+				break;
+		}
+	}
+};
+
 
 #endif

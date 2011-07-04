@@ -20,6 +20,30 @@
 
 using namespace std;
 
+
+//-------------------------------
+//  find the system type --------
+//-------------------------------
+
+// 		helpful:
+// 		http://www.ogre3d.org/docs/api/html/OgrePlatform_8h-source.html
+
+#if defined( __WIN32__ ) || defined( _WIN32 )
+#define TARGET_WIN32
+#elif defined( __APPLE_CC__)
+#include <TargetConditionals.h>
+
+#if (TARGET_OF_IPHONE_SIMULATOR) || (TARGET_OS_IPHONE) || (TARGET_IPHONE)
+#define TARGET_OF_IPHONE
+#define TARGET_OPENGLES
+#else
+#define TARGET_OSX
+#endif
+#else
+#define TARGET_LINUX
+#endif
+//-------------------------------
+
 #ifndef MIN
 #define MIN(x,y) (((x) < (y)) ? (x) : (y))
 #endif
@@ -150,4 +174,7 @@ float 		ofRandom(float val0, float val1);		// random (x - y)
 float 		ofRandomf();							// random (-1 - 1)
 float 		ofRandomuf();							// random (0 - 1) 
 
-
+void ofBeginShape();
+void ofVertex(float x, float y);
+void ofEndShape(bool bClose = false);
+void ofNextContour(bool bClose = false);  // for multi contour shapes!

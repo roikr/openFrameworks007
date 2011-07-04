@@ -35,8 +35,8 @@ string ofToResourcesPath(string path){
 	// convert to UTF8 STL string
 	string dataPathRoot = [bundle_path_ns UTF8String];
 	// append data
-	dataPathRoot.append( "/data/" ); // ZACH
-	//dataPathRoot.append( "/" ); // ZACH
+	//dataPathRoot.append( "/data/" ); // ZACH
+	dataPathRoot.append( "/" ); // ZACH
 	//printf("setting data path root to '%s'\n", dataPathRoot.c_str() );
 	
 	
