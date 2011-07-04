@@ -15,11 +15,16 @@
 
 using namespace std;
 
+enum {
+	OFX_TEXTURE_TYPE_PVR,
+	OFX_TEXTURE_TYPE_PNG
+};
+
 class ofxiTexture {
 
 	public:
 	
-	bool load(string filename);
+	bool load(string filename,int type=OFX_TEXTURE_TYPE_PVR);
 	void draw();
 	void release();
 	

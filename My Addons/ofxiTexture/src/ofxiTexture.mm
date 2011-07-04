@@ -39,10 +39,66 @@ typedef struct _PVRTexHeader
 } PVRTexHeader;
 
 	
-bool ofxiTexture::load(string filename) {
+bool ofxiTexture::load(string filename,int type) {
 	
 	
+	if (type==OFX_TEXTURE_TYPE_PNG) {
+		
 	
+			
+		NSString *texturePath = [NSString stringWithCString:filename.c_str() encoding:[NSString defaultCStringEncoding]];
+		
+		
+		
+		
+		CGImageRef textureImage = [UIImage imageNamed:texturePath].CGImage;
+		if (textureImage == nil) {
+			NSLog(@"Failed to load texture image");
+			return false;
+		}
+		
+		NSInteger texWidth = CGImageGetWidth(textureImage);
+		NSInteger texHeight = CGImageGetHeight(textureImage);
+		
+		GLubyte *textureData = (GLubyte *)malloc(texWidth * texHeight * 4);
+		
+		CGContextRef textureContext = CGBitmapContextCreate(textureData,
+															texWidth, texHeight,
+															8, texWidth * 4,
+															CGImageGetColorSpace(textureImage),
+															kCGImageAlphaPremultipliedLast);
+		
+		// Rotate the image
+		CGContextTranslateCTM(textureContext, 0, texHeight);
+		CGContextScaleCTM(textureContext, 1.0, -1.0);
+		
+		CGContextDrawImage(textureContext, CGRectMake(0.0, 0.0, (float)texWidth, (float)texHeight), textureImage);
+		CGContextRelease(textureContext);
+		
+		if (_name != 0)
+			glDeleteTextures(1, &_name);
+		
+		glGenTextures(1, &_name);
+		
+		glBindTexture(GL_TEXTURE_2D, _name);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+		
+		free(textureData);
+		
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		
+		_width = texWidth;
+		_height = texHeight;
+		_hasAlpha = CGImageGetAlphaInfo(textureImage) != kCGImageAlphaNone;
+		_internalFormat = GL_RGBA;
+				
+		return true;
+	}	
+			
+		
+		
+			
 	char gPVRTexIdentifier[5] = "PVR!";
 	//NSString * path = [[NSString alloc] initWithCString:filename.c_str()];
 	NSString *path = [NSString stringWithFormat:@"%s",filename.c_str()];
@@ -176,6 +232,9 @@ bool ofxiTexture::load(string filename) {
 	}
 	
 	[_imageData removeAllObjects];
+	
+			
+		
 	
 	return true;
 	
