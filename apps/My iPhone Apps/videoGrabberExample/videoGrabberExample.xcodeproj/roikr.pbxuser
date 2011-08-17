@@ -42,8 +42,8 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 335271298;
-			PBXWorkspaceStateSaveDate = 335271298;
+			PBXPerProjectTemplateStateSaveDate = 335288767;
+			PBXWorkspaceStateSaveDate = 335288767;
 		};
 		perUserProjectItems = {
 			E4ACE20E13FBEBE200C48152 /* PBXTextBookmark */ = E4ACE20E13FBEBE200C48152 /* PBXTextBookmark */;
@@ -52,11 +52,11 @@
 			E4ACE21113FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21113FBEBE200C48152 /* PBXTextBookmark */;
 			E4ACE21213FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21213FBEBE200C48152 /* PBXTextBookmark */;
 			E4ACE21313FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21313FBEBE200C48152 /* PBXTextBookmark */;
-			E4ACE21413FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21413FBEBE200C48152 /* PBXTextBookmark */;
 			E4ACE21513FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21513FBEBE200C48152 /* PBXTextBookmark */;
 			E4ACE21613FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21613FBEBE200C48152 /* PBXTextBookmark */;
-			E4ACE21713FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21713FBEBE200C48152 /* PBXTextBookmark */;
-			E4ACE21813FBEBE200C48152 /* PBXTextBookmark */ = E4ACE21813FBEBE200C48152 /* PBXTextBookmark */;
+			E4F3913F13FC1AAE007B18EC /* PBXTextBookmark */ = E4F3913F13FC1AAE007B18EC /* PBXTextBookmark */;
+			E4F3914013FC1AAE007B18EC /* PBXTextBookmark */ = E4F3914013FC1AAE007B18EC /* PBXTextBookmark */;
+			E4F3914113FC1AAE007B18EC /* PBXTextBookmark */ = E4F3914113FC1AAE007B18EC /* PBXTextBookmark */;
 		};
 		sourceControlManager = E4ACE0F413FBD52500C48152 /* Source Control */;
 		userBuildSettings = {
@@ -145,9 +145,9 @@
 	};
 	E4ACE1E513FBE2CF00C48152 /* ofxiVideoPlayer.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1076, 4082}}";
-			sepNavSelRange = "{5040, 10}";
-			sepNavVisRange = "{5011, 813}";
+			sepNavIntBoundsRect = "{{0, 0}, {1076, 4108}}";
+			sepNavSelRange = "{5250, 0}";
+			sepNavVisRange = "{4376, 937}";
 		};
 	};
 	E4ACE1E613FBE2CF00C48152 /* ofxiVideoPlayer.h */ = {
@@ -217,16 +217,6 @@
 		vrLen = 756;
 		vrLoc = 13;
 	};
-	E4ACE21413FBEBE200C48152 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4D8936D11527B74007E1F53 /* testApp.mm */;
-		name = "testApp.mm: 142";
-		rLen = 12;
-		rLoc = 3146;
-		rType = 0;
-		vrLen = 1265;
-		vrLoc = 2532;
-	};
 	E4ACE21513FBEBE200C48152 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = E4ACE1BC13FBE22800C48152 /* ofxiPhoneVideo.cpp */;
@@ -247,26 +237,6 @@
 		vrLen = 702;
 		vrLoc = 5615;
 	};
-	E4ACE21713FBEBE200C48152 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4ACE1E513FBE2CF00C48152 /* ofxiVideoPlayer.cpp */;
-		name = "ofxiVideoPlayer.cpp: 252";
-		rLen = 44;
-		rLoc = 5264;
-		rType = 0;
-		vrLen = 780;
-		vrLoc = 5011;
-	};
-	E4ACE21813FBEBE200C48152 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = E4ACE1E513FBE2CF00C48152 /* ofxiVideoPlayer.cpp */;
-		name = "ofxiVideoPlayer.cpp: 235";
-		rLen = 10;
-		rLoc = 5040;
-		rType = 0;
-		vrLen = 813;
-		vrLoc = 5011;
-	};
 	E4D8936B11527B74007E1F53 /* main.mm */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {978, 518}}";
@@ -283,9 +253,39 @@
 	};
 	E4D8936D11527B74007E1F53 /* testApp.mm */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1347, 2028}}";
-			sepNavSelRange = "{818, 0}";
-			sepNavVisRange = "{2470, 754}";
+			sepNavIntBoundsRect = "{{0, 0}, {978, 2379}}";
+			sepNavSelRange = "{2410, 0}";
+			sepNavVisRange = "{299, 852}";
 		};
+	};
+	E4F3913F13FC1AAE007B18EC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4D8936D11527B74007E1F53 /* testApp.mm */;
+		name = "testApp.mm: 116";
+		rLen = 0;
+		rLoc = 2410;
+		rType = 0;
+		vrLen = 852;
+		vrLoc = 299;
+	};
+	E4F3914013FC1AAE007B18EC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4ACE1E513FBE2CF00C48152 /* ofxiVideoPlayer.cpp */;
+		name = "ofxiVideoPlayer.cpp: 247";
+		rLen = 0;
+		rLoc = 5250;
+		rType = 0;
+		vrLen = 973;
+		vrLoc = 5505;
+	};
+	E4F3914113FC1AAE007B18EC /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4ACE1E513FBE2CF00C48152 /* ofxiVideoPlayer.cpp */;
+		name = "ofxiVideoPlayer.cpp: 247";
+		rLen = 0;
+		rLoc = 5250;
+		rType = 0;
+		vrLen = 937;
+		vrLoc = 4376;
 	};
 }

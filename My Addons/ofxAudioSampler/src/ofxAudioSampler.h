@@ -7,41 +7,48 @@
  *
  */
 
+#pragma once
+
+
+#include "ofxAudioSample.h"
 
 class ofxAudioSampler {
 	
 public:
-	ofxAudioSampler();
+	ofxAudioSampler() : bRecording(false) {};
 	void setup(int bufferSize,int numBuffers);
-	void draw();
+	
 	
 	void audioReceived( float * input, int bufferSize);
-	void audioRequested( float * output, int bufferSize);
-	void mix(float *buffer,int bufferSize,float volume=1.0f);
-	
+		
 	void record();
 	void play(float speed);
-	void stop();
 	
 	void normalize();
 	void trim(float thresh);
 	
 	
-	bool getIsPlaying();
+
 	bool getIsRecording();
 	
 	float *getBuffer();
 	int getCurrentBuffer();
 	int getBufferSize();
 	int getNumBuffers();
+	ofxAudioSample* getAudioSample();
+	
+private:
+	
+	ofxAudioSample sample;
 	
 	int bufferSize;
 	int numBuffers;
-	int state;
+//	int state;
+	bool bRecording;
 	
-	float *buffer;
+	
 	int currentBuffer;
 	
-	int pos;
-	float speed;
+//	int pos;
+//	float speed;
 };

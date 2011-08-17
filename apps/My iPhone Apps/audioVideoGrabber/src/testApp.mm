@@ -41,15 +41,24 @@ void testApp::setup(){
 	grabber.startCamera();
 	
 	
-	player.setup(&video,0,0,nil,true);
+	videoPlayer.setup(&video,0,0,nil,true);
 	bRecording = false;
+	
+	int nChannels = 2;
+	int bufferSize = 512;
+	float sampleRate 			= 44100;
+	
+	sampler.setup(bufferSize,sampleRate * video.sampleLength / (1000 * bufferSize));
+	audioPlayer.setup(sampler.getAudioSample(),bufferSize);
+	
+	ofSoundStreamSetup(nChannels, 1, this, sampleRate, sampler.getBufferSize(), 2);
 	
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	counter = counter + 0.033f;
-	player.update();
+	videoPlayer.update();
 	
 	switch (grabber.getState()) {
 		
@@ -61,7 +70,7 @@ void testApp::update(){
 		case CAMERA_RUNNING:
 			if (bRecording) {
 				bRecording = false;
-				player.playIntro();
+				videoPlayer.playIntro();
 			}
 			break;
 		default:
@@ -82,7 +91,7 @@ void testApp::draw(){
 	if (grabber.getState() == CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING) {
 		grabber.draw();
 	} else {
-		player.draw();
+		videoPlayer.draw();
 	}
 
 	
@@ -117,7 +126,11 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 		case CAMERA_RECORDING:
 			break;
 		default:
-			player.play(1.0f, 1.0f);
+			if (!sampler.getIsRecording()) {
+				videoPlayer.play(1.0f, 1.0f);
+				audioPlayer.play();
+			}
+			
 			break;
 	}
 	
@@ -140,6 +153,7 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 	switch (grabber.getState()) {
 		case CAMERA_CAPTURING:
 			grabber.record();
+			sampler.record();
 			break;
 		case CAMERA_RECORDING:
 			break;
@@ -148,6 +162,28 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 			break;
 	}
 	
+}
+
+void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
+	
+	if (sampler.getIsRecording()) {
+		sampler.audioReceived(input,bufferSize);
+		if (!sampler.getIsRecording()) {
+			sampler.normalize();
+		}
+	}
+	
+		
+}
+
+void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
+	memset(output, 0, bufferSize*sizeof(float)*nChannels);
+	if (!sampler.getIsRecording() && audioPlayer.getNumPlaying()) {
+		audioPlayer.mixChannel(output,0,nChannels);
+		audioPlayer.mixChannel(output,1,nChannels);
+		//piter->video->mix(rAudio, bufferSize,1.0f/players.size()*rightScale);
+		audioPlayer.postProcess();
+	}
 }
 
 //--------------------------------------------------------------

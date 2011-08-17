@@ -8,29 +8,22 @@
  */
 
 #include "ofxAudioSampler.h"
+
 #include "ofMain.h"
 #include <math.h>
 
-enum {
-	SAMPLER_IDLE,
-	SAMPLER_RECORDING,
-	SAMPLER_PLAYING
-};
 
-ofxAudioSampler::ofxAudioSampler() {
-	state = SAMPLER_IDLE;
-}
 
 	
 void ofxAudioSampler::setup(int bufferSize,int numBuffers) {
 	this->bufferSize = bufferSize;
 	this->numBuffers = numBuffers;
-	buffer				= new float[bufferSize*numBuffers];
-	memset(buffer, 0, bufferSize*numBuffers * sizeof(float));
+	sample.nChannels = 1;
+	sample.numFrames = bufferSize * numBuffers;
+	sample.buffer	= new float[sample.numFrames];
+	memset(sample.buffer, 0, sample.numFrames * sizeof(float));
 }
 
-void ofxAudioSampler::draw() {
-}
 
 void ofxAudioSampler::audioReceived( float * input, int bufferSize) {
 	if( this->bufferSize != bufferSize ){
@@ -42,16 +35,17 @@ void ofxAudioSampler::audioReceived( float * input, int bufferSize) {
 	if (getIsRecording()) {
 		
 		for (int i = 0; i < bufferSize; i++){
-			buffer[bufferSize * currentBuffer + i] = input[i];
+			sample.buffer[bufferSize * currentBuffer + i] = input[i];
 		}
 		currentBuffer++;
 		if (currentBuffer>=numBuffers) {
-			stop();
+			bRecording = false;
 		}
 	}
 		
 }
 
+/*
 void ofxAudioSampler::audioRequested( float * output, int bufferSize) {
 	if( this->bufferSize != bufferSize ){
 		ofLog(OF_LOG_ERROR, "your buffer size was set to %i - but the stream needs a buffer size of %i", this->bufferSize, bufferSize);
@@ -103,35 +97,36 @@ void ofxAudioSampler::mix(float *buffer,int bufferSize,float volume) {
 		}
 	} 
 }
-
+*/
 
 
 
 
 void ofxAudioSampler::record() {
-	state = SAMPLER_RECORDING;
+	bRecording = true;
 	currentBuffer = 0;
 	
 }
+
+/*
 void ofxAudioSampler::play(float speed) {
 	state = SAMPLER_PLAYING;
 	currentBuffer = 0;
 	pos = 0;
 	this->speed = speed;
 }
+*/
 
-void ofxAudioSampler::stop() {
-	state = SAMPLER_IDLE;
-}
+
 
 void ofxAudioSampler::normalize() {
 	double peak = 0;
 	for (int i = 0; i < bufferSize * numBuffers; i++){
-		peak = fmax(peak,sqrt(buffer[i]*buffer[i]));
+		peak = fmax(peak,sqrt(sample.buffer[i]*sample.buffer[i]));
 	}
 	
 	for (int i = 0; i < bufferSize * numBuffers; i++){
-		buffer[i] /= peak;
+		sample.buffer[i] /= peak;
 	}
 }
 
@@ -139,30 +134,32 @@ void ofxAudioSampler::trim(float thresh) {
 	
 	int i;
 	for (i = 0; i < bufferSize * numBuffers; i++){
-		if (sqrt(buffer[i]*buffer[i])>thresh) {
+		if (sqrt(sample.buffer[i]*sample.buffer[i])>thresh) {
 			break;
 		}
 	}
 	
 	if (i<bufferSize * numBuffers) {
 		for (int j = 0; j < bufferSize * numBuffers-i; j++){
-			buffer[j] = buffer[j+i];
+			sample.buffer[j] = sample.buffer[j+i];
 		}
 	}
 	
 	
 }
 
-
+/*
 bool ofxAudioSampler::getIsPlaying() {
 	return state == SAMPLER_PLAYING;
 }
+*/
 
 bool ofxAudioSampler::getIsRecording() {
-	return state == SAMPLER_RECORDING;
+	return bRecording;
 }
 
-float *ofxAudioSampler::getBuffer() {return buffer;}
+float *ofxAudioSampler::getBuffer() {return sample.buffer;}
 int ofxAudioSampler::getCurrentBuffer() {return currentBuffer;}
 int ofxAudioSampler::getBufferSize() {return bufferSize;}
 int ofxAudioSampler::getNumBuffers() {return numBuffers;}
+ofxAudioSample* ofxAudioSampler::getAudioSample() {return &sample;}
