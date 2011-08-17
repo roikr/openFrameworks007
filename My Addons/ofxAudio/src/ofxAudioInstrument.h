@@ -29,7 +29,7 @@ struct note {
 	ofxAudioFile *sample;
 };
 
-class ofxAudioInstrument {
+class ofxAudioInstrument { 
 	
 	
 public:
@@ -37,7 +37,7 @@ public:
 	void setup(int blockLength,int sampleTriggers); // call before loading samples loaded 
 	
 	void loadSample(string filename,int midi,bool bChokeGroup = false);
-	void noteOn(int midi,int velocity,int cents);
+	void noteOn(int midi,int velocity,int cents=0);
 	void noteOff(int midi);
 	void noteOffAll();
 	

@@ -57,7 +57,7 @@ public:
 	
 
 	void openForSave(string filename);
-	void saveWithBlocks(float *left,float*right);
+	void save(float * output,int nChannels);
 	void close();
 	
 	int getNumPlaying();

@@ -464,8 +464,7 @@ void ofxAudioFile::openForSave(string filename) {
 	
 }
 
-
-void ofxAudioFile::saveWithBlocks(float *left,float*right) {
+void ofxAudioFile::save(float * output,int nChannels) {
 
 	OSStatus error = noErr;
 
@@ -474,8 +473,8 @@ void ofxAudioFile::saveWithBlocks(float *left,float*right) {
 	int j;
 	
 	for (i = 0, j = 0; i < bufferLength; j+=2, i++) {
-		saveBuffer[j] = (float)(left[i]*SINT16_MAX);
-		saveBuffer[j+1] = (float)(right[i]*SINT16_MAX);
+		saveBuffer[j] = (float)(output[i*nChannels]*SINT16_MAX);
+		saveBuffer[j+1] = (float)(output[(i+1)*nChannels-1]*SINT16_MAX);
 	}
 	
 	try {
