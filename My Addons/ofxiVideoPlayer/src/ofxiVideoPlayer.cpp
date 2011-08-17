@@ -150,16 +150,17 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 	
 }
 
-void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) {
+// void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) 
+void ofxiVideoPlayer::mixChannel(float * output, int bufferSize,int channel, int nChannels,float volume) {
+
 	if( video->audio.getBufferSize() != bufferSize ){
 		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
 		return;
 	}
 	
 	if (state == PLAYER_PLAYING) {
-		
 		for (int i = 0; i < bufferSize; i++) {
-			buffer[i ] += (*(video->audio.getBuffer()+pos+(int)(speed*i))) *volume * this->volume;
+			output[i*nChannels+channel] += (*(video->audio.getBuffer()+pos+(int)(speed*i))) *volume * this->volume;
 		}
 		
 	} 

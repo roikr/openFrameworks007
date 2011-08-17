@@ -44,7 +44,7 @@ public:
 //	void setPosition(float pos);
 	
 	void audioRequested( float * output, int bufferSize);
-	void mix(float *buffer,int bufferSize,float volume=1.0f);
+	void mixChannel(float * output, int bufferSize,int channel, int nChannels,float volume=1.0f);
 	
 	void preProcess(); // should be call after audioRequested or mix to update position and state
 	
