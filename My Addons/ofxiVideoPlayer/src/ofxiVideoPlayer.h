@@ -9,6 +9,7 @@
 
 #pragma once
 
+
 class ofxiPhoneVideo;
 
 class ofxiVideoPlayer {
@@ -18,9 +19,11 @@ public:
 	//ofxiPhoneClipper();
 	//~ofxiPhoneClipper();
 	
-	void setup(ofxiPhoneVideo *video,bool bIntroMode = false);
+	void setup(ofxiPhoneVideo *video,int bufferSize,int numBuffers,float *buffer,bool bIntroMode = false);
 	void update();
 	void draw();
+	void drawFrame(int frame);
+	void drawTexture(int texture);
 	void exit();
 	
 	void play(int note,int velocity);
@@ -69,8 +72,13 @@ protected:
 	
 	ofxiPhoneVideo *video;
 	
+	
 	int currentFrame;
 	
 	bool bIntroMode;
+	
+	float *buffer;
+	int bufferSize;
+	int numBuffers;
 	
 };

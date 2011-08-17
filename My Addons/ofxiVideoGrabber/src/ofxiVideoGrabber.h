@@ -15,6 +15,7 @@
 #include "ofxiFBO.h"
 
 
+
 using namespace std;
 
 @class MyVideoBuffer;
@@ -39,6 +40,7 @@ public:
 	void render();
 	void draw();
 	void drawLiveCam();
+	void drawTexture(int texture);
 	
 	void exit();
 		
@@ -47,10 +49,11 @@ public:
 	
 	void startCapture();
 	void record();
+	void pause();
 	
 	int getState();
 	
-	void audioReceived( float * input, int bufferSize);
+//	void audioReceived( float * input, int bufferSize);
 	
 	bool cameraToggle();
 	

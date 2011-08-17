@@ -8,10 +8,9 @@
  */
 
 #include "ofxiVideoPlayer.h"
-
-#include "ofxiPhoneVideo.h"
 #include "ofMain.h"
 #include <math.h>
+#include "ofxiPhoneVideo.h"
 
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
@@ -32,9 +31,12 @@ enum {
 	PLAYER_INTRO_BACKWARD
 };
 
-void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,bool bIntroMode) {
+void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,int bufferSize,int numBuffers,float *buffer,bool bIntroMode) {
 
 	this->video = video;
+	this->buffer = buffer;
+	this->bufferSize = bufferSize;
+	this->numBuffers = numBuffers;
 	
 	state = PLAYER_IDLE;
 	this->bIntroMode = bIntroMode;
@@ -123,13 +125,77 @@ void ofxiVideoPlayer::updateFrame() {
 
 
 void ofxiVideoPlayer::draw() {
-	video->drawTexture(currentTexture);
+	drawTexture(currentTexture);
 }
 
 
+
+void ofxiVideoPlayer::drawFrame(int frame) {
+	drawTexture(video->textures[frame]);
+}
+
+void ofxiVideoPlayer::drawTexture(int texture) {
+	
+	glPushMatrix();
+	
+	if (!video->bHorizontal) {
+		ofTranslate(video->textureHeight, 0, 0);
+		ofRotate(90);
+		
+	}
+	
+	float u = video->widthFraction;
+	float v = video->heightFraction;
+	
+	GLfloat spriteTexcoords[] = {
+		u,v,   
+		u,0.0f,
+		0,v,   
+		0.0f,0,};
+	
+	float w = video->textureWidth*u;//ofGetWidth()/2;
+	float h = video->textureHeight*v;//(float)ofGetWidth()/(float)width*(float)height/2;
+	
+	GLfloat spriteVertices[] =  {
+		w,h,0,   
+		w,0,0,   
+		0,h,0, 
+		0,0,0};
+	
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_TEXTURE_2D);
+	
+	
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	
+	
+	glDisable(GL_TEXTURE_2D);
+	
+	//	glPushMatrix();
+	//	//	if (video->bMirrored) {
+	//	//		glTranslatef(w, 0, 0);
+	//	//		glScalef(-1.0, 1.0, 1.0);
+	//	//	}
+	//	
+	//	glPopMatrix();
+	glPopMatrix();
+	
+}
+
+
+
 void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
-	if( video->audio.getBufferSize() != bufferSize ){
-		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
+	if( this->bufferSize != bufferSize ){
+		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", this->bufferSize, bufferSize);
 		return;
 	}
 	
@@ -139,7 +205,7 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 		
 		for (int i = 0; i < bufferSize; i++){
 			
-			output[i ] = (*(video->audio.getBuffer()+pos+(int)(speed*i))) * this->volume;
+			output[i ] = (*(buffer+pos+(int)(speed*i))) * this->volume;
 		}
 		
 	} else {
@@ -153,14 +219,14 @@ void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 // void ofxiVideoPlayer::mix(float *buffer,int bufferSize,float volume) 
 void ofxiVideoPlayer::mixChannel(float * output, int bufferSize,int channel, int nChannels,float volume) {
 
-	if( video->audio.getBufferSize() != bufferSize ){
-		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
+	if( this->bufferSize != bufferSize ){
+		ofLog(OF_LOG_ERROR, "ofxiVideoPlayer: your buffer size was set to %i - but the stream needs a buffer size of %i", this->bufferSize, bufferSize);
 		return;
 	}
 	
 	if (state == PLAYER_PLAYING) {
 		for (int i = 0; i < bufferSize; i++) {
-			output[i*nChannels+channel] += (*(video->audio.getBuffer()+pos+(int)(speed*i))) *volume * this->volume;
+			output[i*nChannels+channel] += (*(buffer+pos+(int)(speed*i))) *volume * this->volume;
 		}
 		
 	} 
@@ -169,9 +235,9 @@ void ofxiVideoPlayer::mixChannel(float * output, int bufferSize,int channel, int
 void ofxiVideoPlayer::preProcess() {
 	
 	if (state == PLAYER_PLAYING) {
-		pos+=video->audio.bufferSize*speed;
+		pos+=bufferSize*speed;
 		
-		if (pos + video->audio.bufferSize*speed >=video->audio.getNumBuffers()*video->audio.bufferSize) {
+		if (pos + bufferSize*speed >=numBuffers*bufferSize) {
 			state = PLAYER_IDLE;	
 			
 			if (bIntroMode) {

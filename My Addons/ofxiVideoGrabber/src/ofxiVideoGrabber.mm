@@ -12,9 +12,10 @@
 #import "MyVideoBuffer.h"
 #include <iostream>
 #include "ofMain.h"
-#include "ofxiPhoneVideo.h"
+
 #import "glu.h"
 #include "ofxiPhoneExtras.h"
+#include "ofxiPhonevideo.h"
 
 
 ofxiVideoGrabber::ofxiVideoGrabber() {
@@ -29,7 +30,7 @@ int ofxiVideoGrabber::getState() {
 void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 	
 	
-	this->video = video;
+	
 	
 	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps] retain];
 	
@@ -56,6 +57,8 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 		video->textures.push_back(texture);
 				
 	}
+	
+	this->video = video;
 }
 
 
@@ -155,7 +158,7 @@ void ofxiVideoGrabber::draw() {
 	
 	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)) {
 		
-		video->drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
+		drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
 	} else {
 		//[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
 		drawLiveCam();
@@ -171,6 +174,63 @@ void ofxiVideoGrabber::draw() {
 }
 
 
+void ofxiVideoGrabber::drawTexture(int texture) {
+	
+	glPushMatrix();
+	
+	if (!video->bHorizontal) {
+		ofTranslate(video->textureHeight, 0, 0);
+		ofRotate(90);
+		
+	}
+	
+	float u = video->widthFraction;
+	float v = video->heightFraction;
+	
+	GLfloat spriteTexcoords[] = {
+		u,v,   
+		u,0.0f,
+		0,v,   
+		0.0f,0,};
+	
+	float w = video->textureWidth*u;//ofGetWidth()/2;
+	float h = video->textureHeight*v;//(float)ofGetWidth()/(float)width*(float)height/2;
+	
+	GLfloat spriteVertices[] =  {
+		w,h,0,   
+		w,0,0,   
+		0,h,0, 
+		0,0,0};
+	
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_TEXTURE_2D);
+	
+	
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	
+	
+	glDisable(GL_TEXTURE_2D);
+	
+	//	glPushMatrix();
+	//	//	if (video->bMirrored) {
+	//	//		glTranslatef(w, 0, 0);
+	//	//		glScalef(-1.0, 1.0, 1.0);
+	//	//	}
+	//	
+	//	glPopMatrix();
+	glPopMatrix();
+	
+}
+
 
 
 	
@@ -182,37 +242,37 @@ void ofxiVideoGrabber::exit() {
 	
 }
 
-void ofxiVideoGrabber::audioReceived( float * input, int bufferSize) {
-	if( video->audio.getBufferSize() != bufferSize ){
-		ofLog(OF_LOG_ERROR, "ofxiVideoGrabber: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
-		return;
-	}	
-	
-	if (video->audio.getIsRecording()) {
-		video->audio.audioReceived(input,bufferSize);
-		if (!video->audio.getIsRecording()) {
-			state = CAMERA_RUNNING;
-			video->audio.normalize();
-		}
-	}
-	
-//	if (getState()==CAMERA_RECORDING) {
-//		
-//		for (int i = 0; i < bufferSize; i++){
-//			video->sample[video->audio.getBufferSize()*currentBuffer+i] = input[i];
-//		}
-//		currentBuffer++;
-//		
-//		if (currentBuffer>=video->numBuffers) {
-//			state = CAMERA_RUNNING;
+//void ofxiVideoGrabber::audioReceived( float * input, int bufferSize) {
+//	if( video->audio.getBufferSize() != bufferSize ){
+//		ofLog(OF_LOG_ERROR, "ofxiVideoGrabber: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
+//		return;
+//	}	
+//	
+//	if (video->audio.getIsRecording()) {
+//		video->audio.audioReceived(input,bufferSize);
+//		if (!video->audio.getIsRecording()) {
+//			grabber.stop();
+//			video->audio.normalize();
 //		}
 //	}
-	
-	
-	//scaledSamples.push_front(max);
-	
-	
-}
+//	
+////	if (getState()==CAMERA_RECORDING) {
+////		
+////		for (int i = 0; i < bufferSize; i++){
+////			video->sample[video->audio.getBufferSize()*currentBuffer+i] = input[i];
+////		}
+////		currentBuffer++;
+////		
+////		if (currentBuffer>=video->numBuffers) {
+////			state = CAMERA_RUNNING;
+////		}
+////	}
+//	
+//	
+//	//scaledSamples.push_front(max);
+//	
+//	
+//}
 
 
 
@@ -248,8 +308,8 @@ void ofxiVideoGrabber::startCapture() {
 }
 
 void ofxiVideoGrabber::record() {
-	
-	video->audio.record();
+// roikr: audio fix	
+//	video->audio.record();
 		
 	firstFrame = currentFrame-1;
 	video->firstFrame = (currentFrame-1) % video->numFrames;
@@ -258,6 +318,10 @@ void ofxiVideoGrabber::record() {
 	
 	ofLog(OF_LOG_VERBOSE, "ofxiVideoGrabber::record, first frame: %i", firstFrame);
 	
+}
+
+void ofxiVideoGrabber::pause() {
+	state = CAMERA_RUNNING;
 }
 
 bool ofxiVideoGrabber::cameraToggle() {

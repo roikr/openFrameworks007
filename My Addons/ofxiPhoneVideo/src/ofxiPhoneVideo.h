@@ -9,31 +9,27 @@
 #pragma once
 
 #include <vector>
-#include "ofxAudioSampler.h"
+
 
 // for now supporting 44100 mono audio
 
 using namespace std;
 
-class ofxiPhoneVideo {
+struct ofxiPhoneVideo {
 	
-public:
-	ofxiPhoneVideo() : bHorizontal(true),bFlipHoriznotal(false) {};
-	void drawFrame(int frame);
-	void drawTexture(int texture);
+//public:
+//	ofxiPhoneVideo() : bHorizontal(true),bFlipHoriznotal(false) {};
 	
 	int		numFrames;
 	int		numIntroFrames;
 	
 	int		fps;
-	int		bufferSize;
-	float	sampleRate;
+//	int		bufferSize;
+//	float	sampleRate;
 	int		sampleLength; // in millis -  make sure that there are more frames than needed
 	
 	
 	vector<int> textures;
-	
-	ofxAudioSampler audio;
 	
 	int firstFrame;
 	
