@@ -124,6 +124,7 @@ void ofRegisterTouchEvents(ofBaseApp *app);
 
 void	ofEnableDataPath();
 void	ofDisableDataPath();
+void ofSetDataPathRoot(string newRoot);
 string 	ofToDataPath(string path, bool absolute=false);
 
 

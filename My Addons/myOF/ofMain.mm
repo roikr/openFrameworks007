@@ -56,17 +56,44 @@ void ofDisableDataPath(){
 	enableDataPath = false;
 }
 
-string ofToDataPath(string path, bool makeAbsolute){	
-	if (enableDataPath) {
-		return ofToDocumentsPath("data/"+path);
-	} else {
-		return path;
-	}
+//string ofToDataPath(string path, bool makeAbsolute){	
+//	if (enableDataPath) {
+//		return ofToDocumentsPath("data/"+path);
+//	} else {
+//		return path;
+//	}
+//
+//	
+//}
 
-	
+static string dataPathRoot = "data/";
+
+//--------------------------------------------------
+void ofSetDataPathRoot(string newRoot){
+	string newPath = "";
+	dataPathRoot = newPath+newRoot;
 }
 
 
+//--------------------------------------------------
+string ofToDataPath(string path, bool makeAbsolute){
+	if( enableDataPath ){
+		
+		//check if absolute path has been passed or if data path has already been applied
+		//do we want to check for C: D: etc ?? like  substr(1, 2) == ':' ??
+		if( path.length()==0 || (path.substr(0,1) != "/" &&  path.substr(1,1) != ":" &&  path.substr(0,dataPathRoot.length()) != dataPathRoot)){
+			path = dataPathRoot+path;
+		}
+		
+		if(makeAbsolute && (path.length()==0 || path.substr(0,1) != "/")){
+#ifdef TARGET_OF_IPHONE
+			//do we need iphone specific code here?
+#endif
+		}
+		
+	}
+	return path;
+}
 
 
 
