@@ -22,7 +22,7 @@ public:
 	void audioReceived( float * input, int bufferSize);
 		
 	void record();
-	void play(float speed);
+//	void play(float speed);
 	
 	void normalize();
 	void trim(float thresh);

@@ -41,7 +41,7 @@ void testApp::setup(){
 	grabber.startCamera();
 	
 	
-	videoPlayer.setup(&video,0,0,nil,true);
+	videoPlayer.setup(&video,true);
 	bRecording = false;
 	
 	int nChannels = 2;
@@ -127,7 +127,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 			break;
 		default:
 			if (!sampler.getIsRecording()) {
-				videoPlayer.play(1.0f, 1.0f);
+				videoPlayer.play(1.0f);
 				audioPlayer.play();
 			}
 			

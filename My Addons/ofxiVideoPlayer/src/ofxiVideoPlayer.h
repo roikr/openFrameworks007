@@ -19,15 +19,15 @@ public:
 	//ofxiPhoneClipper();
 	//~ofxiPhoneClipper();
 	
-	void setup(ofxiPhoneVideo *video,int bufferSize,int numBuffers,float *buffer,bool bIntroMode = false);
+	void setup(ofxiPhoneVideo *video,bool bIntroMode = false);
 	void update();
 	void draw();
 	void drawFrame(int frame);
 	void drawTexture(int texture);
 	void exit();
 	
-	void play(int note,int velocity);
-	void play(float speed,float volume=1.0f);
+	//void play(int note,int velocity);
+	void play(float speed);
 	bool getIsPlaying();
 	
 	void updateFrame();
@@ -46,10 +46,10 @@ public:
 //	bool getIsScrubbing();
 //	void setPosition(float pos);
 	
-	void audioRequested( float * output, int bufferSize);
-	void mixChannel(float * output, int bufferSize,int channel, int nChannels,float volume=1.0f);
-	
-	void preProcess(); // should be call after audioRequested or mix to update position and state
+//	void audioRequested( float * output, int bufferSize);
+//	void mixChannel(float * output, int bufferSize,int channel, int nChannels,float volume=1.0f);
+//	
+//	void preProcess(); // should be call after audioRequested or mix to update position and state
 	
 	
 
@@ -67,7 +67,7 @@ protected:
 	int state;
 	
 	float speed;
-	float volume;
+//	float volume;
 	int pos;
 	
 	ofxiPhoneVideo *video;
@@ -77,8 +77,8 @@ protected:
 	
 	bool bIntroMode;
 	
-	float *buffer;
-	int bufferSize;
-	int numBuffers;
+//	float *buffer;
+//	int bufferSize;
+//	int numBuffers;
 	
 };

@@ -41,7 +41,7 @@ void testApp::setup(){
 	grabber.startCamera();
 	
 	
-	player.setup(&video,0,0,nil,true);
+	player.setup(&video,true);
 	bRecording = false;
 	
 }
@@ -117,7 +117,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 		case CAMERA_RECORDING:
 			break;
 		default:
-			player.play(1.0f, 1.0f);
+			player.play(1.0f);
 			break;
 	}
 	

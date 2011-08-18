@@ -5,8 +5,9 @@
 #include "ofxXmlSettings.h"
 
 
-#include "ofxiVideoGrabber.h"
+
 #include "ofxiVideoPlayer.h"
+#include "ofxAudioPlayer.h"
 
 #include <iostream>
 #include "ofMain.h"
@@ -40,29 +41,32 @@ void testApp::setup(){
 	
 	
 	int bufferSize = 512;
+	int nChannels = 2;
 	
 	video.fps = 25;
 	video.numIntroFrames = 4;
-	video.sampleRate 			= 44100;
 	video.numFrames = 25;
 	video.sampleLength = 1000*video.numFrames/video.fps;
 	
-	video.audio.setup(bufferSize,video.sampleRate * video.sampleLength / (1000 * bufferSize));	
 	video.widthFraction = 1.0;
 	video.heightFraction = 1.0;
 	video.textureWidth = 128;
 	video.textureHeight = 256;
 	
 	
+	sampleRate 			= 44100;
+	
+	sampler.setup(bufferSize,sampleRate * video.sampleLength / (1000 * bufferSize));
+	
 	
 	//video->sample				= new float[video->numBuffers*video->bufferSize];
 	//memset(video->sample, 0, video->numBuffers*video->bufferSize * sizeof(float));
 	
-	song.setupForSave(video.audio.getBufferSize());
+	song.setupForSave(bufferSize);
 	
 	ofxXmlSettings xml;
 	
-	bool loaded = xml.loadFile(ofToResourcesPath("cards.xml"));
+	bool loaded = xml.loadFile(ofToResourcesPath("data/cards.xml"));
 	assert(loaded);
 	
 	
@@ -81,7 +85,7 @@ void testApp::setup(){
 //			minX = ofGetWidth();
 		
 		c.background = new ofxRKTexture;
-		c.background->setup(ofToResourcesPath(xml.getAttribute("card", "image", "", j)));
+		c.background->setup(ofToResourcesPath("data/"+xml.getAttribute("card", "image", "", j)));
 		c.background->init();
 		c.background->load();
 		
@@ -116,10 +120,12 @@ void testApp::setup(){
 	for (i=0; i<xml.getNumTags("player");i++) {
 		
 		player p;
-		p.song.setup(video.audio.getBufferSize(), video.sampleRate);
-		p.song.loadTrack(ofToResourcesPath(xml.getAttribute("player", "filename", "", i)));
+		p.song.setup(bufferSize, sampleRate);
+		p.song.loadTrack(ofToResourcesPath("data/"+xml.getAttribute("player", "filename", "", i)));
 		p.video = new ofxiVideoPlayer;
 		p.video->setup(&video,true);
+		p.audio = new ofxAudioPlayer;
+		p.audio->setup(sampler.getAudioSample(),bufferSize);
 		players.push_back(p);
 	}
 	
@@ -137,12 +143,16 @@ void testApp::setup(){
 //	}
 	
 	
-	lAudio	= new float[video.audio.getBufferSize()];
-	rAudio	= new float[video.audio.getBufferSize()];
+//	lAudio	= new float[video.audio.getBufferSize()];
+//	rAudio	= new float[video.audio.getBufferSize()];
+//	buffer = new float[bufferSize*nChannels];
 	
+	sample.nChannels = 2;
+	sample.numFrames = bufferSize;
+	sample.buffer	= new float[sample.numFrames];
 	
-	camera = new ofxiVideoGrabber;
-	camera->setup(&video);
+//	camera = new ofxiVideoGrabber;
+	grabber.setup(&video);
 	
 	
 	
@@ -151,9 +161,11 @@ void testApp::setup(){
 	trigger.setAutoThresh(0.1,50);
 	//trigger.setThresh(0.15);
 	
-	ofSoundStreamSetup(2, 1, this, video.sampleRate, video.audio.getBufferSize(), 2);
+	ofSoundStreamSetup(nChannels, 1, this, sampleRate, bufferSize, 2);
 	
-	camera->startCamera();
+	grabber.startCamera();
+	
+	
 	
 	songVersion = 0;
 	
@@ -219,7 +231,7 @@ void testApp::update()
 //--------------------------------------------------------------
 void testApp::draw()
 {
-	camera->render();
+	grabber.render();
 	
 	ofBackground(0, 0, 0);
 	ofSetColor(255,255,255,255);
@@ -279,8 +291,8 @@ void testApp::draw()
 			//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
 			//ofScale(0.5, 0.5, 1);
 			
-			if (camera->getState()==CAMERA_CAPTURING || camera->getState()==CAMERA_RECORDING) {
-				camera->draw();
+			if (grabber.getState()==CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING) {
+				grabber.draw();
 			} else {
 				piter->video->draw();
 			}
@@ -296,10 +308,10 @@ void testApp::draw()
 		
 		ofEnableAlphaBlending();
 		
-		ofPushMatrix();
-		ofTranslate(0, y); 
-		iter->background->draw(0, 0);
-		ofPopMatrix();
+//		ofPushMatrix();
+//		ofTranslate(0, y); 
+//		iter->background->draw(0, 0);
+//		ofPopMatrix();
 		
 		ofDisableAlphaBlending();
 	}
@@ -310,14 +322,14 @@ void testApp::draw()
 
 //--------------------------------------------------------------
 void testApp::exit() {
-	camera->exit();
+	grabber.exit();
 }
 
 
 void testApp::record() {
 	trigger.setTrigger();
 	trigger.resetMeters();
-	camera->startCapture();
+	grabber.startCapture();
 	
 	songVersion++;
 	//camera->setTrigger(thresh);
@@ -328,7 +340,8 @@ void testApp::record() {
 void testApp::preview() {
 	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
 		
-		iter->video->play(60,127);
+		iter->video->play(1.0f);
+		iter->audio->play();
 		
 	}
 	
@@ -527,28 +540,36 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 	
 	if (trigger.getTriggerState() == TRIGGER_TRIGGERED) {
 		trigger.resetTrigger();
-		camera->record();
+		grabber.record();
+		sampler.record();
 		bRecording = true;
 	}
 	
 	//compressor.audioProcess(input,bufferSize);
 	
-	camera->audioReceived(input, bufferSize);
+//	camera->audioReceived(input, bufferSize);
+//	
+//	if (bRecording && !sampler.getIsRecording()) {
+//		bRecording = false;
+//		playIntro();
+//		//gain = 0.6f/trigger.getRmsPeak();
+//		//printf("rms: %1.2f, players: %i, gain: %1.2f\n", trigger.getRmsPeak(),(int)players.size(),gain);
+//	}
 	
-	if (bRecording && !video.audio.getIsRecording()) {
-		bRecording = false;
-		playIntro();
-		//gain = 0.6f/trigger.getRmsPeak();
-		//printf("rms: %1.2f, players: %i, gain: %1.2f\n", trigger.getRmsPeak(),(int)players.size(),gain);
+	if (sampler.getIsRecording()) {
+		sampler.audioReceived(input,bufferSize);
+		if (!sampler.getIsRecording()) {
+			sampler.normalize();
+			bRecording = false;
+		}
 	}
 }
 
 
 
-void testApp::audioProcess(int bufferSize) {
-	memset(lAudio, 0, bufferSize*sizeof(float));
-	memset(rAudio, 0, bufferSize*sizeof(float));
-	
+void testApp::audioProcess(float *buffer,int bufferSize, int nChannels) {
+	memset(buffer, 0, bufferSize*sizeof(float)*nChannels);
+		
 	vector<player>::iterator piter;
 	vector<actor>::iterator aiter;
 	
@@ -563,7 +584,17 @@ void testApp::audioProcess(int bufferSize) {
 				for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
 					if (niter->bNoteOn) {
 						printf("player: %i, ", distance(players.begin(),piter));
-						piter->video->play(niter->note,niter->velocity);
+						sampleInstance si;
+						si.speed = exp((float)(niter->note-60)/12.0*log(2.0));
+						float volume = (float)niter->velocity / 127;
+						si.left = volume * (1 - aiter->pan);
+						si.right = volume * aiter->pan;
+						si.retrigger = true;
+						
+						//piter->video->play(niter->note,niter->velocity);
+						piter->video->play(si.speed);
+						
+						piter->audio->trigger(si);
 					}
 				}
 			
@@ -573,23 +604,27 @@ void testApp::audioProcess(int bufferSize) {
 				break;
 		}
 		
-		float leftScale = 1 - aiter->pan;
-		float rightScale = aiter->pan;
 		
-		piter->video->mix(lAudio, bufferSize,1.0f/players.size()*leftScale);
-		piter->video->mix(rAudio, bufferSize,1.0f/players.size()*rightScale);
-		piter->video->preProcess();
+		
+		piter->audio->mixChannel(buffer,0,nChannels);//,1.0f/players.size()*leftScale);
+		piter->audio->mixChannel(buffer,1,nChannels);//,1.0f/players.size()*rightScale);
+		//piter->video->mix(rAudio, bufferSize,1.0f/players.size()*rightScale);
+		piter->audio->postProcess();
 	}
 }
 
 void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	
-	audioProcess(bufferSize);
+	audioProcess(output,bufferSize,nChannels);
 	
-	for (int i = 0; i < bufferSize; i++){
-		output[i*nChannels] = lAudio[i];// * gain;
-		output[i*nChannels + 1] = rAudio[i];// * gain;
-	}
+	
+//	memcpy(output, buffer, bufferSize*sizeof(float)*nChannels);
+		
+	
+//	for (int i = 0; i < bufferSize; i++){
+//		output[i*nChannels] = lAudio[i];// * gain;
+//		output[i*nChannels + 1] = rAudio[i];// * gain;
+//	}
 	
 }
 
@@ -607,9 +642,10 @@ void testApp::renderAudio() {
 	while (getSongState()==SONG_RENDER_AUDIO || getSongState()==SONG_CANCEL_RENDER_AUDIO) {
 		
 		//update(); // todo move to production for other thread
-		audioProcess(video.audio.getBufferSize());
+		audioProcess(sample.buffer,sample.numFrames,sample.nChannels);
 		
-		song.saveWithBlocks(lAudio, rAudio);
+//		song.saveWithBlocks(lAudio, rAudio);
+		song.save(sample.buffer, sample.nChannels);
 		currentBlock++;
 	}
 	
@@ -626,7 +662,7 @@ void testApp::renderAudio() {
 void testApp::seekFrame(int frame) {
 	
 		
-	int reqBlock = (float)frame/25.0f*(float)video.sampleRate/(float)video.audio.getBufferSize();
+	int reqBlock = (float)frame/25.0f*sampleRate/(float)sampler.getBufferSize();
 	
 //	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
 //		piter->bDidStartPlaying = true;
@@ -640,7 +676,8 @@ void testApp::seekFrame(int frame) {
 			for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
 				if (niter->bNoteOn) {
 //					printf("player: %i, ", distance(players.begin(),piter));
-					piter->video->play(niter->note,niter->velocity);
+					float speed = exp((float)(niter->note-60)/12.0*log(2.0));
+					piter->video->play(speed); // ,niter->velocity
 //					piter->bDidStartPlaying = true;
 					
 				}
@@ -671,7 +708,7 @@ float testApp::getRenderProgress(){
 	
 	switch (songState) {
 		case SONG_RENDER_AUDIO: {
-			return (float)currentBlock * (float)video.audio.getBufferSize() / (float)video.sampleRate/duration;
+			return (float)currentBlock * (float)sampler.getBufferSize() / (float)sampleRate/duration;
 		}	break;
 		case SONG_RENDER_VIDEO:
 			return (float)currentBlock/(float)totalBlocks;
@@ -683,7 +720,7 @@ float testApp::getRenderProgress(){
 }
 
 bool testApp::cameraToggle() {
-	return camera->cameraToggle();
+	return grabber.cameraToggle();
 }
 //--------------------------------------------------------------
 void testApp::lostFocus() {

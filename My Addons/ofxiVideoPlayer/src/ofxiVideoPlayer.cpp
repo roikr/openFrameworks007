@@ -31,12 +31,12 @@ enum {
 	PLAYER_INTRO_BACKWARD
 };
 
-void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,int bufferSize,int numBuffers,float *buffer,bool bIntroMode) {
+void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,/*int bufferSize,int numBuffers,float *buffer,*/bool bIntroMode) {
 
 	this->video = video;
-	this->buffer = buffer;
-	this->bufferSize = bufferSize;
-	this->numBuffers = numBuffers;
+//	this->buffer = buffer;
+//	this->bufferSize = bufferSize;
+//	this->numBuffers = numBuffers;
 	
 	state = PLAYER_IDLE;
 	this->bIntroMode = bIntroMode;
@@ -192,6 +192,7 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 }
 
 
+/*
 
 void ofxiVideoPlayer::audioRequested( float * output, int bufferSize) {
 	if( this->bufferSize != bufferSize ){
@@ -248,23 +249,25 @@ void ofxiVideoPlayer::preProcess() {
 	}
 	
 }
+ 
+*/
 
-void ofxiVideoPlayer::play(int note,int velocity) {
-	
-	float ratio = exp((float)(note-60)/12.0*log(2.0));
-	float volume = (float)velocity / 127;
-	//printf("note:  %i %i, ratio: %1.2f %1.2f\n", note,velocity,ratio,volume);
-	play(ratio,volume);
-}
+//void ofxiVideoPlayer::play(int note,int velocity) {
+//	
+//	float ratio = exp((float)(note-60)/12.0*log(2.0));
+//	float volume = (float)velocity / 127;
+//	//printf("note:  %i %i, ratio: %1.2f %1.2f\n", note,velocity,ratio,volume);
+//	play(ratio,volume);
+//}
 
-void ofxiVideoPlayer::play(float speed,float volume) {
+void ofxiVideoPlayer::play(float speed) {
 	state = PLAYER_PLAYING;
 	start = ofGetElapsedTimeMillis();
 	currentTexture = video->textures[video->firstFrame];
 	currentFrame = 0;
 	pos = 0;
 	this->speed = speed;
-	this->volume = volume;
+//	this->volume = volume;
 }
 
 bool ofxiVideoPlayer::getIsPlaying() {

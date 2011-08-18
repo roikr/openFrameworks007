@@ -18,12 +18,16 @@
 using namespace std;
 
 
-struct instance {
-	int pos;
-	float volume;
+struct sampleInstance {
+	float left;
+	float right;
 	float speed;
+	bool retrigger;
+	
+	int pos;
 	bool bStop;
 };
+
 
 struct ofxAudioSample;
 
@@ -34,7 +38,7 @@ public:
 	void exit();
 	
 	
-	void trigger(float speed,float volume,bool retrigger);
+	void trigger(sampleInstance si);
 	void play();
 	void stop();
 	
@@ -50,7 +54,7 @@ private:
 	
 	ofxAudioSample *sample;
 	
-	deque<instance > instances;
+	deque<sampleInstance > instances;
 };
 
  

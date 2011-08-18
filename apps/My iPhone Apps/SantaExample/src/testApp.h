@@ -4,7 +4,8 @@
 //#include "ofMainExt.h"
 
 
-
+#include "ofxiVideoGrabber.h"
+#include "ofxAudioSampler.h"
 #include "ofxMidiTrack.h"
 #include "ofxAudioTrigger.h"
 #include "ofxAudioFile.h"
@@ -13,13 +14,16 @@
 //#include "ofxDynamicCompressor.h"
 
 #include "ofxiPhoneVideo.h"
+#include "ofxAudioSample.h"
 
-class ofxiVideoGrabber;
+
 class ofxiVideoPlayer;
+class ofxAudioPlayer;
 
 
 struct player {
 	ofxiVideoPlayer *video;
+	ofxAudioPlayer *audio;
 	ofxMidiTrack song;
 	bool bDidStartPlaying;
 	
@@ -72,7 +76,7 @@ public:
 
 	void audioReceived( float * input, int bufferSize, int nChannels );
 	
-	void audioProcess(int bufferSize);
+	void audioProcess(float *buffer,int bufferSize, int nChannels);
 	void audioRequested( float * output, int bufferSize, int nChannels );
 	void renderAudio() ;
 	
@@ -92,15 +96,19 @@ public:
 	bool bNeedDisplay;
 	
 	ofxiPhoneVideo video;
-	ofxiVideoGrabber *camera;
+	ofxiVideoGrabber grabber;
+	ofxAudioSampler sampler;
 	
 	vector<player> players;
 	vector<card> cards;
 	vector<card>::iterator citer;
 	
-	//float *buffer;
-	float 	* lAudio;
-	float   * rAudio;
+	ofxAudioSample sample;
+	float sampleRate;
+//	float *buffer; // for save song 
+//	int bufferSize;
+//	int nChannels;
+	
 	
 	
 

@@ -22,22 +22,27 @@ void ofxAudioPlayer::setup(ofxAudioSample *sample,int bufferSize) {
 
 
 void ofxAudioPlayer::play() {
-	trigger(1.0f, 1.0f, true);
+	sampleInstance si;
+	si.speed = 1.0f;
+	si.left = 1.0f;
+	si.right = 1.0f;
+	si.retrigger = true;
+	
+	trigger(si);
 }
 
-void ofxAudioPlayer::trigger(float speed,float volume,bool retrigger) {
-	if (retrigger && !instances.empty()) {
+void ofxAudioPlayer::trigger(sampleInstance si) {
+	if (si.retrigger && !instances.empty()) {
 		instances.back().bStop = true;
 #ifdef LOG_AUDIO_FILE
 		cout << "retrigger, ";
 #endif
 	}
-	instance i;
-	i.pos = 0;
-	i.volume = volume;
-	i.bStop = false;
-	i.speed = speed;
-	instances.push_front(i);
+	
+	si.pos = 0;
+	si.bStop = false;
+	
+	instances.push_front(si);
 #ifdef LOG_AUDIO_FILE
 	cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
 #endif
@@ -45,7 +50,7 @@ void ofxAudioPlayer::trigger(float speed,float volume,bool retrigger) {
 }
 
 void ofxAudioPlayer::stop() {
-	for (deque<instance >::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+	for (deque<sampleInstance >::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
 		iter->bStop = true;
 	}
 }
@@ -57,7 +62,7 @@ void ofxAudioPlayer::stop() {
 void ofxAudioPlayer::mixChannel(float * output, int channel, int nChannels) {
 	
 	
-	for (deque<instance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+	for (deque<sampleInstance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
 		//sample.mixChannel(output,channel,nChannels,iter->block,iter->volume,iter->bStop);
 	
 	
@@ -69,6 +74,7 @@ void ofxAudioPlayer::mixChannel(float * output, int channel, int nChannels) {
 		
 		//return (tableBuffer+samplesPerChannel*channel+block*blockLength);
 		float *buffer = sample->buffer+sample->numFrames*(sample->nChannels == 2 ? channel : 0)+iter->pos;
+		float volume = channel ? iter->right : iter->left; 
 		
 		if (iter->bStop) {
 			float step = 1.0/(n-1);
@@ -76,11 +82,11 @@ void ofxAudioPlayer::mixChannel(float * output, int channel, int nChannels) {
 			cout << "ramp" << endl; //<< step << endl;
 #endif
 			for (int i=0; i<n; i++) {
-				output[i*nChannels+channel]+=buffer[(int)(iter->speed*i)]*iter->volume*((n-1-i)*step);
+				output[i*nChannels+channel]+=buffer[(int)(iter->speed*i)]*volume*((n-1-i)*step);
 			}
 		} else {
 			for (int i=0; i<n; i++) {
-				output[i*nChannels+channel]+=buffer[(int)(iter->speed*i)]*iter->volume;
+				output[i*nChannels+channel]+=buffer[(int)(iter->speed*i)]*volume;
 			}
 		}
 	}
@@ -116,7 +122,7 @@ void ofxAudioPlayer::audioRequested (float * output, int channel,int bufferSize,
 */
 
 void ofxAudioPlayer::postProcess() {
-	deque<instance>::iterator iter=instances.begin();
+	deque<sampleInstance>::iterator iter=instances.begin();
 	while (iter!=instances.end()) {
 		if (iter->pos+bufferSize*iter->speed>=sample->numFrames || iter->bStop) {
 			iter = instances.erase(iter);
