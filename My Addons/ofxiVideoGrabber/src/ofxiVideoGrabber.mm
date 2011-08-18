@@ -27,12 +27,9 @@ int ofxiVideoGrabber::getState() {
 }
 	
 
-void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
+void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition) {
 	
-	
-	
-	
-	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps] retain];
+	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps devicePosition:cameraPosition == FRONT_CAMERA ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack] retain];
 	
 	fbo.setup();
 	
@@ -62,10 +59,12 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video) {
 }
 
 
+void ofxiVideoGrabber::setCameraPosition(int cameraPosition) {
+	
+}
 
 
-
-void ofxiVideoGrabber::drawLiveCam() {
+void ofxiVideoGrabber::drawCamera() {
 	
 	
 	float w = 480; // normalizing each camera to 480 * 360
@@ -85,12 +84,19 @@ void ofxiVideoGrabber::drawLiveCam() {
 			
 	
 	GLfloat tx0 = 0;
-	GLfloat ty0 = 0;
+	GLfloat ty0 = 1;
 	GLfloat tx1 = 1;
-	GLfloat ty1 = 1;
+	GLfloat ty1 = 0;
+	
+	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
+		tx0 = 0;
+		ty0 = 0;
+		tx1 = 1;
+		ty1 = 1;
+	}
 	
 	glPushMatrix(); 
-	glScalef(0.5, 0.5, 0);
+//	glScalef(0.5, 0.5, 0);
 	//glTranslatef(x,y,0.0f);
 	
 	GLfloat tex_coords[] = {
@@ -119,7 +125,7 @@ void ofxiVideoGrabber::drawLiveCam() {
 	
 }
 
-void ofxiVideoGrabber::render() {
+void ofxiVideoGrabber::render(ofPoint pnt) {
 	
 	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)) {
 		
@@ -135,7 +141,12 @@ void ofxiVideoGrabber::render() {
 			fbo.push(video->textureWidth,video->textureHeight);
 			fbo.begin(texture);		
 			
-			[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
+			glPushMatrix();
+			glTranslatef(-pnt.x, -pnt.y, 0);
+			
+			//[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
+			drawCamera();
+			glPopMatrix();
 			
 			currentFrame++;
 			
@@ -150,9 +161,9 @@ void ofxiVideoGrabber::render() {
 			fbo.pop();
 		}
 	}
-	
-
 }
+
+
 
 void ofxiVideoGrabber::draw() {
 	
@@ -161,7 +172,7 @@ void ofxiVideoGrabber::draw() {
 		drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
 	} else {
 		//[videoTexture renderCameraToSprite:videoTexture.CameraTexture withWidth:480];
-		drawLiveCam();
+		drawCamera();
 	}
 	
 	
@@ -329,7 +340,15 @@ bool ofxiVideoGrabber::cameraToggle() {
 }
 
 
+int ofxiVideoGrabber::getCameraWidth() {
+	return 480;
+}
 
+int ofxiVideoGrabber::getCameraHeight() {
+	float w = 480; // normalizing each camera to 480 * 360
+	return  (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
+
+}
 
 
 

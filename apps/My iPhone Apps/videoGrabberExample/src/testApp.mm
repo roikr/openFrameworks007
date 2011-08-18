@@ -37,12 +37,14 @@ void testApp::setup(){
 	video.bHorizontal = true;
 	video.bFlipHoriznotal = false;
 	
-	grabber.setup(&video);
+	grabber.setup(&video,FRONT_CAMERA);
 	grabber.startCamera();
 	
 	
 	player.setup(&video,true);
 	bRecording = false;
+	
+	grabber.startCapture();
 	
 }
 
@@ -73,17 +75,19 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-	grabber.render();
+	grabber.render(ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2));
 	
 	ofBackground(0,0,0);	
 	ofSetColor(0xffffff);
 	
+	grabber.drawCamera();
+	grabber.draw();
 	
-	if (grabber.getState() == CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING) {
-		grabber.draw();
-	} else {
-		player.draw();
-	}
+//	if (grabber.getState() == CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING) {
+//		grabber.draw();
+//	} else {
+//		player.draw();
+//	}
 
 	
 
@@ -147,6 +151,8 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 			grabber.startCapture();
 			break;
 	}
+	
+//	grabber.cameraToggle();
 	
 }
 

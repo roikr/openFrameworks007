@@ -13,6 +13,7 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 #include "ofxiFBO.h"
+#include "ofMain.h"
 
 
 
@@ -20,6 +21,11 @@ using namespace std;
 
 @class MyVideoBuffer;
 class ofxiPhoneVideo;
+
+enum {
+	FRONT_CAMERA,
+	BACK_CAMERA
+};
 
 enum {
 	CAMERA_IDLE,
@@ -35,11 +41,11 @@ public:
 	ofxiVideoGrabber();
 	//~ofxiPhoneClipper();
 	
-	void setup(ofxiPhoneVideo *video);
+	void setup(ofxiPhoneVideo *video,int cameraPosition);
 	void update();
-	void render();
+	void render(ofPoint pnt);
 	void draw();
-	void drawLiveCam();
+	void drawCamera();
 	void drawTexture(int texture);
 	
 	void exit();
@@ -56,6 +62,11 @@ public:
 //	void audioReceived( float * input, int bufferSize);
 	
 	bool cameraToggle();
+	void setCameraPosition(int cameraPosition);
+	
+	int getCameraWidth();
+	int getCameraHeight();
+	
 	
 protected:
 	

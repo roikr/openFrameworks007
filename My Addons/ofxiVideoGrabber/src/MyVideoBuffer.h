@@ -80,8 +80,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	AVCaptureInputPort *audioInputPort;
 	
 	
-	AVCaptureDeviceInput *_videoInput;
-	
+	AVCaptureDeviceInput *_videoInput;  
 	
 	int currentFrame;
 	
@@ -97,11 +96,12 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 
 @property (readwrite) uint CameraTexture;
 @property (readwrite) int currentFrame;
+@property (readonly) AVCaptureDevicePosition devicePosition;
 
 
--(id) initWithFPS: (int) fps;
+-(id) initWithFPS: (int)fps devicePosition:(AVCaptureDevicePosition) position;
 - (void)	captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
-- (void)	renderCameraToSprite:(uint)text withWidth:(GLuint)width;
+//- (void)	renderCameraToSprite:(uint)text withWidth:(GLuint)width;
 - (GLuint)	createVideoTextuerUsingWidth:(GLuint)w Height:(GLuint)h;
 - (void)	resetWithSize:(GLuint)w Height:(GLuint)h;
 

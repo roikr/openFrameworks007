@@ -64,13 +64,11 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 #import <CoreGraphics/CoreGraphics.h>
 
 
-#import "ofxiPhoneVideo.h"
+
 
 
 @interface MyVideoBuffer (Internal)
 - (AVCaptureDevice *) cameraWithPosition:(AVCaptureDevicePosition) position;
-- (AVCaptureDevice *) frontFacingCamera;
-- (AVCaptureDevice *) backFacingCamera;
 
 @end
 
@@ -84,11 +82,13 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 @synthesize CameraTexture=m_textureHandle;
 @synthesize currentFrame;
 
+
 @synthesize videoInput = _videoInput;
 
--(id) initWithFPS: (int) fps {
+-(id) initWithFPS: (int) fps devicePosition:(AVCaptureDevicePosition) position{
 	if ((self = [super init]))
 	{
+		
 		
 		
 		NSError * error;
@@ -107,7 +107,8 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 			return nil;
 		
 		//-- Add the device to the session.
-		AVCaptureDeviceInput *videoInput = [[[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error] autorelease];
+
+		AVCaptureDeviceInput *videoInput = [[[AVCaptureDeviceInput alloc] initWithDevice:[self cameraWithPosition:position] error:&error] autorelease];
 //		video->bMirrored = false;
 		[self setVideoInput:videoInput];
 //		AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
@@ -156,9 +157,14 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	return self;
 }
 
+-(AVCaptureDevicePosition) devicePosition {
+	return [[[self videoInput] device] position];
+}
+
 - (BOOL) cameraToggle
 {
-    BOOL success = NO;
+    
+	BOOL success = NO;
     
     if ([[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo] count] > 1) {
         NSError *error;
@@ -167,10 +173,10 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
         AVCaptureDevicePosition position = [[videoInput device] position];
        
         if (position == AVCaptureDevicePositionBack) {
-            newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self frontFacingCamera] error:&error];
+            newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self cameraWithPosition:AVCaptureDevicePositionFront] error:&error];
 			//video->bMirrored = true;
         } else if (position == AVCaptureDevicePositionFront) {
-            newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:&error];
+            newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self cameraWithPosition:AVCaptureDevicePositionBack] error:&error];
 			//video->bMirrored = false;
 		} else {
             goto bail;
@@ -225,18 +231,6 @@ bail:
     }
     return nil;
 }
-
-
-- (AVCaptureDevice *) frontFacingCamera
-{
-    return [self cameraWithPosition:AVCaptureDevicePositionFront];
-}
-
-- (AVCaptureDevice *) backFacingCamera
-{
-    return [self cameraWithPosition:AVCaptureDevicePositionBack];
-}
-
 
 -(GLuint)createVideoTextuerUsingWidth:(GLuint)w Height:(GLuint)h
 {
@@ -344,7 +338,7 @@ bail:
 }
 
 
-
+/*
 -(void)renderCameraToSprite:(uint)text withWidth:(GLuint) width
 {
 	if (!text)
@@ -399,7 +393,7 @@ bail:
 	glDisable(GL_TEXTURE_2D);
 	
 }
-
+*/
 
 - (void)dealloc 
 {
