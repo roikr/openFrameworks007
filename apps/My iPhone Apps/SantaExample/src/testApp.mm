@@ -21,8 +21,6 @@
 void testApp::setup(){	
 	
 	
-	ofDisableDataPath();
-	
 	// register touch events
 	ofRegisterTouchEvents(this);
 	
@@ -35,8 +33,9 @@ void testApp::setup(){
 	//iPhoneAlerts will be sent to this.
 	//ofxiPhoneAlerts.addListener(this);
 	
+	ofBackground(255,255,255);
 	ofSetFrameRate(60);
-	//ofBackground(255,255,255);
+	
 	
 	
 	
@@ -52,6 +51,8 @@ void testApp::setup(){
 	video.heightFraction = 1.0;
 	video.textureWidth = 128;
 	video.textureHeight = 256;
+	video.bHorizontal = true;
+	video.bFlipHoriznotal = false;
 	
 	
 	sampleRate 			= 44100;
@@ -66,7 +67,7 @@ void testApp::setup(){
 	
 	ofxXmlSettings xml;
 	
-	bool loaded = xml.loadFile(ofToResourcesPath("data/cards.xml"));
+	bool loaded = xml.loadFile("cards.xml");
 	assert(loaded);
 	
 	
@@ -85,7 +86,7 @@ void testApp::setup(){
 //			minX = ofGetWidth();
 		
 		c.background = new ofxRKTexture;
-		c.background->setup(ofToResourcesPath("data/"+xml.getAttribute("card", "image", "", j)));
+		c.background->setup(ofToDataPath(xml.getAttribute("card", "image", "", j)));
 		c.background->init();
 		c.background->load();
 		
@@ -113,7 +114,8 @@ void testApp::setup(){
 	}
 							  
 	prefs.direction = SLIDER_VERTICAL;
-	slider.setup(1,prefs);						  
+	slider.setup(1,prefs);	
+	bSlide = false;
 		
 	xml.pushTag("players");
 	
@@ -121,7 +123,7 @@ void testApp::setup(){
 		
 		player p;
 		p.song.setup(bufferSize, sampleRate);
-		p.song.loadTrack(ofToResourcesPath("data/"+xml.getAttribute("player", "filename", "", i)));
+		p.song.loadTrack(ofToDataPath(xml.getAttribute("player", "filename", "", i)));
 		p.video = new ofxiVideoPlayer;
 		p.video->setup(&video,true);
 		p.audio = new ofxAudioPlayer;
@@ -152,7 +154,7 @@ void testApp::setup(){
 	sample.buffer	= new float[sample.numFrames];
 	
 //	camera = new ofxiVideoGrabber;
-	grabber.setup(&video);
+	grabber.setup(&video,FRONT_CAMERA);
 	
 	
 	
@@ -179,6 +181,9 @@ void testApp::setup(){
 void testApp::update()
 {
 			
+
+	slider.update();
+	
 	switch (songState) {
 		case SONG_IDLE: 
 			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
@@ -231,10 +236,11 @@ void testApp::update()
 //--------------------------------------------------------------
 void testApp::draw()
 {
-	grabber.render();
 	
-	ofBackground(0, 0, 0);
-	ofSetColor(255,255,255,255);
+	
+	grabber.render(ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2));
+	
+	
 	
 //	if (players.front().video->getIsPlaying()) {
 //		players.front().video->draw();
@@ -255,7 +261,12 @@ void testApp::draw()
 //	
 //	return;
 	
-	slider.update();
+	
+	
+	ofBackground(0, 0, 0);
+	ofSetColor(255,255,255,255);
+	
+	
 	slider.transform();
 	
 	vector<card>::iterator cbegin,cend;
@@ -276,18 +287,22 @@ void testApp::draw()
 	vector<actor>::iterator aiter;
 	vector<card>::iterator iter;
 	
+	
+	
 	for (iter=cbegin; iter<=cend; iter++) {
 		
 		int y = distance(cards.begin(), iter) *ofGetHeight();
 		//cout << y <<endl;
 		
 		for (piter=players.begin(),aiter=iter->actors.begin(); piter!=players.end(); piter++,aiter++)  {
-
-		
 			ofPushMatrix();
+			//glLoadIdentity();
+			
+			
 			ofTranslate(aiter->x, aiter->y+y, 0);
-			ofScale(aiter->scale,aiter->scale,1.0);
 			ofRotate(aiter->degree);
+			ofScale(aiter->scale,aiter->scale,1.0);
+			
 			//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
 			//ofScale(0.5, 0.5, 1);
 			
@@ -308,16 +323,17 @@ void testApp::draw()
 		
 		ofEnableAlphaBlending();
 		
-//		ofPushMatrix();
-//		ofTranslate(0, y); 
-//		iter->background->draw(0, 0);
-//		ofPopMatrix();
+		ofPushMatrix();
+		ofTranslate(0, y); 
+		iter->background->draw(0, 0);
+		ofPopMatrix();
 		
 		ofDisableAlphaBlending();
 	}
 		
 	trigger.draw();
-			
+	
+				
 }
 
 //--------------------------------------------------------------
@@ -338,12 +354,34 @@ void testApp::record() {
 }
 
 void testApp::preview() {
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
+	
+	vector<player>::iterator piter;
+	vector<actor>::iterator aiter;
+	
+	int major[3] = {0,4,3};
+
+	
+	for (piter=players.begin(),aiter=citer->actors.begin(); piter!=players.end() ; piter++,aiter++)  {
 		
-		iter->video->play(1.0f);
-		iter->audio->play();
+		
+		sampleInstance si;
+		si.speed = exp((float)(major[distance(players.begin(),piter)])/12.0*log(2.0));
+		float volume = 1.0f/players.size();
+		si.left = volume * (1 - aiter->pan);
+		si.right = volume * aiter->pan;
+		si.retrigger = true;
+		
+		//piter->video->play(niter->note,niter->velocity);
+		piter->video->play(si.speed);
+		
+		piter->audio->trigger(si);
+					
+		
+		
+		
 		
 	}
+	
 	
 	
 }
@@ -473,25 +511,29 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 		
 	} else if (touch.x < 30) {
 		trigger.setThresh(1-(touch.y/ofGetHeight()));
+	} else {
+		bSlide = true;
+		slider.touchDown(touch.x, touch.y,touch.id);
 	}
+
+	
+	
 	
 }
 
-void testApp::touchDown(float x, float y, int touchId)	{	
-	
-	slider.touchDown(x, y, touchId);
 
-}
 
 //--------------------------------------------------------------
 
 void testApp::touchMoved(ofTouchEventArgs &touch)	{	
 	//touchMoved(touch.x, touch.y, touch.id);
+	if (bSlide) {
+		slider.touchMoved(touch.x, touch.y,touch.id);
+	}
+	
 }
 
-void testApp::touchMoved(float x, float y, int touchId)	{	
-	slider.touchMoved(x, y, touchId);
-}
+
 
 
 
@@ -512,25 +554,29 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 				setSongState(SONG_IDLE);
 				break;
 			default:
+				
 				break;
 		}  
 		
+	} 
+	
+	if (bSlide) {
+		slider.touchUp(touch.x, touch.y,touch.id);
+		citer=cards.begin()+slider.getCurrentPage();
+		bSlide = false;
+		
 	}
+
 }
 
-void testApp::touchUp(float x, float y, int touchId)	{	
-	slider.touchUp(x, y, touchId);
-	citer=cards.begin()+slider.getCurrentPage();
-	
-}
+
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-	touchDoubleTap(touch.x, touch.y, touch.id);
+	
 }
 	
-void testApp::touchDoubleTap(float x, float y, int touchId)	{	
-}
+
 
 void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 	
@@ -567,9 +613,12 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 
 
 
-void testApp::audioProcess(float *buffer,int bufferSize, int nChannels) {
-	memset(buffer, 0, bufferSize*sizeof(float)*nChannels);
-		
+
+
+void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
+	
+	memset(output, 0, bufferSize*sizeof(float)*nChannels);
+	
 	vector<player>::iterator piter;
 	vector<actor>::iterator aiter;
 	
@@ -586,7 +635,7 @@ void testApp::audioProcess(float *buffer,int bufferSize, int nChannels) {
 						printf("player: %i, ", distance(players.begin(),piter));
 						sampleInstance si;
 						si.speed = exp((float)(niter->note-60)/12.0*log(2.0));
-						float volume = (float)niter->velocity / 127;
+						float volume = (float)niter->velocity / 127* 1.0f/players.size();
 						si.left = volume * (1 - aiter->pan);
 						si.right = volume * aiter->pan;
 						si.retrigger = true;
@@ -597,25 +646,21 @@ void testApp::audioProcess(float *buffer,int bufferSize, int nChannels) {
 						piter->audio->trigger(si);
 					}
 				}
-			
+				
 			} break;
-		
+				
 			default:
 				break;
 		}
 		
 		
 		
-		piter->audio->mixChannel(buffer,0,nChannels);//,1.0f/players.size()*leftScale);
-		piter->audio->mixChannel(buffer,1,nChannels);//,1.0f/players.size()*rightScale);
+		piter->audio->mixChannel(output,0,nChannels);//,1.0f/players.size()*leftScale);
+		piter->audio->mixChannel(output,1,nChannels);//,1.0f/players.size()*rightScale);
 		//piter->video->mix(rAudio, bufferSize,1.0f/players.size()*rightScale);
 		piter->audio->postProcess();
 	}
-}
-
-void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	
-	audioProcess(output,bufferSize,nChannels);
 	
 	
 //	memcpy(output, buffer, bufferSize*sizeof(float)*nChannels);
@@ -642,7 +687,7 @@ void testApp::renderAudio() {
 	while (getSongState()==SONG_RENDER_AUDIO || getSongState()==SONG_CANCEL_RENDER_AUDIO) {
 		
 		//update(); // todo move to production for other thread
-		audioProcess(sample.buffer,sample.numFrames,sample.nChannels);
+		audioRequested(sample.buffer,sample.numFrames,sample.nChannels);
 		
 //		song.saveWithBlocks(lAudio, rAudio);
 		song.save(sample.buffer, sample.nChannels);

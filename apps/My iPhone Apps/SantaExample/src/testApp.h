@@ -69,14 +69,7 @@ public:
 	void touchUp(ofTouchEventArgs &touch);
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	
-	void touchDown(float x, float y, int touchId);
-	void touchMoved(float x, float y, int touchId);
-	void touchUp(float x, float y, int touchId);
-	void touchDoubleTap(float x, float y, int touchId);
-
 	void audioReceived( float * input, int bufferSize, int nChannels );
-	
-	void audioProcess(float *buffer,int bufferSize, int nChannels);
 	void audioRequested( float * output, int bufferSize, int nChannels );
 	void renderAudio() ;
 	
@@ -128,6 +121,7 @@ public:
 	int songVersion;
 	
 	ofxSlider slider;
+	bool bSlide;
 	
 };
 

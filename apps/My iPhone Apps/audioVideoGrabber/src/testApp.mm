@@ -37,7 +37,7 @@ void testApp::setup(){
 	video.bHorizontal = true;
 	video.bFlipHoriznotal = false;
 	
-	grabber.setup(&video);
+	grabber.setup(&video,BACK_CAMERA);
 	grabber.startCamera();
 	
 	
@@ -82,7 +82,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-	grabber.render();
+	grabber.render(ofPoint(0,0));
 	
 	ofBackground(0,0,0);	
 	ofSetColor(0xffffff);
