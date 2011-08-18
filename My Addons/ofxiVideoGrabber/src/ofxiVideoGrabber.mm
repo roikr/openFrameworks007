@@ -140,7 +140,7 @@ void ofxiVideoGrabber::render() {
 			currentFrame++;
 			
 			if (state == CAMERA_RECORDING) {
-				if ( currentFrame-1 - firstFrame >= video->numFrames - video->numIntroFrames)  {
+				if ( currentFrame-1 - firstFrame >= video->numFrames - video->numIntroFrames-1)  {
 					state = CAMERA_RUNNING;
 				}
 			}
