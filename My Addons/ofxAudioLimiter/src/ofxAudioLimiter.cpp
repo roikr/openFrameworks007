@@ -10,6 +10,7 @@
 #include "ofxAudioLimiter.h"
 #include <cmath>
 #include "ofMain.h"
+#include <OpenGLES/ES1/gl.h>
 
 //attack and release in milliseconds
 void ofxAudioLimiter::setup(float attackMs,float releaseMs,float sampleRate,float thresh) {
