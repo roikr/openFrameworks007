@@ -24,21 +24,21 @@ void ofxButton::draw() {
 	
 	
 	if (!bDown) {
-		ofSetColor(255, 255, 255,150);
-		ofRect(rect.x, rect.y, rect.x+rect.width, 1);
-		ofSetColor(0, 0, 0,50);
+		ofSetColor(255, 255, 255,100);
+		ofRect(rect.x, rect.y, rect.x+rect.width, 2);
+		ofSetColor(0, 0, 0,100);
 		ofRect(rect.x, rect.y+rect.height-2, rect.x+rect.width, 2);
 		
 	} else {
-		ofSetColor(0, 0, 0,50);
+		ofSetColor(0, 0, 0,100);
 		ofRect(rect.x, rect.y, rect.x+rect.width, 2);
-		ofSetColor(255, 255, 255,150);
-		ofRect(rect.x, rect.y+rect.height-1, rect.x+rect.width, 1);
+		ofSetColor(255, 255, 255,100);
+		ofRect(rect.x, rect.y+rect.height-2, rect.x+rect.width, 2);
 	}
 
 	ofDisableAlphaBlending();
 }
 
 void ofxButton::setDown(bool bDown){
-	this->bDown = bDown;
+ 	this->bDown = bDown;
 }
