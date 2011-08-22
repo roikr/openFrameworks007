@@ -343,14 +343,18 @@ void testApp::exit() {
 
 
 void testApp::record() {
-	trigger.setTrigger();
-	trigger.resetMeters();
-	grabber.startCapture();
 	
-	songVersion++;
-	//camera->setTrigger(thresh);
-	//camera->startRecording();
-	//cout << "Start recording" << endl;
+	
+	if (getSongState() == SONG_IDLE) {
+		trigger.setTrigger();
+		trigger.resetMeters();
+		grabber.startCapture();
+
+		songVersion++;
+		//camera->setTrigger(thresh);
+		//camera->startRecording();
+		//cout << "Start recording" << endl;
+	}
 }
 
 void testApp::preview() {
@@ -490,10 +494,14 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 		
 		switch ((int)(4*touch.y/(ofGetHeight()+1))) {
 			case 0:
+				
 				record();
+				
+				
 				break;
 			case 1:
-				preview();
+				setSongState(SONG_IDLE);
+				//preview();
 				break;
 				
 			case 2:
@@ -510,7 +518,11 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 		}  
 		
 	} else if (touch.x < 30) {
-		trigger.setThresh(1-(touch.y/ofGetHeight()));
+		if (trigger.getIsAutoThreshEnabled()) {
+			trigger.setAutoThresh((1-(touch.y/ofGetHeight()))/4, 50);
+		} else {
+			trigger.setThresh(1-(touch.y/ofGetHeight()));
+		}
 	} else {
 		bSlide = true;
 		slider.touchDown(touch.x, touch.y,touch.id);
@@ -573,7 +585,15 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-	
+	if (touch.x < 30) {
+		if (!trigger.getIsAutoThreshEnabled()) {
+			trigger.setAutoThresh((1-(touch.y/ofGetHeight()))/4, 50);
+		} else {
+			trigger.disableAutoTrhresh();
+			trigger.setThresh(1-(touch.y/ofGetHeight()));
+		}
+		
+	} 
 }
 	
 
@@ -607,6 +627,7 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 		if (!sampler.getIsRecording()) {
 			sampler.normalize();
 			bRecording = false;
+			setSongState(SONG_PLAY);
 		}
 	}
 }

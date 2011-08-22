@@ -55,9 +55,12 @@ void ofxAudioTrigger::draw() {
 	ofRect(10, (1-rmsAmplitude)* ofGetHeight(), 10, rmsAmplitude*ofGetHeight());
 	
 	ofSetColor(255, 0, 0);
-	ofRect(0, (1-thresh)* ofGetHeight()-1, 10, 3);
-	
-	
+	if (bAutoThresh) {
+		ofRect(0, (1-thresh-bias)* ofGetHeight()-1, 10, 3);
+	} else {
+		ofRect(0, (1-thresh)* ofGetHeight()-1, 10, 3);
+	}
+
 	ofSetColor(0,0,0);
 	ofRect(0, (1-peak)* ofGetHeight()-1, 10, 3);
 	ofRect(10, (1-rmsPeak)* ofGetHeight()-1, 10, 3);
@@ -151,6 +154,7 @@ void ofxAudioTrigger::audioReceived( float * input, int bufferSize) {
 
 
 void ofxAudioTrigger::setAutoThresh(float bias,int length) {
+	samples.clear();
 	this->bias = bias;
 	for (int i=0;i<length;i++) { 
 		samples.push_back(0);
@@ -167,3 +171,6 @@ void ofxAudioTrigger::disableAutoTrhresh() {
 	samples.clear();
 }
 
+bool ofxAudioTrigger::getIsAutoThreshEnabled() {
+	return bAutoThresh;
+}
