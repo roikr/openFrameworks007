@@ -7,6 +7,8 @@
  *
  */
 
+#define VIDEO_BITRATE 700.0
+
 enum {
 	SONG_IDLE,
 	SONG_PLAY,

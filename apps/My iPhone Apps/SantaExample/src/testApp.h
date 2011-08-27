@@ -11,6 +11,8 @@
 #include "ofxAudioFile.h"
 #include "ofxRKTexture.h"
 #include "ofxSlider.h"
+#include "ofxAudioLimiter.h"
+
 //#include "ofxDynamicCompressor.h"
 
 #include "ofxiPhoneVideo.h"
@@ -34,7 +36,8 @@ struct actor {
 	int y;
 	float scale;
 	float degree;
-	float pan;
+	int player;
+	
 };
 
 struct card {
@@ -51,6 +54,7 @@ public:
 	void update();
 	
 	
+	void render();
 	void draw();
 	void exit();
 	
@@ -72,6 +76,7 @@ public:
 	void audioReceived( float * input, int bufferSize, int nChannels );
 	void audioRequested( float * output, int bufferSize, int nChannels );
 	void renderAudio() ;
+	void renderVideo() ;
 	
 	void lostFocus();
 	void gotFocus();
@@ -83,6 +88,9 @@ public:
 	void soundStreamStart();
 	void soundStreamStop();
 	float getRenderProgress();
+	
+	void preRender();
+	void postRender();
 	
 	bool cameraToggle();
 	
@@ -122,6 +130,8 @@ public:
 	
 	ofxSlider slider;
 	bool bSlide;
+	
+	ofxAudioLimiter limiter;
 	
 };
 
