@@ -22,3 +22,5 @@ void ofxiPhoneGLViewPort();
 
 float distance(ofPoint pnt);
 
+void setiPhoneDataPath();
+
