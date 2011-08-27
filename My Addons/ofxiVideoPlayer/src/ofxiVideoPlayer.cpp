@@ -48,14 +48,14 @@ void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,/*int bufferSize,int numBuffer
 	
 }
 
-void ofxiVideoPlayer::seekFrame(int nextFrame) {
+void ofxiVideoPlayer::seekFrame(int frame) {
 	
 	
 	
 	
 	switch (state) {
 		case PLAYER_PLAYING: {
-			if (nextFrame >= video->textures.size()-video->numIntroFrames) {
+			if (frame >= video->textures.size()-video->numIntroFrames) {
 				state = PLAYER_IDLE;
 				if (bIntroMode) {
 					playIntro();
@@ -64,7 +64,7 @@ void ofxiVideoPlayer::seekFrame(int nextFrame) {
 				}
 
 			} else {
-				int temp = video->textures[(video->firstFrame+nextFrame) % video->textures.size()];
+				int temp = video->textures[(video->firstFrame+frame) % video->textures.size()];
 				if	(temp!=currentTexture) {
 					//printf("seekFrame: %i, texture: %i\n", nextFrame,temp);
 					currentTexture =temp;
@@ -75,11 +75,11 @@ void ofxiVideoPlayer::seekFrame(int nextFrame) {
 		case PLAYER_INTRO_FORWARD: 
 		case PLAYER_INTRO_BACKWARD: {
 			
-			state = (nextFrame / (video->numIntroFrames - 1)) % 2 ? PLAYER_INTRO_BACKWARD : PLAYER_INTRO_FORWARD;
-			int mod = nextFrame % (video->numIntroFrames - 1);
-			int frame = (state == PLAYER_INTRO_FORWARD) ?  mod  : (video->numIntroFrames - 1) - mod;
+			state = (frame / (video->numIntroFrames - 1)) % 2 ? PLAYER_INTRO_BACKWARD : PLAYER_INTRO_FORWARD;
+			int mod = frame % (video->numIntroFrames - 1);
+			int introFrame = (state == PLAYER_INTRO_FORWARD) ?  mod  : (video->numIntroFrames - 1) - mod;
 			
-			currentTexture = video->textures[(video->textures.size()+video->firstFrame - video->numIntroFrames + frame) % video->textures.size()];
+			currentTexture = video->textures[(video->textures.size()+video->firstFrame - video->numIntroFrames + introFrame) % video->textures.size()];
 			
 			
 			
@@ -98,15 +98,16 @@ void ofxiVideoPlayer::update() {
 	}
 	
 	seekFrame(speed*(ofGetElapsedTimeMillis()-start)*video->fps/1000);
-		
+				
 }
 
 void ofxiVideoPlayer::updateFrame() {
 	if (state == PLAYER_IDLE) {
+		
 		return;
 	}
 	
-	seekFrame(currentFrame);
+	seekFrame(speed*currentFrame);
 	currentFrame++;
 	
 	
@@ -265,7 +266,7 @@ void ofxiVideoPlayer::play(float speed) {
 	start = ofGetElapsedTimeMillis();
 	currentTexture = video->textures[video->firstFrame];
 	currentFrame = 0;
-	pos = 0;
+//	pos = 0;
 	this->speed = speed;
 //	this->volume = volume;
 }
@@ -280,9 +281,12 @@ bool ofxiVideoPlayer::getIsPlaying() {
 void ofxiVideoPlayer::playIntro() {
 	state = PLAYER_INTRO_FORWARD;
 	start = ofGetElapsedTimeMillis();
-	currentTexture = video->textures[(video->firstFrame-video->numIntroFrames+video->textures.size()) % video->textures.size()];
+	
+	int introFirst = (video->firstFrame-video->numIntroFrames+video->textures.size()) % video->textures.size();
+	currentTexture = video->textures[introFirst];
+//	ofLog(OF_LOG_VERBOSE, "playIntro: first: %i, introFrames: %i, size: %i, introFirst: %i, currentTexture: %i",video->firstFrame,video->numIntroFrames,video->textures.size(),introFirst,currentTexture);
 	currentFrame = 0;
-	speed = 1;
+	speed = 1.0;
 }
 
 

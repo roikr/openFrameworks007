@@ -68,7 +68,7 @@ protected:
 	
 	float speed;
 //	float volume;
-	int pos;
+//	int pos;
 	
 	ofxiPhoneVideo *video;
 	
