@@ -16,7 +16,6 @@
 
 #include "ofxiPhoneExtras.h"
 
-#define BPM 210
 
 
 //--------------------------------------------------------------
@@ -91,6 +90,7 @@ void testApp::setup(){
 		c.background->setup(ofToDataPath(xml.getAttribute("card", "image", "", j)));
 		c.background->init();
 		c.background->load();
+		int bpm = xml.getAttribute("card", "bpm", 120, j);
 		
 		xml.pushTag("card", j);
 
@@ -106,6 +106,20 @@ void testApp::setup(){
 //				maxX = max(p.x,maxX);
 			c.actors.push_back(a);
 		}
+		
+		for (i=0; i<xml.getNumTags("player");i++) {
+			
+			player p;
+			p.song.setup(bufferSize, sampleRate,bpm);
+			p.song.loadTrack(ofToDataPath(xml.getAttribute("player", "filename", "", i)));
+			p.video = new ofxiVideoPlayer;
+			p.video->setup(&video,true);
+			p.audio = new ofxAudioPlayer;
+			p.audio->setup(sampler.getAudioSample(),bufferSize);
+			
+			c.players.push_back(p);
+			
+		}
 	
 		xml.popTag();
 	
@@ -118,28 +132,12 @@ void testApp::setup(){
 	slider.setup(1,prefs);	
 	bSlide = false;
 		
-	xml.pushTag("players");
 	
-	for (i=0; i<xml.getNumTags("player");i++) {
-		
-		player p;
-		p.song.setup(bufferSize, sampleRate,BPM);
-		p.song.loadTrack(ofToDataPath(xml.getAttribute("player", "filename", "", i)));
-		p.video = new ofxiVideoPlayer;
-		p.video->setup(&video,true);
-		p.audio = new ofxAudioPlayer;
-		p.audio->setup(sampler.getAudioSample(),bufferSize);
-		
-		players.push_back(p);
-		
-	}
-	
-	xml.popTag();
 	
 	xml.popTag();
 	
 	citer = cards.begin();
-	
+	oiter = cards.end();
 	
 	
 //	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) {
@@ -174,6 +172,7 @@ void testApp::setup(){
 	
 	
 	songVersion = 0;
+	bCameraOffset = false;
 	
 	//camera->startCapture(); // TODO: remove this - just for testing	
 }
@@ -184,20 +183,24 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update()
 {
-			
+	if (!bCameraOffset && grabber.getIsReady()) {
+		ofPoint offset = ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2);
+		grabber.setOffset(offset);
+		bCameraOffset = true;
+	}		
 
 	slider.update();
 	
 	switch (songState) {
 		case SONG_IDLE: 
-			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
+			for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++) { 
 				iter->video->update();
 			}
 			
 			
 			break;
 		case SONG_PLAY:
-			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) { 
+			for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++) { 
 				iter->video->update();
 			}
 			if (! getIsPlaying()) {
@@ -242,7 +245,7 @@ void testApp::update()
 void testApp::render()
 {
 	if (getSongState() == SONG_IDLE) {
-		grabber.render(ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2));
+		grabber.render();
 		
 	}
 }
@@ -294,7 +297,7 @@ void testApp::draw()
 	}
 	
 	vector<player>::iterator piter;
-	vector<actor>::iterator aiter;
+	
 	vector<card>::iterator iter;
 	
 	for (iter=cbegin; iter<=cend; iter++) {
@@ -302,7 +305,8 @@ void testApp::draw()
 		int y = distance(cards.begin(), iter) *ofGetHeight();
 		//cout << y <<endl;
 		
-		for (piter=players.begin(),aiter=iter->actors.begin(); piter!=players.end(); piter++,aiter++)  {
+		for (vector<actor>::iterator aiter=iter->actors.begin(); aiter!=iter->actors.end(); aiter++)  {
+			vector<player>::iterator piter=iter->players.begin()+aiter->player;
 			ofPushMatrix();
 			//glLoadIdentity();
 			
@@ -314,11 +318,12 @@ void testApp::draw()
 			//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
 			//ofScale(0.5, 0.5, 1);
 			
-			if (grabber.getState()==CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING) {
+			if (grabber.getIsReady() && (grabber.getState()==CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING || video.textures.empty())) {
 				grabber.draw();
 			} else {
 				piter->video->draw();
 			}
+ 
 			
 			//if (iter->video->getIsPlaying()) {
 	//			iter->video->draw();
@@ -341,42 +346,35 @@ void testApp::draw()
 	
 	ofPopMatrix();
 	trigger.draw();
-		
-	
-	
-				
+
 }
 
 void testApp::renderVideo(){
 	
 	ofBackground(0, 0, 0);
 	ofSetColor(255,255,255,255);
+	ofPushMatrix();
 	
-	vector<player>::iterator piter;
-	vector<actor>::iterator aiter;
 	vector<card>::iterator iter = citer;
 	
 
-	for (piter=players.begin(),aiter=iter->actors.begin(); piter!=players.end(); piter++,aiter++)  {
+	for (vector<actor>::iterator aiter=iter->actors.begin(); aiter!=iter->actors.end(); aiter++)  {
+		vector<player>::iterator piter=iter->players.begin()+aiter->player;	
 		ofPushMatrix();
-				
 		ofTranslate(aiter->x, aiter->y, 0);
 		ofRotate(aiter->degree);
 		ofScale(aiter->scale,aiter->scale,1.0);
-		
 		piter->video->draw();
-		
 		ofPopMatrix();
-			
-		ofEnableAlphaBlending();
-		
-		ofPushMatrix();
-		ofTranslate(0, 0); 
-		iter->background->draw(0, 0);
-		ofPopMatrix();
-		
-		ofDisableAlphaBlending();
 	}
+	
+	ofEnableAlphaBlending();
+	ofPushMatrix();
+	ofTranslate(0, 0); 
+	iter->background->draw(0, 0);
+	ofPopMatrix();
+	ofDisableAlphaBlending();
+	ofPopMatrix();
 }
 
 //--------------------------------------------------------------
@@ -389,6 +387,7 @@ void testApp::record() {
 	
 	
 	if (getSongState() == SONG_IDLE) {
+		
 		trigger.setTrigger();
 		trigger.resetMeters();
 		grabber.startCapture();
@@ -430,17 +429,17 @@ void testApp::preview() {
 */
 }
 
-void testApp::playIntro() {
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
-		
-		iter->video->playIntro();
-		
-	}
-	
-}
+//void testApp::playIntro() {
+//	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
+//		
+//		iter->video->playIntro();
+//		
+//	}
+//	
+//}
 
 bool testApp::getIsPlaying() {
-	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {		
+	for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++)  {		
 		if (iter->audio->getNumPlaying() || iter->song.getIsPlaying()) {
 			return true;
 		} 
@@ -472,7 +471,7 @@ void testApp::setSongState(int songState) {
 	if (songState == SONG_RENDER_AUDIO || songState == SONG_RENDER_VIDEO) {
 		duration = 0;
 		
-		for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++)  {
+		for (vector<player>::iterator piter=citer->players.begin(); piter!=citer->players.end(); piter++)  {
 			duration = max(duration, piter->song.getDuration());
 		}
 
@@ -493,16 +492,19 @@ void testApp::setSongState(int songState) {
 		case SONG_RENDER_AUDIO_FINISHED:
 		case SONG_CANCEL_RENDER_AUDIO:
 			songState = SONG_IDLE;
-			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
+			for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++)  {
 				iter->song.stop();
 			}
 			break;
 		case SONG_PLAY:
 		case SONG_RENDER_AUDIO:
 		case SONG_RENDER_VIDEO:
-			for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++)  {
-				iter->song.play();
+			if (!(grabber.getState()==CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING || video.textures.empty())) {
+				for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++)  {
+					iter->song.play();
+				}
 			}
+			
 			break;
 		default:
 			break;
@@ -613,9 +615,23 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 	} 
 	
 	if (bSlide) {
-		slider.touchUp(touch.x, touch.y,touch.id);
-		citer=cards.begin()+slider.getCurrentPage();
 		bSlide = false;
+		slider.touchUp(touch.x, touch.y,touch.id);
+		
+		switch (getSongState()) {
+			case SONG_IDLE: 
+			case SONG_PLAY: {
+				vector<card>::iterator iter = cards.begin()+slider.getCurrentPage();
+				if (citer!=iter) {
+					setSongState(SONG_IDLE);
+					oiter = citer;
+					citer = iter;
+					setSongState(SONG_PLAY);
+				}
+			} break;
+			default:
+				break;
+		}
 		
 	}
 
@@ -680,7 +696,7 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 	
 	memset(output, 0, bufferSize*sizeof(float)*nChannels);
 	
-	for (vector<player>::iterator piter=players.begin(); piter!=players.end() ; piter++)  {
+	for (vector<player>::iterator piter=citer->players.begin(); piter!=citer->players.end() ; piter++)  {
 		
 		switch (songState) {
 			case SONG_PLAY:
@@ -700,7 +716,7 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 						si.retrigger = true;
 						
 						for (vector<actor>::iterator aiter=citer->actors.begin(); aiter!=citer->actors.end() ; aiter++)  {
-							if (aiter->player  == distance(players.begin(), piter)) {
+							if (aiter->player  == distance(citer->players.begin(), piter)) {
 								pan = (float)aiter->x/(float)(ofGetWidth());
 								if (songState == SONG_PLAY) { 
 									piter->video->play(si.speed);
@@ -723,12 +739,25 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 				break;
 		}
 		
-		
-		
 		piter->audio->mixChannel(output,0,nChannels);//,1.0f/players.size()*leftScale);
 		piter->audio->mixChannel(output,1,nChannels);//,1.0f/players.size()*rightScale);
 		//piter->video->mix(rAudio, bufferSize,1.0f/players.size()*rightScale);
 		piter->audio->postProcess();
+	}
+	
+	if (oiter!=cards.end()) {
+		bool bPlaying = false;
+		for (vector<player>::iterator piter=oiter->players.begin(); piter!=oiter->players.end() ; piter++)  {
+			
+			piter->audio->mixChannel(output,0,nChannels);
+			piter->audio->mixChannel(output,1,nChannels);
+			piter->audio->postProcess();
+			bPlaying |= piter->audio->getNumPlaying() || piter->song.getIsPlaying();
+		}		
+		
+		if (!bPlaying) {
+			oiter=cards.end();
+		}
 	}
 	
 	limiter.audioProcess(output,bufferSize,nChannels);
@@ -785,7 +814,7 @@ void testApp::seekFrame(int frame) {
 //	}
 	
 	for (;currentBlock<reqBlock;currentBlock++) { // TODO: or song finished...
-		for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+		for (vector<player>::iterator piter=citer->players.begin(); piter!=citer->players.end(); piter++) {
 			vector<event> events;
 			piter->song.process(events);
 			
@@ -802,7 +831,7 @@ void testApp::seekFrame(int frame) {
 		}
 	}
 
-	for (vector<player>::iterator piter=players.begin(); piter!=players.end(); piter++) {
+	for (vector<player>::iterator piter=citer->players.begin(); piter!=citer->players.end(); piter++) {
 		piter->video->updateFrame();
 	}
 	
@@ -849,7 +878,6 @@ void testApp::preRender() {
 
 void testApp::postRender() {
 	grabber.releaseVideo();
-	grabber.initVideo();
 	grabber.startCamera();
 	setSongState(SONG_IDLE);
 	

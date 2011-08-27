@@ -137,7 +137,6 @@ void ofxiVideoPlayer::drawFrame(int frame) {
 
 void ofxiVideoPlayer::drawTexture(int texture) {
 	
-	glPushMatrix();
 	
 	if (!video->bHorizontal) {
 		ofTranslate(video->textureHeight, 0, 0);
@@ -188,7 +187,6 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 	//	//	}
 	//	
 	//	glPopMatrix();
-	glPopMatrix();
 	
 }
 

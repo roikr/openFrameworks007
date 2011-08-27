@@ -12,16 +12,17 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 
+
 class ofxiFBO {
 public:
 	
-	void setup();
-	void push(int width,int height);
+	void setup(int width,int height);
+	void exit();
 	void begin(GLuint texture);
 	void end();
-	void pop();
+	
 	
 	GLuint fbo;
-	GLuint oldFramebuffer;
-	
+	int width;
+	int height;
 };

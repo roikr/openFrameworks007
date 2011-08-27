@@ -12,29 +12,15 @@
 #include "ofxiPhoneExtras.h"
 #include "ofMainExt.h"
 
-void ofxiFBO::setup() {
+void ofxiFBO::setup(int width,int height) {
+	this->width = width;
+	this->height = height;
 	glGenFramebuffersOES(1, &fbo);
-}
-
-void ofxiFBO::push(int width,int height) {
-	glViewport(0, 0, width, height);
+	NSLog(@"ofxiFBO::setup - glGenFramebuffersOES: %i", fbo);
 	
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity ();
-	gluOrtho2D (0, width, 0, height);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	
-	glColor4f(1.0, 1.0, 1.0, 0);
 }
 
 void ofxiFBO::begin(GLuint texture) {
-	
-	
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING_OES, (GLint *) &oldFramebuffer); 
-	
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, texture, 0); // probably for init and alloc mem
@@ -44,31 +30,52 @@ void ofxiFBO::begin(GLuint texture) {
 	GLuint status = glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES);
 	if (status != GL_FRAMEBUFFER_COMPLETE_OES)
 	{
-		NSLog(@"failed to make complete framebuffer object %x", status);
+		NSLog(@"ofxiFBO::begin - failed to make complete framebuffer object %x, for texture: %i", status,texture);
+		switch (status) {
+			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES:
+				NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_OES:
+				NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_OES");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_OES:
+				NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_OES");
+				break;
+			case GL_FRAMEBUFFER_UNSUPPORTED_OES:
+				NSLog(@"GL_FRAMEBUFFER_UNSUPPORTED_OES");
+				break;
+			default:
+				break;
+		}
 	}
 	
+	glViewport(0, 0, width, height);
 	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity ();
+	gluOrtho2D (0, width, 0, height);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	
-	
+	glColor4f(1.0, 1.0, 1.0, 0);
 }
 
 
 
+
 void ofxiFBO::end() {
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
 	
-	
-	
-	glBindFramebufferOES(GL_FRAMEBUFFER_OES, oldFramebuffer);
-	
-	}
+}
 
 
-void ofxiFBO::pop() {
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+void ofxiFBO::exit() {
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
+	glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, 0, 0); 
+	glDeleteFramebuffersOES(1, &fbo);
+	NSLog(@"ofxiFBO::exit - glDeleteFramebuffersOES: %i", fbo);
+	fbo = 0;
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
 	
-	glMatrixMode(GL_MODELVIEW);
-	ofxiPhoneGLViewPort();
-
+	
 }

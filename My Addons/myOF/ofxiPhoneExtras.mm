@@ -13,7 +13,7 @@
 int orientation = OFXIPHONE_ORIENTATION_PORTRAIT;
 
 void ofxiPhoneSetOrientation(UIDeviceOrientation newOrientation) {
-	
+	orientation = newOrientation;
 	ofLog(OF_LOG_VERBOSE, "ofAppiPhoneWindow::setOrientation: " + ofToString(orientation));
 	switch (orientation) {
 		case OFXIPHONE_ORIENTATION_PORTRAIT:
@@ -33,7 +33,7 @@ void ofxiPhoneSetOrientation(UIDeviceOrientation newOrientation) {
 			break;
 	}
 	
-	orientation = newOrientation;
+	
 }
 
 UIDeviceOrientation ofxiPhoneGetOrientation() {

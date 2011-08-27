@@ -42,6 +42,7 @@ struct actor {
 
 struct card {
 	vector<actor> actors;
+	vector<player> players;
 	ofxRKTexture *background;
 };
 
@@ -53,17 +54,15 @@ public:
 	void setup();
 	void update();
 	
-	
 	void render();
 	void draw();
 	void exit();
 	
 	void record();
 	void preview();
-	void playIntro(); 
+//	void playIntro(); 
 	
 	bool getIsPlaying();
-	
 	
 	int getSongState();
 	void setSongState(int songState);
@@ -100,9 +99,10 @@ public:
 	ofxiVideoGrabber grabber;
 	ofxAudioSampler sampler;
 	
-	vector<player> players;
+	
 	vector<card> cards;
 	vector<card>::iterator citer;
+	vector<card>::iterator oiter; // old iter to keep playing when sliding
 	
 	ofxAudioSample sample;
 	float sampleRate;
@@ -132,6 +132,8 @@ public:
 	bool bSlide;
 	
 	ofxAudioLimiter limiter;
+	
+	bool bCameraOffset;
 	
 };
 

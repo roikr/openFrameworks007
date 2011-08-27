@@ -43,15 +43,16 @@ public:
 	
 	void setup(ofxiPhoneVideo *video,int cameraPosition);
 	void update();
-	void render(ofPoint pnt);
+	void render();
 	void draw();
-	void drawCamera();
-	void drawTexture(int texture);
 	
 	void exit();
 		
 	void startCamera();
 	void stopCamera();
+	
+	void initVideo();
+	void releaseVideo();
 	
 	void startCapture();
 	void record();
@@ -62,14 +63,19 @@ public:
 //	void audioReceived( float * input, int bufferSize);
 	
 	bool cameraToggle();
-	void setCameraPosition(int cameraPosition);
+//	void setCameraPosition(int cameraPosition);
 	
 	int getCameraWidth();
 	int getCameraHeight();
 	
+	bool getIsReady();
+	void setOffset(ofPoint &offset);
 	
 protected:
 	
+	void drawFullCamera();
+	void drawCamera();
+	void drawTexture(int texture);
 	
 	//int		drawCounter, bufferCounter;
 	//int		currentBuffer;
@@ -90,5 +96,10 @@ protected:
 	int cameraFrame;
 	
 	ofxiFBO fbo;
+	
+	ofPoint offset;
+	ofRectangle rect;
+	
+	
 	
 };
