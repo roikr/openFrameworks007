@@ -88,6 +88,7 @@ void testApp::setup(){
 		
 		c.background = new ofxRKTexture;
 		c.background->setup(ofToDataPath(xml.getAttribute("card", "image", "", j)));
+		c.bDisableNoteOff = xml.getAttribute("card", "noteoff", 1, j);
 		c.background->init();
 		c.background->load();
 		int bpm = xml.getAttribute("card", "bpm", 120, j);
@@ -133,11 +134,11 @@ void testApp::setup(){
 	bSlide = false;
 		
 	
-	
 	xml.popTag();
 	
 	citer = cards.begin();
 	oiter = cards.end();
+	bCardChanged =false;
 	
 	
 //	for (vector<player>::iterator iter=players.begin(); iter!=players.end(); iter++) {
@@ -190,6 +191,18 @@ void testApp::update()
 	}		
 
 	slider.update();
+	
+	if (bCardChanged && (ofGetElapsedTimeMillis() - delayStart)>SONG_SWITCH_DELAY) {
+		bCardChanged = false;
+		switch (getSongState()) {
+			case SONG_IDLE: 
+			case SONG_PLAY: {
+				setSongState(SONG_PLAY);
+			} break;
+			default:
+				break;
+		}
+	}
 	
 	switch (songState) {
 		case SONG_IDLE: 
@@ -626,7 +639,8 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 					setSongState(SONG_IDLE);
 					oiter = citer;
 					citer = iter;
-					setSongState(SONG_PLAY);
+					bCardChanged = true;
+					delayStart = ofGetElapsedTimeMillis();
 				}
 			} break;
 			default:
@@ -730,6 +744,18 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 						si.left = volume * (1 - pan);
 						si.right = volume * pan;
 						piter->audio->trigger(si);
+					} else if (citer->bDisableNoteOff) {
+					
+						for (vector<actor>::iterator aiter=citer->actors.begin(); aiter!=citer->actors.end() ; aiter++)  {
+							if (aiter->player  == distance(citer->players.begin(), piter)) {
+								if (songState == SONG_PLAY) { 
+									piter->video->playIntro();
+								}
+							}
+							
+						}
+						
+						piter->audio->stop();
 					}
 				}
 				
@@ -825,7 +851,10 @@ void testApp::seekFrame(int frame) {
 					piter->video->play(speed); // ,niter->velocity
 //					piter->bDidStartPlaying = true;
 					
+				} else if (citer->bDisableNoteOff){
+					piter->video->playIntro();
 				}
+
 			}
 			
 		}

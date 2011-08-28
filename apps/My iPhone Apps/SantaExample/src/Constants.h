@@ -8,6 +8,7 @@
  */
 
 #define VIDEO_BITRATE 700.0
+#define SONG_SWITCH_DELAY 1000
 
 enum {
 	SONG_IDLE,

@@ -44,6 +44,7 @@ struct card {
 	vector<actor> actors;
 	vector<player> players;
 	ofxRKTexture *background;
+	bool bDisableNoteOff;
 };
 
 
@@ -130,6 +131,8 @@ public:
 	
 	ofxSlider slider;
 	bool bSlide;
+	bool bCardChanged;
+	int delayStart;
 	
 	ofxAudioLimiter limiter;
 	
