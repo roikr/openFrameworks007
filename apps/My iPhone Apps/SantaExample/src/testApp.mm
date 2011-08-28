@@ -161,7 +161,7 @@ void testApp::setup(){
 	
 	
 	songState = SONG_IDLE;
-	bRecording = false;
+	
 	trigger.setAutoThresh(0.1,50);
 	//trigger.setThresh(0.15);
 	limiter.setup(10, 500, sampleRate, 0.3);
@@ -174,6 +174,11 @@ void testApp::setup(){
 	
 	songVersion = 0;
 	bCameraOffset = false;
+	
+	state = STATE_LIVE;
+	
+	bNeedDisplay = true;
+	bTriggerRecord = false;
 	
 	//camera->startCapture(); // TODO: remove this - just for testing	
 }
@@ -249,6 +254,21 @@ void testApp::update()
 		default:
 			break;
 	}
+	
+	if (bTriggerRecord && !getIsPlaying()) { // getSongState() == SONG_IDLE
+		bTriggerRecord = false;
+		state = STATE_RECORD;
+		bNeedDisplay = true;
+		trigger.setTrigger();
+		trigger.resetMeters();
+		grabber.startCapture();
+		
+		songVersion++;
+		//camera->setTrigger(thresh);
+		//camera->startRecording();
+		//cout << "Start recording" << endl;
+	}
+	
 	
 }
 
@@ -395,21 +415,15 @@ void testApp::exit() {
 	grabber.exit();
 }
 
+void testApp::live() {
+	state = STATE_LIVE;
+	bNeedDisplay = true;
+	grabber.releaseVideo();
+}
 
 void testApp::record() {
 	
-	
-	if (getSongState() == SONG_IDLE) {
-		
-		trigger.setTrigger();
-		trigger.resetMeters();
-		grabber.startCapture();
-
-		songVersion++;
-		//camera->setTrigger(thresh);
-		//camera->startRecording();
-		//cout << "Start recording" << endl;
-	}
+	bTriggerRecord = true;
 }
 
 
@@ -461,7 +475,9 @@ bool testApp::getIsPlaying() {
 }
 
 
-
+int testApp::getState() {
+	return state;
+}
 
 int  testApp::getSongState() { 
 	return songState;
@@ -547,6 +563,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 	//touchDown(touch.x, touch.y, touch.id);
 	if (touch.x > ofGetWidth()-30) {
 		
+		/*
 		switch ((int)(4*touch.y/(ofGetHeight()+1))) {
 			case 0:
 				
@@ -571,6 +588,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 			default:
 				break;
 		}  
+		 */
 		
 	} else if (touch.x < 30) {
 		if (trigger.getIsAutoThreshEnabled()) {
@@ -607,6 +625,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch)	{
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){	
 	//touchUp(touch.x, touch.y, touch.id);
+	/*
 	if (touch.x > ofGetWidth()-30) {
 		
 		switch ((int)(4*touch.y/(ofGetHeight()+1))) {
@@ -626,6 +645,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 		}  
 		
 	} 
+	 */
 	
 	if (bSlide) {
 		bSlide = false;
@@ -678,7 +698,7 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 		trigger.resetTrigger();
 		grabber.record();
 		sampler.record();
-		bRecording = true;
+		
 	}
 	
 	//compressor.audioProcess(input,bufferSize);
@@ -696,7 +716,9 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 		sampler.audioReceived(input,bufferSize);
 		if (!sampler.getIsRecording()) {
 			sampler.normalize();
-			bRecording = false;
+			
+			state = STATE_PLAY;
+			bNeedDisplay = true;
 			setSongState(SONG_PLAY);
 		}
 	}
@@ -906,11 +928,13 @@ void testApp::preRender() {
 }
 
 void testApp::postRender() {
+	bNeedDisplay = true;
+	state = STATE_LIVE;
 	grabber.releaseVideo();
 	grabber.startCamera();
 	setSongState(SONG_IDLE);
 	
-	
+		
 	soundStreamStart();
 	
 }

@@ -59,11 +59,14 @@ public:
 	void draw();
 	void exit();
 	
+	void live();
 	void record();
 	void preview();
 //	void playIntro(); 
 	
 	bool getIsPlaying();
+	
+	int getState();
 	
 	int getSongState();
 	void setSongState(int songState);
@@ -115,12 +118,14 @@ public:
 	
 
 	int songState;
+	int state;
 	
 	ofxAudioTrigger trigger;
 	//ofxDynamicCompressor compressor;
 		
 	//float gain;
-	bool bRecording;
+	bool bTriggerRecord;
+	
 	
 	ofxAudioFile song; // just for saving
 	float duration;
