@@ -166,6 +166,10 @@ void testApp::setup(){
 	//trigger.setThresh(0.15);
 	limiter.setup(10, 500, sampleRate, 0.3);
 	
+	bool bLoaded = magic.load(ofToDataPath("magic_fx1.caf"), bufferSize);
+	assert(bLoaded);
+	bPlaySong = false;
+	
 	ofSoundStreamSetup(nChannels, 1, this, sampleRate, bufferSize, 2);
 	
 	grabber.startCamera();
@@ -716,10 +720,9 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 		sampler.audioReceived(input,bufferSize);
 		if (!sampler.getIsRecording()) {
 			sampler.normalize();
+			magic.play();
+			bPlaySong = true;
 			
-			state = STATE_PLAY;
-			bNeedDisplay = true;
-			setSongState(SONG_PLAY);
 		}
 	}
 }
@@ -807,6 +810,21 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 			oiter=cards.end();
 		}
 	}
+	
+	
+	if (bPlaySong) {
+		if (magic.getNumPlaying()) {
+			magic.mixChannel(output, 0, nChannels);
+			magic.mixChannel(output, 1, nChannels);
+			magic.postProcess();
+		} else {
+			bPlaySong = false;
+			state = STATE_PLAY;
+			bNeedDisplay = true;
+			setSongState(SONG_PLAY);
+		}
+	}
+
 	
 	limiter.audioProcess(output,bufferSize,nChannels);
 	

@@ -143,5 +143,8 @@ public:
 	
 	bool bCameraOffset;
 	
+	ofxAudioFile magic;
+	bool bPlaySong;
+	
 };
 
