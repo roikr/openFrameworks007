@@ -166,7 +166,7 @@ void testApp::setup(){
 	//trigger.setThresh(0.15);
 	limiter.setup(10, 500, sampleRate, 0.3);
 	
-	bool bLoaded = magic.load(ofToDataPath("magic_fx1.caf"), bufferSize);
+	bool bLoaded = magic.load(ofToDataPath("magic.caf"), bufferSize);
 	assert(bLoaded);
 	bPlaySong = false;
 	
@@ -382,7 +382,7 @@ void testApp::draw()
 	}
 	
 	ofPopMatrix();
-	trigger.draw();
+//	trigger.draw();
 
 }
 
@@ -770,16 +770,6 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 						si.right = volume * pan;
 						piter->audio->trigger(si);
 					} else if (citer->bDisableNoteOff) {
-					
-						for (vector<actor>::iterator aiter=citer->actors.begin(); aiter!=citer->actors.end() ; aiter++)  {
-							if (aiter->player  == distance(citer->players.begin(), piter)) {
-								if (songState == SONG_PLAY) { 
-									piter->video->playIntro();
-								}
-							}
-							
-						}
-						
 						piter->audio->stop();
 					}
 				}
@@ -891,9 +881,7 @@ void testApp::seekFrame(int frame) {
 					piter->video->play(speed); // ,niter->velocity
 //					piter->bDidStartPlaying = true;
 					
-				} else if (citer->bDisableNoteOff){
-					piter->video->playIntro();
-				}
+				} 
 
 			}
 			
