@@ -31,7 +31,7 @@ enum {
 	PLAYER_INTRO_BACKWARD
 };
 
-void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,/*int bufferSize,int numBuffers,float *buffer,*/bool bIntroMode) {
+void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,bool bIntroMode,float introSpeed) {
 
 	this->video = video;
 //	this->buffer = buffer;
@@ -40,6 +40,7 @@ void ofxiVideoPlayer::setup(ofxiPhoneVideo *video,/*int bufferSize,int numBuffer
 	
 	state = PLAYER_IDLE;
 	this->bIntroMode = bIntroMode;
+	this->introSpeed = introSpeed;
 	
 	if (!bIntroMode && video->textures.size()) {
 		currentTexture = video->textures[video->firstFrame];
@@ -284,7 +285,7 @@ void ofxiVideoPlayer::playIntro() {
 	currentTexture = video->textures[introFirst];
 //	ofLog(OF_LOG_VERBOSE, "playIntro: first: %i, introFrames: %i, size: %i, introFirst: %i, currentTexture: %i",video->firstFrame,video->numIntroFrames,video->textures.size(),introFirst,currentTexture);
 	currentFrame = 0;
-	speed = 1.0;
+	speed = introSpeed;
 }
 
 

@@ -45,7 +45,7 @@ void testApp::setup(){
 	
 	video.fps = 25;
 	video.numIntroFrames = 4;
-	video.numFrames = 25;
+	video.numFrames = 35;
 	video.sampleLength = 1000*video.numFrames/video.fps;
 	
 	video.widthFraction = 1.0;
@@ -114,7 +114,7 @@ void testApp::setup(){
 			p.song.setup(bufferSize, sampleRate,bpm);
 			p.song.loadTrack(ofToDataPath(xml.getAttribute("player", "filename", "", i)));
 			p.video = new ofxiVideoPlayer;
-			p.video->setup(&video,true);
+			p.video->setup(&video,true,0.5f);
 			p.audio = new ofxAudioPlayer;
 			p.audio->setup(sampler.getAudioSample(),bufferSize);
 			
@@ -179,7 +179,7 @@ void testApp::setup(){
 	songVersion = 0;
 	bCameraOffset = false;
 	
-	state = STATE_LIVE;
+	live();
 	
 	bNeedDisplay = true;
 	bTriggerRecord = false;
@@ -265,7 +265,7 @@ void testApp::update()
 		bNeedDisplay = true;
 		trigger.setTrigger();
 		trigger.resetMeters();
-		grabber.startCapture();
+		
 		
 		songVersion++;
 		//camera->setTrigger(thresh);
@@ -422,7 +422,8 @@ void testApp::exit() {
 void testApp::live() {
 	state = STATE_LIVE;
 	bNeedDisplay = true;
-	grabber.releaseVideo();
+//	grabber.releaseVideo();
+	grabber.startCapture();
 }
 
 void testApp::record() {
@@ -934,11 +935,12 @@ void testApp::preRender() {
 }
 
 void testApp::postRender() {
-	bNeedDisplay = true;
-	state = STATE_LIVE;
+//	bNeedDisplay = true;
+//	state = STATE_LIVE;
 	grabber.releaseVideo();
 	grabber.startCamera();
 	setSongState(SONG_IDLE);
+	live();
 	
 		
 	soundStreamStart();

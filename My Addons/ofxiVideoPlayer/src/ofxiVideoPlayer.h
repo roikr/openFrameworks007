@@ -19,7 +19,7 @@ public:
 	//ofxiPhoneClipper();
 	//~ofxiPhoneClipper();
 	
-	void setup(ofxiPhoneVideo *video,bool bIntroMode = false);
+	void setup(ofxiPhoneVideo *video,bool bIntroMode = false,float introSpeed = 1.0f);
 	void update();
 	void draw();
 	void drawFrame(int frame);
@@ -76,6 +76,7 @@ protected:
 	int currentFrame;
 	
 	bool bIntroMode;
+	float introSpeed;
 	
 //	float *buffer;
 //	int bufferSize;
