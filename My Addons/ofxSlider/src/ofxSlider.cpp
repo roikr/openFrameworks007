@@ -20,7 +20,7 @@ enum  {
 
 void ofxSlider::setup(float scale,sliderPrefs prefs) {
 	this->scale = scale;
-	this->translate = translate;
+//	this->translate = translate;
 	this->prefs = prefs;
 	setPage(0);
 	state = SLIDER_STATE_IDLE;
@@ -34,10 +34,12 @@ void ofxSlider::update() {
 		
 	if (state == SLIDER_STATE_ANIMATING) {
 		float t = (float)(ofGetElapsedTimeMillis() - upTime)/(float)prefs.animDuration;
-		if (t >= 1) 
+		if (t >= 1) {
 			state = SLIDER_STATE_IDLE;
+			setComponent(translate,dest);
+		}
 		else 
-			setComponent(translate, easeOutBack(t,getComponent(translate),getComponent(dest)));
+			setComponent(translate, easeOutBack(t,getComponent(translate),dest));
 	}	
 		
 }
@@ -164,7 +166,8 @@ void ofxSlider::touchUp(int x, int y, int id) {
 
 		
 		
-		dest = -*currentPage*scale;
+//		dest = -*currentPage*scale;
+		dest=-getComponent(*currentPage)*scale;
 		
 		touches.clear();
 	}
@@ -188,5 +191,17 @@ int	ofxSlider::getCurrentPage() {
 
 void ofxSlider::setPage(int page) {
 	currentPage = this->prefs.pages.begin()+page;
-	translate = -*currentPage*scale;
+	
+	setComponent(translate, -getComponent(*currentPage)*scale);
+}
+
+void ofxSlider::next() {
+	state = SLIDER_STATE_ANIMATING;
+	currentPage++;
+	if (currentPage==prefs.pages.end()) {
+		currentPage=prefs.pages.begin();
+	}
+	dest=-getComponent(*currentPage)*scale;
+	upTime = ofGetElapsedTimeMillis();	
+
 }

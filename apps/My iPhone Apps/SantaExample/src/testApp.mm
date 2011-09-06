@@ -324,13 +324,15 @@ void testApp::draw()
 	cend = citer;
 	
 	if (slider.getIsDragging() || slider.getIsAnimating()) {
-		if (citer>cards.begin()) {
-			cbegin=citer-1;
-		}
-		
-		if(cards.size()>1 && citer<cards.end()-1) {
-			cend=citer+1;
-		}
+//		if (citer>cards.begin()) {
+//			cbegin=citer-1;
+//		}
+//		
+//		if(cards.size()>1 && citer<cards.end()-1) {
+//			cend=citer+1;
+//		}
+		cbegin = cards.begin();
+		cend = cards.end()-1;
 	}
 	
 	vector<player>::iterator piter;
@@ -418,6 +420,13 @@ void testApp::renderVideo(){
 void testApp::exit() {
 	grabber.exit();
 }
+
+void testApp::more() {
+	slider.next();
+	testSlider();
+	
+}
+
 
 void testApp::live() {
 	state = STATE_LIVE;
@@ -655,27 +664,31 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 	if (bSlide) {
 		bSlide = false;
 		slider.touchUp(touch.x, touch.y,touch.id);
-		
-		switch (getSongState()) {
-			case SONG_IDLE: 
-			case SONG_PLAY: {
-				vector<card>::iterator iter = cards.begin()+slider.getCurrentPage();
-				if (citer!=iter) {
-					setSongState(SONG_IDLE);
-					oiter = citer;
-					citer = iter;
-					bCardChanged = true;
-					delayStart = ofGetElapsedTimeMillis();
-				}
-			} break;
-			default:
-				break;
-		}
-		
+		testSlider();		
 	}
 
 }
 
+void testApp::testSlider() {
+	
+	
+	switch (getSongState()) {
+		case SONG_IDLE: 
+		case SONG_PLAY: {
+			vector<card>::iterator iter = cards.begin()+slider.getCurrentPage();
+			if (citer!=iter) {
+				setSongState(SONG_IDLE);
+				oiter = citer;
+				citer = iter;
+				bCardChanged = true;
+				delayStart = ofGetElapsedTimeMillis();
+			}
+		} break;
+		default:
+			break;
+	}
+
+}
 
 
 //--------------------------------------------------------------

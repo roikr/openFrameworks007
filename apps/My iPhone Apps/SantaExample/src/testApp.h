@@ -59,10 +59,12 @@ public:
 	void draw();
 	void exit();
 	
+	void more();
 	void live();
 	void record();
 	void preview();
-//	void playIntro(); 
+//	void playIntro();
+
 	
 	bool getIsPlaying();
 	
@@ -74,6 +76,7 @@ public:
 	void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
 	void touchUp(ofTouchEventArgs &touch);
+	void testSlider();
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	
 	void audioReceived( float * input, int bufferSize, int nChannels );

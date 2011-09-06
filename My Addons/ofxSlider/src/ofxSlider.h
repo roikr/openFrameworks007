@@ -43,7 +43,6 @@ public:
 	
 
 	void draw();
-
 	
 	void touchDown(int x, int y, int id);
 	void touchMoved(int x, int y, int id);
@@ -54,6 +53,7 @@ public:
 	int	 getCurrentPage();
 	void setPage(int page);
 	
+	void next();
 	
 private:
 	
@@ -62,7 +62,7 @@ private:
 	void setComponent(ofPoint &pnt,float x);
 	
 	vector <pair<ofPoint,int> > touches;
-	ofPoint dest;
+	float dest;
 	ofPoint vel;
 		
 	int upTime;
