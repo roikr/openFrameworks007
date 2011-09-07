@@ -102,13 +102,22 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		[self._session setSessionPreset:AVCaptureSessionPresetMedium]; // AVCaptureSessionPresetLow AVCaptureSessionPreset640x480
 		
 		//-- Creata a video device and input from that Device.  Add the input to the capture session.
-		AVCaptureDevice * videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-		if(videoDevice == nil)
-			return nil;
+//		AVCaptureDevice * videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+//		if(videoDevice == nil)
+//			return nil;
 		
 		//-- Add the device to the session.
+		
+		AVCaptureDevice * videoDevice = [self cameraWithPosition:position];
+		if(videoDevice == nil) {
+			videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+		}
+		if(videoDevice == nil) {
+			return nil;
+		}
+		
 
-		AVCaptureDeviceInput *videoInput = [[[AVCaptureDeviceInput alloc] initWithDevice:[self cameraWithPosition:position] error:&error] autorelease];
+		AVCaptureDeviceInput *videoInput = [[[AVCaptureDeviceInput alloc] initWithDevice:videoDevice error:&error] autorelease];
 //		video->bMirrored = false;
 		[self setVideoInput:videoInput];
 //		AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
