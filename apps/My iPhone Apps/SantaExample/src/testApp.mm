@@ -554,6 +554,9 @@ void testApp::setSongState(int songState) {
 			songState = SONG_IDLE;
 			for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++)  {
 				iter->song.stop();
+				iter->audio->stop();
+				iter->video->playIntro();
+				
 			}
 			break;
 		case SONG_PLAY:
