@@ -130,6 +130,8 @@ void testApp::setup(){
 	}
 							  
 	prefs.direction = SLIDER_VERTICAL;
+	prefs.bCyclic = true;
+	prefs.lastPageSize = ofPoint(0,ofGetHeight());
 	slider.setup(1,prefs);	
 	bSlide = false;
 		
@@ -287,6 +289,47 @@ void testApp::render()
 	}
 }
 
+void testApp::drawCard(vector<card>::iterator iter) {
+	
+	
+	for (vector<actor>::iterator aiter=iter->actors.begin(); aiter!=iter->actors.end(); aiter++)  {
+		vector<player>::iterator piter=iter->players.begin()+aiter->player;
+		ofPushMatrix();
+		//glLoadIdentity();
+		
+		
+		ofTranslate(aiter->x, aiter->y, 0);
+		ofRotate(aiter->degree);
+		ofScale(aiter->scale,aiter->scale,1.0);
+		
+		//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
+		//ofScale(0.5, 0.5, 1);
+		
+		if (grabber.getIsReady() && (grabber.getState()==CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING || video.textures.empty())) {
+			grabber.draw();
+		} else {
+			piter->video->draw();
+		}
+		
+		
+		//if (iter->video->getIsPlaying()) {
+		//			iter->video->draw();
+		//		} else {
+		//			camera->draw();
+		//		}
+		ofPopMatrix();
+		
+	}
+	
+	ofEnableAlphaBlending();
+	
+	ofPushMatrix();
+//	ofTranslate(0, y); 
+	iter->background->draw(0, 0);
+	ofPopMatrix();
+	
+	ofDisableAlphaBlending();
+}
 
 void testApp::draw()
 {
@@ -319,70 +362,34 @@ void testApp::draw()
 	ofPushMatrix();
 	slider.transform();
 	
-	vector<card>::iterator cbegin,cend;
-	cbegin = citer;
-	cend = citer;
 	
 	if (slider.getIsDragging() || slider.getIsAnimating()) {
-//		if (citer>cards.begin()) {
-//			cbegin=citer-1;
-//		}
-//		
-//		if(cards.size()>1 && citer<cards.end()-1) {
-//			cend=citer+1;
-//		}
-		cbegin = cards.begin();
-		cend = cards.end()-1;
-	}
-	
-	vector<player>::iterator piter;
-	
-	vector<card>::iterator iter;
-	
-	for (iter=cbegin; iter<=cend; iter++) {
-		
-		int y = distance(cards.begin(), iter) *ofGetHeight();
-		//cout << y <<endl;
-		
-		for (vector<actor>::iterator aiter=iter->actors.begin(); aiter!=iter->actors.end(); aiter++)  {
-			vector<player>::iterator piter=iter->players.begin()+aiter->player;
-			ofPushMatrix();
-			//glLoadIdentity();
-			
-			
-			ofTranslate(aiter->x, aiter->y+y, 0);
-			ofRotate(aiter->degree);
-			ofScale(aiter->scale,aiter->scale,1.0);
-			
-			//ofTranslate(i % 2 * ofGetWidth()/2, (int)(i / 2) * ofGetHeight() /2);
-			//ofScale(0.5, 0.5, 1);
-			
-			if (grabber.getIsReady() && (grabber.getState()==CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING || video.textures.empty())) {
-				grabber.draw();
-			} else {
-				piter->video->draw();
-			}
- 
-			
-			//if (iter->video->getIsPlaying()) {
-	//			iter->video->draw();
-	//		} else {
-	//			camera->draw();
-	//		}
-			ofPopMatrix();
-		
-		}
-		
-		ofEnableAlphaBlending();
-		
 		ofPushMatrix();
-		ofTranslate(0, y); 
-		iter->background->draw(0, 0);
+		ofTranslate(0, -ofGetHeight(), 0);
+		drawCard(cards.end()-1);
 		ofPopMatrix();
 		
-		ofDisableAlphaBlending();
+		for (vector<card>::iterator iter=cards.begin(); iter!=cards.end(); iter++) {
+			ofPushMatrix();
+			ofTranslate(0, distance(cards.begin(), iter) *ofGetHeight(), 0);
+			drawCard(iter);
+			ofPopMatrix();
+		}
+		
+		ofPushMatrix();
+		ofTranslate(0, ofGetHeight()*cards.size(), 0);
+		drawCard(cards.begin());
+		ofPopMatrix();
+		
+	} else {
+		ofPushMatrix();
+		ofTranslate(0, distance(cards.begin(), citer) *ofGetHeight(), 0);
+		drawCard(citer);
+		ofPopMatrix();
 	}
-	
+
+
+		
 	ofPopMatrix();
 //	trigger.draw();
 

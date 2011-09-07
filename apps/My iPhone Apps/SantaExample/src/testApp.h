@@ -56,6 +56,8 @@ public:
 	void update();
 	
 	void render();
+	
+	void drawCard(vector<card>::iterator iter);
 	void draw();
 	void exit();
 	

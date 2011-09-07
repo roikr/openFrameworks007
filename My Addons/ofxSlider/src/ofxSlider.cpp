@@ -22,12 +22,30 @@ void ofxSlider::setup(float scale,sliderPrefs prefs) {
 	this->scale = scale;
 //	this->translate = translate;
 	this->prefs = prefs;
+	adjustPages();  // roikr: if pages in different size need to pass last page size
 	setPage(0);
 	state = SLIDER_STATE_IDLE;
 	
 }
 
+void ofxSlider::adjustPages() {
+	if (prefs.bCyclic) {
+		//ofPoint lastSize = *(prefs.pages.end()-1)-*(prefs.pages.end()-2);
+		prefs.pages.insert(prefs.pages.begin(),*(prefs.pages.begin())-prefs.lastPageSize);
+		prefs.pages.push_back(*(prefs.pages.end()-1)+prefs.lastPageSize);
+	}
+}
 
+void ofxSlider::fixCycle() {
+	if (prefs.bCyclic) {
+		if (currentPage == prefs.pages.begin()) {
+			currentPage = prefs.pages.end()-2;
+		} else if (currentPage == prefs.pages.end()-1) {
+			currentPage = prefs.pages.begin()+1;
+		}
+	}
+	setComponent(translate,-getComponent(*currentPage)*scale);
+}
 
 void ofxSlider::update() {
 	
@@ -36,7 +54,7 @@ void ofxSlider::update() {
 		float t = (float)(ofGetElapsedTimeMillis() - upTime)/(float)prefs.animDuration;
 		if (t >= 1) {
 			state = SLIDER_STATE_IDLE;
-			setComponent(translate,dest);
+			fixCycle();
 		}
 		else 
 			setComponent(translate, easeOutBack(t,getComponent(translate),dest));
@@ -78,7 +96,7 @@ void ofxSlider::touchDown(int x, int y, int id) {
 	
 	if (id==0) {
 		state = SLIDER_STATE_IDLE;
-		
+		fixCycle();
 		
 		touches.push_back(make_pair(ofPoint(x,y), ofGetElapsedTimeMillis()));
 		//printf("touchDown: %i %.0f\n",touches.back().second,touches.back().first.x);
@@ -120,7 +138,12 @@ void ofxSlider::touchMoved(int x, int y, int id) {
 		state = SLIDER_STATE_DRAGGING;
 		//printf("touchMoved: %i %.0f\n",touches.back().second,touches.back().first.x);
 		touches.push_back(make_pair(ofPoint(x,y), ofGetElapsedTimeMillis()));
-		setComponent(translate,getComponent(translate)+boundsFix(getComponent(touches.back().first-(touches.end()-2)->first)));
+		
+		if (prefs.bCyclic) {
+			setComponent(translate,getComponent(translate)+  getComponent(touches.back().first-(touches.end()-2)->first));
+		} else {
+			setComponent(translate,getComponent(translate)+  boundsFix(getComponent(touches.back().first-(touches.end()-2)->first)));
+		}
 	}
 			
 }
@@ -152,22 +175,51 @@ void ofxSlider::touchUp(int x, int y, int id) {
 		
 //		printf("velocity: %.2f\n",vx);
 		
-		if (fabs(vx)>0.5) {
-			if (currentPage < prefs.pages.end()-1  && vx<0) 
-				currentPage++;
-			else if (currentPage > prefs.pages.begin() && vx>0) 
-				currentPage--;
+		if (prefs.bCyclic) {
+			vector<ofPoint>::iterator previousPage,nextPage;
+			nextPage = currentPage+1;
+			if (nextPage==prefs.pages.end()) {
+				nextPage=prefs.pages.begin();
+			}
 			
-		}  else if (currentPage < prefs.pages.end()-1 &&  getComponent((*(currentPage+1) - *currentPage)/2  +translate/scale + *currentPage) <0  ) {
-			currentPage++;
-		} else if (currentPage > prefs.pages.begin() &&  getComponent(( *currentPage - *(currentPage-1))/2 +translate/scale+ *(currentPage-1))>0 )  {
-			currentPage--;
+			previousPage = currentPage==prefs.pages.begin() ? prefs.pages.end()-1 : currentPage-1;
+			
+			if (fabs(vx)>0.5) {
+				if (vx<0) {
+					currentPage = nextPage;
+				}
+				else if (vx>0) { 
+					currentPage = previousPage;
+				}
+				
+			}  else if (getComponent((*(nextPage) - *currentPage)/2  +translate/scale + *currentPage) <0  ) {
+				currentPage = nextPage;
+			} else if (getComponent(( *currentPage - *previousPage)/2 +translate/scale+ *previousPage)>0 )  {
+				currentPage = previousPage;
+			}
+			
+			
+		} else {
+				
+			if (fabs(vx)>0.5) {
+				if (currentPage < prefs.pages.end()-1  && vx<0) 
+					currentPage++;
+				else if (currentPage > prefs.pages.begin() && vx>0) 
+					currentPage--;
+				
+			}  else if (currentPage < prefs.pages.end()-1 &&  getComponent((*(currentPage+1) - *currentPage)/2  +translate/scale + *currentPage) <0  ) {
+				currentPage++;
+			} else if (currentPage > prefs.pages.begin() &&  getComponent(( *currentPage - *(currentPage-1))/2 +translate/scale+ *(currentPage-1))>0 )  {
+				currentPage--;
+			}
+			
+			
 		}
 
-		
+		dest=-getComponent(*currentPage)*scale;
 		
 //		dest = -*currentPage*scale;
-		dest=-getComponent(*currentPage)*scale;
+		
 		
 		touches.clear();
 	}
@@ -186,21 +238,37 @@ bool ofxSlider::getIsDragging() {
 }
 
 int	ofxSlider::getCurrentPage() {
-	return distance(prefs.pages.begin(), currentPage);
+	int dist = distance(prefs.pages.begin(), currentPage);
+	
+	if (prefs.bCyclic) {
+		if (currentPage == prefs.pages.begin()) {
+			dist = prefs.pages.size()-3;
+		} else if (currentPage == prefs.pages.end()-1 ) {
+			dist = 0;
+		} else {
+			dist--;
+		}
+	} 
+
+	return  dist;
 }
 
 void ofxSlider::setPage(int page) {
-	currentPage = this->prefs.pages.begin()+page;
+	currentPage = this->prefs.pages.begin()+page + (prefs.bCyclic ? 1 : 0);
 	
 	setComponent(translate, -getComponent(*currentPage)*scale);
 }
 
 void ofxSlider::next() {
+	fixCycle();
 	state = SLIDER_STATE_ANIMATING;
 	currentPage++;
-	if (currentPage==prefs.pages.end()) {
-		currentPage=prefs.pages.begin();
+	if (!prefs.bCyclic) {
+		if (currentPage==prefs.pages.end()) {
+			currentPage=prefs.pages.begin();
+		}
 	}
+	
 	dest=-getComponent(*currentPage)*scale;
 	upTime = ofGetElapsedTimeMillis();	
 

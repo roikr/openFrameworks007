@@ -16,13 +16,14 @@ enum  {
 
 
 
+
 class sliderPrefs {
 	
 public:
 	
 	
 	
-	sliderPrefs() : direction(SLIDER_HORIZONTAL), animDuration(5000) { };
+	sliderPrefs() : direction(SLIDER_HORIZONTAL), animDuration(5000), bCyclic(false),lastPageSize(ofPoint(0,0)) { };
 	
 	virtual ~sliderPrefs(){};
 		
@@ -30,6 +31,8 @@ public:
 	
 	int direction;
 	int animDuration;
+	bool bCyclic;
+	ofPoint lastPageSize;
 	
 };
 
@@ -54,13 +57,15 @@ public:
 	void setPage(int page);
 	
 	void next();
-	
+		
 private:
 	
 	float boundsFix(float d);
 	float getComponent(ofPoint pnt);
 	void setComponent(ofPoint &pnt,float x);
-	
+	void adjustPages();
+	void fixCycle(); 
+		
 	vector <pair<ofPoint,int> > touches;
 	float dest;
 	ofPoint vel;
