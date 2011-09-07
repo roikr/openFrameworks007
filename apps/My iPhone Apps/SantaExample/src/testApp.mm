@@ -967,10 +967,10 @@ void testApp::preRender() {
 void testApp::postRender() {
 //	bNeedDisplay = true;
 //	state = STATE_LIVE;
-	grabber.suspend(); // roikr: really need this ?
+//	grabber.suspend(); // roikr: really need this ?
 	grabber.startCamera();
 	setSongState(SONG_IDLE);
-	live();
+	//live();
 	
 		
 	soundStreamStart();
