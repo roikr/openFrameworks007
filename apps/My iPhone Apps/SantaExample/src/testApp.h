@@ -59,6 +59,9 @@ public:
 	void draw();
 	void exit();
 	
+	void suspend();
+	void resume();
+	
 	void more();
 	void live();
 	void record();

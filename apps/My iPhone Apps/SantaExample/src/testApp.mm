@@ -156,7 +156,7 @@ void testApp::setup(){
 	sample.buffer	= new float[sample.numFrames];
 	
 //	camera = new ofxiVideoGrabber;
-	grabber.setup(&video,FRONT_CAMERA);
+	grabber.setup(&video,FRONT_CAMERA,0.75);
 	
 	
 	
@@ -420,6 +420,16 @@ void testApp::renderVideo(){
 void testApp::exit() {
 	grabber.exit();
 }
+
+void testApp::suspend() {
+	setSongState(SONG_IDLE);
+	grabber.suspend();
+}
+
+void testApp::resume() {
+	live(); // roikr: double live on startup ?
+}
+
 
 void testApp::more() {
 	slider.next();
@@ -950,7 +960,7 @@ void testApp::preRender() {
 void testApp::postRender() {
 //	bNeedDisplay = true;
 //	state = STATE_LIVE;
-	grabber.releaseVideo();
+	grabber.suspend(); // roikr: really need this ?
 	grabber.startCamera();
 	setSongState(SONG_IDLE);
 	live();

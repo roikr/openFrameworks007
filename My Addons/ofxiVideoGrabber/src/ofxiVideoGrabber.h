@@ -41,22 +41,23 @@ public:
 	ofxiVideoGrabber();
 	//~ofxiPhoneClipper();
 	
-	void setup(ofxiPhoneVideo *video,int cameraPosition);
+	void setup(ofxiPhoneVideo *video,int cameraPosition,float scale);
 	void update();
 	void render();
 	void draw();
 	
 	void exit();
+	void suspend();
 		
 	void startCamera();
 	void stopCamera();
 	
-	void initVideo();
-	void releaseVideo();
+	
 	
 	void startCapture();
+	void stopCapture();
 	void record();
-	void pause();
+	
 	
 	int getState();
 	
@@ -99,6 +100,7 @@ protected:
 	
 	ofPoint offset;
 	ofRectangle rect;
+	float scale;
 	
 	
 	

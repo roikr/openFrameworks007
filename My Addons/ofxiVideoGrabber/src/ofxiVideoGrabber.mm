@@ -27,7 +27,7 @@ int ofxiVideoGrabber::getState() {
 }
 	
 
-void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition) {
+void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition,float scale) {
 	
 	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps devicePosition:cameraPosition == FRONT_CAMERA ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack] retain];
 	
@@ -38,38 +38,18 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition) {
 	fbo.setup(video->textureWidth, video->textureHeight);
 	
 	this->video = video;
+	this->scale = scale;
 }
 
-void ofxiVideoGrabber::initVideo() {
+
+void ofxiVideoGrabber::suspend() {
 	
-	for (int i=0; i<video->numFrames; i++) {
-		
-		GLuint texture;
-		
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
-		
-		glBindTexture(GL_TEXTURE_2D, 0);
-		
-		printf("creating texture: %i\n",texture);
-		
-		//		fbo.begin(texture);
-		//		fbo.end();
-		
-		video->textures.push_back(texture);
-		
-	}
-}
-
-
-void ofxiVideoGrabber::releaseVideo() {
+	stopCapture();
 	
 	for (vector<int>::iterator iter=video->textures.begin(); iter!=video->textures.end(); iter++) {
 		GLuint texture = *iter;
 		glDeleteTextures(1, &texture);
+		printf("delete texture: %i\n",texture);
 	}
 	video->textures.clear();
 }
@@ -158,13 +138,13 @@ void ofxiVideoGrabber::drawCamera() {
 	
 	GLfloat px0 = 0;		// up to you to get the aspect ratio right
 	GLfloat py0 = 0;
-	GLfloat px1 = video->textureWidth;
-	GLfloat py1 = video->textureHeight;
+	GLfloat px1 = video->textureWidth/scale;
+	GLfloat py1 = video->textureHeight/scale;
 	
 	
 	GLfloat tx0 = rect.x;
-	GLfloat ty0 = rect.y+rect.height;
-	GLfloat tx1 = rect.x+rect.width;
+	GLfloat ty0 = rect.y+rect.height/scale;
+	GLfloat tx1 = rect.x+rect.width/scale;
 	GLfloat ty1 = rect.y;
 	
 	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
@@ -219,13 +199,17 @@ void ofxiVideoGrabber::render() {
 			GLuint texture = video->textures[currentFrame % video->numFrames];
 			fbo.begin(texture);	
 			
+			glPushMatrix();
+			glScalef(scale, scale, 1.0);
 			drawCamera();
+			glPopMatrix();
+			
 			
 			currentFrame++;
 			
 			if (state == CAMERA_RECORDING) {
 				if ( currentFrame-1 - firstFrame >= video->numFrames - video->numIntroFrames-1)  {
-					state = CAMERA_RUNNING;
+					stopCapture();
 				}
 			}
 			
@@ -243,7 +227,10 @@ void ofxiVideoGrabber::draw() {
 		
 		drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
 	} else {
+		glPushMatrix();
+		glScalef(scale, scale, 1.0);
 		drawCamera();
+		glPopMatrix();
 	}
 	
 	
@@ -390,9 +377,35 @@ void ofxiVideoGrabber::stopCamera() {
 
 
 void ofxiVideoGrabber::startCapture() {
-	if (video->textures.empty()) {
-		initVideo();
+	
+	if (getState() == CAMERA_IDLE) { // roikr: need to startCamera before
+		return;  
 	}
+	
+	if (video->textures.empty()) {
+		for (int i=0; i<video->numFrames; i++) {
+			
+			GLuint texture;
+			
+			glGenTextures(1, &texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
+			
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
+			
+			glBindTexture(GL_TEXTURE_2D, 0);
+			
+			printf("creating texture: %i\n",texture);
+			
+			//		fbo.begin(texture);
+			//		fbo.end();
+			
+			video->textures.push_back(texture);
+			
+		}
+	}
+	
+	
 	
 	state = CAMERA_CAPTURING;
 	
@@ -401,9 +414,20 @@ void ofxiVideoGrabber::startCapture() {
 	cameraFrame = videoTexture.currentFrame-1;
 }
 
+void ofxiVideoGrabber::stopCapture() {
+	if (state == CAMERA_IDLE) {
+		return; // roikr: don't change state when IDLE if so - it won't start (startCamera)
+	}
+	state = CAMERA_RUNNING;
+}
+
 void ofxiVideoGrabber::record() {
 // roikr: audio fix	
 //	video->audio.record();
+	
+	if (getState() == CAMERA_IDLE) { // roikr: need to startCamera before
+		return;  
+	}
 		
 	firstFrame = currentFrame-1;
 	video->firstFrame = (currentFrame-1) % video->numFrames;
@@ -414,9 +438,6 @@ void ofxiVideoGrabber::record() {
 	
 }
 
-void ofxiVideoGrabber::pause() {
-	state = CAMERA_RUNNING;
-}
 
 bool ofxiVideoGrabber::cameraToggle() {
 	return [videoTexture cameraToggle] == YES;
