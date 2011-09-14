@@ -630,6 +630,13 @@ int ofxMidi::getNumTracks() {
 bool ofxMidi::getCurrentEvent(event &e,int trackNum) {
 	if (tracks.at(trackNum).iter!=tracks.at(trackNum).events.end()) {
 		e = *(tracks.at(trackNum).iter);
+		
+#ifdef DEBUG_OFX_MIDI
+		if (e.note<0) {
+			printf("ofxMidi::getCurrentEvent - illegal event");
+		}
+#endif
+		
 		return true;
 	}
 	return false;

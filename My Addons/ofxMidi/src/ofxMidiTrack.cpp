@@ -11,7 +11,7 @@
 #include <iostream>
 
 
-	
+//#define LOG_MIDI_TRACK
 
 void ofxMidiTrack::setup(int blockLength,int sampleRate,int bpm) { // call after all samples loaded 
 	
@@ -58,6 +58,9 @@ void ofxMidiTrack::play(int trackNum) {
 	startTick = 0;
 	track.firstEvent(trackNum);
 	bPlaying = true;
+#ifdef LOG_MIDI_TRACK
+	track.dumpTracks();
+#endif
 }
 
 void ofxMidiTrack::record() {
@@ -174,7 +177,11 @@ float ofxMidiTrack::getPlayhead(int trackNum) {
 }
 
 float ofxMidiTrack::getDuration(int trackNum) {
-	return(float)track.getLastTick(trackNum) / (float)track.getTicksPerBeat() / (float)bpm * 60;
+	float duration = (float)track.getLastTick(trackNum) / (float)track.getTicksPerBeat() / (float)bpm * 60;
+#ifdef LOG_MIDI_TRACK
+	printf("duration: %f\n",duration);
+#endif
+	return duration;
 }
 
 float ofxMidiTrack::getProgress() {
