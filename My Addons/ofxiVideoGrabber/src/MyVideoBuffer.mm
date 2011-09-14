@@ -90,7 +90,6 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	{
 		
 		
-		
 		NSError * error;
 		
 		//-- Setup our Capture Session.
@@ -160,7 +159,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 		//m_textureHandle = [self createVideoTextuerUsingWidth:1280 Height:720];
 		//m_textureHandle = [self createVideoTextuerUsingWidth:640 Height:480];
 		
-
+		bCameraDidChanged = NO;
 		
 	}
 	return self;
@@ -226,6 +225,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
     }
     
 bail:
+	bCameraDidChanged = success;
     return success;
 }
 
@@ -323,6 +323,11 @@ bail:
 //		}
 	}
 	
+	if (bCameraDidChanged) {
+		bCameraDidChanged = NO;
+		CMVideoDimensions videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDesc);
+		NSLog(@"videoDimensions: %i %i",self.videoDimensions.width,self.videoDimensions.height);
+	}
 	
 	CMVideoCodecType type = CMFormatDescriptionGetMediaSubType(formatDesc);
 #if defined(__LITTLE_ENDIAN__)

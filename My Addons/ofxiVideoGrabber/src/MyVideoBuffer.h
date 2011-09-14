@@ -84,6 +84,8 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 	
 	int currentFrame;
 	
+	BOOL bCameraDidChanged;
+	
 }
 
 @property (nonatomic, retain) AVCaptureSession* _session;

@@ -149,7 +149,7 @@ void ofxiVideoGrabber::drawCamera() {
 	
 	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
 		ty0 = rect.y;
-		ty1 = rect.y+rect.height;
+		ty1 = rect.y+rect.height/scale;
 	}
 	
 	 
