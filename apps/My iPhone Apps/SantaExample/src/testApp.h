@@ -26,7 +26,7 @@ class ofxAudioPlayer;
 struct player {
 	ofxiVideoPlayer *video;
 	ofxAudioPlayer *audio;
-	ofxMidiTrack song;
+	ofxMidiTrack *song;
 	bool bDidStartPlaying;
 	
 };
@@ -100,9 +100,6 @@ public:
 	void soundStreamStop();
 	float getRenderProgress();
 	
-	void preRender();
-	void postRender();
-	
 	bool cameraToggle();
 	
 	bool bNeedDisplay;
@@ -153,6 +150,8 @@ public:
 	
 	ofxAudioFile magic;
 	bool bPlaySong;
+	
+	vector<event> events;
 	
 };
 

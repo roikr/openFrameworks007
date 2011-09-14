@@ -16,6 +16,7 @@
 
 #include "ofxiPhoneExtras.h"
 
+#define MAX_NOTES_PER_BUFFER 10
 
 
 //--------------------------------------------------------------
@@ -37,6 +38,7 @@ void testApp::setup(){
 	ofBackground(255,255,255);
 	ofSetFrameRate(60);
 	
+	events.reserve(MAX_NOTES_PER_BUFFER);
 	
 	
 	
@@ -111,12 +113,13 @@ void testApp::setup(){
 		for (i=0; i<xml.getNumTags("player");i++) {
 			
 			player p;
-			p.song.setup(bufferSize, sampleRate,bpm);
-			p.song.loadTrack(ofToDataPath(xml.getAttribute("player", "filename", "", i)));
+			p.song = new ofxMidiTrack;
+			p.song->setup(bufferSize, sampleRate,bpm);
+			p.song->loadTrack(ofToDataPath(xml.getAttribute("player", "filename", "", i)));
 			p.video = new ofxiVideoPlayer;
 			p.video->setup(&video,true,0.5f);
 			p.audio = new ofxAudioPlayer;
-			p.audio->setup(sampler.getAudioSample(),bufferSize);
+			p.audio->setup(sampler.getAudioSample(),bufferSize,2); // max instances of sample 
 			
 			c.players.push_back(p);
 			
@@ -498,7 +501,7 @@ void testApp::preview() {
 
 bool testApp::getIsPlaying() {
 	for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++)  {		
-		if (iter->audio->getNumPlaying() || iter->song.getIsPlaying()) {
+		if (iter->audio->getNumPlaying() || iter->song->getIsPlaying()) {
 			return true;
 		} 
 	}
@@ -532,7 +535,7 @@ void testApp::setSongState(int songState) {
 		duration = 0;
 		
 		for (vector<player>::iterator piter=citer->players.begin(); piter!=citer->players.end(); piter++)  {
-			duration = max(duration, piter->song.getDuration());
+			duration = max(duration, piter->song->getDuration());
 		}
 
 	}		
@@ -553,7 +556,7 @@ void testApp::setSongState(int songState) {
 		case SONG_CANCEL_RENDER_AUDIO:
 			songState = SONG_IDLE;
 			for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++)  {
-				iter->song.stop();
+				iter->song->stop();
 				iter->audio->stop();
 				iter->video->playIntro();
 				
@@ -564,7 +567,7 @@ void testApp::setSongState(int songState) {
 		case SONG_RENDER_VIDEO:
 			if (!(grabber.getState()==CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING || video.textures.empty())) {
 				for (vector<player>::iterator iter=citer->players.begin(); iter!=citer->players.end(); iter++)  {
-					iter->song.play();
+					iter->song->play();
 				}
 			}
 			
@@ -763,6 +766,9 @@ void testApp::audioReceived( float * input, int bufferSize, int nChannels ) {
 
 
 
+//static float maxSpeed = 1.0f;
+//static float minSpeed = 1.0f;
+//static int maxEvents = 0;
 
 
 void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
@@ -774,8 +780,13 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 		switch (songState) {
 			case SONG_PLAY:
 			case SONG_RENDER_AUDIO: {
-				vector<event> events;
-				piter->song.process(events);
+				
+				piter->song->process(events); // allocate events and reserve enough space to avoid reallocations here
+				
+//				if (events.size()>maxEvents) {
+//					maxEvents = events.size();
+//					printf("player: %i\tmaxEvents: %i\n",distance(citer->players.begin(),piter),maxEvents);
+//				}
 				
 				for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
 					if (niter->bNoteOn) {
@@ -784,6 +795,14 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 						
 						sampleInstance si;
 						si.speed = exp((float)(niter->note-60)/12.0*log(2.0));
+//						float speed = si.speed;
+//						
+//						if (speed>maxSpeed || speed<minSpeed) {
+//							maxSpeed= max(speed,maxSpeed);
+//							minSpeed = min(speed,minSpeed);
+//							printf("player: %i\tnote: %i\tmin: %f\t max: %f\n",distance(citer->players.begin(),piter),niter->note,minSpeed,maxSpeed);
+//						}
+						
 						float volume = (float)niter->velocity / 127* 1.0f;// /players.size();
 						
 						si.retrigger = true;
@@ -808,6 +827,8 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 					}
 				}
 				
+				events.clear();
+				
 			} break;
 				
 			default:
@@ -827,7 +848,7 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 			piter->audio->mixChannel(output,0,nChannels);
 			piter->audio->mixChannel(output,1,nChannels);
 			piter->audio->postProcess();
-			bPlaying |= piter->audio->getNumPlaying() || piter->song.getIsPlaying();
+			bPlaying |= piter->audio->getNumPlaying() || piter->song->getIsPlaying();
 		}		
 		
 		if (!bPlaying) {
@@ -844,7 +865,7 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 		} else {
 			bPlaySong = false;
 			state = STATE_PLAY;
-			bNeedDisplay = true;
+//			bNeedDisplay = true;
 			setSongState(SONG_PLAY);
 		}
 	}
@@ -906,7 +927,7 @@ void testApp::seekFrame(int frame) {
 	for (;currentBlock<reqBlock;currentBlock++) { // TODO: or song finished...
 		for (vector<player>::iterator piter=citer->players.begin(); piter!=citer->players.end(); piter++) {
 			vector<event> events;
-			piter->song.process(events);
+			piter->song->process(events);
 			
 			for (vector<event>::iterator niter=events.begin(); niter!=events.end(); niter++) {
 				if (niter->bNoteOn) {
@@ -957,27 +978,6 @@ float testApp::getRenderProgress(){
 
 bool testApp::cameraToggle() {
 	return grabber.cameraToggle();
-}
-
-void testApp::preRender() {
-	grabber.stopCamera();
-	soundStreamStop();
-	setSongState(SONG_RENDER_VIDEO);
-	
-
-}
-
-void testApp::postRender() {
-//	bNeedDisplay = true;
-//	state = STATE_LIVE;
-//	grabber.suspend(); // roikr: really need this ?
-	grabber.startCamera();
-	setSongState(SONG_IDLE);
-	//live();
-	
-		
-	soundStreamStart();
-	
 }
 
 //--------------------------------------------------------------
