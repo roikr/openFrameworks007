@@ -12,7 +12,7 @@
 
 
 #include <string>
-#include <deque>
+#include <vector>
 
 
 using namespace std;
@@ -34,7 +34,7 @@ struct ofxAudioSample;
 class ofxAudioPlayer {
 public:
 		
-	void setup(ofxAudioSample *sample,int bufferSize);
+	void setup(ofxAudioSample *sample,int bufferSize,int maxInstances);
 	void exit();
 	
 	
@@ -54,7 +54,8 @@ private:
 	
 	ofxAudioSample *sample;
 	
-	deque<sampleInstance > instances;
+	vector<sampleInstance > instances; // deque was replace by vector - reservable to avoid reallocations but not optimized for lifo yet
+	int maxInstances;
 };
 
  

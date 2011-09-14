@@ -15,9 +15,12 @@
 
 #include <iostream>
 
-void ofxAudioPlayer::setup(ofxAudioSample *sample,int bufferSize) {
+void ofxAudioPlayer::setup(ofxAudioSample *sample,int bufferSize,int maxInstances) {
 	this->bufferSize = bufferSize;
 	this->sample = sample;
+	this->maxInstances = maxInstances;
+	this->instances.reserve(maxInstances);
+	
 }
 
 
@@ -32,25 +35,33 @@ void ofxAudioPlayer::play() {
 }
 
 void ofxAudioPlayer::trigger(sampleInstance si) {
+		
 	if (si.retrigger && !instances.empty()) {
 		instances.back().bStop = true;
 #ifdef LOG_AUDIO_PLAYER
 		cout << "retrigger, ";
 #endif
-	}
+	} 
 	
 	si.pos = 0;
 	si.bStop = false;
 	
-	instances.push_front(si);
+	if (instances.size() < maxInstances) {
+		instances.insert(instances.begin(),si);
 #ifdef LOG_AUDIO_PLAYER
-	cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
-#endif
+		cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
+#endif		
+	} else {
+		cout << "ofxAudioPlayer::trigger - exceed maximum instances: " << maxInstances;
+	}
+
+	
+	
 	
 }
 
 void ofxAudioPlayer::stop() {
-	for (deque<sampleInstance >::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+	for (vector<sampleInstance >::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
 		iter->bStop = true;
 	}
 }
@@ -62,7 +73,7 @@ void ofxAudioPlayer::stop() {
 void ofxAudioPlayer::mixChannel(float * output, int channel, int nChannels) {
 	
 	
-	for (deque<sampleInstance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
+	for (vector<sampleInstance>::iterator iter=instances.begin(); iter!=instances.end(); iter++) {
 		//sample.mixChannel(output,channel,nChannels,iter->block,iter->volume,iter->bStop);
 	
 	
@@ -122,7 +133,7 @@ void ofxAudioPlayer::audioRequested (float * output, int channel,int bufferSize,
 */
 
 void ofxAudioPlayer::postProcess() {
-	deque<sampleInstance>::iterator iter=instances.begin();
+	vector<sampleInstance>::iterator iter=instances.begin();
 	while (iter!=instances.end()) {
 		if (iter->pos+bufferSize*iter->speed>=sample->numFrames || iter->bStop) {
 			iter = instances.erase(iter);
