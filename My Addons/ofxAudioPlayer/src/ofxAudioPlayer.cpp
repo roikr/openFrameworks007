@@ -11,7 +11,7 @@
 #include "ofxAudioSample.h"
 
 
-//#define LOG_AUDIO_FILE
+//#define LOG_AUDIO_PLAYER
 
 #include <iostream>
 
@@ -34,7 +34,7 @@ void ofxAudioPlayer::play() {
 void ofxAudioPlayer::trigger(sampleInstance si) {
 	if (si.retrigger && !instances.empty()) {
 		instances.back().bStop = true;
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 		cout << "retrigger, ";
 #endif
 	}
@@ -43,7 +43,7 @@ void ofxAudioPlayer::trigger(sampleInstance si) {
 	si.bStop = false;
 	
 	instances.push_front(si);
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 	cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
 #endif
 	
@@ -78,7 +78,7 @@ void ofxAudioPlayer::mixChannel(float * output, int channel, int nChannels) {
 		
 		if (iter->bStop) {
 			float step = 1.0/(n-1);
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 			cout << "ramp" << endl; //<< step << endl;
 #endif
 			for (int i=0; i<n; i++) {
@@ -126,7 +126,7 @@ void ofxAudioPlayer::postProcess() {
 	while (iter!=instances.end()) {
 		if (iter->pos+bufferSize*iter->speed>=sample->numFrames || iter->bStop) {
 			iter = instances.erase(iter);
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 			cout << "done" << endl; //<< step << endl;
 #endif
 		} else {
