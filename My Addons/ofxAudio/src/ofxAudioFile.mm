@@ -16,7 +16,7 @@
 #define SINT16_MAX 32767.0
 #define LOADING_BUFFER_SIZE 8192
 
-//#define LOG_AUDIO_FILE
+//#define LOG_AUDIO_PLAYER
 
 #include <iostream>
 
@@ -254,7 +254,7 @@ void ofxAudioFile::play() {
 void ofxAudioFile::trigger(float speed,float volume,bool retrigger) {
 	if (retrigger && !instances.empty()) {
 		instances.back().bStop = true;
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 		cout << "retrigger, ";
 #endif
 	}
@@ -264,7 +264,7 @@ void ofxAudioFile::trigger(float speed,float volume,bool retrigger) {
 	i.bStop = false;
 	i.speed = speed;
 	instances.push_front(i);
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 	cout << "trigger: " << instances.size() << endl; // ", blocks: " << sample.getSamplesPerChannel()/blockLength << endl;
 #endif
 	
@@ -333,7 +333,7 @@ void ofxAudioFile::mix(float *left,float *right,int block,float volume,bool ramp
 	
 	if (ramp) {
 		float step = 1.0/(n-1);
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 		cout << "ramp" << endl; //<< step << endl;
 #endif
 		for (int i=0; i<n; i++) {
@@ -367,7 +367,7 @@ void ofxAudioFile::mixChannel(float * output, int channel, int nChannels) {
 		
 		if (iter->bStop) {
 			float step = 1.0/(n-1);
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 			cout << "ramp" << endl; //<< step << endl;
 #endif
 			for (int i=0; i<n; i++) {
@@ -415,7 +415,7 @@ void ofxAudioFile::postProcess() {
 	while (iter!=instances.end()) {
 		if (iter->pos+bufferLength*iter->speed>=samplesPerChannel || iter->bStop) {
 			iter = instances.erase(iter);
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 			cout << "done" << endl; //<< step << endl;
 #endif
 		} else {
@@ -506,7 +506,7 @@ void ofxAudioFile::exit() {
 		free(tableBuffer);
 		tableBuffer = 0;
 		
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 		cout << "free tableBuffer: " << filename << endl; //<< step << endl;
 #endif
 		
@@ -515,7 +515,7 @@ void ofxAudioFile::exit() {
 	if (saveBuffer) {
 		free(saveBuffer);
 		saveBuffer = 0;
-#ifdef LOG_AUDIO_FILE
+#ifdef LOG_AUDIO_PLAYER
 		cout << "free saveBuffer: " << filename << endl; //<< step << endl;
 #endif
 	}
