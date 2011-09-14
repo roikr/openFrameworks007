@@ -701,6 +701,7 @@ void testApp::testSlider() {
 			vector<card>::iterator iter = cards.begin()+slider.getCurrentPage();
 			if (citer!=iter) {
 				setSongState(SONG_IDLE);
+				songVersion++;
 				oiter = citer;
 				citer = iter;
 				bCardChanged = true;
