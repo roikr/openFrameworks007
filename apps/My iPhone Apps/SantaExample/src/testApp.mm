@@ -438,6 +438,9 @@ void testApp::suspend() {
 }
 
 void testApp::resume() {
+	if (grabber.getState() == CAMERA_IDLE) { // return to foreground after aborting video rendering
+		grabber.startCamera();
+	}
 	live(); // roikr: double live on startup ?
 }
 
