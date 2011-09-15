@@ -158,7 +158,8 @@ void testApp::setup(){
 	
 	sample.nChannels = 2;
 	sample.numFrames = bufferSize;
-	sample.buffer	= new float[sample.numFrames];
+	sample.buffer	= new float[sample.numFrames*sample.nChannels]; 
+	// roikr: this bugs took me about week to find - I didn't allocate enough space (new float[sample.numFrames]) so after rendering audio sometimes I got a crash - sometimes it just erased the midi's
 	
 //	camera = new ofxiVideoGrabber;
 	grabber.setup(&video,FRONT_CAMERA,0.75);
