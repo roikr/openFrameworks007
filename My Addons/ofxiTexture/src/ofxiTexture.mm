@@ -92,7 +92,7 @@ bool ofxiTexture::load(string filename,int type) {
 		_height = texHeight;
 		_hasAlpha = CGImageGetAlphaInfo(textureImage) != kCGImageAlphaNone;
 		_internalFormat = GL_RGBA;
-				
+		NSLog(@"texture: %s, width: %i, height: %i",filename.c_str(),_width,_height );		
 		return true;
 	}	
 			
@@ -103,6 +103,11 @@ bool ofxiTexture::load(string filename,int type) {
 	//NSString * path = [[NSString alloc] initWithCString:filename.c_str()];
 	NSString *path = [NSString stringWithFormat:@"%s",filename.c_str()];
 	NSData *data = [NSData dataWithContentsOfFile:path];
+	
+	if (!data) {
+		NSLog(@"texture: %s, file not found",filename.c_str() );
+		return false;
+	}
 	
 	NSMutableArray *_imageData = [NSMutableArray array];
 	
@@ -128,6 +133,7 @@ bool ofxiTexture::load(string filename,int type) {
 		gPVRTexIdentifier[2] != ((pvrTag >> 16) & 0xff) ||
 		gPVRTexIdentifier[3] != ((pvrTag >> 24) & 0xff))
 	{
+		NSLog(@"texture: %s is not pvr",filename.c_str() );
 		return false;
 	}
 	
@@ -191,6 +197,7 @@ bool ofxiTexture::load(string filename,int type) {
 		
 		
 	} else {
+		NSLog(@"texture: %s, unknown compression",filename.c_str());
 		return false;
 	}
 
@@ -278,7 +285,8 @@ void ofxiTexture::draw() {
 	if (_hasAlpha) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+		
+		/*
 		GLfloat fColor[4]={1.0f,1.0f,1.0f,0.0f};
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
@@ -287,10 +295,11 @@ void ofxiTexture::draw() {
 		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA,    GL_REPLACE);
 		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,       GL_TEXTURE);
 		glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, fColor);
-	
+		
+		*/
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+//		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glDisable(GL_BLEND);
 	} else {
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
