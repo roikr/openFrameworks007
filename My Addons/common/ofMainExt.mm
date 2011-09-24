@@ -106,3 +106,17 @@ void setiPhoneDataPath() {
 	//-----
 	
 }
+
+ofColor ofxHexStringToColor(string color) {
+	
+	int r,g,b;
+	sscanf((color.substr(2,2)).c_str(), "%x", &r);
+	sscanf((color.substr(4,2)).c_str(), "%x", &g);
+	sscanf((color.substr(6,2)).c_str(), "%x", &b);
+	ofColor c;
+	c.r = r;
+	c.g = g;
+	c.b = b;
+	return c;
+}
+

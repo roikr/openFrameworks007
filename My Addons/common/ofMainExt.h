@@ -24,3 +24,4 @@ float distance(ofPoint pnt);
 
 void setiPhoneDataPath();
 
+ofColor ofxHexStringToColor(string color); 
