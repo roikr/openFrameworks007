@@ -107,6 +107,14 @@ void setiPhoneDataPath() {
 	
 }
 
+ofColor ofxHexToColor(int hex) {
+	ofColor color;
+	color.r=hex>>16;
+	color.g=(hex>>8) & 0xFF;
+	color.b=hex & 0xFF;
+	return color;
+}
+
 ofColor ofxHexStringToColor(string color) {
 	
 	int r,g,b;

@@ -15,9 +15,10 @@
 class ofxButton {
 
 	public:
-	ofxButton(ofRectangle rect,ofColor color);
+	ofxButton(ofRectangle rect,ofColor color=ofColor());
 	void draw();
 	void setDown(bool bDown);
+	void setColor(ofColor color);
 
 	private:
 	

@@ -42,3 +42,7 @@ void ofxButton::draw() {
 void ofxButton::setDown(bool bDown){
  	this->bDown = bDown;
 }
+
+void ofxButton::setColor(ofColor color) {
+	this->color = color;
+}
