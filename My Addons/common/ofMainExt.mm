@@ -128,3 +128,10 @@ ofColor ofxHexStringToColor(string color) {
 	return c;
 }
 
+string ofxIntToString(int x,int pad) {
+    string res = ofToString(x);
+    while (res.length()<pad) {
+        res='0'+res;
+    }
+    return res;
+}

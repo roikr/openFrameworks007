@@ -26,3 +26,4 @@ void setiPhoneDataPath();
 
 ofColor ofxHexToColor(int hex);
 ofColor ofxHexStringToColor(string color); 
+string ofxIntToString(int val,int pad);
