@@ -28,7 +28,9 @@ enum {
 };
 
 enum {
-	CAMERA_IDLE,
+    CAMERA_NONE,
+    CAMERA_READY,
+    CAMERA_STARTED,
 	CAMERA_RUNNING,
 	CAMERA_CAPTURING,
 	CAMERA_RECORDING
@@ -42,6 +44,8 @@ public:
 	//~ofxiPhoneClipper();
 	
 	void setup(ofxiPhoneVideo *video,int cameraPosition,float scale);
+    void setOffset(ofPoint &offset);
+    
 	void update();
 	void render();
 	void draw();
@@ -51,9 +55,6 @@ public:
 		
 	void startCamera();
 	void stopCamera();
-	
-	
-	
 	void startCapture();
 	void stopCapture();
 	void record();
@@ -69,8 +70,7 @@ public:
 	int getCameraWidth();
 	int getCameraHeight();
 	
-	bool getIsReady();
-	void setOffset(ofPoint &offset);
+	
 	
 protected:
 	
@@ -102,6 +102,8 @@ protected:
 	ofRectangle rect;
 	float scale;
 	
+    bool bOffsetChanged;
+    bool bStartCapture;
 	
 	
 };

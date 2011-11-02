@@ -133,7 +133,8 @@ void ofxiVideoPlayer::draw() {
 
 
 void ofxiVideoPlayer::drawFrame(int frame) {
-	drawTexture(video->textures[frame]);
+    if (video->textures.size())
+        drawTexture(video->textures[frame]);
 }
 
 void ofxiVideoPlayer::drawTexture(int texture) {
@@ -261,13 +262,16 @@ void ofxiVideoPlayer::preProcess() {
 //}
 
 void ofxiVideoPlayer::play(float speed) {
-	state = PLAYER_PLAYING;
-	start = ofGetElapsedTimeMillis();
-	currentTexture = video->textures[video->firstFrame];
-	currentFrame = 0;
-//	pos = 0;
-	this->speed = speed;
-//	this->volume = volume;
+    if (video->textures.size()) {
+    
+        state = PLAYER_PLAYING;
+        start = ofGetElapsedTimeMillis();
+        currentTexture = video->textures[video->firstFrame];
+        currentFrame = 0;
+    //	pos = 0;
+        this->speed = speed;
+    //	this->volume = volume;
+    }
 }
 
 bool ofxiVideoPlayer::getIsPlaying() {
@@ -278,20 +282,25 @@ bool ofxiVideoPlayer::getIsPlaying() {
 
 
 void ofxiVideoPlayer::playIntro() {
-	state = PLAYER_INTRO_FORWARD;
-	start = ofGetElapsedTimeMillis();
-	
-	int introFirst = (video->firstFrame-video->numIntroFrames+video->textures.size()) % video->textures.size();
-	currentTexture = video->textures[introFirst];
-//	ofLog(OF_LOG_VERBOSE, "playIntro: first: %i, introFrames: %i, size: %i, introFirst: %i, currentTexture: %i",video->firstFrame,video->numIntroFrames,video->textures.size(),introFirst,currentTexture);
-	currentFrame = 0;
-	speed = introSpeed;
+    if (video->textures.size()) {
+    
+        state = PLAYER_INTRO_FORWARD;
+        start = ofGetElapsedTimeMillis();
+        
+        int introFirst = (video->firstFrame-video->numIntroFrames+video->textures.size()) % video->textures.size();
+        currentTexture = video->textures[introFirst];
+    //	ofLog(OF_LOG_VERBOSE, "playIntro: first: %i, introFrames: %i, size: %i, introFirst: %i, currentTexture: %i",video->firstFrame,video->numIntroFrames,video->textures.size(),introFirst,currentTexture);
+        currentFrame = 0;
+        speed = introSpeed;
+    }
 }
 
 
 void ofxiVideoPlayer::introFrame() {
-	
-	currentTexture =video->textures[(video->textures.size()+video->firstFrame-video->numIntroFrames) % video->textures.size()];
+	if (video->textures.size()) {
+        currentTexture =video->textures[(video->textures.size()+video->firstFrame-video->numIntroFrames) % video->textures.size()];
+
+    }
 }
 
 /*

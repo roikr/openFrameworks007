@@ -17,9 +17,9 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxiPhonevideo.h"
 
+#define LOG_VIDEO_GRABBER
 
-ofxiVideoGrabber::ofxiVideoGrabber() {
-	state = CAMERA_IDLE;
+ofxiVideoGrabber::ofxiVideoGrabber():state(CAMERA_NONE),offset(ofPoint(0,0)),bStartCapture(false) {
 }
 
 int ofxiVideoGrabber::getState() {
@@ -39,154 +39,82 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition,float scal
 	
 	this->video = video;
 	this->scale = scale;
+    
+    state = CAMERA_READY;
 }
 
-
-void ofxiVideoGrabber::suspend() {
-	
-	stopCapture();
-	
-	for (vector<int>::iterator iter=video->textures.begin(); iter!=video->textures.end(); iter++) {
-		GLuint texture = *iter;
-		glDeleteTextures(1, &texture);
-		printf("delete texture: %i\n",texture);
-	}
-	video->textures.clear();
-}
-
-
-//void ofxiVideoGrabber::setCameraPosition(int cameraPosition) {
-//	
-//}
-
-
-void ofxiVideoGrabber::drawFullCamera() {
-	
-
-	float w = 480; // normalizing each camera to 480 * 360
-	float h = (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
-	
-	
-	glEnable(GL_TEXTURE_2D);
-	
-	// bind the texture
-	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture );
-	
-	GLfloat px0 = 0;		// up to you to get the aspect ratio right
-	GLfloat py0 = 0;
-	GLfloat px1 = w;
-	GLfloat py1 = h;
-	
-			
-	
-	GLfloat tx0 = 0;
-	GLfloat ty0 = 1;
-	GLfloat tx1 = 1;
-	GLfloat ty1 = 0;
-	
-	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
-		tx0 = 0;
-		ty0 = 0;
-		tx1 = 1;
-		ty1 = 1;
-	}
-	
-	
-//	glScalef(0.5, 0.5, 0);
-	//glTranslatef(x,y,0.0f);
-	
-	GLfloat tex_coords[] = {
-		tx0,ty0,
-		tx1,ty0,
-		tx1,ty1,
-		tx0,ty1
-	};
-	GLfloat verts[] = {
-		px0,py0,
-		px1,py0,
-		px1,py1,
-		px0,py1
-	};
-	
-	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
-	glEnableClientState(GL_VERTEX_ARRAY);		
-	glVertexPointer(2, GL_FLOAT, 0, verts );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
-	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-	
-	
-	glBindTexture(GL_TEXTURE_2D, 0 );
-	glDisable(GL_TEXTURE_2D);
-	
+void ofxiVideoGrabber::setOffset(ofPoint &offset) {
+    
+	this->offset = offset;
+	bOffsetChanged = true;
 	
 }
 
-void ofxiVideoGrabber::drawCamera() {
-	
-	if (!getIsReady()) {
-		return;
-	}
-	
-	
-	
-	
-	glEnable(GL_TEXTURE_2D);
-	
-	// bind the texture
-	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture );
-	
-	GLfloat px0 = 0;		// up to you to get the aspect ratio right
-	GLfloat py0 = 0;
-	GLfloat px1 = video->textureWidth/scale;
-	GLfloat py1 = video->textureHeight/scale;
-	
-	
-	GLfloat tx0 = rect.x;
-	GLfloat ty0 = rect.y+rect.height/scale;
-	GLfloat tx1 = rect.x+rect.width/scale;
-	GLfloat ty1 = rect.y;
-	
-	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
-		ty0 = rect.y;
-		ty1 = rect.y+rect.height/scale;
-	}
-	
-	 
-	//	glScalef(0.5, 0.5, 0);
-	//glTranslatef(x,y,0.0f);
-	
-	GLfloat tex_coords[] = {
-		tx0,ty0,
-		tx1,ty0,
-		tx1,ty1,
-		tx0,ty1
-	};
-	GLfloat verts[] = {
-		px0,py0,
-		px1,py0,
-		px1,py1,
-		px0,py1
-	};
-	
-	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
-	glEnableClientState(GL_VERTEX_ARRAY);		
-	glVertexPointer(2, GL_FLOAT, 0, verts );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
-	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-	
-	
-	
-	glBindTexture(GL_TEXTURE_2D, 0 );
-	glDisable(GL_TEXTURE_2D);
-	
-	
+void ofxiVideoGrabber::update() {
+    if (state==CAMERA_STARTED && videoTexture.CameraTexture) {
+#ifdef LOG_VIDEO_GRABBER
+        printf("CAMERA_RUNNING\n");
+#endif
+        state=CAMERA_RUNNING;
+    }
+    
+    if (state>=CAMERA_RUNNING && bOffsetChanged) {
+#ifdef LOG_VIDEO_GRABBER
+        printf("OffsetChanged\n");
+#endif
+        bOffsetChanged = false;
+        float w = 480; // normalizing each camera to 480 * 360
+        float h = (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
+        
+        rect.x = offset.x/w;
+        rect.y = offset.y/h;
+        rect.width = (float)video->textureWidth / w;
+        rect.height = (float)video->textureHeight / h;
+
+    }
+    
+    if (state==CAMERA_RUNNING && bStartCapture) {
+#ifdef LOG_VIDEO_GRABBER
+        printf("CAMERA_CAPTURING\n");
+#endif
+        bStartCapture = false;
+        if (video->textures.empty()) {
+            for (int i=0; i<video->numFrames; i++) {
+                
+                GLuint texture;
+                
+                glGenTextures(1, &texture);
+                glBindTexture(GL_TEXTURE_2D, texture);
+                
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
+                
+                glBindTexture(GL_TEXTURE_2D, 0);
+                
+                printf("creating texture: %i\n",texture);
+                
+                //		fbo.begin(texture);
+                //		fbo.end();
+                
+                video->textures.push_back(texture);
+                
+            }
+        }
+        
+        state = CAMERA_CAPTURING;
+        
+        currentFrame = 0;
+        
+        cameraFrame = videoTexture.currentFrame-1;
+    }
+
 }
+
 
 void ofxiVideoGrabber::render() {
+    
 	
-	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)) {
+	if (state >= CAMERA_CAPTURING) {
 		
 		if  (cameraFrame != videoTexture.currentFrame ) {
 		
@@ -220,31 +148,130 @@ void ofxiVideoGrabber::render() {
 }
 
 
-
 void ofxiVideoGrabber::draw() {
-	
-	if ((state == CAMERA_RECORDING || state == CAMERA_CAPTURING)) {
-		
-		drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
-	} else {
-		glPushMatrix();
+    if (state==CAMERA_RUNNING) {
+        glPushMatrix();
 		glScalef(scale, scale, 1.0);
 		drawCamera();
 		glPopMatrix();
-	}
+    }
 	
+    if (state >= CAMERA_CAPTURING) {
+		drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
+	} 
 	
 	//	if (video->bMirrored) {
 	//		glTranslatef(video->width, 0, 0);
 	//		glScalef(-1.0, 1.0, 1.0);
 	//	}
 	
+}
+
+
+void ofxiVideoGrabber::suspend() {
+    
+    if (state>=CAMERA_CAPTURING) {
+        stopCapture();
+    }
+	
+    if (state>CAMERA_NONE) {
+        for (vector<int>::iterator iter=video->textures.begin(); iter!=video->textures.end(); iter++) {
+            GLuint texture = *iter;
+            glDeleteTextures(1, &texture);
+            printf("delete camera texture: %i\n",texture);
+        }
+        video->textures.clear();
+    }
+	
+	
+}
+
+	
+
+void ofxiVideoGrabber::exit() {
+    if (state==CAMERA_NONE) {
+        return;
+    }
+	stopCamera();
+	[videoTexture release];
+	videoTexture = nil;
 	
 }
 
 
+void ofxiVideoGrabber::startCamera() {
+    if (state==CAMERA_READY) {
+#ifdef LOG_VIDEO_GRABBER
+        printf("startCamera\n");
+#endif
+        [videoTexture._session startRunning];
+        state = CAMERA_STARTED;
+    }
+}
+
+void ofxiVideoGrabber::stopCamera() {
+    if (state>=CAMERA_RUNNING) {
+    	
+        if([videoTexture._session isRunning])
+            [videoTexture._session stopRunning];
+        
+        state = CAMERA_READY;
+//	fbo.release();
+    }
+
+}
+
+
+void ofxiVideoGrabber::startCapture() {
+    // roikr: need to startCamera before
+    bStartCapture = true;
+		
+}
+
+void ofxiVideoGrabber::stopCapture() {
+    if (state>=CAMERA_CAPTURING) {
+        state = CAMERA_RUNNING;
+    }
+    // roikr: don't change state when IDLE if so - it won't start (startCamera)
+}
+
+void ofxiVideoGrabber::record() {
+// roikr: audio fix	
+//	video->audio.record();
+    
+    if (state==CAMERA_CAPTURING) {
+        firstFrame = currentFrame-1;
+        video->firstFrame = (currentFrame-1) % video->numFrames;
+        
+        state = CAMERA_RECORDING;
+        
+        ofLog(OF_LOG_VERBOSE, "ofxiVideoGrabber::record, first frame: %i", firstFrame);
+
+    }
+}
+
+
+bool ofxiVideoGrabber::cameraToggle() {
+	return state>=CAMERA_RUNNING ? [videoTexture cameraToggle] == YES : false;
+}
+
+
+int ofxiVideoGrabber::getCameraWidth() {
+    
+	return state>=CAMERA_RUNNING ? 480 : 0;
+}
+
+int ofxiVideoGrabber::getCameraHeight() {
+    
+	float w = 480; // normalizing each camera to 480 * 360
+	return  state>=CAMERA_RUNNING ?  (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w : 0;
+
+}
+
+
+
+
 void ofxiVideoGrabber::drawTexture(int texture) {
-	
 	
 	if (!video->bHorizontal) {
 		ofTranslate(video->textureHeight, 0, 0);
@@ -295,184 +322,126 @@ void ofxiVideoGrabber::drawTexture(int texture) {
 	//	//	}
 	//	
 	//	glPopMatrix();
-
+    
 	
 }
 
-
-
+void ofxiVideoGrabber::drawFullCamera() {
 	
-
-void ofxiVideoGrabber::exit() {
-	stopCamera();
-	[videoTexture release];
-	videoTexture = nil;
-	
-}
-
-//void ofxiVideoGrabber::audioReceived( float * input, int bufferSize) {
-//	if( video->audio.getBufferSize() != bufferSize ){
-//		ofLog(OF_LOG_ERROR, "ofxiVideoGrabber: your buffer size was set to %i - but the stream needs a buffer size of %i", video->audio.getBufferSize(), bufferSize);
-//		return;
-//	}	
-//	
-//	if (video->audio.getIsRecording()) {
-//		video->audio.audioReceived(input,bufferSize);
-//		if (!video->audio.getIsRecording()) {
-//			grabber.stop();
-//			video->audio.normalize();
-//		}
-//	}
-//	
-////	if (getState()==CAMERA_RECORDING) {
-////		
-////		for (int i = 0; i < bufferSize; i++){
-////			video->sample[video->audio.getBufferSize()*currentBuffer+i] = input[i];
-////		}
-////		currentBuffer++;
-////		
-////		if (currentBuffer>=video->numBuffers) {
-////			state = CAMERA_RUNNING;
-////		}
-////	}
-//	
-//	
-//	//scaledSamples.push_front(max);
-//	
-//	
-//}
-
-
-
-
-void ofxiVideoGrabber::startCamera() {
-	
-	if (getState()!=CAMERA_IDLE)
-		return;
-	
-//	fbo.setup();
-	
-//	for (vector<int>::iterator tex=video->textures.begin(); tex!=video->textures.end(); tex++) {
-//		fbo.begin(*tex);
-//		fbo.end();
-//
-//	}
-	
-	[videoTexture._session startRunning];
-	state = CAMERA_RUNNING;
-	
-}
-
-void ofxiVideoGrabber::stopCamera() {
-	
-	if (getState()==CAMERA_IDLE)
-		return;
-	
-	if([videoTexture._session isRunning])
-		[videoTexture._session stopRunning];
-	
-	state = CAMERA_IDLE;
-//	fbo.release();
-}
-
-
-void ofxiVideoGrabber::startCapture() {
-	
-	if (getState() == CAMERA_IDLE) { // roikr: need to startCamera before
-		return;  
-	}
-	
-	if (video->textures.empty()) {
-		for (int i=0; i<video->numFrames; i++) {
-			
-			GLuint texture;
-			
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
-			
-			glBindTexture(GL_TEXTURE_2D, 0);
-			
-			printf("creating texture: %i\n",texture);
-			
-			//		fbo.begin(texture);
-			//		fbo.end();
-			
-			video->textures.push_back(texture);
-			
-		}
-	}
-	
-	
-	
-	state = CAMERA_CAPTURING;
-	
-	currentFrame = 0;
-	
-	cameraFrame = videoTexture.currentFrame-1;
-}
-
-void ofxiVideoGrabber::stopCapture() {
-	if (state == CAMERA_IDLE) {
-		return; // roikr: don't change state when IDLE if so - it won't start (startCamera)
-	}
-	state = CAMERA_RUNNING;
-}
-
-void ofxiVideoGrabber::record() {
-// roikr: audio fix	
-//	video->audio.record();
-	
-	if (getState() == CAMERA_IDLE) { // roikr: need to startCamera before
-		return;  
-	}
-		
-	firstFrame = currentFrame-1;
-	video->firstFrame = (currentFrame-1) % video->numFrames;
-	
-	state = CAMERA_RECORDING;
-	
-	ofLog(OF_LOG_VERBOSE, "ofxiVideoGrabber::record, first frame: %i", firstFrame);
-	
-}
-
-
-bool ofxiVideoGrabber::cameraToggle() {
-	return [videoTexture cameraToggle] == YES;
-}
-
-
-int ofxiVideoGrabber::getCameraWidth() {
-	return 480;
-}
-
-int ofxiVideoGrabber::getCameraHeight() {
-	float w = 480; // normalizing each camera to 480 * 360
-	return  (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
-
-}
-
-
-
-bool ofxiVideoGrabber::getIsReady() {
-	return videoTexture.CameraTexture;
-}
-
-void ofxiVideoGrabber::setOffset(ofPoint &offset) {
-	this->offset = offset;
-	
-	
+    
 	float w = 480; // normalizing each camera to 480 * 360
 	float h = (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
 	
-	rect.x = offset.x/w;
-	rect.y = offset.y/h;
-	rect.width = (float)video->textureWidth / w;
-	rect.height = (float)video->textureHeight / h;
+	
+	glEnable(GL_TEXTURE_2D);
+	
+	// bind the texture
+	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture );
+	
+	GLfloat px0 = 0;		// up to you to get the aspect ratio right
+	GLfloat py0 = 0;
+	GLfloat px1 = w;
+	GLfloat py1 = h;
+	
+    
+	
+	GLfloat tx0 = 0;
+	GLfloat ty0 = 1;
+	GLfloat tx1 = 1;
+	GLfloat ty1 = 0;
+	
+	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
+		tx0 = 0;
+		ty0 = 0;
+		tx1 = 1;
+		ty1 = 1;
+	}
+	
+	
+    //	glScalef(0.5, 0.5, 0);
+	//glTranslatef(x,y,0.0f);
+	
+	GLfloat tex_coords[] = {
+		tx0,ty0,
+		tx1,ty0,
+		tx1,ty1,
+		tx0,ty1
+	};
+	GLfloat verts[] = {
+		px0,py0,
+		px1,py0,
+		px1,py1,
+		px0,py1
+	};
+	
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
+	
+	glBindTexture(GL_TEXTURE_2D, 0 );
+	glDisable(GL_TEXTURE_2D);
+	
 	
 }
 
+void ofxiVideoGrabber::drawCamera() {
+	
+    
+	glEnable(GL_TEXTURE_2D);
+	
+	// bind the texture
+	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture );
+	
+	GLfloat px0 = 0;		// up to you to get the aspect ratio right
+	GLfloat py0 = 0;
+	GLfloat px1 = video->textureWidth/scale;
+	GLfloat py1 = video->textureHeight/scale;
+	
+	
+	GLfloat tx0 = rect.x;
+	GLfloat ty0 = rect.y+rect.height/scale;
+	GLfloat tx1 = rect.x+rect.width/scale;
+	GLfloat ty1 = rect.y;
+	
+	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
+		ty0 = rect.y;
+		ty1 = rect.y+rect.height/scale;
+	}
+	
+    
+	//	glScalef(0.5, 0.5, 0);
+	//glTranslatef(x,y,0.0f);
+	
+	GLfloat tex_coords[] = {
+		tx0,ty0,
+		tx1,ty0,
+		tx1,ty1,
+		tx0,ty1
+	};
+	GLfloat verts[] = {
+		px0,py0,
+		px1,py0,
+		px1,py1,
+		px0,py1
+	};
+	
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
+	
+	
+	glBindTexture(GL_TEXTURE_2D, 0 );
+	glDisable(GL_TEXTURE_2D);
+	
+	
+}
 
 
