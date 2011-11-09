@@ -11,6 +11,8 @@
 #include "ofMain.h"
 
 int orientation = OFXIPHONE_ORIENTATION_PORTRAIT;
+int wideDimension = 960;
+int narrowDimension = 640;
 
 void ofxiPhoneSetOrientation(UIDeviceOrientation newOrientation) {
 	orientation = newOrientation;
@@ -38,4 +40,9 @@ void ofxiPhoneSetOrientation(UIDeviceOrientation newOrientation) {
 
 UIDeviceOrientation ofxiPhoneGetOrientation() {
 	return (UIDeviceOrientation)orientation;
+}
+
+void ofxiPhoneSetDimesions(int wide,int narrow) {
+    wideDimension = wide;
+    narrowDimension = narrow;
 }

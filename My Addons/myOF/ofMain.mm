@@ -359,11 +359,12 @@ int ofGetElapsedTimeMillis(){
 
 
 int ofGetWidth() {
-	return orientation == OFXIPHONE_ORIENTATION_PORTRAIT || orientation == OFXIPHONE_ORIENTATION_UPSIDEDOWN ? 320 : 480;
+
+    return orientation == OFXIPHONE_ORIENTATION_PORTRAIT || orientation == OFXIPHONE_ORIENTATION_UPSIDEDOWN ? narrowDimension : wideDimension;
 }
 
 int ofGetHeight() {
-	return orientation == OFXIPHONE_ORIENTATION_PORTRAIT || orientation == OFXIPHONE_ORIENTATION_UPSIDEDOWN ? 480 : 320;
+    return orientation == OFXIPHONE_ORIENTATION_PORTRAIT || orientation == OFXIPHONE_ORIENTATION_UPSIDEDOWN ? wideDimension : narrowDimension;
 }
 
 float 		ofGetFrameRate() {

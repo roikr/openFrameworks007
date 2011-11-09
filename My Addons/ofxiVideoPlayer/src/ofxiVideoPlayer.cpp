@@ -155,8 +155,8 @@ void ofxiVideoPlayer::drawTexture(int texture) {
 		0,v,   
 		0.0f,0,};
 	
-	float w = video->textureWidth*u;//ofGetWidth()/2;
-	float h = video->textureHeight*v;//(float)ofGetWidth()/(float)width*(float)height/2;
+	float w = video->textureWidth*u;
+	float h = video->textureHeight*v;
 	
 	GLfloat spriteVertices[] =  {
 		w,h,0,   

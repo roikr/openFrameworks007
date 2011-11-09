@@ -12,6 +12,8 @@
 #import <UIKit/UIKit.h>
 
 extern int orientation;
+extern int wideDimension;
+extern int narrowDimension;
 
 // possible values for iPhoneSetOrientation or iPhoneGetOrientation
 #define	OFXIPHONE_ORIENTATION_PORTRAIT			UIDeviceOrientationPortrait
@@ -22,3 +24,6 @@ extern int orientation;
 
 void ofxiPhoneSetOrientation(UIDeviceOrientation newOrientation);
 UIDeviceOrientation ofxiPhoneGetOrientation();
+
+void ofxiPhoneSetDimesions(int wide,int narrow);
+
