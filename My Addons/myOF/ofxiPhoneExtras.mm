@@ -42,7 +42,7 @@ UIDeviceOrientation ofxiPhoneGetOrientation() {
 	return (UIDeviceOrientation)orientation;
 }
 
-void ofxiPhoneSetDimesions(int wide,int narrow) {
+void ofxiPhoneSetDimensions(int wide,int narrow) {
     wideDimension = wide;
     narrowDimension = narrow;
 }

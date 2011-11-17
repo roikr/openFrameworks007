@@ -25,5 +25,5 @@ extern int narrowDimension;
 void ofxiPhoneSetOrientation(UIDeviceOrientation newOrientation);
 UIDeviceOrientation ofxiPhoneGetOrientation();
 
-void ofxiPhoneSetDimesions(int wide,int narrow);
+void ofxiPhoneSetDimensions(int wide,int narrow);
 
