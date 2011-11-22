@@ -170,15 +170,12 @@ void ofxiVideoGrabber::draw() {
 
 void ofxiVideoGrabber::suspend() {
     
-    if (state>=CAMERA_CAPTURING) {
-        stopCapture();
-    }
-	
+    
     if (state>CAMERA_NONE) {
         for (vector<int>::iterator iter=video->textures.begin(); iter!=video->textures.end(); iter++) {
             GLuint texture = *iter;
             glDeleteTextures(1, &texture);
-            printf("delete camera texture: %i\n",texture);
+//            printf("delete camera texture: %i\n",texture);
         }
         video->textures.clear();
     }
@@ -229,7 +226,7 @@ void ofxiVideoGrabber::startCapture() {
 }
 
 void ofxiVideoGrabber::stopCapture() {
-    if (state>=CAMERA_CAPTURING) {
+    if (state>CAMERA_RUNNING) {
         state = CAMERA_RUNNING;
     }
     // roikr: don't change state when IDLE if so - it won't start (startCamera)
