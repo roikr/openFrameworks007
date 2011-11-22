@@ -55,3 +55,7 @@ void ofxTexturesVector::draw() {
     }
 }
 
+int ofxTexturesVector::getNumTextures() {
+    return textures.size();
+}
+

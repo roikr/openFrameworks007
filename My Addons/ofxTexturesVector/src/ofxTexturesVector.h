@@ -26,6 +26,7 @@ class ofxTexturesVector {
     
     void setTexture(int i);
 	void draw();
+    int getNumTextures();
 		
 protected:
 	
