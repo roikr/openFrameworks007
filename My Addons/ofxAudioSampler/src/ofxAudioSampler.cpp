@@ -108,6 +108,10 @@ void ofxAudioSampler::record() {
 	
 }
 
+void ofxAudioSampler::stop() {
+	bRecording = false;
+}
+
 /*
 void ofxAudioSampler::play(float speed) {
 	state = SAMPLER_PLAYING;

@@ -22,6 +22,7 @@ public:
 	void audioReceived( float * input, int bufferSize);
 		
 	void record();
+    void stop();
 //	void play(float speed);
 	
 	void normalize();
