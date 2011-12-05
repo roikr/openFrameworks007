@@ -36,6 +36,7 @@ public:
 	ofxiVideoGrabber grabber;
 	ofxiVideoPlayer player;
 	
+	bool bCameraOffset;
 	bool bRecording;
 };
 

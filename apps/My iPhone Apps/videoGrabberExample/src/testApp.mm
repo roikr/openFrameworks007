@@ -1,6 +1,7 @@
 #include "testApp.h"
 
 #include "ofxiPhoneVideo.h"
+#import "EAGLView.h"
 
 
 //--------------------------------------------------------------
@@ -16,6 +17,8 @@ void testApp::setup(){
 	
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
 	
+	printf("width: %i, height %i\n",ofGetWidth(),ofGetHeight());
+	
 	vagRounded.loadFont("vag.ttf", 18);
 	ofBackground(50,50,50);	
 	
@@ -25,11 +28,8 @@ void testApp::setup(){
 	
 	video.fps = 25;
 	video.numIntroFrames = 4;
-	
 	video.numFrames = 25;
 	video.sampleLength = 1000*video.numFrames/video.fps;
-	
-
 	video.widthFraction = 1.0;
 	video.heightFraction = 1.0;
 	video.textureWidth = 128;
@@ -38,18 +38,40 @@ void testApp::setup(){
 	video.bFlipHoriznotal = false;
 	
 	grabber.setup(&video,FRONT_CAMERA);
-	grabber.startCamera();
+	
 	
 	
 	player.setup(&video,true);
 	bRecording = false;
 	
-	grabber.startCapture();
+	bCameraOffset = false;
 	
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+	
+	
+	if  (grabber.getState() == CAMERA_READY) {
+        grabber.startCamera();
+    }
+        
+    grabber.update();
+    
+    if (!bCameraOffset  && grabber.getState() >= CAMERA_RUNNING) {
+        bCameraOffset = true;
+        ofPoint offset;
+        float scale = 0.75;
+        offset = ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2);
+		
+		
+		grabber.setTransform(offset,scale);
+        grabber.startCapture();
+		player.stop();
+        
+		
+	}
+	
 	counter = counter + 0.033f;
 	player.update();
 	
@@ -75,25 +97,37 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-	grabber.render(ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2));
+	grabber.render(); //ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2));
+	[ofxiPhoneGetGLView() startRender];
+	
+	glViewport(0, 0, ofGetWidth(), ofGetHeight());
+	
+	
+	glMatrixMode (GL_PROJECTION);
+	glLoadIdentity ();
+	gluOrtho2D (0, ofGetWidth(), 0, ofGetHeight());
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity(); 
+	glScalef(1.0, -1.0,1.0);
+	glTranslatef(0, -ofGetHeight(), 0);
 	
 	ofBackground(0,0,0);	
 	ofSetColor(0xffffff);
 	
-	grabber.drawCamera();
-	grabber.draw();
+	ofPushMatrix();
+    
+	if (grabber.getState()>=CAMERA_CAPTURING) {
+		grabber.draw();
+	} else
+		if (!video.textures.empty()) {
+			player.draw();
+		}
+	ofPopMatrix();
 	
-//	if (grabber.getState() == CAMERA_CAPTURING || grabber.getState()==CAMERA_RECORDING) {
-//		grabber.draw();
-//	} else {
-//		player.draw();
-//	}
 
-	
+//	ofTranslate(-60, -60, 0);
 
-	ofTranslate(-60, -60, 0);
-
-	sprintf (timeString, "time: %0.2i:%0.2i:%0.2i \nelapsed time %i", ofGetHours(), ofGetMinutes(), ofGetSeconds(), ofGetElapsedTimeMillis());
+	sprintf (timeString, "time: %i:%i:%i \nelapsed time %i", ofGetHours(), ofGetMinutes(), ofGetSeconds(), ofGetElapsedTimeMillis());
 	
 	ofSetColor(0xffffff);
 	vagRounded.drawString(eventString, 98,198);
