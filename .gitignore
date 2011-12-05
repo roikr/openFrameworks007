@@ -4,3 +4,5 @@ other/
 scripts/
 readme.txt
 xcode templates/
+.DS_Store
+readme.iphone
