@@ -17,7 +17,7 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxiPhonevideo.h"
 
-#define LOG_VIDEO_GRABBER
+//#define LOG_VIDEO_GRABBER
 
 ofxiVideoGrabber::ofxiVideoGrabber():state(CAMERA_NONE),offset(ofPoint(0,0)),bStartCapture(false) {
 }
@@ -27,7 +27,7 @@ int ofxiVideoGrabber::getState() {
 }
 	
 
-void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition,float scale) {
+void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition) {
 	
 	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps devicePosition:cameraPosition == FRONT_CAMERA ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack] retain];
 	
@@ -43,8 +43,8 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition,float scal
     state = CAMERA_READY;
 }
 
-void ofxiVideoGrabber::setOffset(ofPoint &offset) {
-    
+void ofxiVideoGrabber::setTransform(ofPoint &offset,float scale) {
+    this->scale = scale;
 	this->offset = offset;
 	bOffsetChanged = true;
 	
@@ -90,9 +90,9 @@ void ofxiVideoGrabber::update() {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, video->textureWidth, video->textureHeight, 0,  GL_RGBA, GL_UNSIGNED_BYTE, NULL);     // check if this is right
                 
                 glBindTexture(GL_TEXTURE_2D, 0);
-                
+#ifdef LOG_VIDEO_GRABBER                
                 printf("creating texture: %i\n",texture);
-                
+#endif                
                 //		fbo.begin(texture);
                 //		fbo.end();
                 

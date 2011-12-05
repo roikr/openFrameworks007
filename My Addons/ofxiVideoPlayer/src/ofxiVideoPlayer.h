@@ -28,6 +28,7 @@ public:
 	
 	//void play(int note,int velocity);
 	void play(float speed);
+    void stop();
 	bool getIsPlaying();
 	
 	void updateFrame();
@@ -35,7 +36,7 @@ public:
 	//void firstFrame();
 
 	
-	void introFrame();
+	
 	void playIntro();
 	
 		

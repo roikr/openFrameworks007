@@ -43,8 +43,8 @@ public:
 	ofxiVideoGrabber();
 	//~ofxiPhoneClipper();
 	
-	void setup(ofxiPhoneVideo *video,int cameraPosition,float scale);
-    void setOffset(ofPoint &offset);
+	void setup(ofxiPhoneVideo *video,int cameraPosition);
+    void setTransform(ofPoint &offset,float scale);
     
 	void update();
 	void render();

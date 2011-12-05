@@ -21,9 +21,12 @@ extern int narrowDimension;
 #define OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT	UIDeviceOrientationLandscapeRight
 #define OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT	UIDeviceOrientationLandscapeLeft
 
+#define OFXIPHONE_USER_INTERFACE_PAD UIUserInterfaceIdiomPad
+#define OFXIPHONE_USER_INTERFACE_PHONE UIUserInterfaceIdiomPhone
 
 void ofxiPhoneSetOrientation(UIDeviceOrientation newOrientation);
 UIDeviceOrientation ofxiPhoneGetOrientation();
+UIUserInterfaceIdiom ofxiPhoneGetUserInterface();
 
 void ofxiPhoneSetDimensions(int wide,int narrow);
 
