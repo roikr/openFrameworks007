@@ -31,10 +31,6 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition) {
 	
 	videoTexture = [[[MyVideoBuffer alloc] initWithFPS:video->fps devicePosition:cameraPosition == FRONT_CAMERA ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack] retain];
 	
-	
-	
-//	fbo.setup();
-	
 	fbo.setup(video->textureWidth, video->textureHeight);
 	
 	this->video = video;
@@ -46,7 +42,6 @@ void ofxiVideoGrabber::setup(ofxiPhoneVideo *video,int cameraPosition) {
 void ofxiVideoGrabber::setTransform(ofPoint &offset,float scale) {
     this->scale = scale;
 	this->offset = offset;
-	bOffsetChanged = true;
 	
 }
 
@@ -57,22 +52,7 @@ void ofxiVideoGrabber::update() {
 #endif
         state=CAMERA_RUNNING;
     }
-    
-    if (state>=CAMERA_RUNNING && bOffsetChanged) {
-#ifdef LOG_VIDEO_GRABBER
-        printf("OffsetChanged\n");
-#endif
-        bOffsetChanged = false;
-        float w = 480; // normalizing each camera to 480 * 360
-        float h = (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
         
-        rect.x = offset.x/w;
-        rect.y = offset.y/h;
-        rect.width = (float)video->textureWidth / w;
-        rect.height = (float)video->textureHeight / h;
-
-    }
-    
     if (state==CAMERA_RUNNING && bStartCapture) {
 #ifdef LOG_VIDEO_GRABBER
         printf("CAMERA_CAPTURING\n");
@@ -128,7 +108,9 @@ void ofxiVideoGrabber::render() {
 			fbo.begin(texture);	
 			
 			glPushMatrix();
-			glScalef(scale, scale, 1.0);
+			ofScale(scale, scale, 1.0f);
+			ofTranslate(-offset.x, -offset.y, 0.0f);
+			
 			drawCamera();
 			glPopMatrix();
 			
@@ -145,26 +127,6 @@ void ofxiVideoGrabber::render() {
 			fbo.end();
 		}
 	}
-}
-
-
-void ofxiVideoGrabber::draw() {
-    if (state==CAMERA_RUNNING) {
-        glPushMatrix();
-		glScalef(scale, scale, 1.0);
-		drawCamera();
-		glPopMatrix();
-    }
-	
-    if (state >= CAMERA_CAPTURING) {
-		drawTexture(video->textures[(currentFrame-1) % video->numFrames]);
-	} 
-	
-	//	if (video->bMirrored) {
-	//		glTranslatef(video->width, 0, 0);
-	//		glScalef(-1.0, 1.0, 1.0);
-	//	}
-	
 }
 
 
@@ -268,77 +230,78 @@ int ofxiVideoGrabber::getCameraHeight() {
 
 
 
-void ofxiVideoGrabber::drawTexture(int texture) {
+void ofxiVideoGrabber::draw() {
 	
-	if (!video->bHorizontal) {
-		ofTranslate(video->textureHeight, 0, 0);
-		ofRotate(90);
-		
-	}
-	
-	float u = video->widthFraction;
-	float v = video->heightFraction;
-	
-	GLfloat spriteTexcoords[] = {
-		u,v,   
-		u,0.0f,
-		0,v,   
-		0.0f,0,};
-	
-	float w = video->textureWidth*u;
-	float h = video->textureHeight*v;
-	
-	GLfloat spriteVertices[] =  {
-		w,h,0,   
-		w,0,0,   
-		0,h,0, 
-		0,0,0};
+	if (state < CAMERA_CAPTURING) {
+		return;
+	} 
 	
 	
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glEnable(GL_TEXTURE_2D);
-	
-	
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
-	
-	//	glPushMatrix();
-	//	//	if (video->bMirrored) {
-	//	//		glTranslatef(w, 0, 0);
-	//	//		glScalef(-1.0, 1.0, 1.0);
-	//	//	}
-	//	
-	//	glPopMatrix();
-    
-	
-}
-
-void ofxiVideoGrabber::drawFullCamera() {
-	
-    
-	float w = 480; // normalizing each camera to 480 * 360
-	float h = (float)videoTexture.videoDimensions.height / (float)videoTexture.videoDimensions.width * w ;
-	
+	float w = video->textureWidth;
+	float h = video->textureHeight;
 	
 	glEnable(GL_TEXTURE_2D);
 	
 	// bind the texture
-	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture );
+	glBindTexture(GL_TEXTURE_2D, video->textures[(currentFrame-1) % video->numFrames]  );
 	
 	GLfloat px0 = 0;		// up to you to get the aspect ratio right
 	GLfloat py0 = 0;
 	GLfloat px1 = w;
 	GLfloat py1 = h;
+	
+    
+	
+	GLfloat tx0 = 0;
+	GLfloat ty0 = 1;
+	GLfloat tx1 = 1;
+	GLfloat ty1 = 0;
+		
+	
+	GLfloat tex_coords[] = {
+		tx0,ty0,
+		tx1,ty0,
+		tx1,ty1,
+		tx0,ty1
+	};
+	GLfloat verts[] = {
+		px0,py0,
+		px1,py0,
+		px1,py1,
+		px0,py1
+	};
+	
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
+	
+	glBindTexture(GL_TEXTURE_2D, 0 );
+	glDisable(GL_TEXTURE_2D);
+	
+	
+}
+
+void ofxiVideoGrabber::drawCamera() {
+	
+	if (state<CAMERA_RUNNING) {
+		return;
+	}
+    
+		
+	
+	glEnable(GL_TEXTURE_2D);
+	
+	// bind the texture
+	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture);
+	
+	GLfloat px0 = 0;		// up to you to get the aspect ratio right
+	GLfloat py0 = 0;
+	GLfloat px1 = getCameraWidth();
+	GLfloat py1 = getCameraHeight();
 	
     
 	
@@ -385,60 +348,5 @@ void ofxiVideoGrabber::drawFullCamera() {
 	
 }
 
-void ofxiVideoGrabber::drawCamera() {
-	
-    
-	glEnable(GL_TEXTURE_2D);
-	
-	// bind the texture
-	glBindTexture(GL_TEXTURE_2D, videoTexture.CameraTexture );
-	
-	GLfloat px0 = 0;		// up to you to get the aspect ratio right
-	GLfloat py0 = 0;
-	GLfloat px1 = video->textureWidth/scale;
-	GLfloat py1 = video->textureHeight/scale;
-	
-	
-	GLfloat tx0 = rect.x;
-	GLfloat ty0 = rect.y+rect.height/scale;
-	GLfloat tx1 = rect.x+rect.width/scale;
-	GLfloat ty1 = rect.y;
-	
-	if (videoTexture.devicePosition == AVCaptureDevicePositionBack) {
-		ty0 = rect.y;
-		ty1 = rect.y+rect.height/scale;
-	}
-	
-    
-	//	glScalef(0.5, 0.5, 0);
-	//glTranslatef(x,y,0.0f);
-	
-	GLfloat tex_coords[] = {
-		tx0,ty0,
-		tx1,ty0,
-		tx1,ty1,
-		tx0,ty1
-	};
-	GLfloat verts[] = {
-		px0,py0,
-		px1,py0,
-		px1,py1,
-		px0,py1
-	};
-	
-	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
-	glEnableClientState(GL_VERTEX_ARRAY);		
-	glVertexPointer(2, GL_FLOAT, 0, verts );
-	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
-	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-	
-	
-	
-	glBindTexture(GL_TEXTURE_2D, 0 );
-	glDisable(GL_TEXTURE_2D);
-	
-	
-}
 
 

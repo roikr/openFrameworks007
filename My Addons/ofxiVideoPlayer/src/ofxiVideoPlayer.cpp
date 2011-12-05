@@ -136,55 +136,51 @@ void ofxiVideoPlayer::drawFrame(int frame) {
 void ofxiVideoPlayer::drawTexture(int texture) {
 	
 	
-	if (!video->bHorizontal) {
-		ofTranslate(video->textureHeight, 0, 0);
-		ofRotate(90);
-		
-	}
+	float w = video->textureWidth;
+	float h = video->textureHeight;
 	
-	float u = video->widthFraction;
-	float v = video->heightFraction;
-	
-	GLfloat spriteTexcoords[] = {
-		u,v,   
-		u,0.0f,
-		0,v,   
-		0.0f,0,};
-	
-	float w = video->textureWidth*u;
-	float h = video->textureHeight*v;
-	
-	GLfloat spriteVertices[] =  {
-		w,h,0,   
-		w,0,0,   
-		0,h,0, 
-		0,0,0};
-	
-	
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
-	glBindTexture(GL_TEXTURE_2D, texture);
 	glEnable(GL_TEXTURE_2D);
 	
+	// bind the texture
+	glBindTexture(GL_TEXTURE_2D, texture  );
 	
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	GLfloat px0 = 0;		// up to you to get the aspect ratio right
+	GLfloat py0 = 0;
+	GLfloat px1 = w;
+	GLfloat py1 = h;
 	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindTexture(GL_TEXTURE_2D, 0);
+    
+	
+	GLfloat tx0 = 0;
+	GLfloat ty0 = 1;
+	GLfloat tx1 = 1;
+	GLfloat ty1 = 0;
 	
 	
+	GLfloat tex_coords[] = {
+		tx0,ty0,
+		tx1,ty0,
+		tx1,ty1,
+		tx0,ty1
+	};
+	GLfloat verts[] = {
+		px0,py0,
+		px1,py0,
+		px1,py1,
+		px0,py1
+	};
+	
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer(2, GL_FLOAT, 0, tex_coords );
+	glEnableClientState(GL_VERTEX_ARRAY);		
+	glVertexPointer(2, GL_FLOAT, 0, verts );
+	glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	
+	
+	glBindTexture(GL_TEXTURE_2D, 0 );
 	glDisable(GL_TEXTURE_2D);
 	
-	//	glPushMatrix();
-	//	//	if (video->bMirrored) {
-	//	//		glTranslatef(w, 0, 0);
-	//	//		glScalef(-1.0, 1.0, 1.0);
-	//	//	}
-	//	
-	//	glPopMatrix();
 	
 }
 

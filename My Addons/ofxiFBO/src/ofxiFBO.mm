@@ -57,6 +57,9 @@ void ofxiFBO::begin(GLuint texture) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
+	glScalef(1.0, -1.0,1.0);
+	glTranslatef(0, -height, 0);
+	
 	glColor4f(1.0, 1.0, 1.0, 0);
 }
 

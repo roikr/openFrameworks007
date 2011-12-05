@@ -70,13 +70,12 @@ public:
 	int getCameraWidth();
 	int getCameraHeight();
 	
-	
+	void drawCamera();
 	
 protected:
 	
-	void drawFullCamera();
-	void drawCamera();
-	void drawTexture(int texture);
+
+	
 	
 	//int		drawCounter, bufferCounter;
 	//int		currentBuffer;
@@ -99,11 +98,9 @@ protected:
 	ofxiFBO fbo;
 	
 	ofPoint offset;
-	ofRectangle rect;
 	float scale;
 	
-    bool bOffsetChanged;
     bool bStartCapture;
 	
-	
+		
 };

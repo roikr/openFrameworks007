@@ -7,19 +7,16 @@
 //--------------------------------------------------------------
 void testApp::setup(){	
 	// register touch events
-	ofRegisterTouchEvents(this);
-	
-	// initialize the accelerometer
-	ofxAccelerometer.setup();
+	ofxRegisterMultitouch(this);
 	
 	//iPhoneAlerts will be sent to this.
 	ofxiPhoneAlerts.addListener(this);
 	
-	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+//	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
 	
 	printf("width: %i, height %i\n",ofGetWidth(),ofGetHeight());
 	
-	vagRounded.loadFont("vag.ttf", 18);
+	vagRounded.loadFont("vag.ttf", 12);
 	ofBackground(50,50,50);	
 	
 	ofSetFrameRate(60);
@@ -62,7 +59,7 @@ void testApp::update(){
         bCameraOffset = true;
         ofPoint offset;
         float scale = 0.75;
-        offset = ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2);
+        offset = ofPoint((grabber.getCameraWidth()-video.textureWidth/scale)/2,0);
 		
 		
 		grabber.setTransform(offset,scale);
@@ -100,6 +97,7 @@ void testApp::draw(){
 	grabber.render(); //ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2));
 	[ofxiPhoneGetGLView() startRender];
 	
+	
 	glViewport(0, 0, ofGetWidth(), ofGetHeight());
 	
 	
@@ -110,18 +108,22 @@ void testApp::draw(){
 	glLoadIdentity(); 
 	glScalef(1.0, -1.0,1.0);
 	glTranslatef(0, -ofGetHeight(), 0);
-	
+//	
 	ofBackground(0,0,0);	
-	ofSetColor(0xffffff);
+	ofSetHexColor(0xffffff);
 	
 	ofPushMatrix();
-    
+	
+	ofTranslate(ofGetWidth(), 0, 0);
+	ofRotate(90);
+	grabber.drawCamera();
+	
 	if (grabber.getState()>=CAMERA_CAPTURING) {
 		grabber.draw();
-	} else
-		if (!video.textures.empty()) {
-			player.draw();
-		}
+	}
+	else if (!video.textures.empty()) {
+		player.draw();
+	}
 	ofPopMatrix();
 	
 
@@ -129,17 +131,17 @@ void testApp::draw(){
 
 	sprintf (timeString, "time: %i:%i:%i \nelapsed time %i", ofGetHours(), ofGetMinutes(), ofGetSeconds(), ofGetElapsedTimeMillis());
 	
-	ofSetColor(0xffffff);
-	vagRounded.drawString(eventString, 98,198);
+	ofSetHexColor(0xffffff);
+	vagRounded.drawString(eventString, 20,198);
 	
 	ofSetColor(255,122,220);
-	vagRounded.drawString(eventString, 100,200);
+	vagRounded.drawString(eventString, 22,200);
 	
-	ofSetColor(0xffffff);
-	vagRounded.drawString(timeString, 98,98);
+	ofSetHexColor(0xffffff);
+	vagRounded.drawString(timeString, 20,98);
 	
 	ofSetColor(255,122,220);
-	vagRounded.drawString(timeString, 100,100);	
+	vagRounded.drawString(timeString, 22,100);	
 }
 
 //--------------------------------------------------------------
