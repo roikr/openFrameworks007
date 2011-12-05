@@ -63,6 +63,7 @@
 		E42C503E13FD667F009CA603 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E42C502213FD667E009CA603 /* Foundation.framework */; };
 		E42C503F13FD667F009CA603 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E42C502313FD667E009CA603 /* CoreGraphics.framework */; };
 		E42C504013FD667F009CA603 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E42C502413FD667E009CA603 /* CoreLocation.framework */; };
+		E4B6A2E9145F13FA00D1A4B7 /* ofxAudioLimiter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B6A2E7145F13FA00D1A4B7 /* ofxAudioLimiter.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,6 +219,8 @@
 		E42C502213FD667E009CA603 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = ../audioVideoGrabber/iphoneos4.1/System/Library/Frameworks/Foundation.framework; sourceTree = SOURCE_ROOT; };
 		E42C502313FD667E009CA603 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = ../audioVideoGrabber/iphoneos4.1/System/Library/Frameworks/CoreGraphics.framework; sourceTree = SOURCE_ROOT; };
 		E42C502413FD667E009CA603 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = ../audioVideoGrabber/iphoneos4.1/System/Library/Frameworks/CoreLocation.framework; sourceTree = SOURCE_ROOT; };
+		E4B6A2E7145F13FA00D1A4B7 /* ofxAudioLimiter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioLimiter.cpp; sourceTree = "<group>"; };
+		E4B6A2E8145F13FA00D1A4B7 /* ofxAudioLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioLimiter.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,6 +314,7 @@
 		E42C4ED413FD6441009CA603 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4B6A2E5145F13FA00D1A4B7 /* ofxAudioLimiter */,
 				E42C4F9C13FD661A009CA603 /* myOF */,
 				E42C4ED513FD6441009CA603 /* ofxiPhoneVideo */,
 				E42C4ED913FD6441009CA603 /* ofxiVideoGrabber */,
@@ -907,6 +911,24 @@
 			name = "core frameworks";
 			sourceTree = "<group>";
 		};
+		E4B6A2E5145F13FA00D1A4B7 /* ofxAudioLimiter */ = {
+			isa = PBXGroup;
+			children = (
+				E4B6A2E6145F13FA00D1A4B7 /* src */,
+			);
+			name = ofxAudioLimiter;
+			path = "../../../My Addons/ofxAudioLimiter";
+			sourceTree = "<group>";
+		};
+		E4B6A2E6145F13FA00D1A4B7 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4B6A2E7145F13FA00D1A4B7 /* ofxAudioLimiter.cpp */,
+				E4B6A2E8145F13FA00D1A4B7 /* ofxAudioLimiter.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1027,6 +1049,7 @@
 				E42C4F3813FD6441009CA603 /* ofxSlider.cpp in Sources */,
 				E42C4FA113FD661A009CA603 /* ofxRKTexture.mm in Sources */,
 				E42C4FA213FD661A009CA603 /* PVRTexture.m in Sources */,
+				E4B6A2E9145F13FA00D1A4B7 /* ofxAudioLimiter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1100,7 +1123,7 @@
 					"-w",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "325CF5E2-1D8D-40CF-A295-982D0BD65130";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "001009C9-C36E-4DC7-8BD2-8242897A01C6";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1110,7 +1133,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (G22F3GL4MN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (S8LHA25A98)";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1164,7 +1187,7 @@
 					"-w",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "09506734-48DB-4056-813C-4386BC164AB6";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "001009C9-C36E-4DC7-8BD2-8242897A01C6";
 				SDKROOT = iphoneos;
 			};
 			name = Release;

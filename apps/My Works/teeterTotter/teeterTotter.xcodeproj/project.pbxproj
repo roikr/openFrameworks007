@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -44,7 +44,7 @@
 		E4741BB31329214900F8592B /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741BAD1329214900F8592B /* tinyxmlerror.cpp */; };
 		E4741BB41329214900F8592B /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741BAE1329214900F8592B /* tinyxmlparser.cpp */; };
 		E4741BB51329214900F8592B /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741BB01329214900F8592B /* ofxXmlSettings.cpp */; };
-		E4741BB81329267300F8592B /* ofxSimpleSegmentator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4741BB71329267300F8592B /* ofxSimpleSegmentator.cpp */; };
+		E475D456147D2E6200839D7D /* ofxSimpleSegmentator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E475D454147D2E6200839D7D /* ofxSimpleSegmentator.cpp */; };
 		E49DA7BE10CD396F0006B5A8 /* freeimage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E49DA7BD10CD396F0006B5A8 /* freeimage.a */; };
 		E49F4577132820F9009F01E3 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49F452C132820F9009F01E3 /* b2BroadPhase.cpp */; };
 		E49F4578132820F9009F01E3 /* b2CollideCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49F452E132820F9009F01E3 /* b2CollideCircle.cpp */; };
@@ -245,8 +245,8 @@
 		E4741BAE1329214900F8592B /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E4741BB01329214900F8592B /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E4741BB11329214900F8592B /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
-		E4741BB61329267300F8592B /* ofxSimpleSegmentator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSimpleSegmentator.h; sourceTree = "<group>"; };
-		E4741BB71329267300F8592B /* ofxSimpleSegmentator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSimpleSegmentator.cpp; sourceTree = "<group>"; };
+		E475D454147D2E6200839D7D /* ofxSimpleSegmentator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSimpleSegmentator.cpp; sourceTree = "<group>"; };
+		E475D455147D2E6200839D7D /* ofxSimpleSegmentator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSimpleSegmentator.h; sourceTree = "<group>"; };
 		E49DA7BD10CD396F0006B5A8 /* freeimage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = freeimage.a; path = ../../../libs/FreeImage/lib/osx/freeimage.a; sourceTree = SOURCE_ROOT; };
 		E49F452A132820F9009F01E3 /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
 		E49F452C132820F9009F01E3 /* b2BroadPhase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2BroadPhase.cpp; sourceTree = "<group>"; };
@@ -538,6 +538,7 @@
 		E44665C70F5B3E03005D0BF0 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E475D452147D2E6200839D7D /* ofxSimpleSegmentator */,
 				E4581CD4133F2F1C008C6762 /* common */,
 				E4741BA81329214900F8592B /* ofxXmlSettings */,
 				E49F46E513282D38009F01E3 /* ofxCoordinator */,
@@ -862,6 +863,24 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E475D452147D2E6200839D7D /* ofxSimpleSegmentator */ = {
+			isa = PBXGroup;
+			children = (
+				E475D453147D2E6200839D7D /* src */,
+			);
+			name = ofxSimpleSegmentator;
+			path = "../My Addons/ofxSimpleSegmentator";
+			sourceTree = "<group>";
+		};
+		E475D453147D2E6200839D7D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E475D454147D2E6200839D7D /* ofxSimpleSegmentator.cpp */,
+				E475D455147D2E6200839D7D /* ofxSimpleSegmentator.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E49DA7BC10CD396F0006B5A8 /* osx */ = {
 			isa = PBXGroup;
 			children = (
@@ -1035,8 +1054,6 @@
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4581CDD133F3011008C6762 /* Teeter.cpp */,
 				E4581CDE133F3011008C6762 /* Teeter.h */,
-				E4741BB61329267300F8592B /* ofxSimpleSegmentator.h */,
-				E4741BB71329267300F8592B /* ofxSimpleSegmentator.cpp */,
 				E4581CDB133F3011008C6762 /* Render.cpp */,
 				E4581CDC133F3011008C6762 /* Render.h */,
 			);
@@ -1146,7 +1163,7 @@
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "teeterTotter" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1262,10 +1279,10 @@
 				E4741BB31329214900F8592B /* tinyxmlerror.cpp in Sources */,
 				E4741BB41329214900F8592B /* tinyxmlparser.cpp in Sources */,
 				E4741BB51329214900F8592B /* ofxXmlSettings.cpp in Sources */,
-				E4741BB81329267300F8592B /* ofxSimpleSegmentator.cpp in Sources */,
 				E4581CD9133F2F1C008C6762 /* easing.cpp in Sources */,
 				E4581CDF133F3011008C6762 /* Render.cpp in Sources */,
 				E4581CE0133F3011008C6762 /* Teeter.cpp in Sources */,
+				E475D456147D2E6200839D7D /* ofxSimpleSegmentator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
