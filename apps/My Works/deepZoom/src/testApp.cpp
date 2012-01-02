@@ -1,56 +1,27 @@
 #include "testApp.h"
 
 
-void copyPixels(int x,int y,ofImage &src, ofImage &dest) {
-	
-	for	(int j=0;j< dest.getHeight();j++)
-		for (int i=0; i<dest.getWidth(); i++) {
-			dest.setColor(i, j, src.getColor(x+i, y+j));
-		}
-	
-}
-
+#define TILE_SIZE 256
 
 
 //--------------------------------------------------------------
 void testApp::setup(){
-	src.setUseTexture(false);
-	//src.loadImage(ofToDataPath("Leaf.JPG"));
-	
-	path = "images";
-	
-	size = 256;
-	x = 0;
-	y = 0;
-	col = 0;
-	row = 0;
-	lastWidth = 0;
-	lastHeight = 0;
-	scale = 1;
-	
-	DIR.allowExt("jpg");
-	DIR.listDir(path);
-	fileCounter = 0;
-	printf("num files: %i\n",DIR.numFiles());
-	loadImage();
+	path = "atsmona1";
+	name = "atsmona1";
+	width = 1946;
+	height = 1908;
+	scale = 0.125   ;
+	pos = ofPoint(0,0);
 		
-	
+	load();
 }
 
-void testApp::loadImage() {
-    src.clear();
-	src.loadImage(ofToDataPath(DIR.getPath(fileCounter)));
-	printf("path: %s\n",DIR.getPath(fileCounter).c_str());
-	vector<string> name = ofSplitString(DIR.getName(fileCounter), ".");
-	currentName = name[0];
-	ofxDirList::createDirectory(currentName);
-	printf("path: %s, currentName: %s\n",DIR.getPath(fileCounter).c_str(),currentName.c_str());
-	
-}
+
 
 //--------------------------------------------------------------
 void testApp::update(){
-	
+
+/*
 	if (fileCounter<DIR.numFiles()) {
 	
 		if (y<src.getHeight()) {
@@ -95,12 +66,10 @@ void testApp::update(){
 			}
 
 		}
-	} else {
-        std::exit(0);
-    }
+	}
 
 	
-	
+*/
 	
 	
 }
@@ -108,19 +77,85 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-	dest.draw(0,0);
+	ofPushMatrix();
+	ofScale(scale/tilesScale, scale/tilesScale, 1.0f);
+	ofTranslate(pos.x, pos.y);
+	
+	for (vector<tile>::iterator iter = tiles.begin(); iter!=tiles.end(); iter++) {
+		ofPushMatrix();
+		ofTranslate(TILE_SIZE*iter->col, TILE_SIZE*iter->row);
+		iter->image.draw(0,0);
+		ofPopMatrix();
+	}
+	ofPopMatrix();
+	
 }
 
-//--------------------------------------------------------------
-void testApp::exit(){
+void testApp::load() {
+	tiles.clear();
 	
-	dest.clear();
-    src.clear();
+	float factor = ceil(log(scale)/log(2));
+	tilesScale = pow(2,factor);
+	printf("factor: %f, tilesScale: %f\n",factor,tilesScale);
+	
+	char str[100];
+	for (int y=0; y*TILE_SIZE<height*tilesScale; y++) {
+		for (int x=0; x*TILE_SIZE<width*tilesScale; x++) {
+			tile t;
+			t.col = x;
+			t.row = y;
+			
+			
+			sprintf(str, "%s/%s_%i_%i_%i.jpg",path.c_str(),name.c_str(),(int)(1000*tilesScale),t.col,t.row);
+			printf("%s\n",str);
+			t.image.loadImage(string(str));
+			tiles.push_back(t);
+		}
+	}
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+	
+	switch (key) {
+		case '+':
+		case '-': {
+			float newScale = scale;
+			
+			switch (key) {
+				case '+':
+					newScale+=0.05;
+					break;
+				case '-':
+					newScale-=0.05;
+					break;
+					
+				default:
+					break;
+			}
+			
+			
+			int scalePower = floor(log(scale)/log(2));
+			int newScalePower = floor(log(newScale)/log(2));
+			
+			bool bTilesScaleChanged =  scalePower != newScalePower && newScalePower>=-3; 
+			printf("scale: %f, newScale: %f, update: %i\n",scale,newScale,bTilesScaleChanged);
+			 scale = newScale;
+			
+			if (bTilesScaleChanged) {
+				load();
+			}
+			
+			
+			
+			
+		}  break;
 
+	}
+	
+	
+	
+	
 }
 
 //--------------------------------------------------------------
@@ -135,12 +170,14 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-
+	ofPoint curPos = ofPoint(x,y);
+	pos += curPos-downPos;
+	downPos = curPos;
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-
+	downPos = ofPoint(x,y);
 }
 
 //--------------------------------------------------------------
@@ -150,7 +187,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-
+	printf("width: %d, height: %d\n",ofGetWidth(),ofGetHeight());
 }
 
 //--------------------------------------------------------------

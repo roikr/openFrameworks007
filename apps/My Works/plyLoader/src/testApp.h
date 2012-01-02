@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxDirList.h"
 
 class testApp : public ofBaseApp{
 
@@ -9,7 +8,6 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-        void exit();
 
 		void keyPressed  (int key);
 		void keyReleased(int key);
@@ -21,23 +19,9 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	
-	void loadImage();
+	void exportPlyCloud(string filename, ofMesh& cloud);
+	void importPlyCloud(string filename, ofMesh& cloud);
 		
-	ofImage src;
-	ofImage dest;
-	
-	int x;
-	int y;
-	int size;
-	int lastWidth;
-	int lastHeight;
-	float scale;
-	int col;
-	int row;
-	int fileCounter;
-	
-	string path;
-	ofxDirList DIR;
-	string currentName;
-	
+	ofMesh mesh;
+	ofEasyCam easyCam;
 };
