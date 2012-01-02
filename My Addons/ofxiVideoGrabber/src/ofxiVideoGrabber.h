@@ -71,6 +71,7 @@ public:
 	int getCameraHeight();
 	
 	void drawCamera();
+	void drawCamera(int width,int height);
 	
 protected:
 	

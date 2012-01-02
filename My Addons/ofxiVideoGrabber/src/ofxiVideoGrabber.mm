@@ -285,7 +285,13 @@ void ofxiVideoGrabber::draw() {
 	
 }
 
+
+
 void ofxiVideoGrabber::drawCamera() {
+	drawCamera(getCameraWidth(),getCameraHeight());
+}
+
+void ofxiVideoGrabber::drawCamera(int width,int height) {
 	
 	if (state<CAMERA_RUNNING) {
 		return;
@@ -300,8 +306,8 @@ void ofxiVideoGrabber::drawCamera() {
 	
 	GLfloat px0 = 0;		// up to you to get the aspect ratio right
 	GLfloat py0 = 0;
-	GLfloat px1 = getCameraWidth();
-	GLfloat py1 = getCameraHeight();
+	GLfloat px1 = width;
+	GLfloat py1 = height;
 	
     
 	
