@@ -38,6 +38,11 @@ public:
 	
 	bool bCameraOffset;
 	bool bRecording;
+	bool bGrabPixels;
+	
+	ofBuffer buffer;
+	ofTexture texture;
+	
 };
 
 

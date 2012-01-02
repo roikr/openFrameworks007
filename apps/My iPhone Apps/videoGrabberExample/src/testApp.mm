@@ -43,6 +43,9 @@ void testApp::setup(){
 	
 	bCameraOffset = false;
 	
+	buffer.allocate(video.textureWidth*video.textureHeight*4);
+	texture.allocate(video.textureWidth, video.textureHeight, GL_RGBA);
+	
 }
 
 //--------------------------------------------------------------
@@ -95,6 +98,7 @@ void testApp::update(){
 void testApp::draw(){
 	
 	grabber.render(); //ofPoint((grabber.getCameraWidth()-video.textureWidth)/2,(grabber.getCameraHeight()-video.textureHeight)/2));
+	
 	[ofxiPhoneGetGLView() startRender];
 	
 	
@@ -118,6 +122,27 @@ void testApp::draw(){
 	ofRotate(90);
 	grabber.drawCamera();
 	
+	if (bGrabPixels) {
+		bGrabPixels = false;
+		int width = video.textureWidth;
+		int height =  video.textureHeight;
+		
+		
+		 glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer.getBinaryBuffer());
+		 texture.loadData(reinterpret_cast<unsigned char*> ( buffer.getBinaryBuffer()),width,height,GL_RGBA);
+		 
+		
+		/*
+		NSInteger myDataLength = width * height * 4;
+		GLubyte *buffer = (GLubyte *) malloc(myDataLength);
+		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+		texture.loadData(buffer,width,height,GL_RGBA);
+		free(buffer);
+		*/
+	}
+	
+	
+	
 	if (grabber.getState()>=CAMERA_CAPTURING) {
 		grabber.draw();
 	}
@@ -125,6 +150,8 @@ void testApp::draw(){
 		player.draw();
 	}
 	ofPopMatrix();
+	
+	texture.draw(ofGetWidth()-texture.getWidth(), 0);
 	
 
 //	ofTranslate(-60, -60, 0);
@@ -152,14 +179,16 @@ void testApp::exit(){
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
 	sprintf(eventString, "touchDown = (%2.0f, %2.0f - id %i)", touch.x, touch.y, touch.id);
-	switch (grabber.getState()) {
-		case CAMERA_CAPTURING:
-		case CAMERA_RECORDING:
-			break;
-		default:
-			player.play(1.0f);
-			break;
-	}
+//	switch (grabber.getState()) {
+//		case CAMERA_CAPTURING:
+//		case CAMERA_RECORDING:
+//			break;
+//		default:
+//			player.play(1.0f);
+//			break;
+//	}
+	
+	bGrabPixels = true;
 	
 
 }

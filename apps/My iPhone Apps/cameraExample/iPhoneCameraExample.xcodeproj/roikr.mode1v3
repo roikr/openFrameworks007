@@ -335,15 +335,13 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>E4D21CF112CD28F9003C5617</string>
+										<string>E4E9934A1498F0A500C9659B</string>
 										<key>history</key>
 										<array>
 											<string>E4EC179912CB945C00F267CD</string>
-											<string>E499073012CC05C80068F6A5</string>
-											<string>E499073212CC05C80068F6A5</string>
 											<string>E499073612CC05C80068F6A5</string>
 											<string>E499073812CC05C80068F6A5</string>
-											<string>E4F7D75012CCFEF100D3119E</string>
+											<string>E4D21CF112CD28F9003C5617</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -355,14 +353,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {936, 500}}</string>
+								<string>{{0, 0}, {936, 495}}</string>
 								<key>RubberWindowFrame</key>
 								<string>305 270 1154 712 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>500pt</string>
+							<string>495pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -375,14 +373,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 505}, {936, 166}}</string>
+								<string>{{0, 500}, {936, 171}}</string>
 								<key>RubberWindowFrame</key>
 								<string>305 270 1154 712 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>166pt</string>
+							<string>171pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -401,9 +399,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>E4D21CEB12CD281D003C5617</string>
+				<string>E4E9934B1498F0A500C9659B</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>E4D21CEC12CD281D003C5617</string>
+				<string>E4E9934C1498F0A500C9659B</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -541,12 +539,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>E4D21CED12CD281D003C5617</string>
-		<string>E4D21CEE12CD281D003C5617</string>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>E4EC173512CB93A300F267CD</string>
-		<string>/Users/roikr/Developer/of_preRelease_v0061_osxSL_FAT/apps/My iPhone Apps/cameraExample/iPhoneCameraExample.xcodeproj</string>
+		<string>/Users/roikr/Developer/of_preRelease_v007_iphone/apps/My iPhone Apps/cameraExample/iPhoneCameraExample.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>305 270 1154 712 0 0 1680 1028 </string>
@@ -570,7 +564,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>&lt;No Editor&gt;</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -626,7 +620,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>E4EC173512CB93A300F267CD</string>
-				<string>E4D21CA612CD199F003C5617</string>
+				<string>E4E9934D1498F0A500C9659B</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
