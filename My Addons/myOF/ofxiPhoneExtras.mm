@@ -50,3 +50,29 @@ void ofxiPhoneSetDimensions(int wide,int narrow) {
     wideDimension = wide;
     narrowDimension = narrow;
 }
+
+//--------------------------------------------------------------
+
+string ofxNSStringToString(NSString * s) {
+	return string([s UTF8String]);
+}
+
+//--------------------------------------------------------------
+
+NSString * ofxStringToNSString(string s)
+{
+	return [[[NSString alloc] initWithCString: s.c_str()] autorelease];
+}
+
+//--------------------------------------------------------------
+
+string ofxiPhoneGetDocumentsDirectory()
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	return ofxNSStringToString([paths objectAtIndex:0]) + "/";
+}
+
+
+
+
+

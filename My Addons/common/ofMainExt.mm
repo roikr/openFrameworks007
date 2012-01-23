@@ -13,15 +13,15 @@
 #include <OpenGLES/ES1/gl.h>
 
 
-string ofToDocumentsPath(string path){
-	
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-	string documentsPathRoot = [documentsDirectory UTF8String];
-	path = documentsPathRoot+"/"+path;
-	
-	return path;
-}
+//string ofToDocumentsPath(string path){
+//	
+//	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//	string documentsPathRoot = [documentsDirectory UTF8String];
+//	path = documentsPathRoot+"/"+path;
+//	
+//	return path;
+//}
 
 #ifdef MY_OF // not of - declared in ofMain.mm
 
@@ -84,12 +84,19 @@ bool ofxCopyFile(string src,string dest) {
 	return [[NSFileManager defaultManager] copyItemAtPath:[NSString stringWithCString:src.c_str() encoding:NSASCIIStringEncoding] toPath:[NSString stringWithCString:dest.c_str() encoding:NSASCIIStringEncoding] error:&error];
 }
 
+bool ofxDeleteFile(string dest) {
+	
+	NSError *error = nil;	
+	return [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithCString:dest.c_str() encoding:NSASCIIStringEncoding] error:&error];
+}
+
 float distance(ofPoint pnt) {
 	ofPoint norm = pnt*pnt;
 	return sqrt(norm.x+norm.y+norm.z);
 }
 
 
+/*
 void setiPhoneDataPath() {
 	//----- DAMIAN
 	// set data path root for ofToDataPath()
@@ -106,6 +113,7 @@ void setiPhoneDataPath() {
 	//-----
 	
 }
+ */
 
 ofColor ofxHexToColor(int hex) {
 	ofColor color;

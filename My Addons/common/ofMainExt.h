@@ -9,20 +9,22 @@
 
 #pragma once
 
+#include "ofMain.h"
 #include "ofTypes.h"
 
 #include <string>
 using namespace std;
 
-string ofToDocumentsPath(string path);
+//string ofToDocumentsPath(string path); // deprecated use: string ofxiPhoneGetDocumentsDirectory() at ofxiPhoneExtras
 //string ofToResourcesPath(string path);
 bool ofxCopyFile(string src,string dest);
+bool ofxDeleteFile(string dest);
 
 void ofxiPhoneGLViewPort();
 
 float distance(ofPoint pnt);
 
-void setiPhoneDataPath();
+//void setiPhoneDataPath(); // deprecated use: ofSetDataPathRoot(ofxNSStringToString([[NSBundle mainBundle] resourcePath])+'/'); or whatever
 
 ofColor ofxHexToColor(int hex);
 ofColor ofxHexStringToColor(string color); 
