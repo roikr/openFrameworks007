@@ -19,7 +19,7 @@ void ofxAudioPlayer::setup(ofxAudioSample *sample,int bufferSize,int maxInstance
 	this->bufferSize = bufferSize;
 	this->sample = sample;
 	this->maxInstances = maxInstances;
-	this->instances.reserve(maxInstances);
+	//this->instances.reserve(maxInstances);
 	
 }
 

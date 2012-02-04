@@ -8,6 +8,7 @@
  */
 
 #include "ofxAudioFile.h"
+
 //#import <AVFoundation/AVFoundation.h>
 
 #include "CAStreamBasicDescription.h"
@@ -233,6 +234,10 @@ void ofxAudioFile::setupForSave(int bufferLength) {
 
 float *ofxAudioFile::getTableBuffer() {
 	return tableBuffer;
+}
+
+int ofxAudioFile::getNumChannels() {
+    return channels;
 }
 
 int ofxAudioFile::getSamplesPerChannel() {

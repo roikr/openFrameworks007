@@ -28,6 +28,7 @@ struct instance {
 	bool bStop;
 };
 
+
 class ofxAudioFile {
 public:
 	
@@ -36,6 +37,7 @@ public:
 	bool load(string filename,int bufferLength);
 	void setupForSave(int bufferLength); // allocate memory just for current block
 	void exit();
+    int getNumChannels();
 	int getSamplesPerChannel();
 	
 	
@@ -61,9 +63,10 @@ public:
 	void close();
 	
 	int getNumPlaying();
-	
-private:
+    
 	float *getTableBuffer();
+private:
+	
 	
 	//float* getCurrentBlock(int channel);
 	//float* getBlock(int block,int channel);
