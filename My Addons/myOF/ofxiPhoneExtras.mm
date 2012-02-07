@@ -73,6 +73,10 @@ string ofxiPhoneGetDocumentsDirectory()
 }
 
 
-
+string ofxiPhoneGetLibraryDirectory()
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	return ofxNSStringToString([paths objectAtIndex:0]) + "/";
+}
 
 
