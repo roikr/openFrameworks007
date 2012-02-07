@@ -33,7 +33,7 @@ void ofxFFT::setup(int numFrames) {
     power = new float[mFFTLength];
     
     
-    mFFTNormFactor = 1.0/(2*numFrames);
+    mFFTNormFactor = 1.0/(2.0*numFrames);
     counter = 0;
     bReady = false;
 }
