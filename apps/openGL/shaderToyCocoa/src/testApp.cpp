@@ -6,12 +6,12 @@ void testApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
 	
-//	shader.load("shaders/tutorial2.vert", "shaders/Metablob.frag");
+	shader.load("shaders/tutorial2.vert", "shaders/Metablob.frag");
 //	shader.load("shaders/tutorial2.vert", "shaders/Metatunnel.frag");
 //	shader.load("shaders/tutorial2.vert", "shaders/Sult.frag");
 //	shader.load("shaders/tutorial2.vert", "shaders/Valleyball.frag");
 //	shader.load("shaders/tutorial2.vert", "shaders/MengerSponge.frag");
-    shader.load("shaders/tutorial2.vert", "shaders/Slisesix.frag");
+//    shader.load("shaders/tutorial2.vert", "shaders/Slisesix.frag");
 //    shader.load("shaders/tutorial2.vert", "shaders/Quaternion.frag");
 //    shader.load("shaders/tutorial2.vert", "shaders/Lunaquatic.frag");
 //    shader.load("shaders/tutorial2.vert", "shaders/Mandelbulb.frag");

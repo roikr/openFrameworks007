@@ -165,7 +165,7 @@ void testApp::setup(){
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ofIndexType) * mesh.getNumIndices() , mesh.getIndexPointer(), GL_STATIC_DRAW);
 
    
-    pMatrix.makePerspectiveMatrix(45, ofGetWidth()/ofGetHeight(), 0.1, 100.0);
+    pMatrix.makePerspectiveMatrix(45, (float)ofGetWidth()/(float)ofGetHeight(), 0.1, 100.0);
     //pMatrix.makeOrtho2DMatrix(-10, 10, -10, 10);
     mvMatrix.makeIdentityMatrix();
     mvMatrix.translate(0.0, 0.0, -8.0);
