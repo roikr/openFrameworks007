@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-               BuildableName = "beatDetection.app"
-               BlueprintName = "beatDetection"
-               ReferencedContainer = "container:beatDetection.xcodeproj">
+               BuildableName = "logBeatDetection.app"
+               BlueprintName = "logBeatDetection"
+               ReferencedContainer = "container:logBeatDetection.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,15 +32,15 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "beatDetection.app"
-            BlueprintName = "beatDetection"
-            ReferencedContainer = "container:beatDetection.xcodeproj">
+            BuildableName = "logBeatDetection.app"
+            BlueprintName = "logBeatDetection"
+            ReferencedContainer = "container:logBeatDetection.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
    <LaunchAction
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Debug"
@@ -50,9 +50,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "beatDetection.app"
-            BlueprintName = "beatDetection"
-            ReferencedContainer = "container:beatDetection.xcodeproj">
+            BuildableName = "logBeatDetection.app"
+            BlueprintName = "logBeatDetection"
+            ReferencedContainer = "container:logBeatDetection.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -68,9 +68,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "beatDetection.app"
-            BlueprintName = "beatDetection"
-            ReferencedContainer = "container:beatDetection.xcodeproj">
+            BuildableName = "logBeatDetection.app"
+            BlueprintName = "logBeatDetection"
+            ReferencedContainer = "container:logBeatDetection.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

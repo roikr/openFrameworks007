@@ -23,6 +23,11 @@
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
+		E4D32CB614D8A772002041F8 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D32CAA14D8A772002041F8 /* CAStreamBasicDescription.cpp */; };
+		E4D32CB714D8A772002041F8 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D32CAC14D8A772002041F8 /* CAXException.cpp */; };
+		E4D32CB814D8A772002041F8 /* ofxAudioFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D32CB114D8A772002041F8 /* ofxAudioFile.mm */; };
+		E4D32CCB14D8AC4B002041F8 /* ofxFFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D32CC914D8AC4B002041F8 /* ofxFFT.cpp */; };
+		E4D32CCD14D8AC5B002041F8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D32CCC14D8AC5B002041F8 /* Accelerate.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,7 +73,7 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E4B69B5B0A3A1756003C02F2 /* emptyExampleDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emptyExampleDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69B5B0A3A1756003C02F2 /* logBeatDetectionDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = logBeatDetectionDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -76,6 +81,18 @@
 		E4C2424410CC5A17004149E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		E4C2424510CC5A17004149E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
+		E4D32CA814D8A772002041F8 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugMacros.h; sourceTree = "<group>"; };
+		E4D32CA914D8A772002041F8 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAMath.h; sourceTree = "<group>"; };
+		E4D32CAA14D8A772002041F8 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
+		E4D32CAB14D8A772002041F8 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamBasicDescription.h; sourceTree = "<group>"; };
+		E4D32CAC14D8A772002041F8 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAXException.cpp; sourceTree = "<group>"; };
+		E4D32CAD14D8A772002041F8 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAXException.h; sourceTree = "<group>"; };
+		E4D32CAE14D8A772002041F8 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		E4D32CB014D8A772002041F8 /* ofxAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioFile.h; sourceTree = "<group>"; };
+		E4D32CB114D8A772002041F8 /* ofxAudioFile.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxAudioFile.mm; sourceTree = "<group>"; };
+		E4D32CC914D8AC4B002041F8 /* ofxFFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFFT.cpp; sourceTree = "<group>"; };
+		E4D32CCA14D8AC4B002041F8 /* ofxFFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFFT.h; sourceTree = "<group>"; };
+		E4D32CCC14D8AC5B002041F8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4D32CCD14D8AC5B002041F8 /* Accelerate.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
 				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
@@ -108,6 +126,8 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4D32CC714D8AC4B002041F8 /* ofxFFT */,
+				E4D32CA614D8A772002041F8 /* ofxAudio */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -115,6 +135,7 @@
 		BBAB23C913894ECA00AA2426 /* system frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E4D32CCC14D8AC5B002041F8 /* Accelerate.framework */,
 				E4C2424410CC5A17004149E2 /* AppKit.framework */,
 				E4C2424510CC5A17004149E2 /* Cocoa.framework */,
 				E4C2424610CC5A17004149E2 /* IOKit.framework */,
@@ -165,7 +186,7 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				E4B69B5B0A3A1756003C02F2 /* emptyExampleDebug.app */,
+				E4B69B5B0A3A1756003C02F2 /* logBeatDetectionDebug.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -179,6 +200,57 @@
 			path = src;
 			sourceTree = SOURCE_ROOT;
 		};
+		E4D32CA614D8A772002041F8 /* ofxAudio */ = {
+			isa = PBXGroup;
+			children = (
+				E4D32CA714D8A772002041F8 /* iPublicUtility */,
+				E4D32CAE14D8A772002041F8 /* README */,
+				E4D32CAF14D8A772002041F8 /* src */,
+			);
+			name = ofxAudio;
+			path = "../../../My Addons/ofxAudio";
+			sourceTree = "<group>";
+		};
+		E4D32CA714D8A772002041F8 /* iPublicUtility */ = {
+			isa = PBXGroup;
+			children = (
+				E4D32CA814D8A772002041F8 /* CADebugMacros.h */,
+				E4D32CA914D8A772002041F8 /* CAMath.h */,
+				E4D32CAA14D8A772002041F8 /* CAStreamBasicDescription.cpp */,
+				E4D32CAB14D8A772002041F8 /* CAStreamBasicDescription.h */,
+				E4D32CAC14D8A772002041F8 /* CAXException.cpp */,
+				E4D32CAD14D8A772002041F8 /* CAXException.h */,
+			);
+			path = iPublicUtility;
+			sourceTree = "<group>";
+		};
+		E4D32CAF14D8A772002041F8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4D32CB014D8A772002041F8 /* ofxAudioFile.h */,
+				E4D32CB114D8A772002041F8 /* ofxAudioFile.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4D32CC714D8AC4B002041F8 /* ofxFFT */ = {
+			isa = PBXGroup;
+			children = (
+				E4D32CC814D8AC4B002041F8 /* src */,
+			);
+			name = ofxFFT;
+			path = "../../../My Addons/ofxFFT";
+			sourceTree = "<group>";
+		};
+		E4D32CC814D8AC4B002041F8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4D32CC914D8AC4B002041F8 /* ofxFFT.cpp */,
+				E4D32CCA14D8AC4B002041F8 /* ofxFFT.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4EEC9E9138DF44700A80321 /* openFrameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,9 +263,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* emptyExample */ = {
+		E4B69B5A0A3A1756003C02F2 /* logBeatDetection */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "emptyExample" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "logBeatDetection" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -205,9 +277,9 @@
 			dependencies = (
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
-			name = emptyExample;
+			name = logBeatDetection;
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* emptyExampleDebug.app */;
+			productReference = E4B69B5B0A3A1756003C02F2 /* logBeatDetectionDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -218,7 +290,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "emptyExample" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "logBeatDetection" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -239,7 +311,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* emptyExample */,
+				E4B69B5A0A3A1756003C02F2 /* logBeatDetection */,
 			);
 		};
 /* End PBXProject section */
@@ -277,6 +349,10 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
+				E4D32CB614D8A772002041F8 /* CAStreamBasicDescription.cpp in Sources */,
+				E4D32CB714D8A772002041F8 /* CAXException.cpp in Sources */,
+				E4D32CB814D8A772002041F8 /* ofxAudioFile.mm in Sources */,
+				E4D32CCB14D8AC4B002041F8 /* ofxFFT.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +381,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -316,7 +392,6 @@
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 				);
-				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -336,7 +411,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -347,7 +422,6 @@
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 				);
-				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};
@@ -431,7 +505,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				PRODUCT_NAME = logBeatDetectionDebug;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -515,7 +589,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = logBeatDetection;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -523,7 +597,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "emptyExample" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "logBeatDetection" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
@@ -532,7 +606,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "emptyExample" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "logBeatDetection" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,

@@ -6,8 +6,11 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 
-@interface VideoStream : NSObject
+@interface VideoStream : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>
+
+- (void)setupAVCapture;
+- (void)tearDownAVCapture;
 
 @end
