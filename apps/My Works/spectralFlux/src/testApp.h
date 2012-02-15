@@ -26,6 +26,8 @@ public:
     void gotMessage(ofMessage msg);
     
     void audioOut(float * input, int bufferSize, int nChannels);
+    void audioIn(float * input, int bufferSize, int nChannels);
+    void processAudio(float * input, int bufferSize);
     
     
     ofSoundStream soundStream;
@@ -33,7 +35,7 @@ public:
     int		sampleRate;
     bool 	bPlay;
     
-    vector <float> lAudio;
+    vector <float> input;
 		        
 		
     ofxAudioFile audio;
@@ -51,6 +53,7 @@ public:
     int counter;
     float beatDecay;
     
+    bool bInput;
 };
 
 #endif

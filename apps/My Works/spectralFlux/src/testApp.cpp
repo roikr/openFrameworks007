@@ -18,7 +18,7 @@ void testApp::setup(){
 	sampleRate 			= 44100;
 	bPlay 				= false;
 
-	lAudio.assign(bufferSize, 0.0);
+	input.assign(bufferSize, 0.0);
 	
 	
 	//soundStream.listDevices();
@@ -26,7 +26,7 @@ void testApp::setup(){
 	//if you want to set the device id to be different than the default
 	//soundStream.setDeviceID(1); 	//note some devices are input only and some are output only 
 
-	soundStream.setup(this, 2, 0, sampleRate, bufferSize, 4);
+	soundStream.setup(this, 2, 1, sampleRate, bufferSize, 4); // stereo output one channel input
     
     fft.setup(FFT_SIZE);
     smoothed.assign(fft.mFFTLength, 0.0);
@@ -44,7 +44,8 @@ void testApp::setup(){
     
     audio.load(ofToDataPath("tropit.caf"), bufferSize);
     
-    audio.play();
+    
+    bInput = true;
 }
 
 
@@ -60,7 +61,7 @@ void testApp::draw(){
 
 	ofSetColor(225);
 	ofDrawBitmapString("AUDIO OUTPUT EXAMPLE", 32, 32);
-	ofDrawBitmapString("press 's' to unpause the audio\npress 'e' to pause the audio", 31, 92);
+//	ofDrawBitmapString("press 's' to unpause the audio\npress 'e' to pause the audio", 31, 92);
 	
 	ofNoFill();
 	
@@ -79,9 +80,9 @@ void testApp::draw(){
 		ofSetLineWidth(3);
 					
 			ofBeginShape();
-			for (int i = 0; i < lAudio.size(); i++){
-				float x =  ofMap(i, 0, lAudio.size(), 0, 900, true);
-				ofVertex(x, 100 -lAudio[i]*180.0f);
+			for (int i = 0; i < input.size(); i++){
+				float x =  ofMap(i, 0, input.size(), 0, 900, true);
+				ofVertex(x, 100 -input[i]*180.0f);
 			}
 			ofEndShape(false);
     
@@ -149,13 +150,17 @@ void testApp::draw(){
 void testApp::keyPressed  (int key){
 	
 	
-	if( key == 's' ){
-		soundStream.start();
+	if( key == 't' ){
+		if (bInput) {
+            audio.play();
+        } else {
+            audio.stop();
+        }
+        
+        bInput=!bInput;
 	}
 	
-	if( key == 'e' ){
-		soundStream.stop();
-	}
+	
 	
 }
 
@@ -191,33 +196,8 @@ void testApp::windowResized(int w, int h){
 
 }
 
-
-
-//--------------------------------------------------------------
-void testApp::audioOut(float * output, int bufferSize, int nChannels){
-	//pan = 0.5f;
-	
-    if (bPlay) {
-        audio.mixChannel(output, 0, nChannels);
-        audio.mixChannel(output, 1, nChannels);
-        audio.postProcess();
-    } else {
-        for (int i = 0; i < bufferSize; i++){
-            output[i*nChannels    ] =  0;
-            output[i*nChannels + 1]=  0;
-        }
-    }
-       
-    
-    
-    
-	for (int i = 0; i < bufferSize; i++){
-        lAudio[i] = output[i*nChannels    ];
-        
-    }
-
-    
-    fft.process(lAudio.data(),bufferSize);
+void testApp::processAudio(float * input, int bufferSize) {
+    fft.process(input,bufferSize);
     
     if (fft.bReady) {
         *sfiter = 0;
@@ -241,13 +221,46 @@ void testApp::audioOut(float * output, int bufferSize, int nChannels){
             // take the max, either the smoothed or the incoming:
             if (smoothed[i] <  fft.amplitude[i]) 
                 smoothed[i] =  fft.amplitude[i];
-
+            
         }
         
         
         
         
     }
+}
+
+
+void testApp::audioIn(float * input, int bufferSize, int nChannels) {
+    if (bInput) {
+        memcpy(this->input.data(), input, sizeof(float)*bufferSize);
+        processAudio(input, bufferSize);
+    }
+}
+
+//--------------------------------------------------------------
+void testApp::audioOut(float * output, int bufferSize, int nChannels){
+	//pan = 0.5f;
+    if  (!bInput) {
+        audio.mixChannel(output, 0, nChannels);
+        audio.mixChannel(output, 1, nChannels);
+        audio.postProcess();
+        
+        for (int i = 0; i < bufferSize; i++){
+            input[i] = output[i*nChannels    ]; // copy just left channel
+            
+        }
+        
+        processAudio(input.data(), bufferSize);
+	}
+    
+    
+    
+//    for (int i = 0; i < bufferSize; i++){
+//        output[i*nChannels    ] =  0;
+//        output[i*nChannels + 1]=  0;
+//    }
+        
 }
 
 //--------------------------------------------------------------
