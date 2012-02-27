@@ -1,0 +1,599 @@
+/*
+	Discrete Cosine Transform shader
+	based on Independent JPEG Group code
+	sgreen 10/16/2004
+*/
+
+#define DEBUG 0
+
+// AAN DCT algorithm
+// based on IJG jfdctflt.c
+// TODO - vectorize this code better
+
+void DCT(float d[8], out float4 output0, out float4 output1)
+{
+	float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+	float tmp10, tmp11, tmp12, tmp13;
+	float z1, z2, z3, z4, z5, z11, z13;
+
+    tmp0 = d[0] + d[7];
+    tmp7 = d[0] - d[7];
+    tmp1 = d[1] + d[6];
+    tmp6 = d[1] - d[6];
+    tmp2 = d[2] + d[5];
+    tmp5 = d[2] - d[5];
+    tmp3 = d[3] + d[4];
+    tmp4 = d[3] - d[4];
+    
+    /* Even part */
+    
+    tmp10 = tmp0 + tmp3;	/* phase 2 */
+    tmp13 = tmp0 - tmp3;
+    tmp11 = tmp1 + tmp2;
+    tmp12 = tmp1 - tmp2;
+    
+    output0[0] = tmp10 + tmp11; /* phase 3 */
+    output0[1] = tmp10 - tmp11;
+    
+    z1 = (tmp12 + tmp13) * 0.707106781; /* c4 */
+    output0[2] = tmp13 + z1;	/* phase 5 */
+    output0[3] = tmp13 - z1;
+    
+    /* Odd part */
+
+    tmp10 = tmp4 + tmp5;	/* phase 2 */
+    tmp11 = tmp5 + tmp6;
+    tmp12 = tmp6 + tmp7;
+
+    /* The rotator is modified from fig 4-8 to avoid extra negations. */
+    z5 = (tmp10 - tmp12) * 0.382683433; /* c6 */
+    z2 = 0.541196100 * tmp10 + z5; /* c2-c6 */
+    z4 = 1.306562965 * tmp12 + z5; /* c2+c6 */
+    z3 = tmp11 * 0.707106781; /* c4 */
+
+    z11 = tmp7 + z3;		/* phase 5 */
+    z13 = tmp7 - z3;
+
+    output1[0] = z13 + z2;	/* phase 6 */
+    output1[1] = z13 - z2;
+    output1[2] = z11 + z4;
+    output1[3] = z11 - z4;
+}
+
+// split into even and odd passes:
+float4 DCT_even(float d[8])
+{
+	float tmp0, tmp1, tmp2, tmp3;
+	float tmp10, tmp11, tmp12, tmp13;
+	float z1;
+	float4 output;
+	
+    tmp0 = d[0] + d[7];
+    tmp1 = d[1] + d[6];
+    tmp2 = d[2] + d[5];
+    tmp3 = d[3] + d[4];
+    
+    /* Even part */
+    tmp10 = tmp0 + tmp3;	/* phase 2 */
+    tmp13 = tmp0 - tmp3;
+    tmp11 = tmp1 + tmp2;
+    tmp12 = tmp1 - tmp2;
+    
+    output[0] = tmp10 + tmp11; /* phase 3 */	// dataptr[0]
+    output[1] = tmp10 - tmp11;					// dataptr[4]
+    
+    z1 = (tmp12 + tmp13) * 0.707106781; /* c4 */
+    output[2] = tmp13 + z1;	/* phase 5 */		// dataptr[2]
+    output[3] = tmp13 - z1;						// dataptr[6]
+
+	return output;
+}
+
+float4 DCT_odd(float d[8])
+{
+	float tmp4, tmp5, tmp6, tmp7;
+	float tmp10, tmp11, tmp12;
+	float z2, z3, z4, z5, z11, z13;
+	float4 output;
+	
+    tmp7 = d[0] - d[7];
+    tmp6 = d[1] - d[6];
+    tmp5 = d[2] - d[5];
+    tmp4 = d[3] - d[4];
+
+    /* Odd part */
+    tmp10 = tmp4 + tmp5;	/* phase 2 */
+    tmp11 = tmp5 + tmp6;
+    tmp12 = tmp6 + tmp7;
+
+    /* The rotator is modified from fig 4-8 to avoid extra negations. */
+    z5 = (tmp10 - tmp12) * 0.382683433; /* c6 */
+    z2 = 0.541196100 * tmp10 + z5; /* c2-c6 */
+    z4 = 1.306562965 * tmp12 + z5; /* c2+c6 */
+    z3 = tmp11 * 0.707106781; /* c4 */
+
+    z11 = tmp7 + z3;		/* phase 5 */
+    z13 = tmp7 - z3;
+
+    output[0] = z13 + z2;	/* phase 6 */ 	// dataptr[5]
+    output[1] = z13 - z2;					// dataptr[3]
+    output[2] = z11 + z4;					// dataptr[1]
+    output[3] = z11 - z4;					// dataptr[7]
+
+	return output;
+}
+
+float sample(uniform samplerRECT image,
+			 float2 texcoord)
+{
+	return texRECT(image, texcoord).x;
+}
+
+// TODO - calculate texcoords in vertex shader here
+void fetch_row(uniform samplerRECT image,
+			   float2 texcoord,
+			   out float d[8])
+{
+	for(int i=0; i<8; i++) {
+		d[i] = sample(image, texcoord + float2(i, 0));
+	}
+}
+
+void fetch_col(uniform samplerRECT image,
+			   float2 texcoord,
+			   out float d[8])
+{
+	for(int i=0; i<8; i++) {
+		d[i] = sample(image, texcoord + float2(0, i));
+	}
+}
+
+float4 DCT_rows_pass1_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0, float2 wpos : WPOS
+						 ) : COLOR
+{
+	// read row of 8 pixels
+	float d[8];
+	fetch_row(image, texcoord + float2(-4.0, 0.0), d);
+#if DEBUG
+    return float4(d[0], d[4], d[2], d[6]);
+#else
+	return DCT_even(d);
+#endif
+}
+
+float4 DCT_rows_pass2_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0
+						 ) : COLOR
+{
+	float d[8];
+	fetch_row(image, texcoord + float2(-4.0, 0.0), d);
+#if DEBUG
+    return float4(d[5], d[3], d[1], d[7]);
+#else
+	return DCT_odd(d);
+#endif
+}
+
+// single pass MRT version
+void DCT_rows_singlepass_PS(uniform samplerRECT image,
+						  	float2 texcoord : TEXCOORD0,
+				     	  	out float4 color0 : COLOR0,
+   				     	  	out float4 color1 : COLOR1
+   				     	  	)
+{
+	float d[8];
+	fetch_row(image, texcoord + float2(-4.0, 0.0), d);
+	DCT(d, color0, color1);
+}
+
+float4 DCT_cols_pass1_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0
+						 ) : COLOR
+{
+	float d[8];
+	fetch_col(image, texcoord + float2(0.0, -4.0), d);
+#if DEBUG
+    return float4(d[0], d[4], d[2], d[6]);
+#else
+	return DCT_even(d);
+#endif
+}
+
+float4 DCT_cols_pass2_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0
+						 ) : COLOR
+{
+	float d[8];
+	fetch_col(image, texcoord + float2(0.0, -4.0), d);
+#if DEBUG
+    return float4(d[5], d[3], d[1], d[7]);
+#else
+	return DCT_odd(d);
+#endif
+}
+
+// single pass MRT version
+void DCT_cols_singlepass_PS(uniform samplerRECT image,
+						  	float2 texcoord : TEXCOORD0,
+				     	  	out float4 color0 : COLOR0,
+   				     	  	out float4 color1 : COLOR1
+   				     	  	)
+{
+	float d[8];
+	fetch_col(image, texcoord + float2(0.0, -4.0), d);
+	DCT(d, color0, color1);
+}
+
+
+// convert greyscale image packed into 2 RGBA textures into a single image 8 times as wide
+float4 DCT_unpack_rows_PS(float2 texcoord : TEXCOORD0,
+				 		uniform samplerRECT image,
+				 		uniform samplerRECT image2
+				 		) : COLOR
+{
+    float2 uv = texcoord * float2(1.0/8.0, 1.0);
+	float4 c = texRECT(image, uv);
+	float4 c2 = texRECT(image2, uv);
+	
+	// rearrange data into correct order
+	//    x y z w
+	// c  0 4 2 6
+	// c2 5 3 1 7
+
+	int i = frac(texcoord.x/8.0) * 8.0;
+	float4 sel0 = (i == float4(0, 4, 2, 6));
+	float4 sel1 = (i == float4(5, 3, 1, 7));
+	return dot(c, sel0) + dot(c2, sel1);
+}
+
+// unpack
+float4 DCT_unpack_cols_PS(float2 texcoord : TEXCOORD0,
+				 		uniform samplerRECT image,
+				 		uniform samplerRECT image2
+				 		) : COLOR
+{
+    float2 uv = texcoord * float2(1.0, 1.0/8.0);
+	float4 c = texRECT(image, uv);
+	float4 c2 = texRECT(image2, uv);
+
+	// rearrange data into correct order
+	//    x y z w
+	// c  0 4 2 6
+	// c2 5 3 1 7
+
+	int i = frac(texcoord.y/8.0) * 8.0;
+	float4 sel0 = (i == float4(0, 4, 2, 6));
+	float4 sel1 = (i == float4(5, 3, 1, 7));
+#if DEBUG
+	return dot(c, sel0) + dot(c2, sel1);
+#else
+	return (dot(c, sel0) + dot(c2, sel1)) / 8.0;
+#endif
+}
+
+// Quantization
+float4 Quantize_PS(float2 texcoord : TEXCOORD0,
+                   uniform samplerRECT image,
+				   uniform samplerRECT quantize_tex,
+				   uniform float quantize_level
+				   ) : COLOR
+{
+	float4 c = texRECT(image, texcoord);
+	float2 uv = frac(texcoord/8.0)*8.0; // can't wrap float textures on NV3x
+//	float q = texRECT(quantize_tex, uv).x;
+
+    // crude quantization, zero coefficients above threshold
+    float q;
+	if (uv.x > quantize_level || uv.y > quantize_level)
+	    q = 0.0;
+	else
+	    q = 1.0;
+
+	return c * q;
+}
+
+float4 Dequantize_PS(uniform samplerRECT image,
+					 uniform samplerRECT dequantize_tex,
+					 float2 texcoord : TEXCOORD0
+					 ) : COLOR
+{
+	float4 c = texRECT(image, texcoord);
+	float2 uv = frac(texcoord/8.0)*8.0; // can't wrap float textures on NV3x
+	float q = texRECT(dequantize_tex, uv).x;
+	return c * q;
+}
+
+// IDCT
+// based on jidctflt.c
+// TODO - use branching to skip calculations if all AC terms are zero
+
+void IDCT(float d[8], out float4 output0, out float4 output1)
+{
+	float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+	float tmp10, tmp11, tmp12, tmp13;
+	float z5, z10, z11, z12, z13;
+	
+    /* Even part */
+    tmp0 = d[0];
+    tmp1 = d[2];
+    tmp2 = d[4];
+    tmp3 = d[6];
+
+    tmp10 = tmp0 + tmp2;	/* phase 3 */
+    tmp11 = tmp0 - tmp2;
+
+    tmp13 = tmp1 + tmp3;	/* phases 5-3 */
+    tmp12 = (tmp1 - tmp3) * 1.414213562 - tmp13; /* 2*c4 */
+
+    tmp0 = tmp10 + tmp13;	/* phase 2 */
+    tmp3 = tmp10 - tmp13;
+    tmp1 = tmp11 + tmp12;
+    tmp2 = tmp11 - tmp12;
+    
+    /* Odd part */
+    tmp4 = d[1];
+    tmp5 = d[3];
+    tmp6 = d[5];
+    tmp7 = d[7];
+
+    z13 = tmp6 + tmp5;		/* phase 6 */
+    z10 = tmp6 - tmp5;
+    z11 = tmp4 + tmp7;
+    z12 = tmp4 - tmp7;
+
+    tmp7 = z11 + z13;		/* phase 5 */
+    tmp11 = (z11 - z13) * 1.414213562; /* 2*c4 */
+
+    z5 = (z10 + z12) * 1.847759065; /* 2*c2 */
+    tmp10 = 1.082392200 * z12 - z5; /* 2*(c2-c6) */
+    tmp12 = -2.613125930 * z10 + z5; /* -2*(c2+c6) */
+
+    tmp6 = tmp12 - tmp7;	/* phase 2 */
+    tmp5 = tmp11 - tmp6;
+    tmp4 = tmp10 + tmp5;
+
+    output0[0] = tmp0 + tmp7;		// wsptr[DCTSIZE*0]
+    output1[3] = tmp0 - tmp7;		// wsptr[DCTSIZE*7]
+    output0[1] = tmp1 + tmp6;		// wsptr[DCTSIZE*1]
+    output1[2] = tmp1 - tmp6;		// wsptr[DCTSIZE*6]
+    output0[2] = tmp2 + tmp5;		// wsptr[DCTSIZE*2]
+    output1[1] = tmp2 - tmp5;		// wsptr[DCTSIZE*5]
+    output1[0] = tmp3 + tmp4;		// wsptr[DCTSIZE*4]
+    output0[3] = tmp3 - tmp4;		// wsptr[DCTSIZE*3]
+}
+
+// split into two passes
+// TODO - lots of redundant code here, hopefully the compiler will optimize it out
+float4 IDCT_1(float d[8])
+{
+	float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+	float tmp10, tmp11, tmp12, tmp13;
+	float z5, z10, z11, z12, z13;
+	float4 output;
+	
+    /* Even part */
+    tmp0 = d[0];
+    tmp1 = d[2];
+    tmp2 = d[4];
+    tmp3 = d[6];
+
+    tmp10 = tmp0 + tmp2;	/* phase 3 */
+    tmp11 = tmp0 - tmp2;
+
+    tmp13 = tmp1 + tmp3;	/* phases 5-3 */
+    tmp12 = (tmp1 - tmp3) * 1.414213562 - tmp13; /* 2*c4 */
+
+    tmp0 = tmp10 + tmp13;	/* phase 2 */
+    tmp3 = tmp10 - tmp13;
+    tmp1 = tmp11 + tmp12;
+    tmp2 = tmp11 - tmp12;
+    
+    /* Odd part */
+    tmp4 = d[1];
+    tmp5 = d[3];
+    tmp6 = d[5];
+    tmp7 = d[7];
+
+    z13 = tmp6 + tmp5;		/* phase 6 */
+    z10 = tmp6 - tmp5;
+    z11 = tmp4 + tmp7;
+    z12 = tmp4 - tmp7;
+
+    tmp7 = z11 + z13;		/* phase 5 */
+    tmp11 = (z11 - z13) * 1.414213562; /* 2*c4 */
+
+    z5 = (z10 + z12) * 1.847759065; /* 2*c2 */
+    tmp10 = 1.082392200 * z12 - z5; /* 2*(c2-c6) */
+    tmp12 = -2.613125930 * z10 + z5; /* -2*(c2+c6) */
+
+    tmp6 = tmp12 - tmp7;	/* phase 2 */
+    tmp5 = tmp11 - tmp6;
+    tmp4 = tmp10 + tmp5;
+
+    output[0] = tmp0 + tmp7;		// wsptr[DCTSIZE*0]
+//    output[7] = tmp0 - tmp7;		// wsptr[DCTSIZE*7]
+    output[1] = tmp1 + tmp6;		// wsptr[DCTSIZE*1]
+//    output[6] = tmp1 - tmp6;		// wsptr[DCTSIZE*6]
+    output[2] = tmp2 + tmp5;		// wsptr[DCTSIZE*2]
+//    output[5] = tmp2 - tmp5;		// wsptr[DCTSIZE*5]
+//    output[4] = tmp3 + tmp4;		// wsptr[DCTSIZE*4]
+    output[3] = tmp3 - tmp4;		// wsptr[DCTSIZE*3]
+	return output;
+}
+
+float4 IDCT_2(float d[8])
+{
+	float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+	float tmp10, tmp11, tmp12, tmp13;
+	float z5, z10, z11, z12, z13;
+	float4 output;
+	
+    /* Even part */
+    tmp0 = d[0];
+    tmp1 = d[2];
+    tmp2 = d[4];
+    tmp3 = d[6];
+
+    tmp10 = tmp0 + tmp2;	/* phase 3 */
+    tmp11 = tmp0 - tmp2;
+
+    tmp13 = tmp1 + tmp3;	/* phases 5-3 */
+    tmp12 = (tmp1 - tmp3) * 1.414213562 - tmp13; /* 2*c4 */
+
+    tmp0 = tmp10 + tmp13;	/* phase 2 */
+    tmp3 = tmp10 - tmp13;
+    tmp1 = tmp11 + tmp12;
+    tmp2 = tmp11 - tmp12;
+    
+    /* Odd part */
+    tmp4 = d[1];
+    tmp5 = d[3];
+    tmp6 = d[5];
+    tmp7 = d[7];
+
+    z13 = tmp6 + tmp5;		/* phase 6 */
+    z10 = tmp6 - tmp5;
+    z11 = tmp4 + tmp7;
+    z12 = tmp4 - tmp7;
+
+    tmp7 = z11 + z13;		/* phase 5 */
+    tmp11 = (z11 - z13) * 1.414213562; /* 2*c4 */
+
+    z5 = (z10 + z12) * 1.847759065; /* 2*c2 */
+    tmp10 = 1.082392200 * z12 - z5; /* 2*(c2-c6) */
+    tmp12 = -2.613125930 * z10 + z5; /* -2*(c2+c6) */
+
+    tmp6 = tmp12 - tmp7;	/* phase 2 */
+    tmp5 = tmp11 - tmp6;
+    tmp4 = tmp10 + tmp5;
+
+ // 	output[0] = tmp0 + tmp7;		// wsptr[DCTSIZE*0]
+    output[3] = tmp0 - tmp7;		// wsptr[DCTSIZE*7]
+ //   output[1] = tmp1 + tmp6;		// wsptr[DCTSIZE*1]
+    output[2] = tmp1 - tmp6;		// wsptr[DCTSIZE*6]
+ //   output[2] = tmp2 + tmp5;		// wsptr[DCTSIZE*2]
+    output[1] = tmp2 - tmp5;		// wsptr[DCTSIZE*5]
+    output[0] = tmp3 + tmp4;		// wsptr[DCTSIZE*4]
+//    output[3] = tmp3 - tmp4;		// wsptr[DCTSIZE*3]
+	return output;
+}
+					
+float4 IDCT_cols_pass1_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0
+						 ) : COLOR
+{
+	float d[8];
+	fetch_col(image, texcoord + float2(0.0, -4.0), d);
+#if DEBUG
+    return float4(d[0], d[1], d[2], d[3]);
+#else
+	return IDCT_1(d);
+#endif
+}
+
+float4 IDCT_cols_pass2_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0
+						 ) : COLOR
+{
+	float d[8];
+	fetch_col(image, texcoord + float2(0.0, -4.0), d);		
+#if DEBUG
+    return float4(d[4], d[5], d[6], d[7]);
+#else
+	return IDCT_2(d);
+#endif
+}
+
+// singlepass MRT version
+void IDCT_cols_singlepass_PS(uniform samplerRECT image,
+						  	 float2 texcoord : TEXCOORD0,
+				     	  	 out float4 color0 : COLOR0,
+   				     	  	 out float4 color1 : COLOR1
+   				     	  	 )
+{
+	float d[8];
+	fetch_col(image, texcoord + float2(0.0, -4.0), d);
+	IDCT(d, color0, color1);
+}
+
+float4 IDCT_rows_pass1_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0
+						 ) : COLOR
+{
+	float d[8];
+	fetch_row(image, texcoord + float2(-4.0, 0.0), d);
+#if DEBUG
+    return float4(d[0], d[1], d[2], d[3]);
+#else
+	return IDCT_1(d) / 8.0;	// final scale
+#endif
+}
+
+float4 IDCT_rows_pass2_PS(uniform samplerRECT image,
+						 float2 texcoord : TEXCOORD0
+						 ) : COLOR
+{
+	float d[8];
+	fetch_row(image, texcoord + float2(-4.0, 0.0), d);
+#if DEBUG
+    return float4(d[4], d[5], d[6], d[7]);
+#else
+	return IDCT_2(d) / 8.0;	// final scale
+#endif
+}
+
+// singlepass MRT version
+void IDCT_rows_singlepass_PS(uniform samplerRECT image,
+						  	 float2 texcoord : TEXCOORD0,
+				     	  	 out float4 color0 : COLOR0,
+   				     	  	 out float4 color1 : COLOR1
+   				     	  	 )
+{
+	float d[8];
+	fetch_row(image, texcoord + float2(-4.0, 0.0), d);
+	IDCT(d, color0, color1);
+	color0 /= 8.0;	// final scale
+	color1 /= 8.0;		
+}
+
+// convert greyscale image packed into 2 RGBA textures into a single image 8 times as wide
+float4 IDCT_unpack_rows_PS(float2 texcoord : TEXCOORD0,
+				 		uniform samplerRECT image,
+				 		uniform samplerRECT image2
+				 		) : COLOR
+{
+    float2 uv = texcoord * float2(1.0/8.0, 1.0);
+	float4 c = texRECT(image, uv);
+	float4 c2 = texRECT(image2, uv);
+	
+	int i = frac(texcoord.x/8.0) * 8.0;
+	float4 sel0 = (i == float4(0, 1, 2, 3));
+	float4 sel1 = (i == float4(4, 5, 6, 7));
+	return dot(c, sel0) + dot(c2, sel1);
+}
+
+float4 IDCT_unpack_cols_PS(float2 texcoord : TEXCOORD0,
+				 		uniform samplerRECT image,
+				 		uniform samplerRECT image2
+				 		) : COLOR
+{
+    float2 uv = texcoord * float2(1.0, 1.0/8.0);
+	float4 c = texRECT(image, uv);
+	float4 c2 = texRECT(image2, uv);
+	
+	int i = frac(texcoord.y/8.0) * 8.0;
+	float4 sel0 = (i == float4(0, 1, 2, 3));
+	float4 sel1 = (i == float4(4, 5, 6, 7));
+	return dot(c, sel0) + dot(c2, sel1);
+}
+
+float4 Display_PS(float2 texcoord : TEXCOORD0,
+			      uniform samplerRECT image,
+			      uniform float brightness = 1.0
+			      ) : COLOR
+{
+	float4 c = texRECT(image, texcoord);
+    c *= brightness;
+    return c;
+}

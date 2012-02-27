@@ -1,0 +1,12 @@
+#version 150
+
+in vec4 vVertex;
+in vec2 vTexCoord0;
+
+out vec2 texcoord;
+
+void main(void) 
+{ 
+    texcoord = vTexCoord0;
+    gl_Position = vVertex;
+}
