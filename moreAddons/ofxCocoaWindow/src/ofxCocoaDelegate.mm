@@ -109,7 +109,7 @@
         [ self goFullScreenOnAllDisplays ];
     }
     
-    ofNotifySetup();
+    //ofNotifySetup();
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication 

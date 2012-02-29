@@ -34,6 +34,7 @@
 	BOOL isAnimating;
     
     bool bEnableSetupScreen;
+    bool bInitialized;
 }
 
 @property(nonatomic, assign) id delegate;

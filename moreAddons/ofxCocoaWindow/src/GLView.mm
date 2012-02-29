@@ -70,6 +70,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context
 {
     bEnableSetupScreen = true;
+    bInitialized = false;
     
     NSOpenGLPixelFormatAttribute attribs[] =
     {
@@ -112,7 +113,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (id) initWithFrame:(NSRect)frameRect
 {
-	self = [self initWithFrame:frameRect shareContext:nil];
+    self = [self initWithFrame:frameRect shareContext:nil];
 	return self;
 }
 
@@ -173,12 +174,18 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     if( bEnableSetupScreen )
         ofSetupScreen();
     
+    if (!bInitialized) {
+        ofNotifySetup();
+        bInitialized = true;
+    }
+    
 	if( ofbClearBg() )
     {
 		float * bgPtr = ofBgColorPtr();
 		glClearColor(bgPtr[0],bgPtr[1],bgPtr[2], bgPtr[3]);
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
+    
     
     ofNotifyUpdate();
     ofNotifyDraw();
