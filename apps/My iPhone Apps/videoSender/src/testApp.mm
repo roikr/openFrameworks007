@@ -32,7 +32,7 @@ void testApp::setup(){
 	video.bHorizontal = true;
 	video.bFlipHoriznotal = false;
 	
-	grabber.setup(&video,FRONT_CAMERA);
+	grabber.setup(&video,BACK_CAMERA);
 	
 	bCameraOffset = false;
 	
