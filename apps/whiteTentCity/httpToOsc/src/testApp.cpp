@@ -1,16 +1,19 @@
 #include "testApp.h"
-
-#define HOST "192.168.10.143" //"localhost"
-#define PORT 12345
+#include "ofxXmlSettings.h"
 #include <algorithm>
 
 //--------------------------------------------------------------
 void testApp::setup(){
     
-    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
-    cout << "Current LC_CTYPE is " << local << endl;
+//    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
+//    cout << "Current LC_CTYPE is " << local << endl;
     
-    sender.setup( HOST, PORT );
+    ofxXmlSettings xml;
+    xml.loadFile("server.xml");
+    xml.pushTag("server");
+    
+    sender.setup( xml.getAttribute("osc", "host", "localhost"), xml.getAttribute("osc", "port", 12345) );
+    xml.popTag();
 
     server = ofxHTTPServer::getServer(); // get the instance of the server
 	server->setServerRoot("www");		 // folder with files to be served
@@ -20,23 +23,6 @@ void testApp::setup(){
 //	ofAddListener(server->postEvent,this,&testApp::postRequest);
 	server->start(8888);
 }
-
-string WStringToString(const wstring& s)
-{
-    
-    
-    
-    char buffer[100];
-    int length = wcstombs ( buffer, s.c_str(), 100);
-    
-//    printf( "The number of bytes that comprise the multibyte "
-//           "string is %i\n", length );
-//    
-    return string(buffer,length);
-    
-    
-}
-
 
 
 void testApp::getRequest(ofxHTTPServerResponse & response){
@@ -62,6 +48,17 @@ void testApp::getRequest(ofxHTTPServerResponse & response){
 		m.addStringArg(message);
         
 		sender.sendMessage( m );
+        
+        //response.response="<html> <head> oF http server </head> <body> " + response.url + " <body> </html>";
+        
+        
+    }
+    
+    if (response.url == "/form.asp") {
+        
+        
+        response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body dir='rtl'> <form  name='example' method='get' action='sendMessage.asp'>מספר אוהל:<input type='text' name='tent'><br/>הודעה:<input type='text' name='message'><br/> <input type='submit' name='submit1' value='שלח'> </form> <body> </html>";
+        
         
         //response.response="<html> <head> oF http server </head> <body> " + response.url + " <body> </html>";
         

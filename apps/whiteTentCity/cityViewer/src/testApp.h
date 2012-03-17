@@ -1,0 +1,68 @@
+#pragma once
+
+#include "ofMain.h"
+#include "ofxAssimpModelLoader.h"
+#include "ofxTrueTypeFontUC.h"
+#include "ofxOsc.h"
+#include "ProjectedOverlay.h"
+
+#define PIXEL_PER_CENTIMETER 20
+#define WORD_LENGTH 15 // CENTIMETER
+
+struct message {
+    int tent;
+    vector<string> words;
+    int current;
+    int startTime;
+    float alpha;
+};
+
+
+
+class testApp : public ofBaseApp {
+	public:
+        testApp():overlay(PIXEL_PER_CENTIMETER) {};
+		void setup();
+		void update();
+		void draw();
+		
+		void keyPressed(int key);
+		void keyReleased(int key);
+		void mouseMoved(int x, int y );
+		void mouseDragged(int x, int y, int button);
+		void mousePressed(int x, int y, int button);
+		void mouseReleased(int x, int y, int button);
+		void windowResized(int w, int h);
+		void dragEvent(ofDragInfo dragInfo);
+		void gotMessage(ofMessage msg);		
+    
+        void sendMessage(int tent,string str);
+    
+        
+        ofMesh cityMesh;
+        ofMesh tentMesh;
+    
+    ofMatrix4x4 projMat,mvMat;
+   
+    
+    bool bDebug;
+    bool bProject;
+    bool bEasyCam;
+    
+    ofxTrueTypeFontUC font;
+
+    ofLight light;
+    ofEasyCam cam;
+    
+    vector<message> queue;
+    vector<message> display;
+    
+    ofxOscReceiver receiver;
+    
+    string lastMessage;
+    
+    ProjectedOverlay overlay;
+    
+    int wordDuration;
+    int messageRepetition;
+};
