@@ -4,6 +4,14 @@
 #include "ofxHTTPServer.h"
 #include "ofxOsc.h"
 
+struct message {
+    int tent;
+    string str;
+    int numWords;
+    int startTime;
+    
+};
+
 class testApp : public ofBaseApp{
 
 	public:
@@ -23,8 +31,15 @@ class testApp : public ofBaseApp{
     
         void getRequest(ofxHTTPServerResponse & response);
 //        void postRequest(ofxHTTPServerResponse & response);
+    
         
         ofxHTTPServer * server;
         ofxOscSender sender;
+    
+        vector<message> queue;
+        vector<message> display;
+    
+        int wordDuration;
+        int messageRepetition;
 		
 };

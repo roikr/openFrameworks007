@@ -50,6 +50,7 @@ void ProjectedOverlay::load() {
     
     for (int i=0;i<xml.getNumTags("tent");i++) {
         tent t;
+        t.id = xml.getAttribute("tent", "id", 100+i,i);
         xml.pushTag("tent",i);
         
         for (int j=0;j<xml.getNumTags("index");j++) {
@@ -100,7 +101,7 @@ void ProjectedOverlay::save() {
     
     for (vector<tent >::iterator titer=tents.begin(); titer!=tents.end(); titer++) {
         xml.addTag("tent");
-        
+        xml.addAttribute("tent", "id", titer->id,distance(tents.begin(), titer));
         xml.pushTag("tent",distance(tents.begin(), titer));
         
         for (vector<int>::iterator iter=titer->indices.begin();iter!=titer->indices.end();iter++) {

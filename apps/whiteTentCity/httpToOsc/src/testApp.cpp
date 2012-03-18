@@ -1,18 +1,20 @@
 #include "testApp.h"
 #include "ofxXmlSettings.h"
-#include <algorithm>
 
 //--------------------------------------------------------------
 void testApp::setup(){
     
-//    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
-//    cout << "Current LC_CTYPE is " << local << endl;
     
+        
     ofxXmlSettings xml;
     xml.loadFile("server.xml");
     xml.pushTag("server");
     
     sender.setup( xml.getAttribute("osc", "host", "localhost"), xml.getAttribute("osc", "port", 12345) );
+    wordDuration = xml.getAttribute("animation", "wordDuration", 2000);
+    messageRepetition = xml.getAttribute("animation", "messageRepetition", 3);
+    
+    
     xml.popTag();
 
     server = ofxHTTPServer::getServer(); // get the instance of the server
@@ -34,24 +36,18 @@ void testApp::getRequest(ofxHTTPServerResponse & response){
     }
     
     if (response.url == "/sendMessage.asp") {
-        ofxOscMessage m;
-		m.setAddress( "/sendMessage" );
-		m.addIntArg( ofToInt(response.requestFields["tent"]));
-		string message = response.requestFields["message"];
         
-        cout << message << endl;
+        message msg;
+        msg.tent = ofToInt(response.requestFields["tent"]);
+        msg.str = response.requestFields["message"];
+        msg.numWords=ofSplitString(msg.str, " ").size();
         
-        response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body> " + message + " <body> </html>";
+        cout << msg.str << endl;
         
-        cout << message << endl;
+        response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body> " + msg.str + " <body> </html>";
         
-		m.addStringArg(message);
-        
-		sender.sendMessage( m );
-        
-        //response.response="<html> <head> oF http server </head> <body> " + response.url + " <body> </html>";
-        
-        
+        queue.push_back(msg);
+    
     }
     
     if (response.url == "/form.asp") {
@@ -69,8 +65,52 @@ void testApp::getRequest(ofxHTTPServerResponse & response){
 }
 
 
+
 //--------------------------------------------------------------
 void testApp::update(){
+    vector<message> newDisplay;
+    
+    
+    for (vector<message>::iterator miter=display.begin(); miter!=display.end(); miter++) {
+        // WORD_DURATION ms for each word
+        if (ofGetElapsedTimeMillis()-miter->startTime<miter->numWords*wordDuration*messageRepetition) {
+            newDisplay.push_back(*miter);
+        } 
+    }
+    
+    
+    if (newDisplay.size()!=display.size()) {
+        display = newDisplay;
+    }
+    
+    vector<message> newQueue;
+    
+    for (vector<message>::iterator miter=queue.begin(); miter!=queue.end(); miter++) {
+        vector<message>::iterator diter;
+        for (diter=display.begin(); diter!=display.end() && miter->tent != diter->tent; diter++);
+        if (diter==display.end()) {
+            
+            miter->startTime = ofGetElapsedTimeMillis();
+            display.push_back(*miter);
+            
+            ofxOscMessage m;
+            m.setAddress( "/sendMessage" );
+            m.addIntArg(miter->tent);
+            m.addStringArg(miter->str);
+            sender.sendMessage( m );
+            
+            cout << "send: " << miter->tent << " " << miter->str << endl;
+            
+            
+        } else {
+            newQueue.push_back(*miter);
+        }
+    }
+    
+    
+    if (newQueue.size()!=queue.size()) {
+        queue = newQueue;
+    }
 
 }
 

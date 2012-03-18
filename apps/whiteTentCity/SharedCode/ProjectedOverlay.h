@@ -24,6 +24,7 @@ struct screen {
 } ;
 
 struct tent {
+    int id;
     vector<int> indices;
     vector<ofVec3f> vertices;
     ofMatrix4x4 glMat;

@@ -2,79 +2,17 @@
 #include "ofxProCamToolkit.h"
 #include "ofxRKProCamToolkit.h"
 #include "ofxXmlSettings.h"
-#include "Poco/String.h"
-
-/*
-//--------------------------------------------------
-vector <wstring> ofSplitWString(const wstring & source, const string & delimiter, bool ignoreEmpty = false, bool trim = false);
-
-vector <wstring> ofSplitWString(const wstring & source, const string & delimiter, bool ignoreEmpty, bool trim) {
-	vector<wstring> result;
-	if (delimiter.empty()) {
-		result.push_back(source);
-		return result;
-	}
-	wstring::const_iterator substart = source.begin(), subend;
-	while (true) {
-		subend = search(substart, source.end(), delimiter.begin(), delimiter.end());
-		wstring sub(substart, subend);
-		if(trim) {
-			Poco::trimInPlace(sub);
-		}
-		if (!ignoreEmpty || !sub.empty()) {
-			result.push_back(sub);
-		}
-		if (subend == source.end()) {
-			break;
-		}
-		substart = subend + delimiter.size();
-	}
-	return result;
-}
- 
-*/
-
-wstring StringToWString(const string& s);
-string WStringToString(const wstring& s);
-
-wstring StringToWString(const string& s)
-{
-//    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
-//    cout << "Current LC_CTYPE is " << local << endl;
-//    
-    wchar_t buffer[100];
-    int length = mbstowcs(buffer, s.c_str(), 100);
-    
-//    printf( "The number of bytes that comprise the widechar "
-//           "string is %i\n", length );
-    
-    return wstring(buffer,length);
-}
+#include "ofxStringUtils.h"
 
 
-string WStringToString(const wstring& s)
-{
-    
-//    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
-//    cout << "Current LC_CTYPE is " << local << endl;
-//    
-    char buffer[100];
-    int length = wcstombs ( buffer, s.c_str(), 100);
 
-//    printf( "The number of bytes that comprise the multibyte "
-//           "string is %i\n", length );
-//    
-    return string(buffer,length);
-    
-    
-}
+
 
 //--------------------------------------------------------------
 void testApp::setup(){
     
-    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
-    cout << "Current LC_CTYPE is " << local << endl;
-    
+    SetLocale("he_IL.UTF-8");
+   
     ofxXmlSettings xml;
     xml.loadFile("viewer.xml");
     xml.pushTag("viewer");
@@ -100,7 +38,6 @@ void testApp::setup(){
     
     
     model.loadModel(xml.getAttribute("model", "city", ""));
-    //cityModel.loadModel("base.3ds");
     cityMesh = model.getMesh(0);
     model.loadModel(xml.getAttribute("model", "tent", ""));
 	tentMesh = model.getMesh(0);
@@ -109,6 +46,7 @@ void testApp::setup(){
     wordDuration = xml.getAttribute("animation", "wordDuration", 2000);
     messageRepetition = xml.getAttribute("animation", "messageRepetition", 3);
     
+    xml.popTag();
     
     cout<< "numIndices: " << cityMesh.getNumIndices() << endl;
     
@@ -148,27 +86,6 @@ void testApp::setup(){
     
 }
 
-void testApp::sendMessage(int tent,string str) {
-    if (tent<overlay.tents.size()) {
-        message m;
-        m.tent = tent;
-        
-        vector<string> list = ofSplitString(str, " ");
-        
-//        for (vector<string>::reverse_iterator iter=list.rbegin(); iter!=list.rend(); iter++) {
-//            m.words.push_back(*iter);
-//        }
-//        for (vector<string>::iterator iter=list.begin(); iter!=list.end(); iter++) {
-//            string message = *iter;
-//            reverse(message.begin(),message.end());
-//            m.words.push_back(message);
-//        }
-        
-        m.words = list;
-        
-        queue.push_back(m);
-    }
-}
 
 
 //--------------------------------------------------------------
@@ -184,49 +101,39 @@ void testApp::update(){
 		// check for mouse moved message
 		if ( m.getAddress() == "/sendMessage" )
 		{
-			lastMessage = m.getArgAsString(1);
-            sendMessage(m.getArgAsInt32(0),lastMessage );
+			
+            int tent = m.getArgAsInt32(0);
+            
+            lastMessage = m.getArgAsString(1);
+            message msg;
+            msg.words = ofSplitString(m.getArgAsString(1), " ");
+            msg.startTime = ofGetElapsedTimeMillis();
+            messages[tent] = msg;
+            cout << "received: " << tent << " " << lastMessage << endl;
+                
+            
 		}
     }
     
-    vector<message> newDisplay;
+    vector<int> messagesDone;
     
     
-    for (vector<message>::iterator miter=display.begin(); miter!=display.end(); miter++) {
-        int current = (ofGetElapsedTimeMillis()-miter->startTime) / wordDuration; // WORD_DURATION ms for each word
-        if (current<miter->words.size()*messageRepetition) {
-            miter->current = current  % miter->words.size();
-            float phase = (float)((ofGetElapsedTimeMillis()-miter->startTime) % wordDuration) / wordDuration;
-            miter->alpha = ofMap(phase, 0, 0.1, 0, 1,true)-ofMap(phase, 0.9, 1, 0, 1,true);
-            newDisplay.push_back(*miter);
-        } 
-    }
-    
-    
-    if (newDisplay.size()!=display.size()) {
-        display = newDisplay;
-    }
-    
-    vector<message> newQueue;
-    
-    for (vector<message>::iterator miter=queue.begin(); miter!=queue.end(); miter++) {
-        vector<message>::iterator diter;
-        for (diter=display.begin(); diter!=display.end() && miter->tent != diter->tent; diter++);
-        if (diter==display.end()) {
-            miter->current = 0 ;
-            miter->alpha = 0;
-            miter->startTime = ofGetElapsedTimeMillis();
-            display.push_back(*miter);
+    for (map<int,message>::iterator miter=messages.begin(); miter!=messages.end(); miter++) {
+        int current = (ofGetElapsedTimeMillis()-miter->second.startTime) / wordDuration; // WORD_DURATION ms for each word
+        if (current<miter->second.words.size()*messageRepetition) {
+            miter->second.current = current  % miter->second.words.size();
+            float phase = (float)((ofGetElapsedTimeMillis()-miter->second.startTime) % wordDuration) / wordDuration;
+            miter->second.alpha = ofMap(phase, 0, 0.1, 0, 1,true)-ofMap(phase, 0.9, 1, 0, 1,true);
+            
         } else {
-            newQueue.push_back(*miter);
+            messagesDone.push_back(miter->first);
         }
     }
-
     
-    if (newQueue.size()!=queue.size()) {
-        queue = newQueue;
-    }
     
+    for (vector<int>::iterator iter=messagesDone.begin();iter!=messagesDone.end();iter++) {
+        messages.erase(*iter); 
+    }    
     
 }
 
@@ -268,24 +175,42 @@ void testApp::draw() {
     if (bProject) {
         glDisable(GL_DEPTH_TEST);
         ofFill();
-        for (vector<message>::iterator miter=display.begin(); miter!=display.end(); miter++) {
-            vector<tent>::iterator iter=overlay.tents.begin()+miter->tent;
-            
+        for (vector<tent>::iterator iter=overlay.tents.begin(); iter!=overlay.tents.end(); iter++) {
+        
             ofPushMatrix();
             glMultMatrixf(iter->glMat.getPtr());
             
-            for (vector<screen>::iterator siter=overlay.screens.begin(); siter!=overlay.screens.end(); siter++) {
                 
-                ofPushMatrix();
-                glMultMatrixf(siter->glMat.getPtr());
-                
-                ofSetColor(0,0,0,miter->alpha*255);
-               
-                wstring word(StringToWString(miter->words[miter->current]));
+            vector<screen>::iterator siter;
+            
+            map<int,message>::iterator miter=messages.find(iter->id);
+            if (miter!=messages.end()) {
+                wstring word(StringToWString(miter->second.words[miter->second.current]));
                 reverse(word.begin(),word.end());
-                font.drawString(word, (WORD_LENGTH * PIXEL_PER_CENTIMETER - font.stringWidth(word))/2, font.stringHeight(word)); 
-                ofPopMatrix();
+                
+                for (int i=0; i<4; i++) {
+                    siter=overlay.screens.begin()+i;
+                    ofPushMatrix();
+                    glMultMatrixf(siter->glMat.getPtr());
+                    ofSetColor(0,0,0,miter->second.alpha*255);
+                    font.drawString(word, - font.stringWidth(word)/2, font.stringHeight(word)/2); 
+                    ofPopMatrix();
+                }
             }
+            
+           
+            
+            string s(ofToString(iter->id));
+            wstring word=L"101";
+            word.assign(s.begin(), s.end());
+            
+            siter=overlay.screens.begin()+4;
+            ofPushMatrix();
+            glMultMatrixf(siter->glMat.getPtr());
+            ofSetColor(0);
+            font.drawString(word, -font.stringWidth(word)/2, font.stringHeight(word)/2); 
+            ofPopMatrix();
+            
             ofPopMatrix();
         }
     }

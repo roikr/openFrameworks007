@@ -186,6 +186,13 @@ void screenCoordinateSystem(vector<ofVec3f> &input,ofVec3f &origin,ofVec3f &xVec
     yVec = (input[0]-input[3]).getNormalized();
 }
 
+void findCoordinateSystem(vector<ofVec3f> &input,ofVec3f &origin,ofVec3f &xVec,ofVec3f &yVec) {
+    origin = input[0];
+    xVec = (input[1]-input[0]).getNormalized();
+    float proj = xVec.dot(input[3]-input[0]);
+    yVec = (input[3]-(input[0]+xVec*proj)).getNormalized();
+}
+
 void ofSaveMatrices(string filename) {
     ofMatrix4x4 projMat,mvMat;
     glGetFloatv(GL_PROJECTION_MATRIX,projMat.getPtr());

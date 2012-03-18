@@ -7,10 +7,9 @@
 #include "ProjectedOverlay.h"
 
 #define PIXEL_PER_CENTIMETER 20
-#define WORD_LENGTH 15 // CENTIMETER
+
 
 struct message {
-    int tent;
     vector<string> words;
     int current;
     int startTime;
@@ -36,9 +35,7 @@ class testApp : public ofBaseApp {
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);		
     
-        void sendMessage(int tent,string str);
     
-        
         ofMesh cityMesh;
         ofMesh tentMesh;
     
@@ -54,8 +51,7 @@ class testApp : public ofBaseApp {
     ofLight light;
     ofEasyCam cam;
     
-    vector<message> queue;
-    vector<message> display;
+    map<int,message> messages;
     
     ofxOscReceiver receiver;
     

@@ -26,7 +26,7 @@ void testApp::setup(){
    // cityModel.loadModel("TENTS_PIVOTS.obj",true);
     cityModel.loadModel("base6.obj",true);
     cityMesh = cityModel.getMesh(0);
-    tentModel.loadModel("tent12.obj",true);
+    tentModel.loadModel("tent12_low.obj",true);
 	tentMesh = tentModel.getMesh(0);
     
     cout<< "numIndices: " << cityMesh.getNumIndices() << endl;
@@ -81,6 +81,7 @@ void testApp::drawTent() {
     words.push_back(L"שרוד");
     words.push_back(L"קדצ");
     words.push_back(L"יתרבח");
+    words.push_back(L"101");
     
     for (vector<screen>::iterator siter=overlay.screens.begin(); siter!=overlay.screens.end(); siter++) {
 
@@ -105,7 +106,7 @@ void testApp::drawTent() {
         
         if (dist<words.size()) {
             wstring word = words[dist];
-            font.drawString(word, (WORD_LENGTH * PIXEL_PER_CENTIMETER - font.stringWidth(word))/2, font.stringHeight(word)); 
+            font.drawString(word, - font.stringWidth(word)/2, font.stringHeight(word)/2); 
         }
         
         ofPopMatrix();
@@ -171,7 +172,7 @@ void testApp::draw(){
             
             cam.begin();
             glEnable(GL_DEPTH_TEST);
-            tentMesh.drawFaces();
+            tentMesh.drawWireframe();
             
             // check to see if anything is selected
             // draw hover point magenta
@@ -351,6 +352,10 @@ void testApp::keyPressed(int key){
             cam.begin();
             ofSaveMatrices(ofToDataPath("matrices.txt"));
             cam.end();
+            break;
+        case 'W':
+        case 'w':
+            overlay.save();
             break;
         default:
             break;

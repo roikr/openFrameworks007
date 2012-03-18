@@ -13,7 +13,7 @@
 
 class testApp : public ofBaseApp {
 	public:
-        testApp():overlay("settings.xml",PIXEL_PER_CENTIMETER) {};
+        testApp():overlay(PIXEL_PER_CENTIMETER) {};
 		void setup();
 		void update();
 		void draw();
