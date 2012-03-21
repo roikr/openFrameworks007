@@ -8,6 +8,7 @@
 
 #include "ofxStringUtils.h"
 #include <iostream>
+#include "ofConstants.h"
 
 /*
  #include "Poco/String.h"
@@ -42,38 +43,63 @@
  */
 
 void SetLocale(string locale) {
-    char* local = setlocale(LC_ALL, locale.c_str());
-    cout << "Current LC_CTYPE is " << local << endl;
+
+    printf ("Locale is: %s\n", setlocale(LC_ALL,locale.c_str()));
+//    char* local = setlocale(LC_ALL, locale.c_str());
+//    cout << "Current LC_CTYPE is " << local << endl;
+
+    
 }
 
 
-wstring StringToWString(const string& s)
+wstring StringToWString(const string& str)
 {
+#ifdef TARGET_WIN32
+    // Convert an ASCII string to a Unicode String
+    std::wstring wstrTo;
+    wchar_t *wszTo = new wchar_t[str.length() + 1];
+    wszTo[str.size()] = L'\0';
+    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, wszTo, (int)str.length());
+    wstrTo = wszTo;
+    delete[] wszTo;
+    return wstrTo;
+#else
     //    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
     //    cout << "Current LC_CTYPE is " << local << endl;
     //    
     wchar_t buffer[100];
-    int length = mbstowcs(buffer, s.c_str(), 100);
+    int length = mbstowcs(buffer, str.c_str(), 100);
     
     //    printf( "The number of bytes that comprise the widechar "
     //           "string is %i\n", length );
     
     return wstring(buffer,length);
+#endif
 }
 
 
-string WStringToString(const wstring& s)
+string WStringToString(const wstring& wstr)
 {
-    
+#ifdef TARGET_WIN32
+     // Convert a Unicode string to an ASCII string
+    std::string strTo;
+    char *szTo = new char[wstr.length() + 1];
+    szTo[wstr.size()] = '\0';
+    WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, szTo, (int)wstr.length(), NULL, NULL);
+    strTo = szTo;
+    delete[] szTo;
+    return strTo;
+#else    
     //    char* local = setlocale(LC_ALL, "he_IL.UTF-8");
     //    cout << "Current LC_CTYPE is " << local << endl;
     //    
     char buffer[100];
-    int length = wcstombs ( buffer, s.c_str(), 100);
+    int length = wcstombs ( buffer, wstr.c_str(), 100);
     
     //    printf( "The number of bytes that comprise the multibyte "
     //           "string is %i\n", length );
     //    
     return string(buffer,length);
+#endif
 }
 

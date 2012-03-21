@@ -7,8 +7,6 @@
 
 
 #define PIXEL_PER_CENTIMETER 20
-#define WORD_LENGTH 15 // CENTIMETER
-
 
 
 class testApp : public ofBaseApp {
@@ -68,6 +66,8 @@ class testApp : public ofBaseApp {
     ProjectedOverlay overlay;
     
     vector<ofVec3f> bb;
+    
+    vector<int> indices; // for city polygons
     
     
 };

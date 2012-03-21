@@ -11,6 +11,8 @@
 #include "ofVec3f.h"
 #include "ofMatrix4x4.h"
 
+
+
 struct screen {
     int index; // index of the first vertex of the screen for deleting by first index
     vector<int> indices;
@@ -19,8 +21,6 @@ struct screen {
     ofVec3f yVec;
     vector<ofVec2f> proj;
     ofMatrix4x4 glMat;
-    
-    
 } ;
 
 struct tent {
@@ -28,6 +28,10 @@ struct tent {
     vector<int> indices;
     vector<ofVec3f> vertices;
     ofMatrix4x4 glMat;
+};
+
+struct polygon {
+    vector<ofVec3f> vertices;
 };
 
 
@@ -42,6 +46,9 @@ public:
     vector<screen> screens;
     vector<tent> tents;
     
+    screen playground;
+    vector<polygon> polygons;
+       
     void updateMatrices();
     
     float scale;

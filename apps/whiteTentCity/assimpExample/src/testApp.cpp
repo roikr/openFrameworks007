@@ -9,30 +9,25 @@ void testApp::setup(){
     ofDisableArbTex();
 
         
-    if(model.loadModel("tent_low.obj",true)){
+    if(model.loadModel("tent3.obj",true)){
         
-        mesh1 = model.getMesh(0);
+        mesh = model.getMesh(0);
     	
     }
     
-    if(model.loadModel("tent.obj",true)){
-        
-        mesh2 = model.getMesh(0);
-    	
-    }
-
+    
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
 	glEnable(GL_DEPTH_TEST);
 
     //some model / light stuff
     glShadeModel(GL_SMOOTH);
- //   light.enable();
+    //light.enable();
     
     ofEnableSeparateSpecularLight();
 //    ofSetGlobalAmbientColor(ofColor(30,30,30));
 
-	
+//	glEnable(GL_NORMALIZE);
 }
 
 //--------------------------------------------------------------
@@ -53,20 +48,19 @@ void testApp::draw(){
     
     ofPushMatrix();
     
-//    model.drawFaces();
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
+    model.drawFaces();
     
 
     
-    glRotatef(90, 1.0f, 0.0f, 0.0f);
+   
 //    glEnable(GL_NORMALIZE);
 //    glScalef(100, 100, 100);
     
     
-    mesh1.drawWireframe();
-    glScalef(100, 100, 100);
-    mesh2.drawWireframe();
-    
-    ofPopMatrix();
+   // mesh.drawWireframe();
+        ofPopMatrix();
     
     cam.end();
 /*

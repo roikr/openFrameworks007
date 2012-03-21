@@ -1,0 +1,134 @@
+// !$*UTF8*$!
+{
+	E4B69B4C0A3A1720003C02F2 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = E4EC0DA0150C9B2700D42A3D /* emptyExample */;
+		activeTarget = E4B69B5A0A3A1756003C02F2 /* emptyExample */;
+		codeSenseManager = E4EC0DC2150C9B4700D42A3D /* Code sense */;
+		executables = (
+			E4EC0DA0150C9B2700D42A3D /* emptyExample */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					582,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 353147687;
+			PBXWorkspaceStateSaveDate = 353147687;
+		};
+		perUserProjectItems = {
+			E4EC0DC9150C9DBB00D42A3D /* PlistBookmark */ = E4EC0DC9150C9DBB00D42A3D /* PlistBookmark */;
+			E4EC0DCA150C9DBB00D42A3D /* PBXTextBookmark */ = E4EC0DCA150C9DBB00D42A3D /* PBXTextBookmark */;
+			E4EC0DCB150C9DBB00D42A3D /* PBXTextBookmark */ = E4EC0DCB150C9DBB00D42A3D /* PBXTextBookmark */;
+		};
+		sourceControlManager = E4EC0DC1150C9B4700D42A3D /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	E4B69B5A0A3A1756003C02F2 /* emptyExample */ = {
+		activeExec = 0;
+		executables = (
+			E4EC0DA0150C9B2700D42A3D /* emptyExample */,
+		);
+	};
+	E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {760, 6751}}";
+			sepNavSelRange = "{1754, 0}";
+			sepNavVisRange = "{2740, 1390}";
+		};
+	};
+	E4EC0DA0150C9B2700D42A3D /* emptyExample */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = emptyExample;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	E4EC0DC1150C9B4700D42A3D /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	E4EC0DC2150C9B4700D42A3D /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	E4EC0DC9150C9DBB00D42A3D /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/roikr/Developer/of_preRelease_v007_iphone/apps/whiteTentCity/wordsSenseExample/openFrameworks-Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
+	E4EC0DCA150C9DBB00D42A3D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 130";
+		rLen = 0;
+		rLoc = 3550;
+		rType = 0;
+		vrLen = 1442;
+		vrLoc = 2941;
+	};
+	E4EC0DCB150C9DBB00D42A3D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 81";
+		rLen = 0;
+		rLoc = 1754;
+		rType = 0;
+		vrLen = 1390;
+		vrLoc = 2740;
+	};
+}

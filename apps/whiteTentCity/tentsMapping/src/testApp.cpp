@@ -23,10 +23,10 @@ void testApp::setup(){
 	
 	// this sets the camera's distance from the object
 	//cam.setDistance(100);
-   // cityModel.loadModel("TENTS_PIVOTS.obj",true);
-    cityModel.loadModel("base6.obj",true);
+//    cityModel.loadModel("TENTS_PIVOTS.obj",true);
+    cityModel.loadModel("base14.obj",true);
     cityMesh = cityModel.getMesh(0);
-    tentModel.loadModel("tent12_low.obj",true);
+    tentModel.loadModel("tent_14_low_poly.obj",true);
 	tentMesh = tentModel.getMesh(0);
     
     cout<< "numIndices: " << cityMesh.getNumIndices() << endl;
@@ -120,6 +120,16 @@ void testApp::drawCity() {
         glMultMatrixf(iter->glMat.getPtr());
         drawTent();
         ofPopMatrix();
+    }
+    
+    ofNoFill();
+    for (vector<polygon>::iterator iter=overlay.polygons.begin(); iter!=overlay.polygons.end(); iter++) {
+        
+        glBegin(GL_LINE_LOOP);
+        for (vector<ofVec3f>::iterator viter=iter->vertices.begin();viter!=iter->vertices.end();viter++) {
+            glVertex3f(viter->x, viter->y, viter->z);
+        }
+        glEnd();
     }
 }
 
@@ -273,6 +283,17 @@ void testApp::draw(){
             
             ofCircle(selected, 5);
             ofDrawBitmapString(ofToString(choice), selected+ofVec2f(5, -25));
+            
+            
+            ofSetColor(150);
+            
+            for (vector<int>::iterator iter=indices.begin();iter!=indices.end();iter++) {
+                ofVec3f &pos = imageMesh.getVerticesPointer()[*iter];
+                ofCircle(pos, 5);
+                ofDrawBitmapString(ofToString(distance(indices.begin(), iter)+1), pos+ofVec2f(5, 25));
+                
+            }
+            
         }   break;
         case STATE_SCREEN:
             drawScreen();
@@ -472,7 +493,42 @@ void testApp::keyPressed(int key){
                     }
                 }   break;  
                     
-                
+                case OF_KEY_LEFT:
+                    if (!indices.empty()) {
+                        indices.erase(indices.end()-1);
+                    }
+                    break;
+                case OF_KEY_RIGHT:
+                    indices.push_back(choice);
+                    break;
+                case OF_KEY_DOWN: 
+                    if (!indices.empty()) {
+                        polygon p;
+//                        p.indices = indices;
+                        for (vector<int>::iterator iter=indices.begin(); iter!=indices.end(); iter++) {
+                            p.vertices.push_back(cityMesh.getVerticesPointer()[*iter]);
+                        }
+                        overlay.polygons.push_back(p);
+                        indices.clear();
+                        overlay.save();
+                    } 
+                    break;
+                    
+                case OF_KEY_UP: 
+                    if (indices.size()>=4) {
+                        overlay.playground.indices = indices;
+                        vector<ofVec3f> vertices;
+                        for (vector<int>::iterator iter=indices.begin(); iter!=indices.end(); iter++) {
+                            vertices.push_back(cityMesh.getVerticesPointer()[*iter]);
+                        }
+                        
+                        findCoordinateSystem(vertices,overlay.playground.origin,overlay.playground.xVec,overlay.playground.yVec);
+
+                        indices.clear();
+                        overlay.save();
+                    } 
+                    break;
+
                     
                 default:
                  break;

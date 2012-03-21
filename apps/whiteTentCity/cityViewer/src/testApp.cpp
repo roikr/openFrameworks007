@@ -10,8 +10,12 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    
+
+#ifdef TARGET_WIN32
+    SetLocale("Hebrew");
+#else
     SetLocale("he_IL.UTF-8");
+#endif
    
     ofxXmlSettings xml;
     xml.loadFile("viewer.xml");
@@ -201,7 +205,7 @@ void testApp::draw() {
            
             
             string s(ofToString(iter->id));
-            wstring word=L"101";
+            wstring word;//=L"101";
             word.assign(s.begin(), s.end());
             
             siter=overlay.screens.begin()+4;
@@ -253,8 +257,6 @@ void testApp::keyPressed(int key){
 			bEasyCam=!bEasyCam;
 			break;
     
-    
-    
         case 'P':
         case 'p': 
             bProject = !bProject;
@@ -279,6 +281,16 @@ void testApp::keyPressed(int key){
             ofLoadMatrices(ofToDataPath("matrices.txt"),projMat,mvMat);
             
             break;
+        case 'T':
+        case 't': {
+            message msg;
+            msg.words = ofSplitString("העם דורש צדק חברתי", " ");
+            msg.startTime = ofGetElapsedTimeMillis();
+            
+            for (vector<tent>::iterator iter=overlay.tents.begin(); iter!=overlay.tents.end(); iter++) {
+                messages[iter->id] = msg;;
+            }
+        } break;
         default:
             break;
     }

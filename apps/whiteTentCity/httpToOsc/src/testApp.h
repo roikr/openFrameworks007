@@ -35,6 +35,7 @@ class testApp : public ofBaseApp{
         
         ofxHTTPServer * server;
         ofxOscSender sender;
+        ofxOscSender wordsSender;
     
         vector<message> queue;
         vector<message> display;

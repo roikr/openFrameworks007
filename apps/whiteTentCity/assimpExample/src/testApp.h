@@ -24,8 +24,7 @@ class testApp : public ofBaseApp{
     
         ofxAssimpModelLoader model;
 
-        ofVboMesh mesh1;
-        ofVboMesh mesh2;
+        ofVboMesh mesh;
         ofPoint position;
         float normScale;
         ofPoint scale;

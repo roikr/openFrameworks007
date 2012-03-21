@@ -11,6 +11,8 @@ void testApp::setup(){
     xml.pushTag("server");
     
     sender.setup( xml.getAttribute("osc", "host", "localhost"), xml.getAttribute("osc", "port", 12345) );
+    wordsSender.setup( xml.getAttribute("wordsSender", "host", "localhost"), xml.getAttribute("wordsSender", "port", 12346) );
+    
     wordDuration = xml.getAttribute("animation", "wordDuration", 2000);
     messageRepetition = xml.getAttribute("animation", "messageRepetition", 3);
     
@@ -101,6 +103,10 @@ void testApp::update(){
             
             cout << "send: " << miter->tent << " " << miter->str << endl;
             
+            m.clear();
+            m.setAddress("/addWords");
+            m.addStringArg(miter->str);
+            wordsSender.sendMessage(m);
             
         } else {
             newQueue.push_back(*miter);
