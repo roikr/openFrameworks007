@@ -46,6 +46,8 @@ void testApp::setup(){
     model.loadModel(xml.getAttribute("model", "tent", ""));
 	tentMesh = model.getMesh(0);
     
+    cityBrightness = xml.getAttribute("city", "brightness", 100);
+    tentBrightness = xml.getAttribute("tent", "brightness", 200);
 
     wordDuration = xml.getAttribute("animation", "wordDuration", 2000);
     messageRepetition = xml.getAttribute("animation", "messageRepetition", 3);
@@ -105,7 +107,6 @@ void testApp::update(){
 		// check for mouse moved message
 		if ( m.getAddress() == "/sendMessage" )
 		{
-			
             int tent = m.getArgAsInt32(0);
             
             lastMessage = m.getArgAsString(1);
@@ -163,9 +164,9 @@ void testApp::draw() {
    
     glEnable(GL_DEPTH_TEST);
     
-    ofSetColor(50);
+    ofSetColor(cityBrightness);
     cityMesh.drawFaces();
-    ofSetColor(100);
+    ofSetColor(tentBrightness);
     for (vector<tent>::iterator iter=overlay.tents.begin(); iter!=overlay.tents.end(); iter++) {
         ofPushMatrix();
         glMultMatrixf(iter->glMat.getPtr());
@@ -291,6 +292,7 @@ void testApp::keyPressed(int key){
                 messages[iter->id] = msg;;
             }
         } break;
+            
         default:
             break;
     }

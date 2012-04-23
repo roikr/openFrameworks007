@@ -4,14 +4,21 @@
 //--------------------------------------------------------------
 void testApp::setup(){
     
-    
+    //ofRegisterURLNotification(this);
         
     ofxXmlSettings xml;
     xml.loadFile("server.xml");
     xml.pushTag("server");
     
-    sender.setup( xml.getAttribute("osc", "host", "localhost"), xml.getAttribute("osc", "port", 12345) );
-    wordsSender.setup( xml.getAttribute("wordsSender", "host", "localhost"), xml.getAttribute("wordsSender", "port", 12346) );
+    
+    
+    for (int i=0; i<xml.getNumTags("osc"); i++) {
+        ofxOscSender *s= new ofxOscSender;
+        s->setup(xml.getAttribute("osc", "host", "localhost",i), xml.getAttribute("osc", "port", 12345,i));
+        senders.push_back(s);
+    }
+    
+    
     
     wordDuration = xml.getAttribute("animation", "wordDuration", 2000);
     messageRepetition = xml.getAttribute("animation", "messageRepetition", 3);
@@ -22,10 +29,10 @@ void testApp::setup(){
     server = ofxHTTPServer::getServer(); // get the instance of the server
 	server->setServerRoot("www");		 // folder with files to be served
 	server->setUploadDir("upload");		 // folder to save uploaded files
-	server->setCallbackExtension("asp");	 // extension of urls that aren't files but will generate a post or get event
+	server->setCallbackExtension("php");	 // extension of urls that aren't files but will generate a post or get event
 	ofAddListener(server->getEvent,this,&testApp::getRequest);
 //	ofAddListener(server->postEvent,this,&testApp::postRequest);
-	server->start(8888);
+	server->start(8080);
 }
 
 
@@ -37,7 +44,7 @@ void testApp::getRequest(ofxHTTPServerResponse & response){
         cout << iter->first << ": " << iter->second << endl;
     }
     
-    if (response.url == "/sendMessage.asp") {
+    if (response.url == "/message.php") {
         
         message msg;
         msg.tent = ofToInt(response.requestFields["tent"]);
@@ -46,22 +53,58 @@ void testApp::getRequest(ofxHTTPServerResponse & response){
         
         cout << msg.str << endl;
         
-        response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body> " + msg.str + " <body> </html>";
+        response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body dir='rtl'>ההודעה נשלחה !<br/><br!><form  name='example' method='get' action='http://tent.dyndns-mail.com:8080/message.php'>מספר אוהל:<input type='text' name='tent'><br/>הודעה:<input type='text' name='message'><br/> <input type='submit' name='submit1' value='שלח'> </form> <body> </html>";
+        
+        //response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body> " + msg.str + " <body> </html>";
         
         queue.push_back(msg);
     
+        ofLoadURLAsync("http://www.animishmish.com/tentTweet/tweet/?message="+msg.str);
     }
     
-    if (response.url == "/form.asp") {
+    if (response.url == "/sms.php") {
+        
+        message msg;
+        msg.tent = ofToInt(response.requestFields["code"]);
+        msg.str = response.requestFields["sms"];
+        msg.numWords=ofSplitString(msg.str, " ").size();
+        
+        cout << msg.str << endl;
+        
+        response.response="תודה!";
         
         
-        response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body dir='rtl'> <form  name='example' method='get' action='sendMessage.asp'>מספר אוהל:<input type='text' name='tent'><br/>הודעה:<input type='text' name='message'><br/> <input type='submit' name='submit1' value='שלח'> </form> <body> </html>";
+        queue.push_back(msg);
+        
+        ofLoadURLAsync("http://www.animishmish.com/tentTweet/tweet/?message="+msg.str);
+    }
+    
+    
+    
+    if (response.url == "/form.php") {
+        
+        
+        response.response="<html lang='he'> <head> <meta charset='utf-8' /> </head> <body dir='rtl'> <form  name='example' method='get' action='http://tent.dyndns-mail.com:8080/message.php'>מספר אוהל:<input type='text' name='tent'><br/>הודעה:<input type='text' name='message'><br/> <input type='submit' name='submit1' value='שלח'> </form> <body> </html>";
         
         
         //response.response="<html> <head> oF http server </head> <body> " + response.url + " <body> </html>";
         
         
     }
+    
+    if (response.url == "/ban.php") {
+        
+        ofxOscMessage m;
+        m.setAddress( "/ban" );
+        
+        m.addStringArg(response.requestFields["word"]);
+        
+        for (vector<ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+            (*iter)->sendMessage(m);
+        }
+    }
+    
+    
     
     
 }
@@ -99,14 +142,11 @@ void testApp::update(){
             m.setAddress( "/sendMessage" );
             m.addIntArg(miter->tent);
             m.addStringArg(miter->str);
-            sender.sendMessage( m );
             
-            cout << "send: " << miter->tent << " " << miter->str << endl;
+            for (vector<ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+                (*iter)->sendMessage(m);
+            }
             
-            m.clear();
-            m.setAddress("/addWords");
-            m.addStringArg(miter->str);
-            wordsSender.sendMessage(m);
             
         } else {
             newQueue.push_back(*miter);

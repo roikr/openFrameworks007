@@ -31,11 +31,12 @@ class testApp : public ofBaseApp{
     
         void getRequest(ofxHTTPServerResponse & response);
 //        void postRequest(ofxHTTPServerResponse & response);
-    
+        void urlResponse(ofHttpResponse &response);
+        
         
         ofxHTTPServer * server;
-        ofxOscSender sender;
-        ofxOscSender wordsSender;
+        vector<ofxOscSender*> senders;
+        
     
         vector<message> queue;
         vector<message> display;

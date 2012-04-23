@@ -61,4 +61,7 @@ class testApp : public ofBaseApp {
     
     int wordDuration;
     int messageRepetition;
+    
+    int cityBrightness;
+    int tentBrightness;
 };

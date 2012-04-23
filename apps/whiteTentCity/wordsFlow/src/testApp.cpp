@@ -17,43 +17,6 @@ void testApp::SayGoodbye(b2Joint* joint)
 }
 
 
-// Implement contact listener.
-void testApp::BeginContact(b2Contact* contact)
-{
-    b2Fixture* fixtureA = contact->GetFixtureA();
-    b2Fixture* fixtureB = contact->GetFixtureB();
-    
-    if (fixtureA->IsSensor() && !(fixtureB->IsSensor()))
-    {
-        sensors[fixtureA]->bodies.insert(fixtureB->GetBody());
-        
-    }
-    
-    if (fixtureB->IsSensor() && !(fixtureA->IsSensor()))
-    {
-        sensors[fixtureB]->bodies.insert(fixtureA->GetBody());
-    }
-    
-    
-}
-
-// Implement contact listener.
-void testApp::EndContact(b2Contact* contact)
-{
-    b2Fixture* fixtureA = contact->GetFixtureA();
-    b2Fixture* fixtureB = contact->GetFixtureB();
-    
-    if (fixtureA->IsSensor() && !(fixtureB->IsSensor()))
-    {
-        sensors[fixtureA]->bodies.erase(fixtureB->GetBody());
-        
-    }
-    
-    if (fixtureB->IsSensor() && !(fixtureA->IsSensor()))
-    {
-        sensors[fixtureB]->bodies.erase(fixtureA->GetBody());
-    }
-}
 
 
 void testApp::addWord(wstring str) {
@@ -117,7 +80,7 @@ void testApp::addWord(wstring str) {
     bd.position =  pos;
     
     w.body = m_world->CreateBody(&bd);
-    w.body->CreateFixture(&shape, 5.0f);
+    w.body->CreateFixture(&shape, 0.1f);
     
     words.push_back(w);
 }
@@ -126,24 +89,25 @@ void testApp::addWord(wstring str) {
 //--------------------------------------------------------------
 void testApp::setup(){
     
+//    remoteCam.initGrabber(640,480);
+//	remoteCam.start();
+    //remoteCam.setRequestedSize(320, 240);
+   
+    
     ofxXmlSettings xml;
     xml.loadFile("viewer.xml");
     xml.pushTag("viewer");
     
     
     
-    tspsReceiver = new ofxTSPSReceiver();
-	tspsReceiver->setListener( this );
-	tspsReceiver->connect(PORT);
-    
-    
+ 
     
     SetLocale("he_IL.UTF-8");
     
     
     
     
-    receiver.setup( xml.getAttribute("osc", "port", 12346));
+    receiver.setup( xml.getAttribute("osc", "port", 12341));
     
     ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
 	ofSetVerticalSync(true);
@@ -190,7 +154,7 @@ void testApp::setup(){
         m_world = new b2World(b2Vec2(0.0f,0.0f)); 
         
         m_world->SetDestructionListener(this);
-        m_world->SetContactListener(this);
+        //m_world->SetContactListener(this);
         m_world->SetDebugDraw(&m_debugDraw);
         
         uint32 flags = b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit ;
@@ -278,12 +242,13 @@ void testApp::setup(){
     
     ofSetColor(150);
     
-    bDrawDebug = true;
+    bDrawDebug = false;
     bEasyCam = false;
     
+    bExplode = false;
 }
 
-
+/*
 b2Fixture* testApp::createSensor(ofxTSPSPerson* person) {
     vector<b2Vec2> vs;
     for(int c = 0; c < person->contour.size(); c++){
@@ -298,6 +263,7 @@ b2Fixture* testApp::createSensor(ofxTSPSPerson* person) {
     
     return m_groundBody->CreateFixture(&fd);
 }
+*/
 
 
 //--------------------------------------------------------------
@@ -317,13 +283,30 @@ void testApp::update(){
     
                 
         
-        
+//    remoteCam.update();
+//	if(remoteCam.isFrameNew()){
+//		//PROCESS DATA
+//		//remoteCam.getPixels()
+//		
+//	}    
     
  
-    
+    if (bExplode) {
+        bExplode = false;
+        for (vector<word>::iterator iter=words.begin(); iter!=words.end(); iter++) {
+            b2Vec2 d(ofRandom(-100,100),ofRandom(-100,100));
+            
+            //d.Normalize();
+            b2Vec2 F = 1000.0f * d;
+            iter->body->ApplyForce(F, iter->body->GetPosition());
+        }
+        
+    }
     
     m_world->Step(timeStep, velocityIterations, positionIterations);
 	
+    
+    
 	if (timeStep > 0.0f)
 	{
 		++m_stepCount;
@@ -332,19 +315,14 @@ void testApp::update(){
     	
 	m_world->ClearForces();
     
-//    for (map<b2Fixture*,sensor*>::iterator siter=sensors.begin();siter!=sensors.end();siter++) {
-//        for (set<b2Body*>::iterator biter=siter->second->bodies.begin(); biter!=siter->second->bodies.end(); biter++) {
-//            b2Vec2 d(siter->second->person->velocity.x,siter->second->person->velocity.y);
-//            
-//            //d.Normalize();
-//            b2Vec2 F = 10.0f * d;
-//            (*biter)->ApplyForce(F, (*biter)->GetPosition());
-//        }
-//    }
+    
+    
     
     while( receiver.hasWaitingMessages() )
 	{
-		// get the next message
+		
+        
+        // get the next message
 		ofxOscMessage m;
 		receiver.getNextMessage( &m );
         
@@ -361,7 +339,7 @@ void testApp::update(){
             
             
             cout << "received: " << lastMessage << endl;
-            
+            bExplode = true;
             
 		}
     }
@@ -373,6 +351,8 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    
+    
     
     glMatrixMode(GL_PROJECTION);
     ofPushMatrix();
@@ -396,6 +376,11 @@ void testApp::draw(){
     glDisable(GL_DEPTH_TEST);
     ofPushMatrix();
     glMultMatrixf(overlay.playground.glMat.getPtr());
+    
+//    ofPushMatrix();
+//    ofScale(1.0f/REAL_PIXEL_PER_CENTIMETER, 1.0f/REAL_PIXEL_PER_CENTIMETER);
+//    remoteCam.draw(0,0);
+//    ofPopMatrix();
     
     if (bDrawDebug) {
         m_world->DrawDebugData();
@@ -572,63 +557,6 @@ void testApp::MouseMove(const b2Vec2& p)
 }
 
 
-//called when the person enters the system
-void testApp::personEntered( ofxTSPSPerson* person, ofxTSPSScene* scene )
-{
-	ofColor* color = new ofColor();
-	color->r = ofRandom(0, 255);
-	color->g = ofRandom(0, 255);
-	color->b = ofRandom(0, 255);
-	color->a = 255;
-	
-	//put a color into the custom attributes field
-	person->customAttributes = color;
-    
-    sensor* s= new sensor;
-    s->person = person;
-    sensors[createSensor(person)] = s;
-        
-	
-}
-
-//called each time the centroid moves (a lot)
-void testApp::personMoved( ofxTSPSPerson* person, ofxTSPSScene* scene )
-{
-    for (map<b2Fixture*,sensor*>::iterator iter=sensors.begin(); iter!=sensors.end(); iter++) {
-        if (iter->second->person==person) {
-            m_groundBody->DestroyFixture(iter->first);
-            sensor* s= iter->second;
-            sensors.erase(iter);
-            sensors[createSensor(person)] = s;
-            break;
-        }
-    }
-}
-
-//called one frame before the person is removed from the list to let you clean up
-void testApp::personWillLeave( ofxTSPSPerson* person, ofxTSPSScene* scene )
-{
-	//delete the color so we free up memory.
-	delete (ofColor*)person->customAttributes;
-    for (map<b2Fixture*,sensor*>::iterator iter=sensors.begin(); iter!=sensors.end(); iter++) {
-        if (iter->second->person==person) {
-            m_groundBody->DestroyFixture(iter->first);
-            sensor* s= iter->second;
-            sensors.erase(iter);
-            delete s;
-            break;
-        }
-    }
-    
-    
-}
-
-//called every frame no matter what.
-void testApp::personUpdated(ofxTSPSPerson* person, ofxTSPSScene* scene)
-{
-    
-    
-}
 
 
 //--------------------------------------------------------------
@@ -667,13 +595,17 @@ void testApp::keyPressed(int key){
         
         case 'A':
         case 'a': {
-            wstring src = L"חברתי";
+            wstring src = L"036007030";
             wstring word;
             for (wstring::reverse_iterator iter=src.rbegin(); iter!=src.rend(); iter++) {
                 word.push_back(*iter);
             }
             addWord(word);
         } break;
+        case 'E':
+        case 'e':
+            bExplode = true;
+            break;
             
         default:
             break;

@@ -26,7 +26,7 @@ class testApp : public ofBaseApp {
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);		
     
-        void drawTent();
+        void drawTent(int id);
         void drawScreen();
         void drawCity();
     

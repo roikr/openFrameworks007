@@ -2,6 +2,7 @@
 #include "ofxProCamToolkit.h"
 #include "ofxRKProCamToolkit.h"
 #include "ofxXmlSettings.h"
+#include "ofxStringUtils.h"
 
 
 enum {
@@ -12,6 +13,12 @@ enum {
 
 //--------------------------------------------------------------
 void testApp::setup(){
+#ifdef TARGET_WIN32
+    SetLocale("Hebrew");
+#else
+    SetLocale("he_IL.UTF-8");
+#endif
+    
     ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
 	ofSetVerticalSync(true);
     
@@ -24,9 +31,9 @@ void testApp::setup(){
 	// this sets the camera's distance from the object
 	//cam.setDistance(100);
 //    cityModel.loadModel("TENTS_PIVOTS.obj",true);
-    cityModel.loadModel("base14.obj",true);
+    cityModel.loadModel("23_3_base_3_pools.obj",true);
     cityMesh = cityModel.getMesh(0);
-    tentModel.loadModel("tent_14_low_poly.obj",true);
+    tentModel.loadModel("23_3_TENT_HIGH.obj",true);
 	tentMesh = tentModel.getMesh(0);
     
     cout<< "numIndices: " << cityMesh.getNumIndices() << endl;
@@ -74,14 +81,16 @@ void testApp::update(){
 
 
 
-void testApp::drawTent() {
+void testApp::drawTent(int id) {
     
-    vector<wstring> words;
-    words.push_back(L"םעה");
-    words.push_back(L"שרוד");
-    words.push_back(L"קדצ");
-    words.push_back(L"יתרבח");
-    words.push_back(L"101");
+    vector<string> words;
+    words.push_back("םעה");
+    words.push_back("שרוד");
+    words.push_back("קדצ");
+    words.push_back("יתרבח");
+    words.push_back(ofToString(id));
+   
+   
     
     for (vector<screen>::iterator siter=overlay.screens.begin(); siter!=overlay.screens.end(); siter++) {
 
@@ -105,7 +114,7 @@ void testApp::drawTent() {
         int dist = distance(overlay.screens.begin(),siter);
         
         if (dist<words.size()) {
-            wstring word = words[dist];
+            wstring word = StringToWString(words[dist]);
             font.drawString(word, - font.stringWidth(word)/2, font.stringHeight(word)/2); 
         }
         
@@ -118,7 +127,7 @@ void testApp::drawCity() {
     for (vector<tent>::iterator iter=overlay.tents.begin(); iter!=overlay.tents.end(); iter++) {
         ofPushMatrix();
         glMultMatrixf(iter->glMat.getPtr());
-        drawTent();
+        drawTent(iter->id);
         ofPopMatrix();
     }
     
@@ -192,7 +201,7 @@ void testApp::draw(){
             if (bProject) {
                 glDisable(GL_DEPTH_TEST);
                 ofSetColor(255);
-                drawTent();
+                drawTent(100);
                 
             }
 
@@ -225,7 +234,7 @@ void testApp::draw(){
             cam.begin();
              glEnable(GL_DEPTH_TEST);
             ofSetColor(255);
-            cityMesh.drawFaces();
+            cityMesh.drawWireframe();
             ofSetColor(100);
             for (vector<tent>::iterator iter=overlay.tents.begin(); iter!=overlay.tents.end(); iter++) {
                 ofPushMatrix();
@@ -474,6 +483,7 @@ void testApp::keyPressed(int key){
                         t.indices.push_back(choice) ;
                         t.vertices.push_back(cityMesh.getVerticesPointer()[origin]);
                         t.vertices.push_back(cityMesh.getVerticesPointer()[choice]);
+                        t.id = overlay.tents.size()+100;
                         overlay.tents.push_back(t);
                         bOrigin = false;
                         overlay.save();
