@@ -5,10 +5,11 @@
 #include "ofxXmlSettings.h"
 
 struct file {
-    file(string path,time_t time,bool directory) : path(path),time(time),directory(directory) {};
+    file(string path,time_t time,double size,bool directory) : path(path),time(time),size(size),directory(directory) {};
     
     string path;
     time_t time;
+    double size;
     bool directory;
 };
 
@@ -18,7 +19,7 @@ class testApp : public ofBaseApp{
         void setup();
 		void setup(string host,string root);
 		void update();
-        void draw() {};
+        void draw();
     
         void start();
 		
@@ -30,8 +31,7 @@ class testApp : public ofBaseApp{
 
         void parseDir(file dir,ofBuffer &data);
     
-    
-   
+        void updateXml(string path); // second pass - update xml files
     
     private:
     
@@ -47,5 +47,16 @@ class testApp : public ofBaseApp{
     
     long time;
     int iteration;
+    
+    bool bStarted;
+    
+    double totalBytes;
+    double bytesReceived;
+    double bytesUpdated;
+    double metaBytes;
+    
+    int measureTime;
+    unsigned int bytesMeasure;
+    unsigned int lastMeasure;
    		
 };

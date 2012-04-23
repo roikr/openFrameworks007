@@ -20,7 +20,7 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        pair<int,time_t> visitDirectory(string path);
+        pair<double,time_t> visitDirectory(string path);
 
 		
 };

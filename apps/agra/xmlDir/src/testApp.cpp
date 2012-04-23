@@ -5,18 +5,18 @@
 #include "Poco/DateTimeFormatter.h"
 //--------------------------------------------------------------
 void testApp::setup(){
-    visitDirectory("/Library/WebServer/Documents/roee");
+    visitDirectory("/Library/WebServer/Documents/test1");
     std::exit(0);
 }
 
-pair<int,time_t> testApp::visitDirectory(string path) {
+pair<double,time_t> testApp::visitDirectory(string path) {
     ofxXmlSettings xml;
     
     xml.addTag("files");
     xml.pushTag("files");
     ofDirectory dir;
     dir.listDir(path);
-    int size = 0;
+    double size = 0;
     time_t time = 0;
     int i=0;
     
@@ -27,7 +27,7 @@ pair<int,time_t> testApp::visitDirectory(string path) {
             xml.addAttribute("file", "name", dir.getName(j),i);
             
             ofFile file = dir.getFile(j);
-            int fileSize;
+            double fileSize;
             time_t fileTime;
             
             if (file.isDirectory()) {

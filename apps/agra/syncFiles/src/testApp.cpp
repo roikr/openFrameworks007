@@ -3,15 +3,18 @@
 #include "Poco/File.h"
 #include "Poco/DateTimeParser.h"
 
-#define SIMULTANEOUS_CONNECTIONS 10
-#define TIME_BETWEEN_ITERATIONS 60 // minutes
+#define SIMULTANEOUS_CONNECTIONS 100
+#define TIME_BETWEEN_ITERATIONS 0.5f // minutes
 #define TIME_DIFF_FOR_UPDATING 10
-
+#define MEASURE_INTERVAL 1000 // ms
 
 void testApp::setup() {
 //    setup("http://81.218.93.18/","roee");
-    setup("http://localhost/","test1");
+    setup("http://localhost/","roee");
     start();
+    measureTime = ofGetElapsedTimeMillis();
+    lastMeasure = 0;
+    bytesMeasure = 0;
 }
 
 //--------------------------------------------------------------
@@ -20,12 +23,16 @@ void testApp::setup(string host,string root){
     this->root = root;
     ofRegisterURLNotification(this);
     iteration = 0;
-   
 }
 
 void testApp::start() {
     
-    list.push_back(file(root,std::time(0),true));
+    list.push_back(file(root,std::time(0),0,true));
+    bStarted = true;
+    totalBytes = 0;
+    bytesReceived = 0;
+    bytesUpdated = 0;
+    metaBytes = 0;
     
     time = ofGetElapsedTimeMillis();
     iteration++;
@@ -35,6 +42,17 @@ void testApp::start() {
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    if (floor((ofGetElapsedTimeMillis()-measureTime)/MEASURE_INTERVAL)) {
+        lastMeasure = bytesMeasure;
+        bytesMeasure = 0;
+        measureTime = ofGetElapsedTimeMillis();
+    }
+    
+    if (bStarted && list.empty() && queue.empty()) {
+        bStarted = false;
+        updateXml(root);
+    }
     
     if (queue.size()<SIMULTANEOUS_CONNECTIONS) {
         
@@ -71,7 +89,27 @@ void testApp::update(){
 }
 
 
-
+void testApp::draw() {
+    ofSetColor(0);
+    
+    double bitrate = lastMeasure*1000/MEASURE_INTERVAL*8.0;
+    ofDrawBitmapString("bitrate: "+ofToString(bitrate/1000000,2) + " MBit", 0,40);
+    
+    if (totalBytes) {
+        ofSetColor(0, 255, 0);
+        int updated = ofGetWidth()*bytesUpdated/totalBytes;
+        ofRect(0, 0, updated, 20);
+        ofSetColor(0, 0, 255);
+        ofRect(updated, 0, ofGetWidth()*bytesReceived/totalBytes, 20);
+        
+        ofSetColor(0);
+        ofDrawBitmapString("total: " + ofToString(totalBytes/1000000,0)+" MB", 0,60);
+        ofDrawBitmapString("time remained: "+ (bitrate ? ofToString((totalBytes-bytesReceived-bytesUpdated)*8.0/bitrate/60,0)+" min" : "unknown"), 0,80);
+        ofDrawBitmapString("overhead: "+ofToString(metaBytes/1000,0)+" KB",0,100);
+        
+    }
+    
+}
 
 //--------------------------------------------------------------
 void testApp::gotMessage(ofMessage msg){
@@ -82,9 +120,12 @@ void testApp::gotMessage(ofMessage msg){
 
 void testApp::urlResponse(ofHttpResponse &response) {
     string url = response.request.name;
+    
+    
     //stream <<  url  << endl;
     
     if (response.status == 200 ) {
+        bytesMeasure+=response.data.size();
         string path = url.substr(host.length(),url.length());
         
         string lastComp = ofSplitString(path, "/").back();
@@ -94,6 +135,7 @@ void testApp::urlResponse(ofHttpResponse &response) {
         
         if (lastComp == "files.xml") {
             path = path.substr(0,path.length()-lastComp.length()-1);
+            metaBytes += response.data.size();
         }
         
         for (iter=queue.begin();iter!=queue.end();iter++) {
@@ -120,7 +162,7 @@ void testApp::urlResponse(ofHttpResponse &response) {
             ofBufferToFile(ofToDataPath(path), response.data,true);
            
             ofFile(ofToDataPath(down.path)).getPocoFile().setLastModified(Poco::Timestamp::fromEpochTime(down.time)); // response.lastModified
-
+            bytesReceived += down.size;
             
         }
     } else {
@@ -131,60 +173,6 @@ void testApp::urlResponse(ofHttpResponse &response) {
 }
 
 
-/*
-
-pair<int,time_t> testApp::visitDirectory(string path) {
-    ofxXmlSettings xml;
-    
-    xml.addTag("files");
-    xml.pushTag("files");
-    ofDirectory dir;
-    dir.listDir(path);
-    int size = 0;
-    time_t time = 0;
-    int i=0;
-    
-    for (int j=0; j<dir.size(); j++) {
-        if (dir.getName(j) != "files.xml") {
-            
-            xml.addTag("file");
-            xml.addAttribute("file", "name", dir.getName(j),i);
-            
-            ofFile file = dir.getFile(j);
-            int fileSize;
-            time_t fileTime;
-            
-            if (file.isDirectory()) {
-                xml.addAttribute("file", "dir",1,i);
-                pair<int,time_t> p = visitDirectory(file.path());
-                fileSize = p.first;
-                fileTime = p.second;
-                
-            } else {
-                fileSize=file.getSize();
-                fileTime = file.getPocoFile().getLastModified().epochTime();
-                
-            }
-            
-            xml.addAttribute("file", "size",fileSize,i);
-            
-            Poco::Timestamp timestamp = Poco::Timestamp::fromEpochTime(fileTime);
-            //cout << dir.getPath(j) << ": " << Poco::DateTimeFormatter::format(timestamp,"%d-%b-%Y %H:%M") << endl;
-            xml.addAttribute("file", "date",Poco::DateTimeFormatter::format(timestamp,"%d-%b-%Y %H:%M"),i);
-            
-            size+=fileSize;
-            time = max(time,fileTime);
-            i++;
-        }
-    }
-    
-    xml.popTag();
-    xml.saveFile(path+"/files.xml");
-    
-    cout << path << ": " << size << endl;
-    return make_pair(size,time);
-}
-*/
 
 void testApp::parseDirXml(ofxXmlSettings &xml,string dirPath,vector<file>& files) {
     
@@ -192,8 +180,10 @@ void testApp::parseDirXml(ofxXmlSettings &xml,string dirPath,vector<file>& files
     xml.pushTag("files");
     
     for (int i=0; i<xml.getNumTags("file"); i++) {
-       
+        
+        
         string p = xml.getAttribute("file", "name", "",i);
+        double size = xml.getAttribute("file", "size", 0.0,i);
         
         string lastModifiedStr = xml.getAttribute("file", "date", "",i);
         time_t lastModified = 0;
@@ -206,7 +196,7 @@ void testApp::parseDirXml(ofxXmlSettings &xml,string dirPath,vector<file>& files
         
         bool bDir = xml.getAttribute("file", "dir", 0,i);
         
-        files.push_back(file(dirPath+"/"+p,lastModified,bDir)); // p.at(p.length()-1) == '/')
+        files.push_back(file(dirPath+"/"+p,lastModified,size,bDir)); // p.at(p.length()-1) == '/')
         
     }
     
@@ -217,12 +207,20 @@ void testApp::parseDirXml(ofxXmlSettings &xml,string dirPath,vector<file>& files
 void testApp::parseDir(file dir,ofBuffer &data) {
     
     
+    
     cout << "parsing: " << dir.path << endl;
     //stream << data;
     ofxXmlSettings remoteXml;
     vector<file> remote;
     remoteXml.loadFromBuffer(data);
     parseDirXml(remoteXml, dir.path, remote);
+    
+    if (dir.path == root) {
+        for (vector<file>::iterator iter=remote.begin(); iter!=remote.end(); iter++) {
+            totalBytes+=iter->size;
+        }
+    }
+    
    
     ofxXmlSettings localXml;
     vector<file> local;
@@ -300,15 +298,41 @@ void testApp::parseDir(file dir,ofBuffer &data) {
 
                 cout << iter->path << " is not updated" <<endl;
 
+            } else {
+                bytesUpdated += iter->size;
             }
         } else {
             list.push_back(*iter);
+            cout << iter->path << " is not exist" <<endl;
         }
     }
 
     
-    remoteXml.saveFile(dir.path+"/files.xml");
+    remoteXml.saveFile(dir.path+"/new_files.xml");
 }
 
 
+void testApp::updateXml(string path) {
+    
+    cout << "updateXml: " << path << endl;
+    
+    ofDirectory dir;
+    dir.listDir(path);
+   
+    
+    for (int j=0; j<dir.size(); j++) {
+        if (dir.getName(j) != "files.xml" && dir.getName(j) != "new_files.xml") {
+            if (dir.getFile(j).isDirectory()) {
+                updateXml(dir.getPath(j));
+                                
+            }         
+        }
+    }
+    
+    ofFile file = ofFile(path+"/new_files.xml");
+    if (file.exists()) {
+        file.moveTo(path+"/files.xml");
+    }
+    
+}
 
