@@ -3,7 +3,7 @@
 #include "Poco/File.h"
 #include "Poco/DateTimeParser.h"
 
-#define SIMULTANEOUS_CONNECTIONS 100
+#define SIMULTANEOUS_CONNECTIONS 5
 #define TIME_BETWEEN_ITERATIONS 0.5f // minutes
 #define TIME_DIFF_FOR_UPDATING 10
 #define MEASURE_INTERVAL 1000 // ms
@@ -12,9 +12,7 @@ void testApp::setup() {
 //    setup("http://81.218.93.18/","roee");
     setup("http://localhost/","roee");
     start();
-    measureTime = ofGetElapsedTimeMillis();
-    lastMeasure = 0;
-    bytesMeasure = 0;
+   
 }
 
 //--------------------------------------------------------------
@@ -35,6 +33,11 @@ void testApp::start() {
     metaBytes = 0;
     
     time = ofGetElapsedTimeMillis();
+    
+    measureTime = ofGetElapsedTimeMillis();
+    bitrate = 0;
+    bytesMeasure = 0;
+    
     iteration++;
 
     //int res = ofLoadURLAsync(host+root);
@@ -44,7 +47,7 @@ void testApp::start() {
 void testApp::update(){
     
     if (floor((ofGetElapsedTimeMillis()-measureTime)/MEASURE_INTERVAL)) {
-        lastMeasure = bytesMeasure;
+        bitrate = bytesMeasure*1000/MEASURE_INTERVAL*8.0;
         bytesMeasure = 0;
         measureTime = ofGetElapsedTimeMillis();
     }
@@ -90,9 +93,10 @@ void testApp::update(){
 
 
 void testApp::draw() {
+    
+#ifndef POCO_LOCO
     ofSetColor(0);
     
-    double bitrate = lastMeasure*1000/MEASURE_INTERVAL*8.0;
     ofDrawBitmapString("bitrate: "+ofToString(bitrate/1000000,2) + " MBit", 0,40);
     
     if (totalBytes) {
@@ -108,6 +112,7 @@ void testApp::draw() {
         ofDrawBitmapString("overhead: "+ofToString(metaBytes/1000,0)+" KB",0,100);
         
     }
+#endif
     
 }
 

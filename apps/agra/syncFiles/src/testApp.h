@@ -33,7 +33,7 @@ class testApp : public ofBaseApp{
     
         void updateXml(string path); // second pass - update xml files
     
-    private:
+//    private:
     
     
     vector<file> list;
@@ -57,6 +57,6 @@ class testApp : public ofBaseApp{
     
     int measureTime;
     unsigned int bytesMeasure;
-    unsigned int lastMeasure;
+    double bitrate;
    		
 };

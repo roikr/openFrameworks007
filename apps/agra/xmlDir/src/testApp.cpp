@@ -5,7 +5,7 @@
 #include "Poco/DateTimeFormatter.h"
 //--------------------------------------------------------------
 void testApp::setup(){
-    visitDirectory("/Library/WebServer/Documents/test1");
+    visitDirectory("/Library/WebServer/Documents/roee");
     std::exit(0);
 }
 
