@@ -41,6 +41,7 @@ void testApp::start() {
     iteration++;
 
     //int res = ofLoadURLAsync(host+root);
+    
 }
 
 //--------------------------------------------------------------
@@ -91,10 +92,28 @@ void testApp::update(){
     
 }
 
+string testApp::getDebugStr() {
+    string s;
+    s = "bitrate:\t\t\t"+ofToString(bitrate/1000000,2) + " MBit\n";
+    
+    if (totalBytes) {
+        s+="total:\t\t\t" + ofToString(totalBytes/1000000,0)+" MB\n";
+        s+="time remained:\t\t\t"+ (bitrate ? ofToString((totalBytes-bytesReceived-bytesUpdated)*8.0/bitrate/60,0)+" min\n" : "unknown\n");
+        s+="overhead:\t\t\t"+ofToString(metaBytes/1000,0)+" KB\n";
+        
+    }
+    
+    s+="last status:\t\t\t"+ofToString(status)+"\n";
+    if (status!=200) {
+        s+="last error:\t\t\t"+error+"\n";
+    }
+    
+    return s;
+}
 
 void testApp::draw() {
     
-#ifndef POCO_LOCO
+
     ofSetColor(0);
     
     ofDrawBitmapString("bitrate: "+ofToString(bitrate/1000000,2) + " MBit", 0,40);
@@ -112,7 +131,7 @@ void testApp::draw() {
         ofDrawBitmapString("overhead: "+ofToString(metaBytes/1000,0)+" KB",0,100);
         
     }
-#endif
+
     
 }
 
@@ -129,52 +148,67 @@ void testApp::urlResponse(ofHttpResponse &response) {
     
     //stream <<  url  << endl;
     
-    if (response.status == 200 ) {
-        bytesMeasure+=response.data.size();
-        string path = url.substr(host.length(),url.length());
-        
-        string lastComp = ofSplitString(path, "/").back();
-        
-        
-        vector<file>::iterator iter;
-        
-        if (lastComp == "files.xml") {
-            path = path.substr(0,path.length()-lastComp.length()-1);
-            metaBytes += response.data.size();
-        }
-        
-        for (iter=queue.begin();iter!=queue.end();iter++) {
-            if (iter->path == path) {
-                break;
-            }
-        }
-        
-        if (iter==queue.end()) {
+    //list.push_back(*iter);
+    
+    status = response.status;
+    
+   
+    string path = url.substr(host.length(),url.length());
+    
+    bool bFilesXml = false;
+    string lastComp = ofSplitString(path, "/").back();
 
-            return;
-        }
+    if (lastComp == "files.xml") {
+        bFilesXml = true;
+        path = path.substr(0,path.length()-lastComp.length()-1);
+        metaBytes += response.data.size();
+    }
         
+        
+    vector<file>::iterator iter;
+    
+    for (iter=queue.begin();iter!=queue.end();iter++) {
+        if (iter->path == path) {
+            break;
+        }
+    }
+    
+    if (iter==queue.end()) {
+        status = -1;
+        error = "could not find "+path+" in the queue";
+    } else {
         file down = *iter;
         queue.erase(iter);
         
-        
-//        
-        
-        if(down.directory) { // path[path.length()-1] =='/'
-            parseDir(down,response.data);
+        switch (response.status) {
+            case 200: {
+                bytesMeasure+=response.data.size();
+                
+                
+                if(down.directory) { // path[path.length()-1] =='/'
+                    parseDir(down,response.data);
+                    
+                } else {
+                    ofBufferToFile(ofToDataPath(path), response.data,true);
+                    
+                    ofFile(ofToDataPath(down.path)).getPocoFile().setLastModified(Poco::Timestamp::fromEpochTime(down.time)); // response.lastModified
+                    bytesReceived += down.size;
+                }
 
-        } else {
-            ofBufferToFile(ofToDataPath(path), response.data,true);
-           
-            ofFile(ofToDataPath(down.path)).getPocoFile().setLastModified(Poco::Timestamp::fromEpochTime(down.time)); // response.lastModified
-            bytesReceived += down.size;
-            
+            } break;
+                
+            case -1:
+                error = response.error;
+                list.push_back(down);
+                break;
+                
+            default:
+                error = response.error;
+                break;
         }
-    } else {
-
+        
     }
     
-
 }
 
 
@@ -336,7 +370,7 @@ void testApp::updateXml(string path) {
     
     ofFile file = ofFile(path+"/new_files.xml");
     if (file.exists()) {
-        file.moveTo(path+"/files.xml");
+        file.moveTo(path+"/files.xml",true,true);
     }
     
 }

@@ -33,6 +33,8 @@ class testApp : public ofBaseApp{
     
         void updateXml(string path); // second pass - update xml files
     
+        string getDebugStr();
+    
 //    private:
     
     
@@ -58,5 +60,8 @@ class testApp : public ofBaseApp{
     int measureTime;
     unsigned int bytesMeasure;
     double bitrate;
+    
+    int status;   // last status
+    string error; // last error
    		
 };
