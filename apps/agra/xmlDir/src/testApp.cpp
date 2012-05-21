@@ -5,7 +5,8 @@
 #include "Poco/DateTimeFormatter.h"
 //--------------------------------------------------------------
 void testApp::setup(){
-    visitDirectory("/Library/WebServer/Documents/roee");
+    cout.precision(0);
+    visitDirectory("/Library/WebServer/Documents/ver14");
     std::exit(0);
 }
 
@@ -57,7 +58,7 @@ pair<double,time_t> testApp::visitDirectory(string path) {
     xml.popTag();
     xml.saveFile(path+"/files.xml");
     
-    cout << path << ": " << size << endl;
+    cout << path << ": " << fixed << size << endl;
     return make_pair(size,time);
 }
 
