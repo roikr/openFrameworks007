@@ -247,16 +247,11 @@ bool ofxiTexture::load(string filename,int type) {
 	
 }
 
-void ofxiTexture::draw() {
+void ofxiTexture::draw(float u,float v) {
 	
 	
 	
 	glPushMatrix();
-	
-	
-	
-	float u = 1;
-	float v = 1;
 	
 	GLfloat spriteTexcoords[] = {
 		u,v,   
@@ -282,29 +277,29 @@ void ofxiTexture::draw() {
 	glEnable(GL_TEXTURE_2D);
 	
 	
-	if (_hasAlpha) {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
-		/*
-		GLfloat fColor[4]={1.0f,1.0f,1.0f,0.0f};
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,         GL_TEXTURE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,         GL_CONSTANT);
-		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA,    GL_REPLACE);
-		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,       GL_TEXTURE);
-		glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, fColor);
-		
-		*/
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		
-//		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glDisable(GL_BLEND);
-	} else {
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	}
-
+//	if (_hasAlpha) {
+//		glEnable(GL_BLEND);
+//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//		
+//		/*
+//		GLfloat fColor[4]={1.0f,1.0f,1.0f,0.0f};
+//		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+//		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+//		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB,         GL_TEXTURE);
+//		glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB,         GL_CONSTANT);
+//		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA,    GL_REPLACE);
+//		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA,       GL_TEXTURE);
+//		glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, fColor);
+//		
+//		*/
+//		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//		
+////		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+//		glDisable(GL_BLEND);
+//	} else {
+//		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//	}
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

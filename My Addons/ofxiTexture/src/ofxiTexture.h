@@ -25,7 +25,7 @@ class ofxiTexture {
 	public:
 	
 	bool load(string filename,int type=OFX_TEXTURE_TYPE_PVR);
-	void draw();
+	void draw(float u=1,float v=1); // from 0 to 1
 	void release();
 	
 	GLuint _name;
