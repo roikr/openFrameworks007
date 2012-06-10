@@ -1,0 +1,8 @@
+follow these steps to use of64 compiled library
+1. delete the current project xcode and xcconfig references
+2. drag these files from the of64 folders
+3. edit xcconfig files to reflect the new path of the library
+4. in the target build phases - add the new dependency and linked library
+5. you will maybe add to copy the GLUT library reference from the new project reference
+6. delete FRAMEWORKS PATH from user defined variables in the target build settings
+
