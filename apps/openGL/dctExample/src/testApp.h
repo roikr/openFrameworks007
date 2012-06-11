@@ -22,6 +22,9 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+        void setupShader(ofShader &shader,string filename);
+        void pass(ofShader &shader,GLuint src1,GLuint src,ofxFBO &fbo);
+
 		
     ofShader shader;
     ofShader dct_rows_fprog;
@@ -31,6 +34,14 @@ class testApp : public ofBaseApp{
     ofShader dct_cols2_fprog;
     ofShader dct_unpack_cols_fprog;
     
+    ofShader idct_cols_fprog;
+    ofShader idct_cols2_fprog;
+    ofShader idct_unpack_cols_fprog;
+    ofShader idct_rows_fprog;
+    ofShader idct_rows2_fprog;
+    ofShader idct_unpack_rows_fprog;
+    
+   
     GLuint vao,vbo[2];
     
     vector<ofVec2f> vertices;

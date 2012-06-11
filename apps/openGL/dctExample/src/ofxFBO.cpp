@@ -111,7 +111,7 @@ void ofxFBO::setup(int width, int height) {
 #if ESSENTIAL_GL_PRACTICES_IOS
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 #else
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // GL_LINEAR_MIPMAP_LINEAR
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // GL_LINEAR_MIPMAP_LINEAR // roikr: DON'T MIPMAP HERE
 #endif
 	
 	// Allocate a texture image with which we can render to

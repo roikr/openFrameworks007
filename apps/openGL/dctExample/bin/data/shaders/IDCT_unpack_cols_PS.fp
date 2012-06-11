@@ -24,11 +24,11 @@ void main(void)
     float f=fract(texcoord.y*width/8);// * 8.0;
     ivec4 i=int(floor(8*f))*ivec4(1,1,1,1);
     
-	bvec4 sel0 = equal(i,ivec4(0, 4, 2, 6));
-	bvec4 sel1 = equal(i,ivec4(5, 3, 1, 7));
+	bvec4 sel0 = equal(i,ivec4(0, 1, 2, 3));
+	bvec4 sel1 = equal(i,ivec4(4, 5, 6, 7));
 
     
-    fragColor.r = (dot(c,vec4(sel0))+dot(c2,vec4(sel1)))/8.0; 
+    fragColor.r = dot(c,vec4(sel0))+dot(c2,vec4(sel1)); 
     fragColor.b = 0;
     fragColor.g = 0;
     fragColor.a = 0;

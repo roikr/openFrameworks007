@@ -55,7 +55,13 @@ int loadTexture(ofPixels &pixels,GLenum minFilter, GLenum magFilter, GLenum wrap
 }
 
 
-
+void testApp::setupShader(ofShader &shader,string filename) {
+    shader.checkAndCreateProgram(); 
+    glBindAttribLocation(shader.getProgram(),POS_ATTRIB_IDX,"vVertex");
+    glBindAttribLocation(shader.getProgram(),TEXCOORD_ATTRIB_IDX,"vTexCoord0");
+    shader.load("shaders/VS.vp", filename);
+	shader.printActiveUniforms();
+}
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -114,43 +120,19 @@ void testApp::setup(){
     textureID = loadTexture(image.getPixelsRef(), GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
     
     
-    dct_rows_fprog.checkAndCreateProgram(); 
-    glBindAttribLocation(dct_rows_fprog.getProgram(),POS_ATTRIB_IDX,"vVertex");
-    glBindAttribLocation(dct_rows_fprog.getProgram(),TEXCOORD_ATTRIB_IDX,"vTexCoord0");
-    dct_rows_fprog.load("shaders/VS.vp", "shaders/DCT_rows_pass1_PS.fp");
-	dct_rows_fprog.printActiveUniforms();
-    
-    
-    dct_rows2_fprog.checkAndCreateProgram(); 
-    glBindAttribLocation(dct_rows2_fprog.getProgram(),POS_ATTRIB_IDX,"vVertex");
-    glBindAttribLocation(dct_rows2_fprog.getProgram(),TEXCOORD_ATTRIB_IDX,"vTexCoord0");
-    dct_rows2_fprog.load("shaders/VS.vp", "shaders/DCT_rows_pass2_PS.fp");
-	dct_rows2_fprog.printActiveUniforms();
-
-    dct_unpack_rows_fprog.checkAndCreateProgram(); 
-    glBindAttribLocation(dct_unpack_rows_fprog.getProgram(),POS_ATTRIB_IDX,"vVertex");
-    glBindAttribLocation(dct_unpack_rows_fprog.getProgram(),TEXCOORD_ATTRIB_IDX,"vTexCoord0");
-    dct_unpack_rows_fprog.load("shaders/VS.vp", "shaders/DCT_unpack_rows_PS.fp");
-	dct_unpack_rows_fprog.printActiveUniforms();
-    
-    dct_cols_fprog.checkAndCreateProgram(); 
-    glBindAttribLocation(dct_cols_fprog.getProgram(),POS_ATTRIB_IDX,"vVertex");
-    glBindAttribLocation(dct_cols_fprog.getProgram(),TEXCOORD_ATTRIB_IDX,"vTexCoord0");
-    dct_cols_fprog.load("shaders/VS.vp", "shaders/DCT_cols_pass1_PS.fp");
-	dct_cols_fprog.printActiveUniforms();
-    
-    
-    dct_cols2_fprog.checkAndCreateProgram(); 
-    glBindAttribLocation(dct_cols2_fprog.getProgram(),POS_ATTRIB_IDX,"vVertex");
-    glBindAttribLocation(dct_cols2_fprog.getProgram(),TEXCOORD_ATTRIB_IDX,"vTexCoord0");
-    dct_cols2_fprog.load("shaders/VS.vp", "shaders/DCT_cols_pass2_PS.fp");
-	dct_cols2_fprog.printActiveUniforms();
-    
-    dct_unpack_cols_fprog.checkAndCreateProgram(); 
-    glBindAttribLocation(dct_unpack_cols_fprog.getProgram(),POS_ATTRIB_IDX,"vVertex");
-    glBindAttribLocation(dct_unpack_cols_fprog.getProgram(),TEXCOORD_ATTRIB_IDX,"vTexCoord0");
-    dct_unpack_cols_fprog.load("shaders/VS.vp", "shaders/DCT_unpack_cols_PS.fp");
-	dct_unpack_cols_fprog.printActiveUniforms();
+    setupShader(dct_rows_fprog,"shaders/DCT_rows_pass1_PS.fp");
+    setupShader(dct_rows2_fprog,"shaders/DCT_rows_pass2_PS.fp");
+    setupShader(dct_unpack_rows_fprog,"shaders/DCT_unpack_rows_PS.fp");
+	setupShader(dct_cols_fprog,"shaders/DCT_cols_pass1_PS.fp");
+    setupShader(dct_cols2_fprog,"shaders/DCT_cols_pass2_PS.fp");
+	setupShader(dct_unpack_cols_fprog,"shaders/DCT_unpack_cols_PS.fp");
+	setupShader(idct_cols_fprog,"shaders/IDCT_cols_pass1_PS.fp");
+	setupShader(idct_cols2_fprog,"shaders/IDCT_cols_pass2_PS.fp");
+    setupShader(idct_unpack_cols_fprog,"shaders/IDCT_unpack_cols_PS.fp");
+	setupShader(idct_rows_fprog,"shaders/IDCT_rows_pass1_PS.fp");
+	setupShader(idct_rows2_fprog,"shaders/IDCT_rows_pass2_PS.fp");
+	setupShader(idct_unpack_rows_fprog,"shaders/IDCT_unpack_rows_PS.fp");
+	
    
     
     shader.checkAndCreateProgram(); // need to bind attributes before loading
@@ -198,74 +180,47 @@ void setUniformTexture(ofShader &shader,string name, int textureTarget,int textu
 	
 }
 
+void testApp::pass(ofShader &shader,GLuint src1,GLuint src2,ofxFBO &fbo) {
+    fbo.begin();
+	shader.begin();
+	glBindVertexArray(vao);
+    setUniformTexture(dct_unpack_rows_fprog,"image", GL_TEXTURE_2D,src1, 0);
+    if (src2) {
+        setUniformTexture(shader,"image2", GL_TEXTURE_2D,src2, 1);
+    }
+    
+    glUniform1f(glGetUniformLocation(shader.getProgram(), "width"), fbo.width);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
+    shader.end();
+    fbo.end();
+}
+
 //--------------------------------------------------------------
 void testApp::draw(){
 
     // Bind our  FBO and render our scene
-	
-	fbo[0].begin();
-	dct_rows_fprog.begin();
+    
+    pass(dct_rows_fprog,textureID,0,fbo[0]);
+    pass(dct_rows2_fprog,textureID,0,fbo[1]);
+    pass(dct_unpack_rows_fprog,fbo[0].colorTexture,fbo[1].colorTexture,fbo[2]);
+    pass(dct_cols_fprog,fbo[2].colorTexture,0,fbo[0]);
+    pass(dct_cols2_fprog,fbo[2].colorTexture,0,fbo[1]);
+    pass(dct_unpack_cols_fprog,fbo[0].colorTexture,fbo[1].colorTexture,fbo[2]);
+    
+    pass(idct_cols_fprog,fbo[2].colorTexture,0,fbo[0]);
+    pass(idct_cols2_fprog,fbo[2].colorTexture,0,fbo[1]);
+    pass(idct_unpack_cols_fprog,fbo[0].colorTexture,fbo[1].colorTexture,fbo[2]);
+    pass(idct_rows_fprog,fbo[2].colorTexture,0,fbo[0]);
+    pass(idct_rows2_fprog,fbo[2].colorTexture,0,fbo[1]);
+    pass(dct_unpack_rows_fprog,fbo[0].colorTexture,fbo[1].colorTexture,fbo[2]);
+    
+    shader.begin();
 	glBindVertexArray(vao);
-    setUniformTexture(dct_rows_fprog,"image", GL_TEXTURE_2D,textureID, 0);
-    glUniform1f(glGetUniformLocation(dct_rows_fprog.getProgram(), "width"), fbo[0].width); 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
-    dct_rows_fprog.end();
-    fbo[0].end();
+	setUniformTexture(shader,"image", GL_TEXTURE_2D,fbo[2].colorTexture, 0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
+    shader.end();
     
-    fbo[1].begin();
-	dct_rows2_fprog.begin();
-	glBindVertexArray(vao);
-	setUniformTexture(dct_rows2_fprog,"image", GL_TEXTURE_2D,textureID, 0);
-    glUniform1f(glGetUniformLocation(dct_rows2_fprog.getProgram(), "width"), fbo[1].width); 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
-    dct_rows2_fprog.end();
-    fbo[1].end();
-    
-
-    fbo[2].begin();
-	dct_unpack_rows_fprog.begin();
-	glBindVertexArray(vao);
-    setUniformTexture(dct_unpack_rows_fprog,"image", GL_TEXTURE_2D,fbo[0].colorTexture, 0);
-    setUniformTexture(dct_unpack_rows_fprog,"image2", GL_TEXTURE_2D,fbo[1].colorTexture, 1);
-    glUniform1f(glGetUniformLocation(dct_unpack_rows_fprog.getProgram(), "width"), fbo[0].width);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
-    dct_unpack_rows_fprog.end();
-    fbo[2].end();
-	
-    
-    
-    
-    fbo[0].begin();
-	dct_cols_fprog.begin();
-	glBindVertexArray(vao);
-    setUniformTexture(dct_cols_fprog,"image", GL_TEXTURE_2D,fbo[2].colorTexture, 0);
-    glUniform1f(glGetUniformLocation(dct_cols_fprog.getProgram(), "width"), fbo[0].width); 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
-    dct_cols_fprog.end();
-    fbo[0].end();
-    
-    fbo[1].begin();
-	dct_cols2_fprog.begin();
-	glBindVertexArray(vao);
-	setUniformTexture(dct_cols2_fprog,"image", GL_TEXTURE_2D,fbo[2].colorTexture, 0);
-    glUniform1f(glGetUniformLocation(dct_cols2_fprog.getProgram(), "width"), fbo[1].width); 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
-    dct_cols2_fprog.end();
-    fbo[1].end();
-    
-    
-    fbo[2].begin();
-	dct_unpack_cols_fprog.begin();
-	glBindVertexArray(vao);
-    setUniformTexture(dct_unpack_cols_fprog,"image", GL_TEXTURE_2D,fbo[0].colorTexture, 0);
-    setUniformTexture(dct_unpack_cols_fprog,"image2", GL_TEXTURE_2D,fbo[1].colorTexture, 1);
-    glUniform1f(glGetUniformLocation(dct_unpack_cols_fprog.getProgram(), "width"), fbo[0].width);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size()); // GL_LINE_STRIP or GL_TRIANGLE_STRIP
-    dct_unpack_cols_fprog.end();
-    fbo[2].end();
-    
-    
-    
+    return;
     
     
     
