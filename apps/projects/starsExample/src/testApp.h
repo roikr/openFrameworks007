@@ -49,5 +49,7 @@ class testApp : public ofBaseApp{
     float gr;
     
     bool bDebug;
+    
+    ofVec2f rot;
 		
 };

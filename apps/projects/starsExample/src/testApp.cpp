@@ -2,7 +2,7 @@
 
 #define MAX_SIZE 50
 #define MAX_DEPTH 32
-#define VELOCITY -2.0
+#define VELOCITY -0.05
 #define NUM_GROUPS 5
 #define NUM_ENV 200
 
@@ -62,26 +62,42 @@ void testApp::setup(){
     ga = pow( 0.01, 1.0 / ( attackMs * sampleRate * 0.001 ) ); 
     gr = pow( 0.01, 1.0 / ( releaseMs * sampleRate * 0.001 ) ); 
     
-	soundStream.setup(this, 0, NUM_CHANNELS, sampleRate, bufferSize, 4);
+	//soundStream.setup(this, 0, NUM_CHANNELS, sampleRate, bufferSize, 4);
     
     bDebug = false;
     ofToggleFullscreen();
     ofSetFrameRate(30);
     ofEnableAlphaBlending();
+    
+    //rot=ofVec2f(1.0,0.0)*0.02;
+    rot=ofVec2f(1.0,0.0)*0.0001;
 }
 
 
 //--------------------------------------------------------------
 void testApp::update(){
     for (vector<star>::iterator iter=stars.begin(); iter!=stars.end(); iter++) {
+       
         iter->pos.z = MAX_DEPTH+(ofGetElapsedTimeMillis()-iter->startTime)*VELOCITY/1000;
-        
         float k=128/iter->pos.z;
-        float x = iter->pos.x*k + ofGetWidth()/2;
-        float y = iter->pos.y*k + ofGetHeight()/2;
+        iter->pos.x+=rot.x*k;
+        iter->pos.y+=rot.y*k;
         
-        if  (iter->pos.z<=0 || ofDist(ofGetWidth()/2, ofGetHeight()/2, x, y)>ofGetHeight()/2) {
-            randomStar(*iter,false);
+        
+        if  (iter->pos.z<=0 || ofVec2f(iter->pos).length()*k>ofGetHeight()/2) {
+            randomStar(*iter,true);
+            
+            k=128/iter->pos.z;
+           
+            
+            if (ofVec2f(iter->pos*k).length()>ofGetHeight()/2 && ((ofVec2f(iter->pos)+rot)*k).length()<=ofGetHeight()/2) {
+                
+            } else {
+                iter->pos.z = MAX_DEPTH;
+            }
+            
+            
+            
         }
         
         
