@@ -1,23 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxOrigami.h"
 
-struct face {
-    vector<ofVec2f> vertices;
-    ofColor color;
-   
-};
-
-class origami {
-public:
-    
-    void setup();
-    void cut(ofVec2f p0,ofVec2f p1);
-    void draw();
-    
-    
-    vector<face> faces;
-};
 
 class testApp : public ofBaseApp{
 
@@ -37,7 +22,7 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
 
-    origami obj;
+    ofxOrigami origami;
     ofVec2f downPos;
 		
 };
