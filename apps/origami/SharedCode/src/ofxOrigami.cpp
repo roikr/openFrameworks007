@@ -77,9 +77,7 @@ void ofxOrigami::cut(ofVec2f p0,ofVec2f p1) {
     ofVec2f perp = (p1-p0).perpendicular();
     float d = perp.dot(p0);
     
-    vector<face> newFaces;
-    
-    for ( vector<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
+    for ( list<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
         
         vector<pair<int,ofVec2f> > intersections;
         
@@ -126,22 +124,21 @@ void ofxOrigami::cut(ofVec2f p0,ofVec2f p1) {
             f1.vertices.push_back(li0.second);
             f1.color = randomHue();
             
-            newFaces.push_back(f0);
-            newFaces.push_back(f1);
-        } else {
-            newFaces.push_back(*fiter);
-        }
+            fiter = faces.erase(fiter);
+            fiter = faces.insert(fiter, f0);
+            fiter++;
+            fiter = faces.insert(fiter, f1);
+            
+        } 
     }
     
-    if (newFaces.size() != faces.size()) {
-        faces = newFaces;
-    }
+    
 }
 
 void ofxOrigami::draw() {
     ofPushStyle();
     ofFill();
-    for (vector<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
+    for (list<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
         ofBeginShape();
         ofSetColor(fiter->color.r, fiter->color.g, fiter->color.b);
         

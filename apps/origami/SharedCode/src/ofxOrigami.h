@@ -24,5 +24,5 @@ public:
     void draw();
     
     
-    vector<face> faces;
+    list<face> faces;
 };
