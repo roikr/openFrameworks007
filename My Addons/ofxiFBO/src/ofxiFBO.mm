@@ -10,7 +10,7 @@
 #include "ofxiFBO.h"
 #include "glu.h"
 #include "ofxiPhoneExtras.h"
-#include "ofMainExt.h"
+
 
 void ofxiFBO::setup(int width,int height) {
 	this->width = width;

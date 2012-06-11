@@ -37,6 +37,7 @@ public:
 	float getHeight();
     
 	bool getIsPlaying();
+    bool getIsFrameVisible();
 	int getCurrentFrame();
 	int getElapsedFrame();
 	

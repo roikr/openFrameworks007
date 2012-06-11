@@ -51,14 +51,16 @@ void ofxiVideoPlayer::update() {
 		}
         
         if (videoPlayer.state == VIDEO_PLAYER_STATE_FINISHED) {
+            bPlaying = false;
             [videoPlayer release];
             videoPlayer = NULL;
-            bPlaying = false;
+            
         }
         
 	}
     
-	while (videoPlayer.readPos-playPos<PRE_SAMPLES && [videoPlayer readAudio]  ) {
+    if (bPlaying) {
+        while (videoPlayer.readPos-playPos<PRE_SAMPLES && [videoPlayer readAudio]  );
 		
 	} 
 	
@@ -75,7 +77,7 @@ int ofxiVideoPlayer::getElapsedFrame() {
 }
 
 void ofxiVideoPlayer::draw(ofRectangle rect,ofRectangle tex) {
-	if (getIsPlaying() && videoPlayer.state != VIDEO_PLAYER_STATE_PLAYING) {
+	if (videoPlayer!=NULL && videoPlayer.state != VIDEO_PLAYER_STATE_PLAYING) {
 		return;
 	}
 	
@@ -152,6 +154,10 @@ bool ofxiVideoPlayer::getIsPlaying() {
 	return videoPlayer!=NULL;
 }
 
+bool ofxiVideoPlayer::getIsFrameVisible() {
+    return videoPlayer!=NULL && videoPlayer.state == VIDEO_PLAYER_STATE_PLAYING;
+}
+
 void ofxiVideoPlayer::stop() {
     if (bPlaying) {
         [videoPlayer stop];
@@ -161,19 +167,20 @@ void ofxiVideoPlayer::stop() {
 
 void ofxiVideoPlayer::audioRequested( float * output, int bufferSize, int nChannels ) {
 	
+    memset(output, 0, nChannels*bufferSize*sizeof(float));
+    
+    if (bPlaying) {
+//        if (videoPlayer!=NULL  && videoPlayer.bReadAudio && videoPlayer.state == VIDEO_PLAYER_STATE_PLAYING )
+        if (videoPlayer.bReadAudio && videoPlayer.readPos-playPos>=bufferSize && videoPlayer.frame>0) {
+            for (int i = 0; i < bufferSize; i++){
+                
+                output[i*nChannels] = videoPlayer.buffer[(playPos+i*videoPlayer.numChannels) % RING_BUFFER_SIZE];// * gain;
+                output[i*nChannels + 1] = videoPlayer.numChannels == 2 ? videoPlayer.buffer[(playPos+i*videoPlayer.numChannels+1) % RING_BUFFER_SIZE] : output[i*nChannels];// * gain;
+                
+            }
+            
+            playPos+=bufferSize*videoPlayer.numChannels;
+        }
+    }
 	
-	
-	if (videoPlayer.readPos-playPos>=bufferSize && videoPlayer.frame>0) {
-		for (int i = 0; i < bufferSize; i++){
-			
-			output[i*nChannels] = videoPlayer.buffer[(playPos+i*videoPlayer.numChannels) % RING_BUFFER_SIZE];// * gain;
-			output[i*nChannels + 1] = videoPlayer.numChannels == 2 ? videoPlayer.buffer[(playPos+i*videoPlayer.numChannels+1) % RING_BUFFER_SIZE] : output[i*nChannels];// * gain;
-			
-		}
-		
-		playPos+=bufferSize*videoPlayer.numChannels;
-	} else {
-		memset(output, 0, nChannels*bufferSize*sizeof(float));
-        
-	}
 }

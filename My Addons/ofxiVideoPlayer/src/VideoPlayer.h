@@ -62,6 +62,7 @@ enum {
 @property (readonly) float* buffer;
 @property (readonly) int frame;
 @property (readonly) int numChannels;
+@property (readonly) bool bReadAudio;
 
 @property (readonly) int state;
 

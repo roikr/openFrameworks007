@@ -14,7 +14,7 @@
 
 @implementation VideoPlayer
 
-@synthesize frameRate,width,height,state,readPos,frame,numChannels;
+@synthesize frameRate,width,height,state,readPos,frame,numChannels,bReadAudio;
 
 -(id)initWithURL:(NSURL*)videoURL context:(EAGLContext *)context{
 	
@@ -60,16 +60,21 @@
 		
 		NSDictionary* audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kAudioFormatLinearPCM ], AVFormatIDKey,nil];
 		
-		audioOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:[[asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0] outputSettings:audioOutputSettings];
-		NSLog(@"AVAssetReaderTrackOutput mediaType: %@",[audioOutput mediaType]);
-		test = [reader canAddOutput:audioOutput];
-		NSLog(@"can add audio output: %i",test);
-		[reader addOutput:audioOutput];
+        bReadAudio = [[asset tracksWithMediaType:AVMediaTypeAudio] count];
+        
+        if (bReadAudio) {
+            audioOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:[[asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0] outputSettings:audioOutputSettings];
+            NSLog(@"AVAssetReaderTrackOutput mediaType: %@",[audioOutput mediaType]);
+            test = [reader canAddOutput:audioOutput];
+            NSLog(@"can add audio output: %i",test);
+            [reader addOutput:audioOutput];
+        }
+        
+		
 		
 		
 		frame = 0;
 		frameRate = 0;
-		bReadAudio = true;
 		bReadVideo = true;
 		
 		//buffer = (float *) malloc(BUFFER_SIZE * sizeof(float));
@@ -260,6 +265,11 @@
 
 - (void)dealloc {
     [self cleanUpTextures];
+    
+    if (_videoTextureCache) {
+        CFRelease(_videoTextureCache);
+        _videoTextureCache = 0;
+    }
     
     [reader release];
 	if ( audioOutput != nil )
