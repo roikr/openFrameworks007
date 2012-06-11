@@ -4,7 +4,7 @@
 #include "Poco/DateTimeParser.h"
 
 #define SIMULTANEOUS_CONNECTIONS 5
-#define TIME_BETWEEN_ITERATIONS 0.5f // minutes
+#define TIME_BETWEEN_ITERATIONS 15.0f // minutes
 #define TIME_DIFF_FOR_UPDATING 10
 #define MEASURE_INTERVAL 1000 // ms
 

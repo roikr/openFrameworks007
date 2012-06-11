@@ -29,7 +29,7 @@
 		BB24DE3510DA785000E9C588 /* libFreeType_iphone_universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE1310DA785000E9C588 /* libFreeType_iphone_universal.a */; };
 		BB24DE3C10DA785000E9C588 /* libGLU.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE2710DA785000E9C588 /* libGLU.a */; };
 		BB24DE3D10DA785000E9C588 /* libGLU_arm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24DE2810DA785000E9C588 /* libGLU_arm.a */; };
-		BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */; };
+		BB24E23510DAA8AD00E9C588 /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB24E23410DAA8A700E9C588 /* libofxiPhone_iphoneos_Debug.a */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E43929311293250B00F855A8 /* ofxPincher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E439292F1293250B00F855A8 /* ofxPincher.cpp */; };
 		E466A82E130076EB00C7B24A /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E466A82B130076EB00C7B24A /* libBox2D.a */; };
@@ -256,7 +256,7 @@
 				BB24DE3510DA785000E9C588 /* libFreeType_iphone_universal.a in Frameworks */,
 				BB24DE3C10DA785000E9C588 /* libGLU.a in Frameworks */,
 				BB24DE3D10DA785000E9C588 /* libGLU_arm.a in Frameworks */,
-				BB24E23510DAA8AD00E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a in Frameworks */,
+				BB24E23510DAA8AD00E9C588 /* libofxiPhone_iphoneos_Debug.a in Frameworks */,
 				5E25689710ED26CC00A9501C /* CppUnit.a in Frameworks */,
 				5E25689810ED26CC00A9501C /* PocoFoundation.a in Frameworks */,
 				5E25689910ED26CC00A9501C /* PocoNet.a in Frameworks */,
@@ -574,7 +574,7 @@
 		BB24E23010DAA8A700E9C588 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */,
+				BB24E23410DAA8A700E9C588 /* libofxiPhone_iphoneos_Debug.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -950,10 +950,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		BB24E23410DAA8A700E9C588 /* libofxiPhoneOFLib_iphoneos _Debug.a */ = {
+		BB24E23410DAA8A700E9C588 /* libofxiPhone_iphoneos_Debug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libofxiPhoneOFLib_iphoneos _Debug.a";
+			path = libofxiPhone_iphoneos_Debug.a;
 			remoteRef = BB24E23310DAA8A700E9C588 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1033,7 +1033,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (S8LHA25A98)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1089,7 +1088,6 @@
 					"-lsndfile",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A9796A89-168B-44B8-BF3C-97A7B608E436";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1099,7 +1097,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (S8LHA25A98)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
@@ -1151,7 +1148,6 @@
 					"-w",
 				);
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "59F189DA-75E5-44C1-BB46-963FC481987F";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -1160,13 +1156,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos2.2.1;
 			};
 			name = Distribution;
@@ -1175,7 +1169,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Roee Kremer (S8LHA25A98)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
@@ -1224,7 +1217,6 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "59F189DA-75E5-44C1-BB46-963FC481987F";
 				SDKROOT = iphoneos;
 			};
 			name = Distribution;
@@ -1233,7 +1225,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
@@ -1246,7 +1238,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				WARNING_LDFLAGS = "";
 			};
@@ -1256,13 +1248,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos2.2.1;
 			};
 			name = Release;
