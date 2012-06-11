@@ -51,49 +51,51 @@ void testApp::setup(){
             if (!siter->bitmapFill.empty()) {
                 vector<bitmap>::iterator iter = siter->bitmapFill.begin();
                 
-                
-                image.loadImage("LIBRARY/"+iter->href);
-                bitmapItem bi = doc.items[iter->path];
-                
-                if (bi.frameRight/PIXEL_SCALE != image.width || bi.frameBottom/PIXEL_SCALE != image.height) {
-                    cout << bi.href << " " << bi.frameRight/PIXEL_SCALE << "x" << bi.frameBottom/PIXEL_SCALE << " " << image.width << "x" << image.height <<endl;
+                if (ofFile(ofToDataPath("LIBRARY/"+iter->href)).exists()) {
+                    image.loadImage("LIBRARY/"+iter->href);
+                    bitmapItem bi = doc.items[iter->path];
                     
-                    
-                    float sx = (float)bi.frameRight/PIXEL_SCALE/(float)image.width;
-                    float sy = (float)bi.frameBottom/PIXEL_SCALE/(float)image.height;
-                    
-                    for (int i=0; i<docXml.getNumTags("DOMBitmapItem"); i++) {
-                        if (docXml.getAttribute("DOMBitmapItem", "name", "",i) == iter->path) {
-                            docXml.setAttribute("DOMBitmapItem", "frameRight", image.width*(int)PIXEL_SCALE,i);
-                            docXml.setAttribute("DOMBitmapItem", "frameBottom", image.height*(int)PIXEL_SCALE,i);
-                            break;
+                    if (bi.frameRight/PIXEL_SCALE != image.width || bi.frameBottom/PIXEL_SCALE != image.height) {
+                        cout << bi.href << " " << bi.frameRight/PIXEL_SCALE << "x" << bi.frameBottom/PIXEL_SCALE << " " << image.width << "x" << image.height <<endl;
+                        
+                        
+                        float sx = (float)bi.frameRight/PIXEL_SCALE/(float)image.width;
+                        float sy = (float)bi.frameBottom/PIXEL_SCALE/(float)image.height;
+                        
+                        for (int i=0; i<docXml.getNumTags("DOMBitmapItem"); i++) {
+                            if (docXml.getAttribute("DOMBitmapItem", "name", "",i) == iter->path) {
+                                docXml.setAttribute("DOMBitmapItem", "frameRight", image.width*(int)PIXEL_SCALE,i);
+                                docXml.setAttribute("DOMBitmapItem", "frameBottom", image.height*(int)PIXEL_SCALE,i);
+                                break;
+                            }
+                            
                         }
                         
+                        
+                        xml.pushTag("DOMShape",distance(liter->shapes.begin(), siter));
+                        xml.pushTag("paths");
+                        xml.pushTag("Path");
+                        xml.pushTag("fill");
+                        xml.pushTag("BitmapFill");
+                        xml.pushTag("matrix");
+                        
+                        float a = xml.getAttribute("Matrix", "a", 1.0);
+                        float d = xml.getAttribute("Matrix", "d", 1.0);
+                        
+                        xml.setAttribute("Matrix", "a",a*sx,0);
+                        xml.setAttribute("Matrix", "d",d*sy,0);
+                        
+                        cout << a << " " << sx << " " << d << " " << sy << endl;
+                        
+                        
+                        xml.popTag();
+                        xml.popTag();
+                        xml.popTag();
+                        xml.popTag();
+                        xml.popTag();
+                        xml.popTag();
                     }
                     
-                    
-                    xml.pushTag("DOMShape",distance(liter->shapes.begin(), siter));
-                    xml.pushTag("paths");
-                    xml.pushTag("Path");
-                    xml.pushTag("fill");
-                    xml.pushTag("BitmapFill");
-                    xml.pushTag("matrix");
-                    
-                    float a = xml.getAttribute("Matrix", "a", 1.0);
-                    float d = xml.getAttribute("Matrix", "d", 1.0);
-                    
-                    xml.setAttribute("Matrix", "a",a*sx,0);
-                    xml.setAttribute("Matrix", "d",d*sy,0);
-                    
-                    cout << a << " " << sx << " " << d << " " << sy << endl;
-
-                    
-                    xml.popTag();
-                    xml.popTag();
-                    xml.popTag();
-                    xml.popTag();
-                    xml.popTag();
-                    xml.popTag();
                 }
                 
             }

@@ -90,11 +90,7 @@ void testApp::setup(){
     
 }
 
-//ofVec2f worldToScreen( ofVec2f p,float zoom, ofVec2f offset ){
-//	
-//    return (p+offset)*zoom+0.5f*ofVec2f(ofGetWidth(),ofGetHeight());
-//    
-//}
+
 
 //--------------------------------------------------------------
 void testApp::update(){
@@ -121,6 +117,22 @@ void testApp::update(){
          
 }
 
+
+
+ofVec2f testApp::worldToScreen( ofVec2f p ){
+	
+    return (p-0.5*ofVec2f(STAGE_WIDTH,STAGE_HEIGHT)+cam.offset)*cam.zoom+0.5f*ofVec2f(ofGetWidth(),ofGetHeight());
+    
+}
+
+float testApp::fadeFactor(ofRectangle& rect) {
+    ofVec2f p = worldToScreen(ofVec2f(rect.x,rect.y)+0.5*ofVec2f(rect.width,rect.height));
+    ofVec2f q = 0.5f*ofVec2f(ofGetWidth(),ofGetHeight());
+    float distFactor = ofClamp(p.distance(q)/(0.5*(rect.width*cam.zoom+ofGetWidth())), 0, 1);
+    
+    return 3*rect.width*cam.zoom/ofGetWidth()*(1-distFactor);
+}
+
 //--------------------------------------------------------------
 void testApp::draw(){
     
@@ -130,21 +142,9 @@ void testApp::draw(){
     
     ofTranslate(-STAGE_WIDTH/2, -STAGE_HEIGHT/2);
     
-    float zoomFactor = ofMap(cam.zoom,0.8,2,0,1,true);
     
-//    for (vector<bitmapInstance>::iterator iter=references.bitmaps.begin(); iter!=references.bitmaps.end(); iter++) {
-//        ofVec2f center =  ofVec2f(STAGE_WIDTH/2,STAGE_HEIGHT/2)-cam.offset;
-//        float distFactor = ofMap(iter->translation.distance(center), 200, 400, 1, 0,true);
-//        
-//        ofSetColor(255, 255, 255, 255*ofMap(zoomFactor*distFactor, 0, 1, 0.05, 1));
-//        ofPushMatrix();
-//        glTranslatef(iter->translation.x, iter->translation.y, zOffsets[distance(references.bitmaps.begin(), iter)]);
-//        ofScale(iter->scale, iter->scale);
-//        iter->texture.draw(iter->u,iter->v);
-//        ofPopMatrix();
-//    }
+    
 
-    
     //layout.draw(ofVec2f(cam.offset)-0.5*ofVec2f(STAGE_WIDTH,STAGE_HEIGHT),cam.zoom);
     
     ofPushMatrix();
@@ -164,7 +164,6 @@ void testApp::draw(){
    layout.drawLayer(layout.layers[layers["Render Bodies"]],ofVec2f(cam.offset)-0.5*ofVec2f(STAGE_WIDTH,STAGE_HEIGHT),cam.zoom);
     
     
-//    layout.drawLayer(layout.layers[layers["ref images"]],ofVec2f(cam.offset)-0.5*ofVec2f(STAGE_WIDTH,STAGE_HEIGHT),cam.zoom);
     
     ofPushStyle();
     ofVec2f center =  ofVec2f(STAGE_WIDTH/2,STAGE_HEIGHT/2)-cam.offset;
@@ -175,8 +174,10 @@ void testApp::draw(){
         for (vector<shape>::iterator siter=ly.shapes.begin(); siter!=ly.shapes.end(); siter++) {
             if (!siter->bitmapFill.empty()) {
                 bitmap &bm = siter->bitmapFill.front();
-                float distFactor = ofMap((ofVec2f(bm.rect.x,bm.rect.y)+0.5*ofVec2f(bm.rect.width,bm.rect.height)).distance(center), 200, 400, 1, 0,true);
-                ofSetColor(255, 255, 255, 255*ofMap(zoomFactor*distFactor, 0, 1, 0.05, 1));
+//                float zoomFactor = ofMap(cam.zoom,0.8,2,0,1,true);
+//                float distFactor = ofMap((ofVec2f(bm.rect.x,bm.rect.y)+0.5*ofVec2f(bm.rect.width,bm.rect.height)).distance(center), 200, 400, 1, 0,true);
+//                ofSetColor(255, 255, 255, 255*ofMap(zoomFactor*distFactor, 0, 1, 0.05, 1));
+                ofSetColor(255, 255, 255, 255*fadeFactor(bm.rect));
                 layout.drawBitmap(bm, ofVec2f(cam.offset)-0.5*ofVec2f(STAGE_WIDTH,STAGE_HEIGHT),cam.zoom);
                 
             }
@@ -190,9 +191,8 @@ void testApp::draw(){
         for (vector<shape>::iterator siter=ly.shapes.begin(); siter!=ly.shapes.end(); siter++) {
             if (!siter->bitmapFill.empty()) {
                 bitmap &bm = siter->bitmapFill.front();
-                if (current==videos.end() || current->rect != bm.rect) {
-                    float distFactor = ofMap((ofVec2f(bm.rect.x,bm.rect.y)+0.5*ofVec2f(bm.rect.width,bm.rect.height)).distance(center), 200, 400, 1, 0,true);
-                    ofSetColor(255, 255, 255, 255*ofMap(zoomFactor*distFactor, 0, 1, 0.05, 1));
+                if (current==videos.end() || !player.getIsFrameVisible() || current->rect != bm.rect) {
+                    ofSetColor(255, 255, 255, 255*fadeFactor(bm.rect));
                     layout.drawBitmap(bm, ofVec2f(cam.offset)-0.5*ofVec2f(STAGE_WIDTH,STAGE_HEIGHT),cam.zoom);
                 }
                 
@@ -212,17 +212,14 @@ void testApp::draw(){
     if (current!=videos.end()) {
         
         ofRectangle &rect = current->rect;
-        
-        float distFactor = ofMap((ofVec2f(rect.x,rect.y)+0.5*ofVec2f(rect.width,rect.height)).distance(center), 200, 400, 1, 0,true);
-        ofSetColor(255, 255, 255, 255*ofMap(zoomFactor*distFactor, 0, 1, 0.05, 1));
-        
-        
         ofVec2f q = (ofVec2f(rect.x+rect.width,rect.y+rect.height)-0.5*ofVec2f(STAGE_WIDTH,STAGE_HEIGHT)+cam.offset)*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
         ofVec2f p = ofVec2f(ofGetHeight(),ofGetWidth())-ofVec2f(q.y,q.x);
         
         glEnable(GL_SCISSOR_TEST);
         glScissor(p.x, p.y, rect.height*cam.zoom , rect.width*cam.zoom);
       
+        ofSetColor(255, 255, 255, 255*videoFade);
+        
         ofPushMatrix();
         ofTranslate(current->translation);
         ofScale(current->sx, current->sy);
@@ -240,33 +237,37 @@ void testApp::draw(){
     
     cam.reset();
         
-    cam.drawDebug(); //see info on ofxPanZoom status
-	
-	glColor4f(0,0,0,1);
-	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );	
-    ofDrawBitmapString("zoomFactor: " + ofToString( zoomFactor, 2 ),  10, ofGetHeight() - 30 );	
-    
-    
-    int counter = 0;
-    for (vector<videoItem>::iterator iter=videos.begin(); iter!=videos.end(); iter++) {
-        if (iter->bVisible) {
-            counter++;
-        }
-    }
-    
-    ofDrawBitmapString("visibleVideos: " + ofToString( counter ),  10, ofGetHeight() - 50 );
+//    cam.drawDebug(); //see info on ofxPanZoom status
+//	
+//	glColor4f(0,0,0,1);
+//	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );	
+//    
+//    
+//    
+//    int counter = 0;
+//    for (vector<videoItem>::iterator iter=videos.begin(); iter!=videos.end(); iter++) {
+//        if (iter->bVisible) {
+//            counter++;
+//        }
+//    }
+//    
+//    ofDrawBitmapString("visibleVideos: " + ofToString( counter ),  10, ofGetHeight() - 30 );
     
 }
 
 //--------------------------------------------------------------
 void testApp::audioOut( float * output, int bufferSize, int nChannels ){
-    if (player.getIsPlaying()) {
-        player.audioRequested(output, bufferSize, nChannels);
-    } else {
-        memset(output, 0, bufferSize*nChannels*sizeof(float));
+    
+    // sanity check inside
+    
+    player.audioRequested(output, bufferSize, nChannels);
+    
+    for (int i = 0; i < nChannels*bufferSize; i++){
+        
+        output[i] *= videoFade;// * gain;
+        
     }
-	
-	
+    	
 }
 
 
@@ -279,6 +280,8 @@ void testApp::exit(){
 void testApp::touchDown(ofTouchEventArgs &touch){
     cam.touchDown(touch);
 }
+
+
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch){
@@ -309,8 +312,13 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
                 
             } 
         }
+        
+        if (current==iter) {
+            videoFade = fadeFactor(current->rect);
+        }
     }
 
+    
 
 }
 

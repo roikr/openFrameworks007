@@ -541,7 +541,7 @@ void ofxSymbolItem::release() {
     for (vector<layer>::iterator liter=layers.begin();liter!=layers.end();liter++) {
         for (vector<bitmapInstance>::iterator iter=liter->bitmaps.begin(); iter!=liter->bitmaps.end(); iter++) {
 #ifndef TARGET_OPENGLES
-            iter->image.clear(0, 0);
+            iter->image.clear();
 #else
             iter->texture.release();
 #endif

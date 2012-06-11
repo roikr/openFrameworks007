@@ -21,7 +21,7 @@ struct videoItem {
     
     bool bVisible;
     string path;
-    float volume;
+
 };
 
 class testApp : public ofxiPhoneApp {
@@ -44,10 +44,15 @@ public:
 	void gotMemoryWarning();
 	void deviceOrientationChanged(int newOrientation);
     
+    ofVec2f worldToScreen( ofVec2f p );
+
+    float fadeFactor(ofRectangle &rect);
         
     ofxPanZoom cam;
     
     ofxiVideoPlayer player;
+    float videoFade;
+    
     
     vector<float> zOffsets;
     
@@ -60,6 +65,7 @@ public:
     vector<videoItem>::iterator current;
     
     map<string,int> layers;
+    
     
 };
 

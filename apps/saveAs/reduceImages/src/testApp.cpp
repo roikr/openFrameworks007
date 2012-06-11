@@ -1,15 +1,18 @@
 #include "testApp.h"
 //#include "Poco/File.h"
 //#include "Poco/DateTimeParser.h"
-#include "Poco/DateTimeFormatter.h"
+
 //--------------------------------------------------------------
+
+#define NEW_SIZE 128 // 1024
+
 void testApp::setup(){
     
     extensions.push_back("png");
     extensions.push_back("jpeg");
     extensions.push_back("jpg");
     extensions.push_back("tif");
-    visitDirectory("/Users/roikr/Developer/of_preRelease_v007_iphone/apps/saveAs/saveAs/layout/LIBRARY");
+    visitDirectory("/Users/roikr/Developer/of_preRelease_v007_iphone/apps/saveAs/saveAs/bin/data/LIBRARY");
     
     std::exit(0);
 }
@@ -36,14 +39,14 @@ void testApp::visitDirectory(string path) {
                     
                     int width,height;
                     
-                    if (max(src.getWidth(),src.getHeight())>1024) {
+                    if (max(src.getWidth(),src.getHeight())>NEW_SIZE) {
                         if (src.getWidth()>=src.getHeight()) {
-                            width = 1024;
-                            height = 1024*src.getHeight()/src.getWidth();
+                            width = NEW_SIZE;
+                            height = NEW_SIZE*src.getHeight()/src.getWidth();
                             
                         } else {
-                            width = 1024*src.getWidth()/src.getHeight();
-                            height = 1024;
+                            width = NEW_SIZE*src.getWidth()/src.getHeight();
+                            height = NEW_SIZE;
                         }
                         printf(" -> %ix%i",width,height);
                         src.resize(width, height);
