@@ -5,9 +5,18 @@
  *  Created by Oriol Ferrer Mesià on 5/17/10.
  *  Copyright 2010 uri.cat. All rights reserved.
  *
+ *  Modified by Roee Kremer on 12/6/12 to include animations
  */
 
 #include "ofxPanZoom.h"
+
+enum  {
+	SLIDER_STATE_IDLE,
+	SLIDER_STATE_PANNING,
+    SLIDER_STATE_ZOOMING,
+	SLIDER_STATE_ANIMATING
+};
+
 
 
 ofxPanZoom::ofxPanZoom(){
@@ -24,6 +33,8 @@ ofxPanZoom::ofxPanZoom(){
 
 	vFlip = true;
 	viewportConstrained = false;
+    
+    state = SLIDER_STATE_IDLE;
 }
 
 void ofxPanZoom::setScreenSize(int x, int y){
@@ -133,6 +144,10 @@ void ofxPanZoom::touchDown(ofTouchEventArgs &touch){
 	}
 	
 	touching[touch.id] = true;
+    
+    pos = ofVec2f(touch.x,touch.y);
+    velocity = ofVec2f(0,0);
+    time = ofGetElapsedTimef();
 }
 
 
@@ -146,15 +161,34 @@ void ofxPanZoom::touchMoved(ofTouchEventArgs &touch){
 	
 	switch ( touch.numTouches ) {
 
-		case 1:
+		case 1: {
 			// 1 finger >> pan
 			p = lastTouch[touch.id] - ofVec3f(touch.x,touch.y) ;
 			offset = offset - p * (1.0f / zoom);
+            
+            
+            state = SLIDER_STATE_PANNING;
+            ofVec2f newPos = ofVec2f(touch.x,touch.y);
+            float newTime = ofGetElapsedTimef();
+            
+            if (newTime-time>0) {
+                velocity = (newPos-pos)/(newTime-time)/zoom;
+            } else {
+                velocity = ofVec2f(0,0);
+            }
+            
+            pos = newPos;
+            time = newTime;
+            
+//            setComponent(translate,getComponent(translate)+boundsFix(getComponent(touches.back().first-(touches.end()-2)->first)));
+            
 			applyConstrains();
-			break;
+		}   
+        break;
 
 		case 2:
-			
+			state = SLIDER_STATE_ZOOMING;
+            velocity = ofVec2f(0,0);
 			//pan with 2 fingers too
 			p = 0.5 * ( lastTouch[touch.id] - ofVec3f(touch.x,touch.y) ); //0.5 to average both touch offsets
 			offset = offset - p * (1.0 / zoom);	
@@ -201,6 +235,15 @@ void ofxPanZoom::touchUp(ofTouchEventArgs &touch){
 	lastTouch[touch.id].y = touch.y;
 	if (touch.id == 0 || touch.id == 1)
 		zoomDiff = -1.0f;
+    
+    
+    if (touch.id==0 && velocity.length()>0) {
+//        cout << velocity.length() << endl;
+        state = SLIDER_STATE_ANIMATING;
+        lastTime = ofGetElapsedTimef();
+    } else {
+        state = SLIDER_STATE_IDLE;
+    }
 }
 
 
@@ -242,4 +285,21 @@ void ofxPanZoom::applyConstrains(){
 			//printf("oy < bottomRight = %f\n", offset.y);
 		}
 	}
+}
+
+void ofxPanZoom::update() {
+	
+    
+	if (state == SLIDER_STATE_ANIMATING) {
+        if (velocity.length()>0.0001) {
+            float t = ofGetElapsedTimef();
+            offset+=velocity*(t-lastTime);
+            velocity*=0.8;
+            lastTime = t;
+        } else {
+            state = SLIDER_STATE_IDLE;
+        }
+		
+	}	
+    
 }

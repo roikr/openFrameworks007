@@ -5,13 +5,14 @@
  *  Created by Oriol Ferrer Mesià on 5/17/10.
  *  Copyright 2010 uri.cat. All rights reserved.
  *
+ *  Modified by Roee Kremer on 12/6/12 to include animations
  */
 
 #pragma once
 
 #include "ofMain.h"
-#include "ofxiPhone.h"
-#include "ofxiPhoneExtras.h"
+
+
 
 #define	MAX_TOUCHES		12
 #define MIN_FINGER_DISTANCE 50.0f /* in pixels - zooming when fingers were too close was unaccurate & jumpy*/
@@ -69,9 +70,21 @@ public:
 	void reset();
 	void drawDebug();
 	ofVec3f screenToWorld(ofVec3f p);
+    
+    void update(); // update loop for animation
 	
 private:
 	
 	void applyConstrains();
-	
+    
+    int state;
+	int upTime;
+    
+    
+	ofVec2f pos;
+    ofVec2f velocity;
+    float time;
+    
+    float lastTime;
+    
 };
