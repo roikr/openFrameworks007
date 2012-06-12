@@ -23,6 +23,7 @@ void ofxOrigami::setup() {
     f.vertices.push_back(ofVec2f(100,300));
     faces.push_back(f);
     
+    numCuts = 0;
 }
 
 /*
@@ -73,9 +74,11 @@ bool lineIntersect(ofVec2f p0,ofVec2f p1,ofVec2f p2,ofVec2f p3,ofVec2f &q)
 }
 
 
-void ofxOrigami::cut(ofVec2f p0,ofVec2f p1) {
+void ofxOrigami::split(ofVec2f p0,ofVec2f p1) {
     ofVec2f perp = (p1-p0).perpendicular();
     float d = perp.dot(p0);
+    
+    int counter = 0;
     
     for ( list<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
         
@@ -104,6 +107,7 @@ void ofxOrigami::cut(ofVec2f p0,ofVec2f p1) {
         
         
         if (!intersections.empty()) {
+            counter++;
             pair<int,ofVec2f> li0,li1;
             li0 = intersections.front();
             li1 = intersections.back();
@@ -115,6 +119,9 @@ void ofxOrigami::cut(ofVec2f p0,ofVec2f p1) {
             }
             f0.vertices.push_back(li1.second);
             f0.color = fiter->color;
+            f0.cuts = fiter->cuts;
+            f0.cuts.push_back(cut(numCuts+1,li0.second,li1.second));
+            
             
             face f1;
             f1.vertices.push_back(li1.second);
@@ -123,6 +130,8 @@ void ofxOrigami::cut(ofVec2f p0,ofVec2f p1) {
             }
             f1.vertices.push_back(li0.second);
             f1.color = randomHue();
+            f1.cuts = fiter->cuts;
+            f1.cuts.push_back(cut(numCuts+1,li1.second,li0.second));
             
             fiter = faces.erase(fiter);
             fiter = faces.insert(fiter, f0);
@@ -130,6 +139,10 @@ void ofxOrigami::cut(ofVec2f p0,ofVec2f p1) {
             fiter = faces.insert(fiter, f1);
             
         } 
+    }
+    
+    if (counter) {
+        numCuts++;
     }
     
     
@@ -149,4 +162,17 @@ void ofxOrigami::draw() {
         ofEndShape();
     }
     ofPopStyle();
+}
+
+void ofxOrigami::dump() {
+    for (list<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
+        cout << "face: " << distance(faces.begin(), fiter) << endl;
+        
+        for (vector<cut>::iterator iter=fiter->cuts.begin();iter!=fiter->cuts.end();iter++) {
+            cout << "\tcut: " << iter->index <<"\t(" << iter->p0.x <<","<< iter->p0.y<<")\t(" << iter->p1.x <<","<<iter->p1.y<<")"<<endl;
+        }
+       
+    }
+
+    
 }

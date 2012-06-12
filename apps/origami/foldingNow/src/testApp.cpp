@@ -23,7 +23,14 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+    switch (key) {
+        case 'd':
+            origami.dump();
+            break;
+            
+        default:
+            break;
+    }
 }
 
 //--------------------------------------------------------------
@@ -48,7 +55,7 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-    origami.cut(downPos, ofVec2f(x,y));
+    origami.split(downPos, ofVec2f(x,y));
 }
 
 //--------------------------------------------------------------
