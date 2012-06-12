@@ -53,8 +53,10 @@ void ofxPanZoom::apply(int customW, int customH){
 	
 	float w = ww * 0.5f / zoom;
 	float h = hh * 0.5f / zoom;
+    
+    ofPushMatrix();
 
-	ofSetupScreenOrtho( ww, hh, (ofOrientation) ofxiPhoneGetOrientation(), true, -10.0f, 10.0f);
+//	ofSetupScreenOrtho( ww, hh, (ofOrientation) ofxiPhoneGetOrientation(), true, -10.0f, 10.0f);
 	glScalef( zoom, zoom, zoom);
 	glTranslatef( offset.x + w + zoomOffset.x, offset.y + h + zoomOffset.y, 0.0f );	
 	
@@ -65,7 +67,8 @@ void ofxPanZoom::apply(int customW, int customH){
 
 
 void ofxPanZoom::reset(){
-	ofSetupScreen();	
+    ofPopMatrix();
+//	ofSetupScreen();	
 }
 
 void ofxPanZoom::lookAt( ofVec3f p ){
