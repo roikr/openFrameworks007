@@ -94,7 +94,9 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
+    cam.update();
     player.update();
+    
     
     if (current!=videos.end() && !player.getIsPlaying()) {
         current = videos.end();         

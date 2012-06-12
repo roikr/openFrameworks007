@@ -26,8 +26,6 @@
 		E4312487156B9E9300791240 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4312480156B9E9300791240 /* tinyxmlparser.cpp */; };
 		E4312488156B9E9300791240 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4312482156B9E9300791240 /* ofxXmlSettings.cpp */; };
 		E43124B5156BA78C00791240 /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E43124B1156BA78C00791240 /* easing.cpp */; };
-		E43124C5156BADCC00791240 /* ReadMe.md in Resources */ = {isa = PBXBuildFile; fileRef = E43124C1156BADCC00791240 /* ReadMe.md */; };
-		E43124C6156BADCC00791240 /* ofxPanZoom.mm in Sources */ = {isa = PBXBuildFile; fileRef = E43124C4156BADCC00791240 /* ofxPanZoom.mm */; };
 		E43C2382156FA5C3003E2587 /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E43C2358156FA5C2003E2587 /* ofxiVideoPlayer.mm */; };
 		E43C2383156FA5C3003E2587 /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E43C235A156FA5C2003E2587 /* VideoPlayer.m */; };
 		E44EC088156CCA88000C13E7 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44EC087156CCA88000C13E7 /* ofxiTexture.mm */; };
@@ -37,8 +35,8 @@
 		E4BF3E3E15742F09007F9113 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E3C15742F09007F9113 /* ofxFlash.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
+		E4D9056E15877369001020BF /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D9056D15877369001020BF /* ofxPanZoom.cpp */; };
 		E4DDFE5215780F70007F7128 /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E431247B156B9E9300791240 /* install.xml */; };
-		E4DDFE5315780F70007F7128 /* ReadMe.md in Resources */ = {isa = PBXBuildFile; fileRef = E43124C1156BADCC00791240 /* ReadMe.md */; };
 		E4DDFE5415780F70007F7128 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E44EC0B5156D107C000C13E7 /* Default-Portrait.png */; };
 		E4DDFE5515780F70007F7128 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E44EC0B6156D107C000C13E7 /* Default@2x.png */; };
 		E4DDFE5615780F70007F7128 /* icon~iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = E44EC0B7156D107C000C13E7 /* icon~iPad.png */; };
@@ -49,7 +47,6 @@
 		E4DDFE5C15780F70007F7128 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4312480156B9E9300791240 /* tinyxmlparser.cpp */; };
 		E4DDFE5D15780F70007F7128 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4312482156B9E9300791240 /* ofxXmlSettings.cpp */; };
 		E4DDFE5E15780F70007F7128 /* easing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E43124B1156BA78C00791240 /* easing.cpp */; };
-		E4DDFE5F15780F70007F7128 /* ofxPanZoom.mm in Sources */ = {isa = PBXBuildFile; fileRef = E43124C4156BADCC00791240 /* ofxPanZoom.mm */; };
 		E4DDFE6015780F70007F7128 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44EC087156CCA88000C13E7 /* ofxiTexture.mm */; };
 		E4DDFE6115780F70007F7128 /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E43C2358156FA5C2003E2587 /* ofxiVideoPlayer.mm */; };
 		E4DDFE6215780F70007F7128 /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E43C235A156FA5C2003E2587 /* VideoPlayer.m */; };
@@ -121,9 +118,7 @@
 		E4312483156B9E9300791240 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E43124B1156BA78C00791240 /* easing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = easing.cpp; sourceTree = "<group>"; };
 		E43124B2156BA78C00791240 /* easing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = easing.h; sourceTree = "<group>"; };
-		E43124C1156BADCC00791240 /* ReadMe.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.md; sourceTree = "<group>"; };
 		E43124C3156BADCC00791240 /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
-		E43124C4156BADCC00791240 /* ofxPanZoom.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxPanZoom.mm; sourceTree = "<group>"; };
 		E43C2357156FA5C2003E2587 /* ofxiVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoPlayer.h; sourceTree = "<group>"; };
 		E43C2358156FA5C2003E2587 /* ofxiVideoPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVideoPlayer.mm; sourceTree = "<group>"; };
 		E43C2359156FA5C2003E2587 /* VideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayer.h; sourceTree = "<group>"; };
@@ -140,6 +135,7 @@
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
+		E4D9056D15877369001020BF /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
 		E4DDFE4D15780F06007F7128 /* SaveAs copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SaveAs copy-Info.plist"; path = "/Users/roikr/Developer/of_preRelease_v007_iphone/apps/saveAs/saveAs/SaveAs copy-Info.plist"; sourceTree = "<absolute>"; };
 		E4DDFE7715780F70007F7128 /* SaveAsDutch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SaveAsDutch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4DDFE7915780F70007F7128 /* SaveAs copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SaveAs copy2-Info.plist"; path = "/Users/roikr/Developer/of_preRelease_v007_iphone/apps/saveAs/saveAs/SaveAs copy2-Info.plist"; sourceTree = "<absolute>"; };
@@ -335,7 +331,6 @@
 		E43124C0156BADCC00791240 /* ofxPanZoom */ = {
 			isa = PBXGroup;
 			children = (
-				E43124C1156BADCC00791240 /* ReadMe.md */,
 				E43124C2156BADCC00791240 /* src */,
 			);
 			name = ofxPanZoom;
@@ -346,7 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				E43124C3156BADCC00791240 /* ofxPanZoom.h */,
-				E43124C4156BADCC00791240 /* ofxPanZoom.mm */,
+				E4D9056D15877369001020BF /* ofxPanZoom.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -519,7 +514,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4312484156B9E9300791240 /* install.xml in Resources */,
-				E43124C5156BADCC00791240 /* ReadMe.md in Resources */,
 				E44EC0B8156D107C000C13E7 /* Default-Portrait.png in Resources */,
 				E44EC0B9156D107C000C13E7 /* Default@2x.png in Resources */,
 				E44EC0BA156D107C000C13E7 /* icon~iPad.png in Resources */,
@@ -531,7 +525,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4DDFE5215780F70007F7128 /* install.xml in Resources */,
-				E4DDFE5315780F70007F7128 /* ReadMe.md in Resources */,
 				E4DDFE5415780F70007F7128 /* Default-Portrait.png in Resources */,
 				E4DDFE5515780F70007F7128 /* Default@2x.png in Resources */,
 				E4DDFE5615780F70007F7128 /* icon~iPad.png in Resources */,
@@ -581,11 +574,11 @@
 				E4312487156B9E9300791240 /* tinyxmlparser.cpp in Sources */,
 				E4312488156B9E9300791240 /* ofxXmlSettings.cpp in Sources */,
 				E43124B5156BA78C00791240 /* easing.cpp in Sources */,
-				E43124C6156BADCC00791240 /* ofxPanZoom.mm in Sources */,
 				E44EC088156CCA88000C13E7 /* ofxiTexture.mm in Sources */,
 				E43C2382156FA5C3003E2587 /* ofxiVideoPlayer.mm in Sources */,
 				E43C2383156FA5C3003E2587 /* VideoPlayer.m in Sources */,
 				E4BF3E3E15742F09007F9113 /* ofxFlash.cpp in Sources */,
+				E4D9056E15877369001020BF /* ofxPanZoom.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -600,7 +593,6 @@
 				E4DDFE5C15780F70007F7128 /* tinyxmlparser.cpp in Sources */,
 				E4DDFE5D15780F70007F7128 /* ofxXmlSettings.cpp in Sources */,
 				E4DDFE5E15780F70007F7128 /* easing.cpp in Sources */,
-				E4DDFE5F15780F70007F7128 /* ofxPanZoom.mm in Sources */,
 				E4DDFE6015780F70007F7128 /* ofxiTexture.mm in Sources */,
 				E4DDFE6115780F70007F7128 /* ofxiVideoPlayer.mm in Sources */,
 				E4DDFE6215780F70007F7128 /* VideoPlayer.m in Sources */,
