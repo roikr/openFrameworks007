@@ -32,24 +32,27 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-#import "ESRenderer.h"
+//#import "ESRenderer.h"
 
 #include "ofxiPhone.h"
+
+#import <GLKit/GLKit.h>
 
 // This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
 // The view content is basically an EAGL surface you render your OpenGL scene into.
 // Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
-@interface EAGLView : UIView
+@interface EAGLView : GLKView
 {
 @private
-    id <ESRenderer> renderer;
+//    id <ESRenderer> renderer;
 	NSMutableDictionary		*activeTouches;
 	int touchScaleFactor;
 }
 
+
 - (void) startRender;
 - (void) finishRender;
-- (EAGLContext*) context;
+//- (EAGLContext*) context;
 - (id) initWithFrame:(CGRect)frame andDepth:(bool)depth andAA:(bool)fsaaEnabled andNumSamples:(int)samples andRetina:(bool)retinaEnabled;
 
 

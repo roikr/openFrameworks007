@@ -40,11 +40,6 @@
 
 @implementation EAGLView
 
-// You must implement this method
-+ (Class) layerClass
-{
-	return [CAEAGLLayer class];
-}
 
 - (id) initWithFrame:(CGRect)frame
 {
@@ -54,13 +49,20 @@
 - (id) initWithFrame:(CGRect)frame andDepth:(bool)depth andAA:(bool)fsaaEnabled andNumSamples:(int)samples andRetina:(bool)retinaEnabled
 {
 	if((self = [super initWithFrame:frame])) {
+        
+        self.context = [[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1] autorelease];
+        
+        if (!self.context) {
+            NSLog(@"Failed to create ES context");
+        }
+        
+        self.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+        
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)super.layer;
 		
-        eaglLayer.opaque = true;
-		eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-										[NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-		
+        eaglLayer.opaque = YES;
+
 		touchScaleFactor=1;
 		if(retinaEnabled)
 		{
@@ -73,23 +75,9 @@
 			}
 		}
 		
-		// TODO: add initSettings to override ES2Renderer even if available
-        renderer = [[ES2Renderer alloc] initWithDepth:depth andAA:fsaaEnabled andFSAASamples:samples andRetina:retinaEnabled];
-		
-        if (!renderer) {
-            renderer = [[ES1Renderer alloc] initWithDepth:depth andAA:fsaaEnabled andFSAASamples:samples andRetina:retinaEnabled];
-			
-            if (!renderer) {
-				[self release];
-				return nil;
-			}
-        }
-		
-		[[self context] renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:eaglLayer];
-		
 		
 		self.multipleTouchEnabled = true;
-		self.opaque = true;
+		
 		activeTouches = [[NSMutableDictionary alloc] init];
 	}
 	
@@ -98,35 +86,32 @@
 
 - (void)startRender
  {
-    [renderer startRender];
+    [EAGLContext setCurrentContext:self.context];
  }
 	
 - (void)finishRender
 {
-    [renderer finishRender];
+//    [renderer finishRender];
 }
 	
 	
 - (void)layoutSubviews
 {
 		NSLog(@"layoutSubviews");
-	    [renderer resizeFromLayer:(CAEAGLLayer*)self.layer];
-	    [renderer startRender];
-	    [renderer finishRender];
+//	    [renderer resizeFromLayer:(CAEAGLLayer*)self.layer];
+//	    [renderer startRender];
+//	    [renderer finishRender];
 }
 
 
 - (void) dealloc
 {
-    [renderer release];
+//    [renderer release];
 	[activeTouches release];
 	[super dealloc];
 }
 
--(EAGLContext*) context
-{
-	return [renderer context];
-}
+
 
 
 /******************* TOUCH EVENTS ********************/

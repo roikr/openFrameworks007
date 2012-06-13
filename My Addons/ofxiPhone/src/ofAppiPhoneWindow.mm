@@ -314,6 +314,8 @@ void ofAppiPhoneWindow::timerLoop() {
 	static ofEventArgs voidEventArgs;
 	
 	ofGetAppPtr()->update();
+    
+    [ofxiPhoneGetGLView() setNeedsDisplay];
 		
 	#ifdef OF_USING_POCO
 		ofNotifyEvent( ofEvents.update, voidEventArgs);

@@ -1,0 +1,6 @@
+changes to openframeworks and addons
+1. ofxiPhone/src/E1Renderer.mm: comment line 105   -> layer.opaque = YES - to enable transparent openGL after layout subviews
+2. ofxiPhone/src/ofxiPhoneAppDelegate.mm
+    line 111: displayLinkSupported = YES; to enable displayLink
+	line 112: animationFrameInterval = 2; for smooth map movement
+    line 175: NSRunLoopCommonModes; for non stucking openGL draw
