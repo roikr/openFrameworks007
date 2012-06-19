@@ -35,7 +35,7 @@ using Poco::Exception;
 
 static bool factoryLoaded = false;
 int	ofxHttpRequest::nextID = 0;
-ofEvent<ofxHttpResponse> ofURLResponseEvent;
+ofEvent<ofxHttpResponse> ofxURLResponseEvent;
 
 ofxURLFileLoader::ofxURLFileLoader() {
 	if(!factoryLoaded){
@@ -214,7 +214,7 @@ void ofxURLFileLoader::update(ofEventArgs & args){
 		ofLog(OF_LOG_VERBOSE,"ofURLLoader::update: new response " +response.request.name);
 		responses.pop();
 		unlock();
-		ofNotifyEvent(ofURLResponseEvent,response);
+		ofNotifyEvent(ofxURLResponseEvent,response);
 	}else{
 		ofRemoveListener(ofEvents.update,this,&ofxURLFileLoader::update);
 		unlock();
