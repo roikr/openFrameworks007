@@ -28,6 +28,13 @@ void testApp::keyPressed(int key){
             origami.dump();
             break;
             
+        case 'c':
+            origami.fold(origami.cuts.size()-1, true);
+            break;
+        case 'a':
+            origami.fold(origami.cuts.size()-1, false);
+            break;
+            
         default:
             break;
     }

@@ -23,7 +23,6 @@ void ofxOrigami::setup() {
     f.vertices.push_back(ofVec2f(100,300));
     faces.push_back(f);
     
-    numCuts = 0;
 }
 
 /*
@@ -78,8 +77,6 @@ void ofxOrigami::split(ofVec2f p0,ofVec2f p1) {
     ofVec2f perp = (p1-p0).perpendicular();
     float d = perp.dot(p0);
     
-    int counter = 0;
-    
     for ( list<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
         
         vector<pair<int,ofVec2f> > intersections;
@@ -107,7 +104,8 @@ void ofxOrigami::split(ofVec2f p0,ofVec2f p1) {
         
         
         if (!intersections.empty()) {
-            counter++;
+            
+            
             pair<int,ofVec2f> li0,li1;
             li0 = intersections.front();
             li1 = intersections.back();
@@ -120,7 +118,7 @@ void ofxOrigami::split(ofVec2f p0,ofVec2f p1) {
             f0.vertices.push_back(li1.second);
             f0.color = fiter->color;
             f0.cuts = fiter->cuts;
-            f0.cuts.push_back(cut(numCuts+1,li0.second,li1.second));
+            f0.cuts.push_back(cut(cuts.size(),li0.second,li1.second));
             
             
             face f1;
@@ -131,21 +129,83 @@ void ofxOrigami::split(ofVec2f p0,ofVec2f p1) {
             f1.vertices.push_back(li0.second);
             f1.color = randomHue();
             f1.cuts = fiter->cuts;
-            f1.cuts.push_back(cut(numCuts+1,li1.second,li0.second));
+            f1.cuts.push_back(cut(cuts.size(),li0.second,li1.second));
             
             fiter = faces.erase(fiter);
             fiter = faces.insert(fiter, f0);
             fiter++;
             fiter = faces.insert(fiter, f1);
             
+            cuts.push_back(make_pair(p0, p1));
         } 
     }
     
-    if (counter) {
-        numCuts++;
+    
+    
+    
+}
+
+ofVec2f mirror(ofVec2f b0,ofVec2f b1,ofVec2f p) {
+    ofVec2f base = b1-b0;
+    float proj = base.dot(p-b0)/base.length();
+    ofVec2f n = b0+base.getNormalized()*proj;
+    return p+2*(n-p);
+}
+
+void ofxOrigami::fold(int index,bool cw) {
+    
+    if (index>=cuts.size()) {
+        cout << "index overflow" << endl;
+        return;
     }
     
+    ofVec2f p0 = cuts[index].first;
+    ofVec2f p1 = cuts[index].second;
+    ofVec3f l0 = (p1-p0).normalized();
+   
     
+    for (list<face>::iterator fiter=faces.begin();fiter!=faces.end();fiter++) {
+        
+        for (vector<ofVec2f>::iterator iter=fiter->vertices.begin(); iter!=fiter->vertices.end(); iter++) {
+            ofVec3f l1 = ((*iter)-p0).normalized();
+            ofVec3f c = l1.cross(l0);
+            
+            if (cw ? c.z>0 : c.z<0) {
+           
+                *iter = mirror(p0, p1, *iter);
+            }
+        }
+    }
+
+//        vector<cut>::iterator citer=fiter->cuts.begin();
+//        for (;citer!=fiter->cuts.end();citer++) {
+//            if (citer->index==index) {
+//                break;
+//            }
+//            
+//        }
+//        
+//        if (citer!=fiter->cuts.end()) {
+//            vector<ofVec2f>::iterator iter=fiter->vertices.begin();
+//            while (*iter!=citer->p0) {
+//                iter++;
+//            }
+//            
+//            iter++;
+//            if (iter==fiter->vertices.end()) {
+//                iter = fiter->vertices.begin();
+//            }
+//            
+//            while (*iter!=citer->p1) {
+//                *iter = mirror(citer->p0, citer->p1, *iter);
+//                iter++;
+//                if (iter==fiter->vertices.end()) {
+//                    iter = fiter->vertices.begin();
+//                }
+//            }
+//        } 
+        
+        
 }
 
 void ofxOrigami::draw() {

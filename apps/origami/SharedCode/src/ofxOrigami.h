@@ -31,12 +31,13 @@ public:
     
     void setup();
     void split(ofVec2f p0,ofVec2f p1);
+    void fold(int index,bool cw);
     void draw();
     
     
     
     list<face> faces; // faces are arranged in a list in the order they are layered
-    int numCuts;
+    vector<pair<ofVec2f,ofVec2f> > cuts;
     
     void dump(); // for debugging
 };
