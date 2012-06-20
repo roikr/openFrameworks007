@@ -5,9 +5,15 @@ void testApp::setup(){
 	// register touch events
 	ofRegisterTouchEvents(this);
 
-	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
 	
-    scroll.setup(200, ofGetHeight(), 10, 10);
+    scroll.setup(ofRectangle(0,0,200, ofGetHeight()), 10, 10);
+    scroll.addItem("images/bike_icon.gif");
+    scroll.addItem("images/bike_icon.png");
+    scroll.addItem("images/bikers.jpg");
+    scroll.addItem("images/gears.gif");
+    scroll.addItem("images/tdf_1972_poster.jpg");
+    scroll.addItem("images/transparency.png");
     scroll.addItem("images/bike_icon.gif");
     scroll.addItem("images/bike_icon.png");
     scroll.addItem("images/bikers.jpg");
@@ -23,6 +29,7 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 	ofBackground(255,255,255);	
+    scroll.update();
 }
 
 //--------------------------------------------------------------
@@ -49,7 +56,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-
+    scroll.touchDoubleTap(touch);
 }
 
 //--------------------------------------------------------------

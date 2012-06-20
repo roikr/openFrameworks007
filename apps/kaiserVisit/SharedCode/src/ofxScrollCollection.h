@@ -11,8 +11,9 @@
 
 class ofxScrollCollection {
 public:
-    void setup(int width,int height,int hMargin,int vMargin);
+    void setup(ofRectangle rect,int hMargin,int vMargin);
     void addItem(string filename);
+    void update();
     void draw();
     
     void touchDown(ofTouchEventArgs &touch);
@@ -22,10 +23,26 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
 private:
-    vector<ofImage> images;
     
-    int width;
-    int height;
+    vector<ofImage> images;
+    vector<ofImage>::reverse_iterator selected;
+   
+    ofRectangle rect;
+    float contentWidth;
+    float contentHeight;
+    ofVec2f offset;
     int hMargin;
     int vMargin;
+    
+    ofTouchEventArgs touch;
+    ofVec2f velocity;
+    float time;
+    
+    int state;
+    
+    float easeStart;
+    float easeTarget;
+    
+    
+    
 };
