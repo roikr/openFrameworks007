@@ -59,6 +59,14 @@ ofxHttpResponse ofxURLFileLoader::get(ofxHttpRequest request) {
 }
 
 
+int ofxURLFileLoader::getAsync(ofxHttpRequest request){
+	lock();
+	requests.push_back(request);
+	unlock();
+	start();
+	return request.getID();
+}
+
 int ofxURLFileLoader::getAsync(string url, string name){
 	if(name=="") name=url;
 	ofxHttpRequest request(url,name);
@@ -237,6 +245,10 @@ ofxHttpResponse ofxLoadURL(ofxHttpRequest request){
 
 int ofxLoadURLAsync(string url, string name){
 	return ofxGetFileLoader().getAsync(url,name);
+}
+
+int ofxLoadURLAsync(ofxHttpRequest request) {
+    return ofxGetFileLoader().getAsync(request);
 }
 
 ofxHttpResponse ofxSaveURLTo(string url, string path){

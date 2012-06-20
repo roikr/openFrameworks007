@@ -21,9 +21,9 @@ public:
 	,id(nextID++){}
 
 
-	ofxHttpRequest(string url,string name,vector<pair<string,string> > cookies,bool saveTo=false)
+	ofxHttpRequest(string url,vector<pair<string,string> > cookies,bool saveTo=false)
 	:url(url)
-	,name(name)
+	,name(url)
     ,cookies(cookies)
 	,saveTo(saveTo)
 	,id(nextID++){}
@@ -71,6 +71,7 @@ public:
 ofxHttpResponse ofxLoadURL(string url);
 ofxHttpResponse ofxLoadURL(ofxHttpRequest request);
 int ofxLoadURLAsync(string url, string name=""); // returns id
+int ofxLoadURLAsync(ofxHttpRequest request); // returns id
 ofxHttpResponse ofxSaveURLTo(string url, string path);
 int ofxSaveURLAsync(string url, string path);
 void ofxRemoveURLRequest(int id);
@@ -97,6 +98,7 @@ class ofxURLFileLoader : public ofThread  {
         ofxHttpResponse get(string url);
         ofxHttpResponse get(ofxHttpRequest request);
         int getAsync(string url, string name=""); // returns id
+        int getAsync(ofxHttpRequest request); // returns id
         ofxHttpResponse saveTo(string url, string path);
         int saveAsync(string url, string path);
 		void remove(int id);
