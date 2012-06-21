@@ -9,9 +9,26 @@
 
 #include "ofMain.h"
 
+struct scrollCollectionPrefs {
+    scrollCollectionPrefs() {}; // default constructor
+    scrollCollectionPrefs(bool bVertical,ofRectangle rect,float seperator = 10,float inset = 10, float borderSize = 2,int hexBorderColor=0x000000,int selectionDelay=500) :
+    bVertical(bVertical),rect(rect),seperator(seperator),inset(inset),borderSize(borderSize),hexBorderColor(hexBorderColor),selectionDelay(selectionDelay)
+    {};
+    
+    ofRectangle rect;
+    float seperator;
+    float inset;
+    float borderSize;
+    int hexBorderColor;        
+    int selectionDelay;
+    bool bVertical;
+    
+    
+};
+
 class ofxScrollCollection {
 public:
-    void setup(ofRectangle rect,int hMargin,int vMargin);
+    void setup(scrollCollectionPrefs prefs);
     void addItem(string filename);
     void update();
     void draw();
@@ -23,20 +40,27 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
 private:
+    float getContentLength();
+    vector<ofImage>::reverse_iterator find(ofVec2f touch);
+    ofVec2f getVec(float x);
+    float getScalar(ofVec2f v);
+    ofVec2f degenerate(ofVec2f v);
+    
     
     vector<ofImage> images;
     vector<ofImage>::reverse_iterator selected;
    
-    ofRectangle rect;
-    float contentWidth;
-    float contentHeight;
+    scrollCollectionPrefs prefs;
+    
     ofVec2f offset;
-    int hMargin;
-    int vMargin;
+    
     
     ofTouchEventArgs touch;
     ofVec2f velocity;
     float time;
+    
+    float downTime;
+    vector<ofImage>::reverse_iterator downIter;
     
     int state;
     

@@ -18,5 +18,6 @@ public:
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
 	
-    ofxScrollCollection scroll;
+    ofxScrollCollection vScroll;
+    ofxScrollCollection hScroll;
 };

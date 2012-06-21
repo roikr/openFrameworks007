@@ -8,37 +8,6 @@
 
 #include "ofxScrollCollection.h"
 
-enum  {
-	SLIDER_STATE_IDLE,
-    SLIDER_STATE_DOWN,
-	SLIDER_STATE_PANNING,
-    SLIDER_STATE_ANIMATING,
-    SLIDER_STATE_BACK_TRACKING
-};
-
-
-void ofxScrollCollection::setup(ofRectangle rect,int hMargin,int vMargin) {
-    this->rect = rect;
-    this->hMargin = hMargin;
-    this->vMargin = vMargin;
-    contentWidth = rect.width;
-    contentHeight = vMargin;
-    offset = ofVec2f(0,0);
-    state = SLIDER_STATE_IDLE;
-}
-
-void ofxScrollCollection::addItem(string filename) {
-    ofImage img;
-    images.push_back(img);
-    ofImage &back = images.back();
-    back.loadImage(filename);
-    
-    float h = back.getHeight()/back.getWidth()*(rect.width-2*hMargin);
-    contentHeight+=h+vMargin;
-    
-    selected = images.rbegin();
-}
-
 // back easing in - backtracking slightly, then reversing direction and moving to target
 // t: current time, b: beginning value, c: change in value, d: duration, s: overshoot amount (optional)
 // t and d can be in frames or seconds/milliseconds
@@ -56,6 +25,34 @@ inline float easeOutBack(float t, float b, float c, float d, float s) {
 #define DECAY_FACTOR 0.8f
 #define STOP_VELOCITY 0.0001f
 
+enum  {
+	SLIDER_STATE_IDLE,
+    SLIDER_STATE_DOWN,
+	SLIDER_STATE_PANNING,
+    SLIDER_STATE_ANIMATING,
+    SLIDER_STATE_BACK_TRACKING
+};
+
+
+void ofxScrollCollection::setup(scrollCollectionPrefs prefs) {
+    this->prefs = prefs;
+    
+    
+    offset = ofVec2f(0,0);
+    state = SLIDER_STATE_IDLE;
+}
+
+void ofxScrollCollection::addItem(string filename) {
+    ofImage img;
+    img.loadImage(filename);
+    if (img.getWidth()>0) {
+        images.push_back(img);      // roikr: careful - involve with copy ?
+        selected = images.rbegin();
+    }
+}
+
+
+
 void ofxScrollCollection::update() {
     switch (state) {
         case SLIDER_STATE_ANIMATING:
@@ -72,13 +69,20 @@ void ofxScrollCollection::update() {
         case SLIDER_STATE_BACK_TRACKING: {
             float t = ofGetElapsedTimef();
             if (t-time<EASE_DURATION) {
-                offset.y = easeOutBack(t-time, easeStart, easeTarget-easeStart, EASE_DURATION,4);
+                offset = getVec(easeOutBack(t-time, easeStart, easeTarget-easeStart, EASE_DURATION,4));
             } else {
-                offset.y = easeTarget;
+                offset = getVec(easeTarget);
                 state = SLIDER_STATE_IDLE;
             }
             
         } break;
+            
+            case SLIDER_STATE_DOWN:
+//            case SLIDER_STATE_PANNING:
+            if (downIter!=images.rend() && (ofGetElapsedTimef()-downTime)*1000 > prefs.selectionDelay) {
+                selected = downIter;
+                downIter = images.rend();
+            }
             
         default:
             break;
@@ -94,48 +98,68 @@ void ofxScrollCollection::update() {
 
 void ofxScrollCollection::draw() {
     
-    float w =  rect.width-2*hMargin;
     
-    int y=offset.y+vMargin;
+    
+    ofVec2f border(prefs.borderSize,prefs.borderSize);
+    
+    float w =  prefs.rect.width-2*prefs.inset;
+    float h =  prefs.rect.height-2*prefs.inset;
+    
+    ofVec2f pos=ofVec2f(prefs.rect.x,prefs.rect.y);
+    if (prefs.bVertical) {
+        pos+=ofVec2f(prefs.inset,offset.y+prefs.seperator);
+    } else {
+        pos+=ofVec2f(offset.x+prefs.seperator,prefs.inset);
+    }
+        
     for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
-        if (iter->getWidth()>0) {
-            float h = iter->getHeight()/iter->getWidth()*w;
-            
-            if (iter == selected) {
-                ofSetHexColor(0xFF0000);
-                ofRect(hMargin-5, y-5, w+10, h+10);
-            }
-            
-            ofSetHexColor(0xFFFFFF);
-           
-            if (iter->type == OF_IMAGE_COLOR_ALPHA) {
-                ofEnableAlphaBlending();
-            }
-            iter->draw(hMargin,y, w, h);
-            if (iter->type == OF_IMAGE_COLOR_ALPHA) {
-                ofDisableAlphaBlending();
-            }
-            y+=h+vMargin;
-            
+       
+        if (prefs.bVertical) {
+            h = iter->getHeight()/iter->getWidth()*w;
+        } else {
+            w = iter->getWidth()/iter->getHeight()*h;
         }
+        
+        if (iter == selected) {
+            ofSetHexColor(prefs.hexBorderColor);
+            ofRect(pos-border, w+2*prefs.borderSize, h+2*prefs.borderSize);
+        }
+        
+        ofSetHexColor(0xFFFFFF);
+       
+        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
+            ofEnableAlphaBlending();
+        }
+        iter->draw(pos, w, h);
+        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
+            ofDisableAlphaBlending();
+        }
+       
+        pos+=degenerate(ofVec2f(w,h)+prefs.seperator*ofVec2f(1,1));
+            
+        
     }
 }
 
+
 void ofxScrollCollection::touchDown(ofTouchEventArgs &touch) {
-    if (rect.inside(ofVec2f(touch.x,touch.y)) && state !=SLIDER_STATE_PANNING) {
+    ofVec2f downPos = ofVec2f(touch.x,touch.y);
+    downIter = images.rend();
+    if (prefs.rect.inside(downPos) && state !=SLIDER_STATE_PANNING) {
         state = SLIDER_STATE_DOWN;
         this->touch = touch;
         velocity = ofVec2f(0,0);
-        time = ofGetElapsedTimef();
+        downTime = time = ofGetElapsedTimef();
+        downIter = find(downPos);
     }
 }
 
 void ofxScrollCollection::touchMoved(ofTouchEventArgs &touch){
     if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id) {
-        
+        downIter = images.rend();
         state = SLIDER_STATE_PANNING;
-        ofVec2f posDiff = ofVec2f(touch.x,touch.y) - ofVec2f(this->touch.x,this->touch.y);
-        offset+=ofVec2f(0,posDiff.y);
+        ofVec2f posDiff = degenerate(ofVec2f(touch.x,touch.y) - ofVec2f(this->touch.x,this->touch.y));
+        offset+=posDiff;
         this->touch = touch;
         float newTime = ofGetElapsedTimef();
                     
@@ -152,28 +176,33 @@ void ofxScrollCollection::touchMoved(ofTouchEventArgs &touch){
 
 void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
     if (touch.id == this->touch.id) {
+        downIter = images.rend();
         float v0=velocity.length();
         if (v0>STOP_VELOCITY) {
             
             time = ofGetElapsedTimef();
-            easeStart = offset.y;;
+            easeStart = getScalar(offset);
             
-            float b= log(DECAY_FACTOR)*ofGetFrameRate(); // decay each frame
-            float t = log(STOP_VELOCITY/v0)/b;
-            float dist = v0/b*(exp(t*b)-1);
+            float b= log(DECAY_FACTOR)*ofGetFrameRate(); // because we decay the velocity each frame 
+            float t = log(STOP_VELOCITY/v0)/b; // estimate time for stop
+            float dist = v0/b*(exp(t*b)-1); // estimate stop distance
             
 //            cout << v0 << "\t" << t << "\t" << dist << endl;
+            
+            float contentLength = getContentLength();
+            float rectLength = getScalar(ofVec2f(prefs.rect.width,prefs.rect.height));
+            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
                 
-            if (rect.height>contentHeight) {
-                if (velocity.y>0) {
-                    if (offset.y+dist>rect.height-contentHeight) {
+            if (rectLength>contentLength) {
+                if (getScalar(velocity)>0) {
+                    if (getScalar(offset)+dist>rectLength-contentLength) {
                         state = SLIDER_STATE_BACK_TRACKING;
-                        easeTarget = rect.height-contentHeight;
+                        easeTarget = rectLength-contentLength;
                     } else {
                         state = SLIDER_STATE_ANIMATING;
                     }
                 } else {
-                    if (offset.y-dist<0) {
+                    if (getScalar(offset)-dist<0) {
                         state = SLIDER_STATE_BACK_TRACKING;
                         easeTarget = 0;
                     } else {
@@ -181,17 +210,17 @@ void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
                     }
                 } 
             } else {
-                if (velocity.y>0) {
-                    if (offset.y+dist>0) {
+                if (getScalar(velocity)>0) {
+                    if (getScalar(offset)+dist>0) {
                         state = SLIDER_STATE_BACK_TRACKING;
                         easeTarget = 0;
                     } else {
                         state = SLIDER_STATE_ANIMATING;
                     }
                 } else {
-                    if (offset.y-dist<rect.height-contentHeight) {
+                    if (getScalar(offset)-dist<rectLength-contentLength) {
                         state = SLIDER_STATE_BACK_TRACKING;
-                        easeTarget = rect.height-contentHeight;
+                        easeTarget = rectLength-contentLength;
                     } else {
                         state = SLIDER_STATE_ANIMATING;
                     }
@@ -206,24 +235,12 @@ void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
 }
 
 void ofxScrollCollection::touchDoubleTap(ofTouchEventArgs &touch){
-    if (rect.inside(ofVec2f(touch.x,touch.y))) {
-        
-        float w =  rect.width-2*hMargin;
-        
-        int y=offset.y+vMargin;
-        for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
-            if (iter->getWidth()>0) {
-                float h = iter->getHeight()/iter->getWidth()*w;
-                
-                if (touch.y>y && touch.y<y+h) {
-                    selected = iter;
-                    break;
-                }
-                y+=h+vMargin;
-                
-            }
+    if (prefs.rect.inside(ofVec2f(touch.x,touch.y))) {
+        vector<ofImage>::reverse_iterator iter = find(ofVec2f(touch.x,touch.y));
+        if (iter!=images.rend()) {
+            selected = iter;
         }
-        
+                
     }
 
 }
@@ -231,4 +248,67 @@ void ofxScrollCollection::touchDoubleTap(ofTouchEventArgs &touch){
 void ofxScrollCollection::touchCancelled(ofTouchEventArgs &touch){
     
 }
+
+float ofxScrollCollection::getContentLength() {
+    float contentLength = prefs.seperator;
+    float w =  prefs.rect.width-2*prefs.inset;
+    float h =  prefs.rect.height-2*prefs.inset;
+    
+    
+    if (prefs.bVertical) {
+        for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
+            contentLength+=iter->getHeight()/iter->getWidth()*w+prefs.seperator;
+        }
+    } else {
+        for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
+            contentLength+=iter->getWidth()/iter->getHeight()*h+prefs.seperator;
+        }
+    }
+    
+    return contentLength;
+}
+
+vector<ofImage>::reverse_iterator ofxScrollCollection::find(ofVec2f touch) {
+    
+    float w =  prefs.rect.width-2*prefs.inset;
+    float h =  prefs.rect.height-2*prefs.inset;
+    
+    ofVec2f pos=ofVec2f(prefs.rect.x,prefs.rect.y);
+    if (prefs.bVertical) {
+        pos+=ofVec2f(prefs.inset,offset.y+prefs.seperator);
+    } else {
+        pos+=ofVec2f(offset.x+prefs.seperator,prefs.inset);
+    }
+
+    
+    for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
+        if (prefs.bVertical) {
+            h = iter->getHeight()/iter->getWidth()*w;
+        } else {
+            w = iter->getWidth()/iter->getHeight()*h;
+        }
+        
+        if (getScalar(touch)>getScalar(pos) && getScalar(touch)<getScalar(pos+ofVec2f(w,h))) {
+            return iter;
+            break;
+        }
+        pos+=degenerate(ofVec2f(w,h)+prefs.seperator*ofVec2f(1,1));
+    }
+    
+    return images.rend();
+}
+
+ofVec2f ofxScrollCollection::getVec(float x) {
+    return prefs.bVertical ? ofVec2f(0,x) : ofVec2f(x,0);
+}
+
+float ofxScrollCollection::getScalar(ofVec2f v) {
+    return prefs.bVertical ? v.y : v.x;
+}
+
+ofVec2f ofxScrollCollection::degenerate(ofVec2f v) {
+    return prefs.bVertical ? ofVec2f(0,v.y) : ofVec2f(v.x,0);
+}
+
+
 

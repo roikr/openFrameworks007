@@ -6,57 +6,76 @@ void testApp::setup(){
 	ofRegisterTouchEvents(this);
 
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
-	
-    scroll.setup(ofRectangle(0,0,200, ofGetHeight()), 10, 10);
-    scroll.addItem("images/bike_icon.gif");
-    scroll.addItem("images/bike_icon.png");
-    scroll.addItem("images/bikers.jpg");
-    scroll.addItem("images/gears.gif");
-    scroll.addItem("images/tdf_1972_poster.jpg");
-    scroll.addItem("images/transparency.png");
-    scroll.addItem("images/bike_icon.gif");
-    scroll.addItem("images/bike_icon.png");
-    scroll.addItem("images/bikers.jpg");
-    scroll.addItem("images/gears.gif");
-    scroll.addItem("images/tdf_1972_poster.jpg");
-    scroll.addItem("images/transparency.png");
-	
+    
     
     
 	
+    hScroll.setup(scrollCollectionPrefs(false,ofRectangle(0,ofGetHeight()-100,ofGetWidth(), 100),10,10,2,0xFF0000,100));
+    hScroll.addItem("images/bike_icon.gif");
+    hScroll.addItem("images/bike_icon.png");
+    hScroll.addItem("images/bikers.jpg");
+    hScroll.addItem("images/gears.gif");
+    hScroll.addItem("images/tdf_1972_poster.jpg");
+    
+    hScroll.addItem("images/bike_icon.gif");
+    hScroll.addItem("images/bike_icon.png");
+    hScroll.addItem("images/bikers.jpg");
+    hScroll.addItem("images/gears.gif");
+    hScroll.addItem("images/tdf_1972_poster.jpg");
+   
+    
+    vScroll.setup(scrollCollectionPrefs(true,ofRectangle(ofGetWidth()-100,0,100, ofGetHeight()),20,20,5,0x00FF00,100));
+    
+    vScroll.addItem("images/bike_icon.gif");
+    vScroll.addItem("images/bike_icon.png");
+    vScroll.addItem("images/bikers.jpg");
+    vScroll.addItem("images/gears.gif");
+    vScroll.addItem("images/tdf_1972_poster.jpg");
+    vScroll.addItem("images/transparency.png");
+    vScroll.addItem("images/bike_icon.gif");
+    vScroll.addItem("images/bike_icon.png");
+    vScroll.addItem("images/bikers.jpg");
+    vScroll.addItem("images/gears.gif");
+    vScroll.addItem("images/tdf_1972_poster.jpg");
+    vScroll.addItem("images/transparency.png");
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	ofBackground(255,255,255);	
-    scroll.update();
+    hScroll.update();
+    vScroll.update();
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){	
     ofSetHexColor(0xFFFFFF);
-	scroll.draw();
-	
+	hScroll.draw();
+	vScroll.draw();
 }
 
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
-    scroll.touchDown(touch);
+    hScroll.touchDown(touch);
+    vScroll.touchDown(touch);
 }
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch){
-    scroll.touchMoved(touch);
+    hScroll.touchMoved(touch);
+    vScroll.touchMoved(touch);
 }
 
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){
-    scroll.touchUp(touch);
+    hScroll.touchUp(touch);
+    vScroll.touchUp(touch);
 }
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-    scroll.touchDoubleTap(touch);
+    hScroll.touchDoubleTap(touch);
+    vScroll.touchDoubleTap(touch);
 }
 
 //--------------------------------------------------------------
