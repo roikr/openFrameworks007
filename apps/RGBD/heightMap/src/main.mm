@@ -14,7 +14,7 @@ int main( ){
     if( bUseCocoaWindow )
     {
         ofxCocoaWindow cocoaWindow;
-        ofSetupOpenGL( &cocoaWindow, 800, 600, OF_WINDOW );
+        ofSetupOpenGL( &cocoaWindow, 1024, 768, OF_WINDOW );
     }
     else
     {

@@ -34,7 +34,10 @@ class testApp : public ofBaseApp{
     
     GLuint depthID;
     GLuint colorID;
+    GLuint materialID;
     
     ofxPrimeSensor cam;
+    
+    ofImage material;
 		
 };

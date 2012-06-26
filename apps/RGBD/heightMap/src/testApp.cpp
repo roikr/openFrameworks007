@@ -44,19 +44,23 @@ void testApp::setup(){
     const GLubyte * strVersion = glGetString(GL_VERSION); 
 	printf("version: %s\n",strVersion);
     
+    material.setUseTexture(false);
+    material.loadImage("Marble.jpg");
+    
     cam.setup();
     
     depthID = createTexture( GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
     colorID = createTexture( GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
-   
+    materialID = createTexture( GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
+        
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,depthID ); //vidGrabber.getTextureReference().getTextureData().textureID
     
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D,colorID ); //vidGrabber.getTextureReference().getTextureData().textureID
     
-
-    
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D,materialID );
     
     shader.checkAndCreateProgram();
     
@@ -85,6 +89,13 @@ void testApp::setup(){
             vertices.push_back(ofVec2f(fx,fy+dy)-ofVec2f(0.5,0.5));
             vertices.push_back(ofVec2f(fx+dx,fy)-ofVec2f(0.5,0.5));
             vertices.push_back(ofVec2f(fx+dx,fy+dy)-ofVec2f(0.5,0.5));
+            
+//            vertices.push_back(ofVec2f(fx,fy)-ofVec2f(1.0,1.0));
+//            vertices.push_back(ofVec2f(fx,fy+dy)-ofVec2f(1.0,1.0));
+//            vertices.push_back(ofVec2f(fx+dx,fy)-ofVec2f(1.0,1.0));
+//            vertices.push_back(ofVec2f(fx,fy+dy)-ofVec2f(1.0,1.0));
+//            vertices.push_back(ofVec2f(fx+dx,fy)-ofVec2f(1.0,1.0));
+//            vertices.push_back(ofVec2f(fx+dx,fy+dy)-ofVec2f(1.0,1.0));
             
             
 //            texCoords.push_back(ofVec2f(0.0,1.0));
@@ -153,8 +164,8 @@ void testApp::setup(){
     shader.begin();
     
     glUniform1i(glGetUniformLocation(shader.getProgram(), "depthTexture"), 0);  
-    
-    glUniform1i(glGetUniformLocation(shader.getProgram(), "colorTexture"), 1);  
+    glUniform1i(glGetUniformLocation(shader.getProgram(), "colorTexture"), 1);
+    glUniform1i(glGetUniformLocation(shader.getProgram(), "materialTexture"), 2);
     
     //shader.setUniformTexture("uSampler", texture.getTextureReference(), 0); 
     //shader.setUniform4f("vColor", 1.0f,1.0f,1.0f,1.0f);
@@ -189,12 +200,12 @@ void testApp::update(){
     
     
     pixels = cam.getImagePixels();
-    
-    glActiveTexture(GL_TEXTURE1);    
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pixels.getWidth(), pixels.getHeight(), 0,
-				 GL_RGB, GL_UNSIGNED_BYTE, pixels.getPixels());
-    
    
+    glActiveTexture(GL_TEXTURE1);    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pixels.getWidth(), pixels.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, pixels.getPixels());
+    
+    glActiveTexture(GL_TEXTURE2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, material.getWidth(), material.getHeight(), 0,GL_RGB, GL_UNSIGNED_BYTE, material.getPixels());
 }
 
 //--------------------------------------------------------------
