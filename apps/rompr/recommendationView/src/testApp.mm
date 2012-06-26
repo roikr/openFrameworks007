@@ -16,7 +16,8 @@
 enum requestType {
     REQUEST_TYPE_LOGIN,
     REQUEST_TYPE_QUERY,
-    REQUEST_TYPE_IMAGE
+    REQUEST_TYPE_IMAGE,
+    REQUEST_TYPE_RECOMMENDATION
     
 };
 
@@ -168,6 +169,34 @@ void testApp::processQuery(ofBuffer &query) {
 		cout  << "Failed to parse JSON" << endl;
 	}
 
+}
+
+void testApp::viewRecommendation(string html) {
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, ofGetWidth(), ofGetHeight())];
+    
+    //webView.delegate	= NULL;
+    
+    
+    
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"webViewContent" ofType:@"html"];
+//	NSFileHandle *readHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+//    
+//	NSString *htmlString = [[NSString alloc] initWithData: 
+//                            [readHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding];
+	
+    NSString *htmlString = [NSString stringWithCString:html.c_str() encoding:NSUTF8StringEncoding];
+    
+	// to make html content transparent to its parent view -
+	// 1) set the webview's backgroundColor property to [UIColor clearColor]
+	// 2) use the content in the html: <body style="background-color: transparent">
+	// 3) opaque property set to NO
+	//
+	webView.opaque = NO;
+	webView.backgroundColor = [UIColor clearColor];
+    [webView loadHTMLString:htmlString baseURL:nil];
+	[htmlString release];
+    
+    [ofxiPhoneGetUIWindow() addSubview:webView];
 }
 
 void testApp::urlResponse(ofxHttpResponse &response) {
@@ -392,6 +421,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 //    cout << "touchDoubleTap" << endl;
+    
 }
 
 //--------------------------------------------------------------
