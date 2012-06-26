@@ -24,6 +24,7 @@ class ofxDraggable {
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
     
+    bool inside(ofTouchEventArgs &touch);
     
     vector<ofTouchEventArgs> touches;
     

@@ -77,11 +77,12 @@ void ofxScrollCollection::update() {
             
         } break;
             
-            case SLIDER_STATE_DOWN:
-//            case SLIDER_STATE_PANNING:
+            case SLIDER_STATE_DOWN:    // select only if down for several ms and before moving
+//            case SLIDER_STATE_PANNING: 
             if (downIter!=images.rend() && (ofGetElapsedTimef()-downTime)*1000 > prefs.selectionDelay) {
                 selected = downIter;
                 downIter = images.rend();
+//                cout << selected->getWidth() << "\t" << selected->getHeight() << endl;
             }
             
         default:
@@ -141,6 +142,63 @@ void ofxScrollCollection::draw() {
     }
 }
 
+bool ofxScrollCollection::getIsSelected() {
+    return selected!=images.rend();
+}
+
+int ofxScrollCollection::getSelectedNum() {
+    return distance(images.rbegin(), selected);
+}
+
+ofImage &ofxScrollCollection::getImage(int num) {
+    return *(images.rbegin()+num);
+}
+
+bool ofxScrollCollection::getIsDown() {
+    return downIter!=images.rend();
+}
+
+int ofxScrollCollection::getDownNum() {
+    return distance(images.rbegin(), downIter);
+}
+
+ofRectangle ofxScrollCollection::getRectangle(int num) {
+    ofRectangle rect;
+    
+    float w =  prefs.rect.width-2*prefs.inset;
+    float h =  prefs.rect.height-2*prefs.inset;
+    
+    ofVec2f pos=ofVec2f(prefs.rect.x,prefs.rect.y);
+    if (prefs.bVertical) {
+        pos+=ofVec2f(prefs.inset,offset.y+prefs.seperator);
+    } else {
+        pos+=ofVec2f(offset.x+prefs.seperator,prefs.inset);
+    }
+    
+    for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
+        
+        if (prefs.bVertical) {
+            h = iter->getHeight()/iter->getWidth()*w;
+        } else {
+            w = iter->getWidth()/iter->getHeight()*h;
+        }
+        
+        if (iter == downIter) {
+           
+            rect.set(pos, w, h);
+            break;
+        }
+        
+        
+        
+        pos+=degenerate(ofVec2f(w,h)+prefs.seperator*ofVec2f(1,1));
+        
+        
+    }
+    
+    return rect;
+}
+
 
 void ofxScrollCollection::touchDown(ofTouchEventArgs &touch) {
     ofVec2f downPos = ofVec2f(touch.x,touch.y);
@@ -191,7 +249,7 @@ void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
             
             float contentLength = getContentLength();
             float rectLength = getScalar(ofVec2f(prefs.rect.width,prefs.rect.height));
-            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
+//            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
                 
             if (rectLength>contentLength) {
                 if (getScalar(velocity)>0) {
@@ -266,6 +324,10 @@ float ofxScrollCollection::getContentLength() {
     }
     
     return contentLength;
+}
+
+bool ofxScrollCollection::getIsInside(ofVec2f touch) {
+    return prefs.rect.inside(touch);
 }
 
 vector<ofImage>::reverse_iterator ofxScrollCollection::find(ofVec2f touch) {

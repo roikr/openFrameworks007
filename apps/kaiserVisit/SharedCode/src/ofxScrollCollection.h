@@ -39,9 +39,22 @@ public:
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
     
+    bool getIsSelected();
+    int getSelectedNum();
+    ofImage &getImage(int num);
+    
+    bool getIsDown();
+    int getDownNum();
+    ofRectangle getRectangle(int num);
+
+    bool getIsInside(ofVec2f touch);
+    
+    
+    
 private:
-    float getContentLength();
     vector<ofImage>::reverse_iterator find(ofVec2f touch);
+    float getContentLength();
+    
     ofVec2f getVec(float x);
     float getScalar(ofVec2f v);
     ofVec2f degenerate(ofVec2f v);

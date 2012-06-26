@@ -17,7 +17,11 @@ void ofxDraggable::setup(ofRectangle rect) {
 };
 
 void ofxDraggable::draw() {
-    ofRectangle(rect);
+    ofPushStyle();
+    ofSetHexColor(0xFF0000);
+    ofNoFill();
+    ofRect(ofVec2f(0,0), rect.width, rect.height);
+    ofPopStyle();
 };
 
 void ofxDraggable::begin() {
@@ -32,10 +36,14 @@ void ofxDraggable::end() {
     ofPopMatrix();
 };
 
-void ofxDraggable::touchDown(ofTouchEventArgs &touch) {
-    ofVec2f pos = ((ofVec2f(touch.x,touch.y)-trans)/scale).rotate(-rotation);
+bool ofxDraggable::inside(ofTouchEventArgs &touch) {
+    ofVec2f pos = ((ofVec2f(touch.x,touch.y)-trans)/scale).rotated(-rotation);
     
-    if (rect.inside(pos)) {
+    return rect.inside(pos);
+}
+
+void ofxDraggable::touchDown(ofTouchEventArgs &touch) {
+    if (inside(touch)) {
         touches.push_back(touch);
     }
 };
