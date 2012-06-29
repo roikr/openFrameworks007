@@ -8,19 +8,30 @@
 #define TIME_DIFF_FOR_UPDATING 10
 #define MEASURE_INTERVAL 1000 // ms
 
-void testApp::setup() {
-//    setup("http://81.218.93.18/","roee");
-    setup("http://localhost/","roee");
-    start();
-   
-}
+//void testApp::setup() {
+////    setup("http://81.218.93.18/","roee");
+//    setup("http://localhost/","roee");
+//    start();
+//   
+//}
 
 //--------------------------------------------------------------
-void testApp::setup(string host,string root){
+void testApp::setup(){
+    
+    ofRegisterURLNotification(this);
+    bStarted = false;
+}
+
+void testApp::setURL(string host,string root) {
     this->host = host;
     this->root = root;
-    ofRegisterURLNotification(this);
     iteration = 0;
+    
+    list.clear();
+    queue.clear();
+    bStarted = false;
+    start();
+    
 }
 
 void testApp::start() {

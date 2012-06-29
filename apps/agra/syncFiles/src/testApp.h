@@ -17,10 +17,10 @@ class testApp : public ofBaseApp{
 
 	public:
         void setup();
-		void setup(string host,string root);
 		void update();
         void draw();
     
+        void setURL(string host,string root);
         void start();
 		
         void gotMessage(ofMessage msg);
