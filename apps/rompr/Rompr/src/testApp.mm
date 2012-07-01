@@ -1,6 +1,6 @@
 #include "testApp.h"
 #import <QuartzCore/QuartzCore.h>
-#include "ofxJSONElement.h"
+#include "cJSON.h"
 #import "EventRouteWindow.h"
 
 
@@ -9,11 +9,13 @@
 
 #define MAP_BLOCK_WIDTH     1500.0
 
-#define SIMULTANEOUS_CONNECTIONS 5
+#define SIMULTANEOUS_CONNECTIONS 15
 
 #define MAP_RECT_WIDTH      mapKit.getMKMapView().visibleMapRect.size.width
 
 const string HOST_NAME = "107.21.224.181";
+const string USER_ID = "549453367";
+const string FB_ACCESS_TOKEN ="AAACtapZAgifcBALkk9e7p6RYZAYm6hkZCXKub5tdRrD9DyBASA2oQx0xipZBpZBHwL4jIGZA5WjiZBlugZB5QQ6ak7fz0JLyKV8LxDx1sijoWwZDZD";
 
 enum requestType {
     REQUEST_TYPE_LOGIN,
@@ -88,8 +90,7 @@ void testApp::setup(){
     
     logo.loadImage("logo.png");
     
-    string url = "http://"+HOST_NAME+"/mobile/start/549453367/AAACtapZAgifcBAEGBY8KYPyxlFMSZAjdhE3jd2EEQSLF9W3RnaiPYuuFiIhOW1sj3B94d01SJJlUzIPGCyE8JkBLWMEpRxxnkM2M2TXAZDZD";
-    
+    string url = "http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+FB_ACCESS_TOKEN;
     queue[ofxLoadURLAsync(ofxHttpRequest(url,url))] = REQUEST_TYPE_LOGIN;
     
     selected = items.end();
@@ -132,40 +133,51 @@ void testApp::queryViewLocation() {
 
 
 void testApp::processQuery(ofBuffer &query) {
-    ofxJSONElement result;
-    bool parsingSuccessful = result.parse(query.getText());
-	if ( parsingSuccessful )
+    cJSON *result;
+    result=cJSON_Parse(query.getText().c_str());
+	if ( result )
     {
 //		cout << result.getRawString() << endl;
-        ofxJSONElement elements = result["user_recommendation_list"];
+        cJSON *elements = cJSON_GetObjectItem(result, "user_recommendation_list");
         
         int j = 0;
-        for(int i=0; i<elements.size(); i++)
+        for(int i=0; i<cJSON_GetArraySize(elements); i++)
         {
-            ofxJSONElement element = elements[i]["recommendation"];
-            string filename = element["img_path"].asString();
-            int itemID = atoi(element["id"].asString().c_str());
-            if (!filename.empty() && !getIsItemExist(itemID)) {
+            cJSON *element = cJSON_GetObjectItem(cJSON_GetArrayItem(elements, i),"recommendation");
+            cJSON *r_id = cJSON_GetObjectItem(element,"id");
+            cJSON *longitude = cJSON_GetObjectItem(element,"longitude");
+            cJSON *latitude = cJSON_GetObjectItem(element,"latitude");
+            cJSON *img_path = cJSON_GetObjectItem(element,"img_path");
+            
+//            cout << i << "\t" << r_id->type << "\t" << longitude->type << "\t" << latitude->type << "\t" << img_path->type << endl;
+//             cout << i << "\t" << r_id->valuestring << "\t" << longitude->valuestring << "\t" << latitude->valuestring << "\t" << img_path->valuestring << endl;
+//            if (r_id->type==cJSON_Number && longitude->type==cJSON_Number && latitude->type == cJSON_Number && img_path->type == cJSON_String ) {
+//                cout << i << "\t" << r_id->string << "\t" << longitude->string << "\t" << latitude->string << "\t" << img_path->string << endl;
+//            }
+            
+            int itemID = atoi(r_id->valuestring);
+            
+            
                 
+            if (!getIsItemExist(itemID)) {
                 item r;
-                r.img_path = filename;
-                r.location.longitude = atof(element["longitude"].asString().c_str()) ;
-                r.location.latitude = atof(element["latitude"].asString().c_str()) ;
+                r.img_path = img_path->valuestring;
+                r.location.longitude = longitude->type == cJSON_Number ? longitude->valuedouble : atof(longitude->valuestring);
+                r.location.latitude = latitude->type == cJSON_Number ? latitude->valuedouble : atof(latitude->valuestring);
                 r.itemID = itemID;
-                items.push_back(r);
-                selected = items.end(); // roikr: assume that it can't happend while easing
-//                cout <<r.img_path << endl;
-                imagesList.push_back(r.img_path);
-                
-                item &s = items.back();
-//                cout << s.image.getWidth() << "\t" << s.image.getHeight() << "\t" << setprecision(15) << s.longitude <<"\t" << s.latitude << endl;
-                
-                
-//                cout << j << ": " << filename << ", distanceFromCenter: " << MKMetersBetweenMapPoints(MKMapPointForCoordinate(mapKit.getCenterLocation()),MKMapPointForCoordinate(s.location)) << endl;
-                j++;
+                if (r.location.longitude && r.location.latitude && !r.img_path.empty()) {
+                    cout << i << "\t" << j << "\t" << r.itemID << "\t" << r.location.longitude << "\t" << r.location.latitude << "\t" << r.img_path << endl;
+//                    cout << j << MKMetersBetweenMapPoints(MKMapPointForCoordinate(mapKit.getCenterLocation()),MKMapPointForCoordinate(r.location)) << endl;
+                    items.push_back(r);
+                    selected = items.end(); // roikr: assume that it can't happend while easing
+                    imagesList.push_back(r.img_path);
+                    j++;
+                }
                 
             }
         }
+        
+        cJSON_Delete(result);
 	}
     else
     {
@@ -272,14 +284,13 @@ void testApp::urlResponse(ofxHttpResponse &response) {
     
     if (iter!=queue.end()) {
 
-        queue.erase(iter);
-        
         switch (response.status) {
             case 200: 
+            case 302:
                 switch (iter->second) {
                     case REQUEST_TYPE_LOGIN:
                         cookies = response.cookies;
-                        bQueryLocation = true;
+//                        bQueryLocation = true; // roikr: no need to query because there is still query waiting from startup region change
                         break;
                         
                     case REQUEST_TYPE_QUERY:
@@ -338,6 +349,7 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                 
             default:
                 error = response.error;
+                cout << "requestType: " << iter->second << ", status:  -1, error: " << response.error << endl;
                 break;
         }
         
@@ -345,10 +357,11 @@ void testApp::urlResponse(ofxHttpResponse &response) {
         
         
         
-
+        queue.erase(iter);
     } else {
         status = -1;
         error = "could not find "+url+" in the queue";
+        cout << error << endl;
     } 
 }
 

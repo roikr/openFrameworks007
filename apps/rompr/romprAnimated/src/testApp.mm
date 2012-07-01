@@ -14,6 +14,9 @@
 #define MAP_RECT_WIDTH      mapKit.getMKMapView().visibleMapRect.size.width
 
 const string HOST_NAME = "107.21.224.181";
+const string USER_ID = "549453367";
+const string FB_ACCESS_TOKEN ="AAACtapZAgifcBALkk9e7p6RYZAYm6hkZCXKub5tdRrD9DyBASA2oQx0xipZBpZBHwL4jIGZA5WjiZBlugZB5QQ6ak7fz0JLyKV8LxDx1sijoWwZDZD";
+
 
 enum requestType {
     REQUEST_TYPE_LOGIN,
@@ -88,8 +91,7 @@ void testApp::setup(){
     
     logo.loadImage("logo.png");
     
-    string url = "http://"+HOST_NAME+"/mobile/start/549453367/AAACtapZAgifcBAEGBY8KYPyxlFMSZAjdhE3jd2EEQSLF9W3RnaiPYuuFiIhOW1sj3B94d01SJJlUzIPGCyE8JkBLWMEpRxxnkM2M2TXAZDZD";
-    
+    string url = "http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+FB_ACCESS_TOKEN;
     queue[ofxLoadURLAsync(ofxHttpRequest(url,url))] = REQUEST_TYPE_LOGIN;
     
     selected = items.end();
