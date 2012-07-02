@@ -8,6 +8,7 @@
 
 struct item {
     ofImage image;
+    ofImage thumb;
     ofxMapKitLocation location;
     string img_path;
     int itemID;

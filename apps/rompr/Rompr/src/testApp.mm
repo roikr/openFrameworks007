@@ -20,6 +20,7 @@ const string FB_ACCESS_TOKEN ="AAACtapZAgifcBALkk9e7p6RYZAYm6hkZCXKub5tdRrD9DyBA
 enum requestType {
     REQUEST_TYPE_LOGIN,
     REQUEST_TYPE_QUERY,
+    REQUSET_TYPE_THUMB,
     REQUEST_TYPE_IMAGE,
     REQUEST_TYPE_RECOMMENDATION
     
@@ -147,7 +148,7 @@ void testApp::processQuery(ofBuffer &query) {
             cJSON *r_id = cJSON_GetObjectItem(element,"id");
             cJSON *longitude = cJSON_GetObjectItem(element,"longitude");
             cJSON *latitude = cJSON_GetObjectItem(element,"latitude");
-            cJSON *img_path = cJSON_GetObjectItem(element,"img_path");
+            cJSON *img_path = cJSON_GetObjectItem(element,"thumb_path");
             
 //            cout << i << "\t" << r_id->type << "\t" << longitude->type << "\t" << latitude->type << "\t" << img_path->type << endl;
 //             cout << i << "\t" << r_id->valuestring << "\t" << longitude->valuestring << "\t" << latitude->valuestring << "\t" << img_path->valuestring << endl;
@@ -196,7 +197,7 @@ void testApp::showRecommendation(string html) {
     blackView.alpha = 0.0;
     //black.opaque = YES;
     
-    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, ofGetHeight(), ofGetWidth(), ofGetHeight())];
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, -ofGetHeight(), ofGetWidth(), ofGetHeight())];
     
     [view addSubview:webView];
     [view insertSubview:blackView belowSubview:webView];
@@ -212,6 +213,8 @@ void testApp::showRecommendation(string html) {
 //    
 //	NSString *htmlString = [[NSString alloc] initWithData: 
 //                            [readHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding];
+    
+//    cout << html << endl;
 	
     NSString *htmlString = [NSString stringWithCString:html.c_str() encoding:NSUTF8StringEncoding];
     
@@ -221,7 +224,7 @@ void testApp::showRecommendation(string html) {
 	// 3) opaque property set to NO
 	//
 
-    [webView loadHTMLString:htmlString baseURL:nil];
+    [webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:ofxStringToNSString("http://"+HOST_NAME)]];
 //	[htmlString release];
     
     [ofxiPhoneGetUIWindow() addSubview:view];
@@ -252,7 +255,7 @@ void testApp::hideRecommendation() {
             UIWebView *webView = [view.subviews objectAtIndex:1];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [UIView animateWithDuration:1.0 delay:0.0 options: UIViewAnimationOptionTransitionNone | UIViewAnimationOptionCurveEaseOut 
+                [UIView animateWithDuration:0.5 delay:0.0 options: UIViewAnimationOptionTransitionNone | UIViewAnimationCurveEaseInOut 
                                  animations:^{
                                      blackView.alpha = 0.0;
                                      CGRect frame = webView.frame;
