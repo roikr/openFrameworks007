@@ -31,8 +31,13 @@ public:
     int state;
     
     vector<item> items;
-    int downTime;
-    ofTouchEventArgs downTouch;
-    bool bIsDown;
+   
+    ofTouchEventArgs lastTouch;
+    bool bTouchObject;
+    int objectNum;
+    
+    ofImage scratch;
+    ofImage photo;
+    
     
 };

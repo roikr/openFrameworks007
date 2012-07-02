@@ -5,14 +5,21 @@ enum {
     STATE_OBJECTS
 };
 
+ofColor transformColor(ofColor &src) {
+    
+    static ofMatrix4x4 colorMat(0.393,0.349,0.272,0.0,0.769,0.686,0.534,0.0,0.189,0.168,0.131,0.0,0.0,0.0,0.0,1.0);
+    ofVec4f dst = colorMat*ofVec4f(src.r,src.g,src.b,1.0);
+    
+    return ofColor(dst.x,dst.y,dst.z);
+}
+    
+
 //--------------------------------------------------------------
 void testApp::setup(){	
 	// register touch events
 	ofRegisterTouchEvents(this);
 
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
-    
-    
     
     images.setup(scrollCollectionPrefs(true,ofRectangle(ofGetWidth()-100,0,100, ofGetHeight()),20,20,5,0x00FF00,100));
     objects.setup(scrollCollectionPrefs(true,ofRectangle(ofGetWidth()-100,0,100, ofGetHeight()),20,20,5,0x00FF00,100));
@@ -32,7 +39,10 @@ void testApp::setup(){
     }
     
     state = STATE_IMAGES;
-    bIsDown = false;
+    bTouchObject = false;
+    
+    scratch.loadImage("SCRATCHES_OVERLAY.png");
+    
 }
 
 //--------------------------------------------------------------
@@ -42,26 +52,14 @@ void testApp::update(){
     images.update();
     objects.update();
     
-    if (state == STATE_OBJECTS && bIsDown && objects.getIsDown() && (ofGetElapsedTimef()-downTime)*1000 > 250) {
-        bIsDown = false;
-        ofRectangle rect = objects.getRectangle(objects.getDownNum());
-        item x;
-        
-//        cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-        
-        
-        x.drag.setup(rect);
-        x.drag.touchDown(downTouch);
-        x.objectNum = objects.getDownNum();
-        x.scale = (100-40)/objects.getImage(x.objectNum).getWidth();
-        items.push_back(x);
-    }
-
+  
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){	
     ofSetHexColor(0xFFFFFF);
+    
+    ofRectangle rect;
     
     if (images.getIsSelected()) {
         ofImage &image = images.getImage(images.getSelectedNum());
@@ -73,7 +71,9 @@ void testApp::draw(){
         float scale = MIN(sh,sw);
         float w = scale*image.getWidth();
         float h = scale*image.getHeight();
-        image.draw(inset+(dw-w)/2, inset+(dh-h)/2, w, h);
+        rect = ofRectangle(inset+(dw-w)/2, inset+(dh-h)/2,w, h);
+        image.draw(rect);
+        
     }
 
     
@@ -101,6 +101,18 @@ void testApp::draw(){
         default:
             break;
     }
+    
+    if (images.getIsSelected()) {
+        ofEnableAlphaBlending();
+        scratch.draw(rect);
+        ofDisableAlphaBlending();
+        
+    }
+    
+    ofSetHexColor(0x000000);
+    
+    ofDrawBitmapString("tap me twice", 0, 10);
+
 	
 }
 
@@ -108,7 +120,7 @@ void testApp::draw(){
 void testApp::touchDown(ofTouchEventArgs &touch){
     
         
-    bIsDown = false;
+    
     switch (state) {
         case STATE_IMAGES:
             images.touchDown(touch);
@@ -117,9 +129,9 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             
             objects.touchDown(touch);
             if (objects.getIsInside(ofVec2f(touch.x,touch.y)) && objects.getIsDown()) {
-                downTouch = touch;
-                downTime = ofGetElapsedTimef();
-                bIsDown = true;
+                lastTouch = touch;
+                objectNum = objects.getDownNum(); // getDownNum valid only at down stage
+                bTouchObject = true;
             }
                         
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
@@ -139,15 +151,41 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch){
+   
+    
+    
     switch (state) {
         case STATE_IMAGES:
             images.touchMoved(touch);
             break;
         case STATE_OBJECTS:
             objects.touchMoved(touch);
-            for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-                iter->drag.touchMoved(touch);
+            
+            if (bTouchObject) {
+                float angle = (ofVec2f(touch.x,touch.y)-ofVec2f(lastTouch.x,lastTouch.y)).angle(ofVec2f(-1.0,0.0));
+                //cout << angle << endl;
+                
+                if (angle == 0) {
+                    bTouchObject = false;
+                    ofRectangle rect = objects.getRectangle(objectNum);
+                    item x;
+//                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
+                    x.drag.setup(rect);
+                    x.drag.touchDown(lastTouch);
+                    x.drag.touchMoved(touch);
+                    x.objectNum = objectNum;
+                    x.scale = (100-40)/objects.getImage(x.objectNum).getWidth();
+                    items.push_back(x);
+                    objects.touchUp(touch);
+                } 
+                
+                lastTouch = touch;
+            } else {
+                for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+                    iter->drag.touchMoved(touch);
+                }
             }
+            
             
             break;
             
@@ -182,7 +220,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
     
-    if (ofRectangle(0, 0, 50, 50).inside(ofVec2f(touch.x,touch.y))) {
+    if (ofRectangle(0, 0, 100, 20).inside(ofVec2f(touch.x,touch.y))) {
         
         switch (state) {
             case STATE_IMAGES:
