@@ -183,7 +183,7 @@ ofRectangle ofxScrollCollection::getRectangle(int num) {
             w = iter->getWidth()/iter->getHeight()*h;
         }
         
-        if (iter == downIter) {
+        if (distance(images.rbegin(),iter) == num) {
            
             rect.set(pos, w, h);
             break;
@@ -233,7 +233,7 @@ void ofxScrollCollection::touchMoved(ofTouchEventArgs &touch){
 }
 
 void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
-    if (touch.id == this->touch.id) {
+    if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id) {
         downIter = images.rend();
         float v0=velocity.length();
         if (v0>STOP_VELOCITY) {
