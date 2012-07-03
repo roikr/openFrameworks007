@@ -303,3 +303,7 @@ void ofxPanZoom::update() {
 	}	
     
 }
+
+bool ofxPanZoom::getIsAnimating() {
+    return state == SLIDER_STATE_ANIMATING;
+}

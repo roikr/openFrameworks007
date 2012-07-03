@@ -72,6 +72,7 @@ public:
 	ofVec3f screenToWorld(ofVec3f p);
     
     void update(); // update loop for animation
+    bool getIsAnimating();
 	
 private:
 	
