@@ -103,19 +103,24 @@ void ofxDeepZoom::threadedFunction() {
             switch (iter->state) {
                 case TILE_STATE_QUEUE:
                     if (iter->bInside) {
-//                        if( lock() ) {
+                        if( lock() ) {
                             iter->image.setUseTexture(false);
                             iter->image.loadImage(iter->filename);
                             iter->state = TILE_STATE_LOAD;
-//                            unlock();                            
-//                        }
+                            unlock();  
+                            break;
+                            
+                        }
                     }
                     break;
                 case TILE_STATE_UNLOAD:
-//                    if( lock() ) {
+                    if( lock() ) {
                         iter->image.clear();
-//                        unlock();
-//                    }
+                        iter->state = TILE_STATE_DELETE;
+                        unlock();
+                        break;
+                        
+                    }
                     
                     break;
                 default:
@@ -123,9 +128,11 @@ void ofxDeepZoom::threadedFunction() {
                     
             }
             
+            
         }
-
         ofSleepMillis(1 * 100);
+
+        
     }
 
 }
@@ -136,19 +143,22 @@ void ofxDeepZoom::update() {
         
         switch (iter->state) {
             case TILE_STATE_LOAD:
-//                if( lock() ){
+                if( lock() ){
                     iter->image.setUseTexture(true);
                     iter->image.reloadTexture();
                     iter->state = TILE_STATE_ACTIVE;
-//                    unlock();
-//                }
+                    unlock();
+                    break;
+                }
                 
                 break;
                 
             case TILE_STATE_SWAP:
+                iter->image.getTextureReference().clear();
+                iter->image.setUseTexture(false); // for the clear of the pixels
                 iter->state = TILE_STATE_UNLOAD;
                 break;
-            case TILE_STATE_UNLOAD:
+            case TILE_STATE_DELETE:
                 iter = tiles.erase(iter);
                 break;
             default:
@@ -159,15 +169,22 @@ void ofxDeepZoom::update() {
     }
 }
 
+void ofxDeepZoom::begin() {
+    ofPushMatrix();
+    ofTranslate(offset);
+    ofScale(scale, scale);
+}
+
+void ofxDeepZoom::end() {
+    ofPopMatrix();
+}
 
 
 void ofxDeepZoom::draw() {
     
     ofPushStyle();
     
-    ofPushMatrix();
-    ofTranslate(offset);
-    ofScale(scale, scale);
+    
     ofTranslate(-width/2, -height/2);
     
     ofFill();
@@ -200,9 +217,6 @@ void ofxDeepZoom::draw() {
         ofSetHexColor(0xffffff);
         ofRect(iter->rect);
     }
-    
-    
-    ofPopMatrix();
     
     ofPopStyle();
 }

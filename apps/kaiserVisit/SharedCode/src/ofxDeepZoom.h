@@ -18,6 +18,7 @@ enum {
     TILE_STATE_ACTIVE,
     TILE_STATE_SWAP,
     TILE_STATE_UNLOAD,
+    TILE_STATE_DELETE
 };
 
 struct tile {
@@ -37,6 +38,8 @@ public:
     void setup(string filename,string extension,float width, float height,ofRectangle viewport);
     void start();
     void stop();
+    void begin();
+    void end();
     void update();
     void transform(ofVec2f offset,float scale);
     void draw();
