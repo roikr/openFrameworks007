@@ -13,6 +13,7 @@
 #define TILE_SIZE 256
 
 enum {
+    TILE_STATE_QUEUE,
     TILE_STATE_LOAD,
     TILE_STATE_ACTIVE,
     TILE_STATE_SWAP,
@@ -20,10 +21,11 @@ enum {
 };
 
 struct tile {
-    tile(ofRectangle rect):rect(rect),bInside(false),state(TILE_STATE_LOAD) {};
+    tile(ofRectangle rect,string filename):rect(rect),filename(filename),bInside(false),state(TILE_STATE_QUEUE) {};
     
     ofRectangle rect;
 	ofImage image;
+    string filename;
     
     int state;
     bool bInside;
@@ -51,5 +53,6 @@ private:
    
     
     list<tile> tiles;
+    string filename;
     
 };
