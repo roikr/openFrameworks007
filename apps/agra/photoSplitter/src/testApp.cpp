@@ -29,6 +29,7 @@ void testApp::setup(){
 	scale = 1;
 	
 	DIR.allowExt("jpg");
+    DIR.allowExt("png");
 	DIR.listDir(path);
 	fileCounter = 0;
 	printf("num files: %i\n",DIR.numFiles());
@@ -43,7 +44,8 @@ void testApp::loadImage() {
 	printf("path: %s\n",DIR.getPath(fileCounter).c_str());
 	vector<string> name = ofSplitString(DIR.getName(fileCounter), ".");
 	currentName = name[0];
-	ofxDirList::createDirectory(currentName);
+    currentExt = DIR.getFile(fileCounter).getExtension();
+    ofDirectory::createDirectory(currentName);
 	printf("path: %s, currentName: %s\n",DIR.getPath(fileCounter).c_str(),currentName.c_str());
 	
 }
@@ -70,7 +72,7 @@ void testApp::update(){
 			printf("scale: %i, row: %i, col: %i\n",int(scale*1000),row,col);
 			char str[100];
 //			sprintf(str, "png/%s_%i_%i_%i.png",name[0].c_str(),int(scale*1000),col,row);
-			sprintf(str, "%s/%s_%i_%i_%i.jpg",currentName.c_str(),currentName.c_str(),int(scale*1000),col,row);
+			sprintf(str, "%s/%s_%i_%i_%i.%s",currentName.c_str(),currentName.c_str(),int(scale*1000),col,row,currentExt.c_str());
 			dest.saveImage(string(str));
 
 			//printf("x: %i, y: %i, width: %i, height %i\n",x,y,width,height);

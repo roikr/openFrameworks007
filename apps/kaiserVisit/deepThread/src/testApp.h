@@ -1,14 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxDirList.h"
+#include "ofxDeepZoom.h"
 
-struct tile {
-	ofImage image;
-	int col;
-	int row;
-	float scale;
-};
 
 class testApp : public ofBaseApp{
 
@@ -31,16 +25,18 @@ class testApp : public ofBaseApp{
 	
 		
 	float tilesScale;
-	vector<tile> tiles;
-	int width;
+    int width;
 	int height;
 	
 	string path;
 	string name;
+    string ext;
 	
 	ofPoint pos;
 	float scale;
 	
 	ofPoint downPos;
+    
+    ofxDeepZoom deep;
 	
 };

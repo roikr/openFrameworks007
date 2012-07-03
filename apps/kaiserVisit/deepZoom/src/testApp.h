@@ -2,6 +2,12 @@
 
 #include "ofMain.h"
 
+struct tile {
+	ofImage image;
+	int col;
+	int row;
+	float scale;
+};
 
 class testApp : public ofBaseApp{
 
@@ -9,7 +15,6 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-        void exit();
 
 		void keyPressed  (int key);
 		void keyReleased(int key);
@@ -21,25 +26,21 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	
-	void loadImage();
-		
-	ofImage src;
-	ofImage dest;
+	void load();
 	
-	int x;
-	int y;
-	int size;
-	int lastWidth;
-	int lastHeight;
-	float scale;
-	int col;
-	int row;
-	int fileCounter;
-    
+		
+	float tilesScale;
+	vector<tile> tiles;
+	int width;
+	int height;
 	
 	string path;
-	ofDirectory DIR;
-	string currentName;
-    string currentExt;
+	string name;
+    string ext;
+	
+	ofPoint pos;
+	float scale;
+	
+	ofPoint downPos;
 	
 };

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +18,7 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
+		E4A2750315A33D9D009F7B62 /* ofxDeepZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A274FD15A33D9D009F7B62 /* ofxDeepZoom.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */; };
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
@@ -58,9 +59,6 @@
 
 /* Begin PBXFileReference section */
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
-		E40C065C1417B287007C08AD /* Instructions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Instructions.txt; sourceTree = "<group>"; };
-		E40C065D1417B287007C08AD /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
-		E40C065F1417B287007C08AD /* ofxDirList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDirList.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -71,7 +69,9 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E4B69B5B0A3A1756003C02F2 /* deepZoomDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = deepZoomDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4A274FD15A33D9D009F7B62 /* ofxDeepZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDeepZoom.cpp; sourceTree = "<group>"; };
+		E4A274FE15A33D9D009F7B62 /* ofxDeepZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDeepZoom.h; sourceTree = "<group>"; };
+		E4B69B5B0A3A1756003C02F2 /* deepThreadDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = deepThreadDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -111,7 +111,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E40C065A1417B287007C08AD /* ofxDirList */,
+				E4A274FB15A33D9D009F7B62 /* SharedCode */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -143,33 +143,6 @@
 			name = "3rd party frameworks";
 			sourceTree = "<group>";
 		};
-		E40C065A1417B287007C08AD /* ofxDirList */ = {
-			isa = PBXGroup;
-			children = (
-				E40C065B1417B287007C08AD /* doc */,
-				E40C065D1417B287007C08AD /* install.xml */,
-				E40C065E1417B287007C08AD /* src */,
-			);
-			name = ofxDirList;
-			path = ../../../addons/ofxDirList;
-			sourceTree = SOURCE_ROOT;
-		};
-		E40C065B1417B287007C08AD /* doc */ = {
-			isa = PBXGroup;
-			children = (
-				E40C065C1417B287007C08AD /* Instructions.txt */,
-			);
-			path = doc;
-			sourceTree = "<group>";
-		};
-		E40C065E1417B287007C08AD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E40C065F1417B287007C08AD /* ofxDirList.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		E4328144138ABC890047C5CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +160,24 @@
 			name = frameworks;
 			sourceTree = "<group>";
 		};
+		E4A274FB15A33D9D009F7B62 /* SharedCode */ = {
+			isa = PBXGroup;
+			children = (
+				E4A274FC15A33D9D009F7B62 /* src */,
+			);
+			name = SharedCode;
+			path = ../SharedCode;
+			sourceTree = "<group>";
+		};
+		E4A274FC15A33D9D009F7B62 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4A274FD15A33D9D009F7B62 /* ofxDeepZoom.cpp */,
+				E4A274FE15A33D9D009F7B62 /* ofxDeepZoom.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
@@ -196,7 +187,7 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				E4B69B5B0A3A1756003C02F2 /* deepZoomDebug.app */,
+				E4B69B5B0A3A1756003C02F2 /* deepThreadDebug.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -222,9 +213,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* deepZoom */ = {
+		E4B69B5A0A3A1756003C02F2 /* deepThread */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "deepZoom" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "deepThread" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -236,9 +227,9 @@
 			dependencies = (
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
-			name = deepZoom;
+			name = deepThread;
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* deepZoomDebug.app */;
+			productReference = E4B69B5B0A3A1756003C02F2 /* deepThreadDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -246,8 +237,11 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "deepZoom" */;
-			compatibilityVersion = "Xcode 2.4";
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "deepThread" */;
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -267,7 +261,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* deepZoom */,
+				E4B69B5A0A3A1756003C02F2 /* deepThread */,
 			);
 		};
 /* End PBXProject section */
@@ -305,6 +299,7 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
+				E4A2750315A33D9D009F7B62 /* ofxDeepZoom.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,16 +328,19 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 				);
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -362,16 +360,19 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 				);
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -385,11 +386,11 @@
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -455,9 +456,10 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"",
 				);
-				PREBINDING = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				PRODUCT_NAME = deepThreadDebug;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -471,11 +473,11 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -541,9 +543,10 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_49)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"",
 				);
-				PREBINDING = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = deepThread;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -551,7 +554,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "deepZoom" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "deepThread" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
@@ -560,7 +563,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "deepZoom" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "deepThread" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,
