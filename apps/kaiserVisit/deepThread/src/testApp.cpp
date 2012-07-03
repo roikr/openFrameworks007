@@ -16,7 +16,7 @@ void testApp::setup(){
 		
 	//load();
     deep.setup("IMAGE_1", 5053, 3517, ofRectangle(256,256, 512,256));
-    deep.update(pos, scale);
+    deep.transform(pos, scale);
 }
 
 
@@ -24,7 +24,7 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 
-	
+	deep.update();
 	
 }
 
@@ -101,7 +101,7 @@ void testApp::keyPressed(int key){
 //			if (bTilesScaleChanged) {
 //				load();
 //			}
-			deep.update(pos, scale);
+			deep.transform(pos, scale);
 			
 			
 			
@@ -129,7 +129,7 @@ void testApp::mouseDragged(int x, int y, int button){
 	ofPoint curPos = ofPoint(x,y);
 	pos += curPos-downPos;
 	downPos = curPos;
-    deep.update(pos, scale);
+    deep.transform(pos, scale);
 }
 
 //--------------------------------------------------------------

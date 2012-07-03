@@ -12,12 +12,20 @@
 
 #define TILE_SIZE 256
 
+enum {
+    TILE_STATE_LOAD,
+    TILE_STATE_ACTIVE,
+    TILE_STATE_SWAP,
+    TILE_STATE_UNLOAD,
+};
+
 struct tile {
-    tile(ofRectangle rect):rect(rect),bInside(false) {};
+    tile(ofRectangle rect):rect(rect),bInside(false),state(TILE_STATE_LOAD) {};
     
     ofRectangle rect;
 	ofImage image;
     
+    int state;
     bool bInside;
 };
 
@@ -27,7 +35,8 @@ public:
     void setup(string filename,float width, float height,ofRectangle viewport);
     void start();
     void stop();
-    void update(ofVec2f offset,float scale);
+    void update();
+    void transform(ofVec2f offset,float scale);
     void draw();
     
 private:
@@ -42,4 +51,5 @@ private:
    
     
     list<tile> tiles;
+    
 };

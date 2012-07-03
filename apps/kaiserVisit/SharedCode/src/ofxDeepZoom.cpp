@@ -9,7 +9,6 @@
 #include "ofxDeepZoom.h"
 
 
-
 void ofxDeepZoom::setup(string filename,float width, float height,ofRectangle viewport) {
     this->width = width;
     this->height = height;
@@ -25,7 +24,7 @@ void ofxDeepZoom::stop() {
     
 }
 
-void ofxDeepZoom::update(ofVec2f offset,float scale) {
+void ofxDeepZoom::transform(ofVec2f offset,float scale) {
     this->offset = offset;
     
     if (scale > 0 ) {
@@ -36,6 +35,12 @@ void ofxDeepZoom::update(ofVec2f offset,float scale) {
 	float newTilesScale = pow(2,factor);
     
     if (newTilesScale!=tilesScale) {
+        
+        for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
+            
+            iter->state = TILE_STATE_SWAP;
+        }
+        
         tilesScale = newTilesScale;
         int rectSize = TILE_SIZE / tilesScale;
         
@@ -49,7 +54,6 @@ void ofxDeepZoom::update(ofVec2f offset,float scale) {
         int widthRem = (newWidth-numCols*TILE_SIZE)/tilesScale;
         int heightRem = (newHeight-numRows*TILE_SIZE)/tilesScale;
         
-        tiles.clear();
         
         for (int i=0; i<numRows; i++) {
             for (int j=0; j<numCols ; j++) {
@@ -75,17 +79,36 @@ void ofxDeepZoom::update(ofVec2f offset,float scale) {
 //    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
     
     for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
-        
         iter->bInside = iter->rect.x+iter->rect.width>rect.x  && iter->rect.x<rect.x+rect.width  && iter->rect.y+iter->rect.height>rect.y && iter->rect.y<rect.y+rect.height;
     }
     
 }
 
+void ofxDeepZoom::update() {
+    for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
+        
+        switch (iter->state) {
+            case TILE_STATE_LOAD:
+                iter->state = TILE_STATE_ACTIVE;
+                break;
+            
+            case TILE_STATE_SWAP:
+                iter->state = TILE_STATE_UNLOAD;
+                break;
+            case TILE_STATE_UNLOAD:
+                iter = tiles.erase(iter);
+                break;
+            default:
+                break;
+                
+        }
+        
+    }
+}
+
 void ofxDeepZoom::draw() {
     
     ofPushStyle();
-
-    
     
     ofPushMatrix();
     ofTranslate(offset);
@@ -99,12 +122,11 @@ void ofxDeepZoom::draw() {
     ofRect(rect);
         
     
-    
-    
-    
-    
     for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
-        ofSetColor(iter->bInside ? 0 : 255, 0, iter->bInside ? 255 : 0, 100);
+        
+        ofSetColor(iter->bInside ? 0 : 255, 0, iter->bInside ? 255 : 0,100);
+                
+                    
         ofRect(iter->rect);
     }
     
