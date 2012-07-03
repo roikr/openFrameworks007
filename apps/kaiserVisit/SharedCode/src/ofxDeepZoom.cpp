@@ -142,12 +142,12 @@ void ofxDeepZoom::draw() {
         
         switch (iter->state) {
             case TILE_STATE_ACTIVE:
-                ofSetColor(255, 255, 255,iter->bInside ? 255 : 100);
+                ofSetColor(255, 255, 255,iter->bInside ? 150 : 50);
                 iter->image.draw(iter->rect);
                 break;
                 
             default:
-                ofSetColor(iter->bInside ? 0 : 255, 0, iter->bInside ? 255 : 0,100);
+                ofSetColor(iter->bInside ? 0 : 255, 0, iter->bInside ? 255 : 0,50);
                 ofRect(iter->rect);
                 break;
         }

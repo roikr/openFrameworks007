@@ -21,17 +21,7 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	
-	void load();
-	
 		
-	float tilesScale;
-    int width;
-	int height;
-	
-	string path;
-	string name;
-    string ext;
-	
 	ofPoint pos;
 	float scale;
 	
