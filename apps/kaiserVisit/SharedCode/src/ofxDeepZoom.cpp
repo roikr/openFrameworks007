@@ -9,27 +9,27 @@
 #include "ofxDeepZoom.h"
 
 
-void ofxDeepZoom::setup(string filename,float width, float height,ofRectangle viewport) {
+void ofxDeepZoom::setup(string filename,string extension,float width, float height,ofRectangle viewport) {
     this->width = width;
     this->height = height;
     this->viewport = viewport;
     this->filename = filename;
+    this->extension = extension;
     tilesScale = 0.0f;
 }
 
 void ofxDeepZoom::start() {
-    
+    startThread();
 }
 
 void ofxDeepZoom::stop() {
-    
+    stopThread();
 }
 
-string createTileName(string filename,int col,int row,float tilesScale) {
+string createTileName(string filename,string ext,int col,int row,float tilesScale) {
     char str[100];
     string path = filename;
     string name = filename;
-    string ext = "png";
     sprintf(str, "%s/%s_%i_%i_%i.%s",path.c_str(),name.c_str(),(int)(1000*tilesScale),col,row,ext.c_str());
     return str;
 }
@@ -67,16 +67,16 @@ void ofxDeepZoom::transform(ofVec2f offset,float scale) {
         
         for (int i=0; i<numRows; i++) {
             for (int j=0; j<numCols ; j++) {
-                tiles.push_back(tile(ofRectangle(j*rectSize, i*rectSize, rectSize, rectSize),createTileName(filename, j, i, tilesScale)));
+                tiles.push_back(tile(ofRectangle(j*rectSize, i*rectSize, rectSize, rectSize),createTileName(filename,extension, j, i, tilesScale)));
             }
-            tiles.push_back(tile(ofRectangle(numCols*rectSize, i*rectSize, widthRem, rectSize),createTileName(filename, numCols, i, tilesScale)));
+            tiles.push_back(tile(ofRectangle(numCols*rectSize, i*rectSize, widthRem, rectSize),createTileName(filename,extension, numCols, i, tilesScale)));
         }
         
         for (int j=0; j<numCols ; j++) {
-            tiles.push_back(tile(ofRectangle(j*rectSize, numRows*rectSize, rectSize, heightRem),createTileName(filename, j, numRows, tilesScale)));
+            tiles.push_back(tile(ofRectangle(j*rectSize, numRows*rectSize, rectSize, heightRem),createTileName(filename,extension, j, numRows, tilesScale)));
         }
         
-        tiles.push_back(tile(ofRectangle(numCols*rectSize,numRows*rectSize,widthRem,heightRem),createTileName(filename, numCols, numRows, tilesScale)));
+        tiles.push_back(tile(ofRectangle(numCols*rectSize,numRows*rectSize,widthRem,heightRem),createTileName(filename,extension, numCols, numRows, tilesScale)));
         
         
         
@@ -94,20 +94,57 @@ void ofxDeepZoom::transform(ofVec2f offset,float scale) {
     
 }
 
+
+void ofxDeepZoom::threadedFunction() {
+    while( isThreadRunning() != 0 ){
+        
+        for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
+            
+            switch (iter->state) {
+                case TILE_STATE_QUEUE:
+                    if (iter->bInside) {
+//                        if( lock() ) {
+                            iter->image.setUseTexture(false);
+                            iter->image.loadImage(iter->filename);
+                            iter->state = TILE_STATE_LOAD;
+//                            unlock();                            
+//                        }
+                    }
+                    break;
+                case TILE_STATE_UNLOAD:
+//                    if( lock() ) {
+                        iter->image.clear();
+//                        unlock();
+//                    }
+                    
+                    break;
+                default:
+                    break;
+                    
+            }
+            
+        }
+
+        ofSleepMillis(1 * 100);
+    }
+
+}
+
+
 void ofxDeepZoom::update() {
     for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
         
         switch (iter->state) {
-            case TILE_STATE_QUEUE:
-                if (iter->bInside) {
-                    iter->image.loadImage(iter->filename);
-                    iter->state = TILE_STATE_LOAD;
-                }
-                break;
             case TILE_STATE_LOAD:
-                iter->state = TILE_STATE_ACTIVE;
+//                if( lock() ){
+                    iter->image.setUseTexture(true);
+                    iter->image.reloadTexture();
+                    iter->state = TILE_STATE_ACTIVE;
+//                    unlock();
+//                }
+                
                 break;
-            
+                
             case TILE_STATE_SWAP:
                 iter->state = TILE_STATE_UNLOAD;
                 break;
@@ -121,6 +158,8 @@ void ofxDeepZoom::update() {
         
     }
 }
+
+
 
 void ofxDeepZoom::draw() {
     

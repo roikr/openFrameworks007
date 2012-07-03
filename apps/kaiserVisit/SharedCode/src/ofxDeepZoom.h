@@ -34,7 +34,7 @@ struct tile {
 class ofxDeepZoom : protected ofThread {
     
 public:
-    void setup(string filename,float width, float height,ofRectangle viewport);
+    void setup(string filename,string extension,float width, float height,ofRectangle viewport);
     void start();
     void stop();
     void update();
@@ -54,5 +54,8 @@ private:
     
     list<tile> tiles;
     string filename;
+    string extension;
+    
+    void threadedFunction();
     
 };

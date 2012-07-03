@@ -8,8 +8,10 @@ void testApp::setup(){
 	pos = ofVec2f(ofGetWidth()/2,ofGetHeight()/2);
 		
 	//load();
-    deep.setup("IMAGE_1", 5053, 3517, ofRectangle(256,256, 512,256));
+    deep.setup("IMAGE_1", "png",5053, 3517, ofRectangle(256,256, 512,256));
     deep.transform(pos, scale);
+    
+    deep.start();
 }
 
 
@@ -29,7 +31,9 @@ void testApp::draw(){
     deep.draw();
 }
 
-
+void testApp::exit() {
+    deep.stop();
+}
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
