@@ -47,8 +47,7 @@ void ofxDeepZoom::transform(ofVec2f offset,float scale) {
     if (newTilesScale!=tilesScale) {
         
         for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
-            
-            iter->state = TILE_STATE_SWAP;
+            iter->bSwap = true;
         }
         
         tilesScale = newTilesScale;
@@ -94,40 +93,33 @@ void ofxDeepZoom::transform(ofVec2f offset,float scale) {
     
 }
 
+/* we can use
+if( lock() ) {
+    ...
+    unlock();
+}
+but we should not */
+ 
 
 void ofxDeepZoom::threadedFunction() {
     while( isThreadRunning() != 0 ){
         
         for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
             
-            switch (iter->state) {
-                case TILE_STATE_QUEUE:
-                    if (iter->bInside) {
-                        if( lock() ) {
-                            iter->image.setUseTexture(false);
-                            iter->image.loadImage(iter->filename);
-                            iter->state = TILE_STATE_LOAD;
-                            unlock();  
-                            break;
-                            
-                        }
-                    }
-                    break;
-                case TILE_STATE_UNLOAD:
-                    if( lock() ) {
-                        iter->image.clear();
-                        iter->state = TILE_STATE_DELETE;
-                        unlock();
-                        break;
-                        
-                    }
-                    
-                    break;
-                default:
-                    break;
-                    
+            if (iter->state == TILE_STATE_LOAD) {
+               
+                iter->image.setUseTexture(false);
+                iter->image.loadImage(iter->filename);
+                iter->state = TILE_STATE_QUEUE;
+                
             }
             
+            if (iter->state == TILE_STATE_UNLOAD) {
+        
+                iter->image.clear();
+                iter->state = TILE_STATE_INACTIVE;
+                    
+            }
             
         }
         ofSleepMillis(1 * 100);
@@ -141,30 +133,53 @@ void ofxDeepZoom::threadedFunction() {
 void ofxDeepZoom::update() {
     for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
         
-        switch (iter->state) {
-            case TILE_STATE_LOAD:
-                if( lock() ){
-                    iter->image.setUseTexture(true);
-                    iter->image.reloadTexture();
-                    iter->state = TILE_STATE_ACTIVE;
-                    unlock();
+        if (iter->bSwap) {
+            switch (iter->state) {
+                case TILE_STATE_INACTIVE:
+                    iter = tiles.erase(iter);
                     break;
-                }
+                    
+                case TILE_STATE_QUEUE:
+                    iter->state = TILE_STATE_UNLOAD;
+                    break;
                 
+                    
+                case TILE_STATE_ACTIVE:
+                    iter->image.getTextureReference().clear();
+                    iter->image.setUseTexture(false); // for the clear of the pixels in threaded function
+                    iter->state = TILE_STATE_UNLOAD;
+                    break;
+                    
+        
+                default:
+                    break;
+                    
+            }
+        } else {
+            if (iter->state == TILE_STATE_QUEUE) {
+                iter->image.setUseTexture(true);
+                iter->image.reloadTexture();
+                iter->state = TILE_STATE_ACTIVE;
                 break;
-                
-            case TILE_STATE_SWAP:
-                iter->image.getTextureReference().clear();
-                iter->image.setUseTexture(false); // for the clear of the pixels
-                iter->state = TILE_STATE_UNLOAD;
-                break;
-            case TILE_STATE_DELETE:
-                iter = tiles.erase(iter);
-                break;
-            default:
-                break;
-                
+            } else switch (iter->state) {
+                case TILE_STATE_INACTIVE:
+                    if (iter->bInside) {
+                        iter->state = TILE_STATE_LOAD;
+                    }
+                    break;
+                case TILE_STATE_ACTIVE:
+                    if (!iter->bInside) {
+                        iter->image.getTextureReference().clear();
+                        iter->image.setUseTexture(false); // for the clear of the pixels in threaded function
+                        iter->state = TILE_STATE_UNLOAD;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
         }
+        
         
     }
 }

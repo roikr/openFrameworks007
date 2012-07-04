@@ -13,16 +13,16 @@
 #define TILE_SIZE 256
 
 enum {
-    TILE_STATE_QUEUE,
+    TILE_STATE_INACTIVE,
     TILE_STATE_LOAD,
+    TILE_STATE_QUEUE,
     TILE_STATE_ACTIVE,
-    TILE_STATE_SWAP,
     TILE_STATE_UNLOAD,
-    TILE_STATE_DELETE
+    
 };
 
 struct tile {
-    tile(ofRectangle rect,string filename):rect(rect),filename(filename),bInside(false),state(TILE_STATE_QUEUE) {};
+    tile(ofRectangle rect,string filename):rect(rect),filename(filename),bInside(false),bSwap(false),state(TILE_STATE_INACTIVE) {};
     
     ofRectangle rect;
 	ofImage image;
@@ -30,6 +30,7 @@ struct tile {
     
     int state;
     bool bInside;
+    bool bSwap;
 };
 
 class ofxDeepZoom : protected ofThread {
