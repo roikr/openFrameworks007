@@ -129,6 +129,37 @@ void ofxDeepZoom::threadedFunction() {
 
 }
 
+bool isOverlapping(ofRectangle &a,ofRectangle &b) {
+    return a.x+a.width>b.x  && a.x<b.x+b.width  && a.y+a.height>b.y && a.y<b.y+b.height;
+}
+
+bool isContaining(ofRectangle &a,ofRectangle &b) {
+    return a.x<=b.x  && a.width>=b.width  && a.y<=b.y && a.height>=b.height;
+}
+
+bool ofxDeepZoom::shouldSwap(tile &t) {
+    vector<list<tile>::iterator> temp;
+    
+    for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
+        if (!iter->bSwap && isOverlapping(iter->rect, t.rect) && (!iter->bInside || iter->state==TILE_STATE_ACTIVE)){
+            temp.push_back(iter);
+        }
+    }
+    
+    if (!temp.empty()) {
+        if (temp.size()==1) {
+            return isContaining(temp.front()->rect,t.rect);
+        } else {
+            float sum = 0;
+            for (vector<list<tile>::iterator>::iterator iter=temp.begin();iter!=temp.end();iter++) {
+                sum+=(*iter)->rect.width*(*iter)->rect.height;
+            }
+            return sum>=t.rect.width*t.rect.height;
+        }
+    }
+    return false;
+}
+
 
 void ofxDeepZoom::update() {
     for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
@@ -145,9 +176,11 @@ void ofxDeepZoom::update() {
                 
                     
                 case TILE_STATE_ACTIVE:
-                    iter->image.getTextureReference().clear();
-                    iter->image.setUseTexture(false); // for the clear of the pixels in threaded function
-                    iter->state = TILE_STATE_UNLOAD;
+                    if (!iter->bInside || shouldSwap(*iter)) {
+                        iter->image.getTextureReference().clear();
+                        iter->image.setUseTexture(false); // for the clear of the pixels in threaded function
+                        iter->state = TILE_STATE_UNLOAD;
+                    }
                     break;
                     
         
@@ -196,6 +229,19 @@ void ofxDeepZoom::end() {
 
 
 void ofxDeepZoom::draw() {
+    ofTranslate(-width/2, -height/2);
+    for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
+        switch (iter->state) {
+            case TILE_STATE_ACTIVE:
+                iter->image.draw(iter->rect);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void ofxDeepZoom::drawDebug() {
     
     ofPushStyle();
     
@@ -207,7 +253,7 @@ void ofxDeepZoom::draw() {
     ofEnableAlphaBlending();
     ofSetColor(50, 50, 50,50);
     ofRect(rect);
-        
+    
     
     for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
         
@@ -225,7 +271,7 @@ void ofxDeepZoom::draw() {
         
     }
     
-//    ofRect(0, 0, width, height);
+    //    ofRect(0, 0, width, height);
     ofDisableAlphaBlending();
     ofNoFill();
     for (list<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {

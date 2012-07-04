@@ -23,12 +23,14 @@ void testApp::setup(){
 	ofSetCircleResolution(32);
 	
 	cam.setZoom(0.125f);
+//    cam.setZoom(1.0f);
 	cam.setMinZoom(0.1f);
-	cam.setMaxZoom(5.0f);
+	cam.setMaxZoom(2.0f);
 	cam.setScreenSize( ofGetWidth(), ofGetHeight() );
 	cam.setViewportConstrain( ofVec3f(-limitX, -limitY), ofVec3f(limitX, limitY)); //limit browseable area, in world units
 	
-    deep.setup("IMAGE_1", "png",5053, 3517, ofRectangle(100,100, ofGetWidth()-200,ofGetHeight()-200));
+//    deep.setup("IMAGE_1", "png",5053, 3517, ofRectangle(100,100, ofGetWidth()-200,ofGetHeight()-200));
+    deep.setup("IMAGE_1", "png",5053, 3517, ofRectangle(0,0, ofGetWidth(),ofGetHeight()));
     deep.transform( camOffset(), cam.zoom);
     
     deep.start();
@@ -80,7 +82,7 @@ void testApp::draw() {
 }
 
 void testApp::exit() {
-    deep.stop();
+//    deep.stop();
 }
 
 void testApp::touchDown(ofTouchEventArgs &touch){

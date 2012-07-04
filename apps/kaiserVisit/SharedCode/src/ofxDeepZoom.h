@@ -44,8 +44,14 @@ public:
     void update();
     void transform(ofVec2f offset,float scale);
     void draw();
+    void drawDebug();
+    
+    
     
 private:
+    
+    bool shouldSwap(tile &t);
+    
     ofVec2f offset;
     float scale;
     
