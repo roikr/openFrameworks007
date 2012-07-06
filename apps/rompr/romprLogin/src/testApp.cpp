@@ -13,8 +13,8 @@ void testApp::setup(){
         cout << iter->first << ": " << iter->second << endl;
     }
     
-    string recom = "http://107.21.224.181/friends/json/1";
-    ofxHttpRequest request(recom, recom, response.cookies);
+    string recom = "http://107.21.224.181/recommendations";
+    ofxHttpRequest request(recom, response.cookies);
     
     cout << ofxLoadURL(request).data << endl;
     
