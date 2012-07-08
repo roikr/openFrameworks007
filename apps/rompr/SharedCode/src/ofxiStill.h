@@ -40,6 +40,7 @@ public:
     void unbind();
     
     ofImage image;
+    bool bSnap;
 	
 protected:
     void cleanUpTextures();

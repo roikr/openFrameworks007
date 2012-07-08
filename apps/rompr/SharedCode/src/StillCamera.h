@@ -39,6 +39,7 @@ enum {
     int state;
     
     CMBufferQueueRef imagesBufferQueue;
+    
 }
 
 

@@ -32,11 +32,22 @@ void ofxiStill::preview() {
     
     
     bPlaying = false;
+    bSnap = false;
     
 }
 
 void ofxiStill::snap() {
     if (bPlaying && ![stillCamera isCapturingStillImage]) {
+        image.clear();
+        
+        NSString *filePath = [NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+            NSError *error;
+            if ([[NSFileManager defaultManager] removeItemAtPath:filePath error:&error] == NO) {
+                NSLog(@"removeFile error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
+                
+            }
+        }
         [stillCamera takePicture];
     }
 }
@@ -81,6 +92,8 @@ void ofxiStill::update() {
         CMSampleBufferRef sbuf = (CMSampleBufferRef)CMBufferQueueDequeueAndRetain([stillCamera previewBufferQueue]);
         if (sbuf) {
             CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sbuf);
+            
+            
             width = CVPixelBufferGetWidth(pixelBuffer);
             height = CVPixelBufferGetHeight(pixelBuffer);
             
@@ -117,20 +130,29 @@ void ofxiStill::update() {
         
         sbuf = (CMSampleBufferRef)CMBufferQueueDequeueAndRetain([stillCamera imagesBufferQueue]);
         if (sbuf) {
-            CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sbuf);
-                        
-            CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
+            NSData *jpegData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sbuf];
+            NSString *filePath = [NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"];
+            NSError *error;
+            if ([[NSFileManager defaultManager] createFileAtPath:filePath contents:jpegData attributes:nil] == NO) {
+                NSLog(@"createFileAtPath error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
+                
+            }
             
-            int bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
-            int bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
-            unsigned char *pixel = (unsigned char *)CVPixelBufferGetBaseAddress(pixelBuffer);
+            image.loadImage(ofxNSStringToString(filePath));
             
-            image.clear();
-            image.setFromPixels(pixel, bufferWidth, bufferHeight, OF_IMAGE_COLOR_ALPHA);
-            
-            cout << image.getWidth() << "\t" << image.getHeight() << endl;
-                        
-            CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );            
+//            CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sbuf);
+//                        
+//            CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
+//            
+//            int bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
+//            int bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
+//            unsigned char *pixel = (unsigned char *)CVPixelBufferGetBaseAddress(pixelBuffer);
+//            
+//            image.setFromPixels(pixel, bufferWidth, bufferHeight, OF_IMAGE_COLOR_ALPHA);
+//            
+//            cout << image.getWidth() << "\t" << image.getHeight() << endl;
+//                        
+//            CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );            
             CFRelease(sbuf);
         }
         

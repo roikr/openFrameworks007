@@ -9,7 +9,7 @@
 #import "StillCamera.h"
 #import <CoreVideo/CoreVideo.h>
 //#import <MobileCoreServices/MobileCoreServices.h>
-#import <AssetsLibrary/AssetsLibrary.h>
+//#import <AssetsLibrary/AssetsLibrary.h>
 
 // used for KVO observation of the @"capturingStillImage" property to perform flash bulb animation
 static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCaptureStillImageIsCapturingStillImageContext";
@@ -23,7 +23,6 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
 @property (readwrite) CMVideoCodecType videoType;
 @property (readwrite) AVCaptureVideoOrientation videoOrientation;
 @property(readwrite, getter=isCapturingStillImage) BOOL capturingStillImage;
-
 
 @end
 
@@ -54,6 +53,7 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
 	Float64 newRate = (Float64) [previousSecondTimestamps count];
 	self.videoFrameRate = (self.videoFrameRate + newRate) / 2;
 }
+
 
 
 #pragma mark Capture
@@ -121,7 +121,7 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
 	 * Create capture session
 	 */
     captureSession = [[AVCaptureSession alloc] init];
-    captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
+//    captureSession.sessionPreset = AVCaptureSessionPresetPhoto; // roikr: uncomment for photo resolution
  	/*
 	 * Create video connection
 	 */
@@ -201,10 +201,7 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
         if ( !captureSession.isRunning )
             [captureSession startRunning];        
 		
-		
-		
     }
-	
 	
 	return self;
 }
@@ -233,7 +230,7 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
 	[stillImageConnection setVideoOrientation:avcaptureOrientation];
     //	[stillImageConnection setVideoScaleAndCropFactor:effectiveScale];
 	
-//    [stillImageOutput setOutputSettings:[NSDictionary dictionaryWithObject:AVVideoCodecJPEG forKey:AVVideoCodecKey]]; 
+    [stillImageOutput setOutputSettings:[NSDictionary dictionaryWithObject:AVVideoCodecJPEG forKey:AVVideoCodecKey]]; 
     
 //    [stillImageOutput setOutputSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA] 
 //                                                                    forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey]]; 
@@ -255,24 +252,26 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
                   {
 //                      // Enqueue it for preview.  This is a shallow queue, so if image processing is taking too long,
 //                      // we'll drop this frame for preview (this keeps preview latency low).
-//                      OSStatus err = CMBufferQueueEnqueue(imagesBufferQueue, imageDataSampleBuffer);
-//                      if ( !err ) {    
-//                      }
+                      OSStatus err = CMBufferQueueEnqueue(imagesBufferQueue, imageDataSampleBuffer);
+                      if ( !err ) {    
+                      }
                       // trivial simple JPEG case
-                      NSData *jpegData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-                      CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, 
-                                                                                  imageDataSampleBuffer, 
-                                                                                  kCMAttachmentMode_ShouldPropagate);
-                      ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                      [library writeImageDataToSavedPhotosAlbum:jpegData metadata:(id)attachments completionBlock:^(NSURL *assetURL, NSError *error) {
-                          if (error) {
-                              NSLog(@"Save to camera roll failed, error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
-                          }
-                      }];
+                     
+                     
                       
-                      if (attachments)
-                          CFRelease(attachments);
-                      [library release];
+//                      CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, 
+//                                                                                  imageDataSampleBuffer, 
+//                                                                                  kCMAttachmentMode_ShouldPropagate);
+//                      ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+//                      [library writeImageDataToSavedPhotosAlbum:jpegData metadata:(id)attachments completionBlock:^(NSURL *assetURL, NSError *error) {
+//                          if (error) {
+//                              NSLog(@"Save to camera roll failed, error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
+//                          }
+//                      }];
+//                      
+//                      if (attachments)
+//                          CFRelease(attachments);
+//                      [library release];
                   }
               }
           }
