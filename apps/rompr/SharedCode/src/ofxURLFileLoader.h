@@ -9,6 +9,10 @@
 
 #include "Poco/Condition.h"
 
+enum {
+    HTTP_METHOD_GET,
+    HTTP_METHOD_POST
+};
 
 class ofxHttpRequest{
 public:
@@ -17,14 +21,26 @@ public:
     ofxHttpRequest(string url,string name,bool saveTo=false)
 	:url(url)
 	,name(name)
+    ,method(HTTP_METHOD_GET)
 	,saveTo(saveTo)
 	,id(nextID++){}
 
 
-	ofxHttpRequest(string url,vector<pair<string,string> > cookies,bool saveTo=false)
+	ofxHttpRequest(string url,vector<pair<string,string> > &cookies,bool saveTo=false)
 	:url(url)
 	,name(url)
     ,cookies(cookies)
+    ,method(HTTP_METHOD_GET)
+	,saveTo(saveTo)
+	,id(nextID++){}
+    
+    ofxHttpRequest(string url,vector<pair<string,string> > &nvc,map<string,string> &files,vector<pair<string,string> > &cookies,bool saveTo=false)
+	:url(url)
+	,name(url)
+    ,nvc(nvc)
+    ,files(files)
+    ,cookies(cookies)
+    ,method(HTTP_METHOD_POST)
 	,saveTo(saveTo)
 	,id(nextID++){}
 
@@ -34,6 +50,10 @@ public:
 
 	int getID(){return id;}
     
+    int method;
+    
+    vector<pair<string,string> > nvc;
+    map<string,string> files;
     vector<pair<string,string> > cookies;
 private:
 	int					id;
@@ -44,18 +64,25 @@ class ofxHttpResponse{
 public:
 	ofxHttpResponse(){}
 
-	ofxHttpResponse(ofxHttpRequest request,vector<pair<string,string> > cookies,const ofBuffer & data,int status, string error)
+	ofxHttpResponse(ofxHttpRequest request,vector<pair<string,string> > &cookies,const ofBuffer & data,int status, string error)
 	:request(request)
 	,data(data)
 	,status(status)
 	,error(error)
     ,cookies(cookies){}
 
-	ofxHttpResponse(ofxHttpRequest request,vector<pair<string,string> > cookies,int status,string error)
+	ofxHttpResponse(ofxHttpRequest request,vector<pair<string,string> > &cookies,int status,string error)
 	:request(request)
 	,status(status)
 	,error(error)
     ,cookies(cookies){}
+    
+    ofxHttpResponse(ofxHttpRequest request,int status, string error)
+	:request(request)
+	,status(status)
+	,error(error) {}
+    
+    
 
 	operator ofBuffer&(){
 		return data;

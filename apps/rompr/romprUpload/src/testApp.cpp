@@ -14,47 +14,21 @@
 
 #include "Poco/Net/FilePartSource.h"
 
+#include "cJSON.h"
+
 using namespace Poco::Net;
 using namespace Poco;
 
 const string HOST_NAME = "107.21.224.181";
 const string USER_ID = "549453367";
-const string FB_ACCESS_TOKEN ="AAACtapZAgifcBALkk9e7p6RYZAYm6hkZCXKub5tdRrD9DyBASA2oQx0xipZBpZBHwL4jIGZA5WjiZBlugZB5QQ6ak7fz0JLyKV8LxDx1sijoWwZDZD";
-
+const string FB_ACCESS_TOKEN = "AAACtapZAgifcBAG1nd96WupL2vU103yrSCsmUA9KX0ElPYISwqhYcAco7W3BSh8NSha0qkDvMjp3xfUE2W1AHA3apk2rmlIYHstZAMwQZDZD";
 //--------------------------------------------------------------
-void testApp::setup(){
-    string url = "http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+FB_ACCESS_TOKEN;
+
+ofxHttpResponse postForm(string action,vector <string> &formIds,vector <string> &formValues,std::map<string,string> &formFiles,vector<pair<string,string> > &cookies) {
     
-    ofxHttpResponse loginRes = ofxLoadURL(url);
-    
-    cout << loginRes.data.getText() << endl;
-    
-//    for (vector<pair<string, string> >::iterator iter=loginRes.cookies.begin();iter!=loginRes.cookies.end();iter++) {
-//        cout << iter->first << ": " << iter->second << endl;
-//    }
-    
-   
-//    ofxHttpResponse recomRes = ofxLoadURL(ofxHttpRequest("http://107.21.224.181/recommendations", loginRes.cookies));
-//    cout << recomRes.data.getText() << endl;
-    
-    string action = "http://107.21.224.181/recommendation/post";
-    bool sendCookies = false;
-    vector <string> formIds;
-	vector <string> formValues;
-	std::map<string,string> formFiles;
-    
-    
-    
-    formIds.push_back("mode" );
-    formValues.push_back("new");
-    formIds.push_back("title" );
-    formValues.push_back("ponding");
-    formIds.push_back("free_test" );
-    formValues.push_back("indeed");
-    formFiles["file"]=ofToDataPath("idan.jpg");
-        
     ofxHttpRequest request(action,action);
     ofxHttpResponse response;
+    response.request = request;
     try{
         URI uri( action.c_str() );
         std::string path(uri.getPathAndQuery());
@@ -63,14 +37,14 @@ void testApp::setup(){
         
         HTTPClientSession session(uri.getHost(), uri.getPort());
         HTTPRequest req(HTTPRequest::HTTP_POST, path, HTTPMessage::HTTP_1_1);
-//        if(auth.getUsername()!="") auth.authenticate(req);
+        //        if(auth.getUsername()!="") auth.authenticate(req);
         
-        if(sendCookies){
-        	for(unsigned i=0; i<loginRes.cookies.size(); i++){
-        		NameValueCollection reqCookies;
-        		reqCookies.add(loginRes.cookies[i].first,loginRes.cookies[i].second);
-        		req.setCookies(reqCookies);
+        if(!cookies.empty()){
+            NameValueCollection reqCookies;
+        	for(unsigned i=0; i<cookies.size(); i++){
+        		reqCookies.add(cookies[i].first,cookies[i].second);
         	}
+            req.setCookies(reqCookies);
         }
         
         HTMLForm pocoForm;
@@ -101,25 +75,26 @@ void testApp::setup(){
         HTTPResponse res;
         istream& rs = session.receiveResponse(res);
         
+        response.data = rs;
+        response.status = res.getStatus();
+        response.error = res.getReason();
         
         
-        response = ofxHttpResponse(request,loginRes.cookies,rs,res.getStatus(),res.getReason());
-        
-//		response = ofxHttpResponse(res, rs, path);
-//        
-//		if(sendCookies){
-//			cookies.insert(cookies.begin(),response.cookies.begin(),response.cookies.end());
-//		}
-//        
+        //		response = ofxHttpResponse(res, rs, path);
+        //        
+        //		if(sendCookies){
+        //			cookies.insert(cookies.begin(),response.cookies.begin(),response.cookies.end());
+        //		}
+        //        
 		if(response.status>=300 && response.status<400){
 			Poco::URI uri(req.getURI());
 			uri.resolve(res.get("Location"));
             
             cout << "status: " << response.status << ", location: " << uri.toString() << endl;
-//			response.location = uri.toString();
+            //			response.location = uri.toString();
 		}
         
-//    	ofNotifyEvent(newResponseEvent, response, this);
+        //    	ofNotifyEvent(newResponseEvent, response, this);
         
         
     }catch (Exception& exc){
@@ -130,20 +105,83 @@ void testApp::setup(){
         
         // for now print error, need to broadcast a response
         std::cerr << exc.displayText() << std::endl;
-//        response.status = -1;
-//        response.reasonForStatus = exc.displayText();
+        
+        response.status = -1;
+        response.error = exc.displayText();
         
     }
     
+    return response;
+
+    
+}
+
+void testApp::setup(){
+    string url = "http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+FB_ACCESS_TOKEN;
+    
+    ofxHttpResponse loginRes = ofxLoadURL(url);
+    
+    cout << "login, status: " << loginRes.status << ", response: " << loginRes.data.getText() << endl;
+    
+//    for (vector<pair<string, string> >::iterator iter=loginRes.cookies.begin();iter!=loginRes.cookies.end();iter++) {
+//        cout << iter->first << ": " << iter->second << endl;
+//    }
+    
+   
+//    string recomStr = "http://107.21.224.181/recommendations";
+//    ofxHttpResponse recomRes = ofxLoadURL(ofxHttpRequest(recomStr,loginRes.cookies)); // , 
+//    cout << recomRes.data.getText() << endl;
+    
+    
+
+    
+    vector <pair<string,string> > nvc;
+    std::map<string,string> files;
+    
+    files["qqfile"]=ofToDataPath("idan.jpg");
+    
+    //ofxHttpResponse response =  postForm("http://"+HOST_NAME+"/ajax/upload_image",   formIds , formValues, formFiles, loginRes.cookies);
+    ofxHttpResponse response = ofxLoadURL(ofxHttpRequest("http://"+HOST_NAME+"/ajax/upload_image", nvc, files, loginRes.cookies));
+    
     cout << "status: " << response.status << ", reason: " << response.error << endl;
-    cout << response.data.getText();
+    cout << response.data.getText() << endl;
+    
+    string image_path;
+    cJSON *result = cJSON_Parse(response.data.getText().c_str());
+	if ( result )
+    {
+        cJSON *path = cJSON_GetObjectItem(result,"image_path");
+        image_path = path->valuestring;
+       
+    }
+    
+    cout << "image_path: " << image_path << endl;
+    files.clear();
+    nvc.push_back(make_pair("mode", "new"));
+    nvc.push_back(make_pair("id", "0"));
+    nvc.push_back(make_pair("title", "ponding"));
+    nvc.push_back(make_pair("free_text", "indeed"));
+    nvc.push_back(make_pair("creation_date", ""));
+    nvc.push_back(make_pair("modification_date", ""));
+    nvc.push_back(make_pair("category", "1"));
+    nvc.push_back(make_pair("age_from", ""));
+    nvc.push_back(make_pair("age_to", ""));
+    nvc.push_back(make_pair("location", "mobile_location"));
+    nvc.push_back(make_pair("location_longitude", "34.790130615234"));
+    nvc.push_back(make_pair("location_latitude", "32.085258483887"));
+    nvc.push_back(make_pair("location_accuracy", "true"));
+    nvc.push_back(make_pair("uploaded_image_path", image_path));
+    
+   
+        
+//    response =  postForm("http://"+HOST_NAME+"/recommendation/post",   formIds , formValues, formFiles, loginRes.cookies);    
+    response = ofxLoadURL(ofxHttpRequest("http://"+HOST_NAME+"/recommendation/post", nvc, files, loginRes.cookies));
+    
+    cout << "status: " << response.status << ", reason: " << response.error << endl;
+//    cout << response.data.getText();
     
     
     
-    
-    //ofxHttpRequest(recom, response.cookies);
-    
-    //cout << ofxLoadURL(ofxHttpRequest(recom, response.cookies)).data << endl;
     
 }
 

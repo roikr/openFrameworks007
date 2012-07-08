@@ -15,6 +15,9 @@
 #include "Poco/Net/HTTPCookie.h"
 #include "Poco/Net/NameValueCollection.h"
 
+#include "Poco/Net/HTMLForm.h"
+#include "Poco/Net/FilePartSource.h"
+
 using Poco::Net::HTTPClientSession;
 using Poco::Net::HTTPRequest;
 using Poco::Net::HTTPResponse;
@@ -29,7 +32,8 @@ using Poco::URI;
 using Poco::URIStreamOpener;
 using Poco::Exception;
 
-
+using Poco::Net::HTMLForm;
+using Poco::Net::FilePartSource;
 
 #include "ofConstants.h"
 
@@ -159,7 +163,21 @@ ofxHttpResponse ofxURLFileLoader::handleRequest(ofxHttpRequest request) {
 		if (path.empty()) path = "/";
 
 		HTTPClientSession session(uri.getHost(), uri.getPort());
-		HTTPRequest req(HTTPRequest::HTTP_GET, path, HTTPMessage::HTTP_1_1);
+        string method;
+        switch (request.method) {
+            case HTTP_METHOD_GET:
+                method = HTTPRequest::HTTP_GET;
+                break;
+            case HTTP_METHOD_POST:
+                method = HTTPRequest::HTTP_POST;
+                break;
+   
+            default:
+                method = HTTPRequest::HTTP_GET;
+                break;
+        }
+        
+		HTTPRequest req(method, path, HTTPMessage::HTTP_1_1);
 		session.setTimeout(Poco::Timespan(20,0));
         
         if (!request.cookies.empty()) {
@@ -174,43 +192,79 @@ ofxHttpResponse ofxURLFileLoader::handleRequest(ofxHttpRequest request) {
             
         }
         
-		session.sendRequest(req);
-		HTTPResponse res;
-		istream& rs = session.receiveResponse(res);
+        if (request.nvc.empty() & request.files.empty()) {
+            session.sendRequest(req);
+        } else {
+            HTMLForm pocoForm;
+            // create the form data to send
+            if(request.files.size()>0)
+                pocoForm.setEncoding(HTMLForm::ENCODING_MULTIPART);
+            else
+                pocoForm.setEncoding(HTMLForm::ENCODING_URL);
+            
+            // form values
+            for(unsigned i=0; i<request.nvc.size(); i++){
+                const std::string name = request.nvc[i].first.c_str();
+                const std::string val = request.nvc[i].second.c_str();
+                pocoForm.set(name, val);
+            }
+            
+            map<string,string>::iterator it;
+            for(it = request.files.begin(); it!=request.files.end(); it++){
+                string fileName = it->second.substr(it->second.find_last_of('/')+1);
+                cout << "adding file: " << fileName << " path: " << it->second << endl;
+                pocoForm.addPart(it->first,new FilePartSource(it->second));
+            }
+            
+            pocoForm.prepareSubmit(req);
+            
+            pocoForm.write(session.sendRequest(req));
+        }
+        
+        
+        
+        
+        HTTPResponse res;
+        istream& rs = session.receiveResponse(res);
+        
         
         vector<HTTPCookie> pocoCookies;
         res.getCookies(pocoCookies);
         vector<pair<string,string> > cookies;
         
-//        res.write(cout);
+        //        res.write(cout);
         
         for (vector<HTTPCookie>::iterator iter=pocoCookies.begin();iter!=pocoCookies.end();iter++) {
             cookies.push_back(make_pair(iter->getName(), iter->getValue()));
         }
         
-		if(!request.saveTo){
-			return ofxHttpResponse(request,cookies,rs,res.getStatus(),res.getReason());
-		}else{
-			ofFile saveTo(request.name,ofFile::WriteOnly);
-			char aux_buffer[1024];
-			rs.read(aux_buffer, 1024);
-			std::streamsize n = rs.gcount();
-			while (n > 0){
-				// we resize to size+1 initialized to 0 to have a 0 at the end for strings
-				saveTo.write(aux_buffer,n);
-				if (rs){
-					rs.read(aux_buffer, 1024);
-					n = rs.gcount();
-				}
-				else n = 0;
-			}
-			return ofxHttpResponse(request,cookies,res.getStatus(),res.getReason());
-		}
+        if(!request.saveTo){
+            
+            
+            
+            return ofxHttpResponse(request,cookies,rs,res.getStatus(),res.getReason());
+        }else{
+            ofFile saveTo(request.name,ofFile::WriteOnly);
+            char aux_buffer[1024];
+            rs.read(aux_buffer, 1024);
+            std::streamsize n = rs.gcount();
+            while (n > 0){
+                // we resize to size+1 initialized to 0 to have a 0 at the end for strings
+                saveTo.write(aux_buffer,n);
+                if (rs){
+                    rs.read(aux_buffer, 1024);
+                    n = rs.gcount();
+                }
+                else n = 0;
+            }
+            return ofxHttpResponse(request,cookies,res.getStatus(),res.getReason());
+        }        
+		
 
 	} catch (Exception& exc) {
         ofLog(OF_LOG_ERROR, "ofxURLFileLoader " + exc.displayText());
-        vector<pair<string,string> > cookies;
-        return ofxHttpResponse(request,cookies,-1,exc.displayText());
+
+        return ofxHttpResponse(request,-1,exc.displayText());
     }	
 	
 }	
