@@ -22,14 +22,11 @@
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
 		E41D421413B3A95300A75A5D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
-		E457D26A15A9C9B000E48EB9 /* ofxiStill.mm in Sources */ = {isa = PBXBuildFile; fileRef = E457D26715A9C9B000E48EB9 /* ofxiStill.mm */; };
-		E457D26B15A9C9B000E48EB9 /* StillCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = E457D26915A9C9B000E48EB9 /* StillCamera.m */; };
-		E46817E8158F6D62002E93E7 /* ofxURLFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46817E6158F6D62002E93E7 /* ofxURLFileLoader.cpp */; };
-		E4C9C4E71593945B0040BCA4 /* EventRouteWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C9C4E61593945B0040BCA4 /* EventRouteWindow.m */; };
+		E44BEE3B15AA11050048B14D /* ofxiVolumeButtons.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BEE3A15AA11050048B14D /* ofxiVolumeButtons.mm */; };
+		E44BEE4315AA1B040048B14D /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = E457D29415AA102900E48EB9 /* RBVolumeButtons.m */; };
+		E44BEE4515AA21EA0048B14D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44BEE4415AA21EA0048B14D /* MediaPlayer.framework */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
-		E4F6E7C615A0C57800E78890 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = E4F6E7C415A0C57800E78890 /* cJSON.c */; };
-		E4FEE95F159AFECB0092EFF9 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4FEE95E159AFECB0092EFF9 /* ofxPenner.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +48,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* Rompr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rompr.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* volumeButtonsExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = volumeButtonsExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
@@ -70,24 +67,17 @@
 		E41D400813B39D2100A75A5D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		E41D400913B39D2100A75A5D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iPhone+OF Lib.xcodeproj"; path = "../../../libs/openFrameworksCompiled/project/iphone/iPhone+OF Lib.xcodeproj"; sourceTree = SOURCE_ROOT; };
-		E457D26615A9C9B000E48EB9 /* ofxiStill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiStill.h; sourceTree = "<group>"; };
-		E457D26715A9C9B000E48EB9 /* ofxiStill.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiStill.mm; sourceTree = "<group>"; };
-		E457D26815A9C9B000E48EB9 /* StillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillCamera.h; sourceTree = "<group>"; };
-		E457D26915A9C9B000E48EB9 /* StillCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
-		E46817E6158F6D62002E93E7 /* ofxURLFileLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxURLFileLoader.cpp; sourceTree = "<group>"; };
-		E46817E7158F6D62002E93E7 /* ofxURLFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxURLFileLoader.h; sourceTree = "<group>"; };
+		E44BEE3915AA10D20048B14D /* ofxiVolumeButtons.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxiVolumeButtons.h; sourceTree = "<group>"; };
+		E44BEE3A15AA11050048B14D /* ofxiVolumeButtons.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVolumeButtons.mm; sourceTree = "<group>"; };
+		E44BEE3C15AA125E0048B14D /* ofxURLFileLoader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxURLFileLoader.cpp; sourceTree = "<group>"; };
+		E44BEE3D15AA125E0048B14D /* ofxURLFileLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxURLFileLoader.h; sourceTree = "<group>"; };
+		E44BEE4415AA21EA0048B14D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		E457D29315AA102900E48EB9 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
+		E457D29415AA102900E48EB9 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E4C9C4E51593945B0040BCA4 /* EventRouteWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventRouteWindow.h; sourceTree = "<group>"; };
-		E4C9C4E61593945B0040BCA4 /* EventRouteWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventRouteWindow.m; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
-		E4F6E7C415A0C57800E78890 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
-		E4F6E7C515A0C57800E78890 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
-		E4FEE95D159AFEAC0092EFF9 /* ofxPenner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxPenner.h; sourceTree = "<group>"; };
-		E4FEE95E159AFECB0092EFF9 /* ofxPenner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPenner.cpp; sourceTree = "<group>"; };
-		E4FEE960159B326E0092EFF9 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
-		E4FEE961159B326E0092EFF9 /* webViewContent.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = webViewContent.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E44BEE4515AA21EA0048B14D /* MediaPlayer.framework in Frameworks */,
 				E41D421413B3A95300A75A5D /* libofxiPhone_iphoneos_Debug.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -117,7 +108,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* Rompr.app */,
+				1D6058910D05DD3D006BFB54 /* volumeButtonsExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -151,6 +142,7 @@
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 				5326AEA710A23A0500278DE6 /* CoreLocation.framework */,
+				E44BEE4415AA21EA0048B14D /* MediaPlayer.framework */,
 			);
 			name = "core frameworks";
 			sourceTree = "<group>";
@@ -166,7 +158,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E46817E4158F6D62002E93E7 /* SharedCode */,
+				E457D28715AA102900E48EB9 /* SharedCode */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -176,8 +168,6 @@
 			children = (
 				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
-				E4FEE960159B326E0092EFF9 /* logo.png */,
-				E4FEE961159B326E0092EFF9 /* webViewContent.html */,
 			);
 			name = data;
 			path = bin/data;
@@ -211,30 +201,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E46817E4158F6D62002E93E7 /* SharedCode */ = {
+		E457D28715AA102900E48EB9 /* SharedCode */ = {
 			isa = PBXGroup;
 			children = (
-				E46817E5158F6D62002E93E7 /* src */,
+				E457D28815AA102900E48EB9 /* src */,
 			);
 			name = SharedCode;
 			path = ../SharedCode;
 			sourceTree = "<group>";
 		};
-		E46817E5158F6D62002E93E7 /* src */ = {
+		E457D28815AA102900E48EB9 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4F6E7C415A0C57800E78890 /* cJSON.c */,
-				E4F6E7C515A0C57800E78890 /* cJSON.h */,
-				E46817E6158F6D62002E93E7 /* ofxURLFileLoader.cpp */,
-				E46817E7158F6D62002E93E7 /* ofxURLFileLoader.h */,
-				E4C9C4E51593945B0040BCA4 /* EventRouteWindow.h */,
-				E4C9C4E61593945B0040BCA4 /* EventRouteWindow.m */,
-				E4FEE95D159AFEAC0092EFF9 /* ofxPenner.h */,
-				E4FEE95E159AFECB0092EFF9 /* ofxPenner.cpp */,
-				E457D26615A9C9B000E48EB9 /* ofxiStill.h */,
-				E457D26715A9C9B000E48EB9 /* ofxiStill.mm */,
-				E457D26815A9C9B000E48EB9 /* StillCamera.h */,
-				E457D26915A9C9B000E48EB9 /* StillCamera.m */,
+				E457D29315AA102900E48EB9 /* RBVolumeButtons.h */,
+				E457D29415AA102900E48EB9 /* RBVolumeButtons.m */,
+				E44BEE3915AA10D20048B14D /* ofxiVolumeButtons.h */,
+				E44BEE3A15AA11050048B14D /* ofxiVolumeButtons.mm */,
+				E44BEE3C15AA125E0048B14D /* ofxURLFileLoader.cpp */,
+				E44BEE3D15AA125E0048B14D /* ofxURLFileLoader.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -252,9 +236,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* Rompr */ = {
+		1D6058900D05DD3D006BFB54 /* volumeButtonsExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Rompr" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "volumeButtonsExample" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -266,9 +250,9 @@
 			dependencies = (
 				E41D410413B3A11300A75A5D /* PBXTargetDependency */,
 			);
-			name = Rompr;
+			name = volumeButtonsExample;
 			productName = iPhone;
-			productReference = 1D6058910D05DD3D006BFB54 /* Rompr.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* volumeButtonsExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -279,7 +263,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Rompr" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "volumeButtonsExample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -299,7 +283,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* Rompr */,
+				1D6058900D05DD3D006BFB54 /* volumeButtonsExample */,
 			);
 		};
 /* End PBXProject section */
@@ -349,12 +333,8 @@
 			files = (
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E46817E8158F6D62002E93E7 /* ofxURLFileLoader.cpp in Sources */,
-				E4C9C4E71593945B0040BCA4 /* EventRouteWindow.m in Sources */,
-				E4FEE95F159AFECB0092EFF9 /* ofxPenner.cpp in Sources */,
-				E4F6E7C615A0C57800E78890 /* cJSON.c in Sources */,
-				E457D26A15A9C9B000E48EB9 /* ofxiStill.mm in Sources */,
-				E457D26B15A9C9B000E48EB9 /* StillCamera.m in Sources */,
+				E44BEE3B15AA11050048B14D /* ofxiVolumeButtons.mm in Sources */,
+				E44BEE4315AA1B040048B14D /* RBVolumeButtons.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,9 +356,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				PRODUCT_NAME = Rompr;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_NAME = volumeButtonsExample;
 			};
 			name = Debug;
 		};
@@ -388,9 +366,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				PRODUCT_NAME = Rompr;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_NAME = volumeButtonsExample;
 			};
 			name = Release;
 		};
@@ -417,7 +393,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Debug;
@@ -442,68 +418,28 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Release;
 		};
-		E4FEE989159B51F10092EFF9 /* Ad Hoc */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E41D3ED613B38FB500A75A5D /* Project.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Noa Levy";
-				COMPRESS_PNG_FILES = NO;
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_DYNAMIC_NO_PIC = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
-				ONLY_ACTIVE_ARCH = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "598C4919-D49F-4CF3-9650-7DB0E87D9FA1";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WARNING_LDFLAGS = "-no_arch_warnings";
-			};
-			name = "Ad Hoc";
-		};
-		E4FEE98A159B51F10092EFF9 /* Ad Hoc */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
-				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				PRODUCT_NAME = Rompr;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Ad Hoc";
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Rompr" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "volumeButtonsExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
-				E4FEE98A159B51F10092EFF9 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Rompr" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "volumeButtonsExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
-				E4FEE989159B51F10092EFF9 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

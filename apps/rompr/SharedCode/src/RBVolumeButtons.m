@@ -87,7 +87,6 @@ void volumeListenerCallback (
    self = [super init];
    if( self )
    {
-      AudioSessionInitialize(NULL, NULL, NULL, NULL);
       AudioSessionSetActive(YES);
       
       launchVolume = [[MPMusicPlayerController applicationMusicPlayer] volume];
@@ -178,7 +177,10 @@ void volumeListenerCallback (
 
 -(void)dealloc
 {
-   if( hadToLowerVolume )
+   AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, volumeListenerCallback, self);
+    AudioSessionSetActive(NO);
+    
+    if( hadToLowerVolume )
    {
       [[MPMusicPlayerController applicationMusicPlayer] setVolume:1.0];
    }
