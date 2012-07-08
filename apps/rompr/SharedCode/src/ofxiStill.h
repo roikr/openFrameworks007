@@ -12,6 +12,17 @@
 #include "ofMain.h"
 #import <CoreVideo/CVOpenGLESTextureCache.h>
 
+extern ofEvent<ofImage> ofxiStillCameraEvent;
+
+template<class T>
+void ofxRegisterStillCameraNotification(T * obj){
+	ofAddListener(ofxiStillCameraEvent,obj,&T::pictureTaken);
+}
+
+template<class T>
+void ofxUnregisterStillCameraNotification(T * obj){
+	ofRemoveListener(ofxiStillCameraEvent,obj,&T::pictureTaken);
+}
 
 @class StillCamera;
 

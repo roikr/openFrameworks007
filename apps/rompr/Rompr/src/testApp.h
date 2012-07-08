@@ -5,6 +5,8 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxURLFileLoader.h"
 #include "ofxPenner.h"
+#include "ofxiStill.h"
+#include "ofxiVolumeButtons.h"
 
 struct item {
     ofImage image;
@@ -44,7 +46,8 @@ public:
     void didFinishLoadingMap();
     void errorLoadingMap(string errorDescription);
     
-    
+    void volumeButtonPressed(int &button);
+    void pictureTaken(ofImage &image);
     
     bool bUpdatingRegion;
     bool bQueryLocation;
@@ -67,7 +70,12 @@ public:
     ofxPenner ease;
     bool bDeselect;
    
+    int state;
     
+    ofxiStill cam;
+    ofxiVolumeButtons volumeButtons;
+    bool bStartCamera;
+    bool bStopCamera;
     
     
 };

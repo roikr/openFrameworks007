@@ -12,7 +12,7 @@
 #include "ofxiPhoneExtras.h"
 
 
-#define PRE_SAMPLES 4096
+ofEvent<ofImage> ofxiStillCameraEvent;
 
 void ofxiStill::preview() {
     
@@ -139,6 +139,7 @@ void ofxiStill::update() {
             }
             
             image.loadImage(ofxNSStringToString(filePath));
+            ofNotifyEvent(ofxiStillCameraEvent , image);
             
 //            CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sbuf);
 //                        
@@ -209,9 +210,9 @@ void ofxiStill::draw(ofRectangle rect,ofRectangle tex) {
 		rect.x,rect.y,0};
 	
 	
-    glTranslatef(rect.x+rect.width/2, rect.y+rect.height/2, 0);
-    glRotatef(angleOffsetFromPortraitOrientation(ofxiPhoneGetOrientation())-angleOffsetFromPortraitOrientation(stillCamera.videoOrientation), 0.0, 0.0, 1.0);
-    glTranslatef(-rect.x-rect.width/2, -rect.y-rect.height/2, 0);
+//    glTranslatef(rect.x+rect.width/2, rect.y+rect.height/2, 0);
+//    glRotatef(angleOffsetFromPortraitOrientation(ofxiPhoneGetOrientation())-angleOffsetFromPortraitOrientation(stillCamera.videoOrientation), 0.0, 0.0, 1.0);
+//    glTranslatef(-rect.x-rect.width/2, -rect.y-rect.height/2, 0);
     
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);

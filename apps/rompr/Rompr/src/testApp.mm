@@ -15,15 +15,23 @@
 
 const string HOST_NAME = "107.21.224.181";
 const string USER_ID = "549453367";
-const string FB_ACCESS_TOKEN ="AAACtapZAgifcBALkk9e7p6RYZAYm6hkZCXKub5tdRrD9DyBASA2oQx0xipZBpZBHwL4jIGZA5WjiZBlugZB5QQ6ak7fz0JLyKV8LxDx1sijoWwZDZD";
+const string FB_ACCESS_TOKEN = "AAACtapZAgifcBAG1nd96WupL2vU103yrSCsmUA9KX0ElPYISwqhYcAco7W3BSh8NSha0qkDvMjp3xfUE2W1AHA3apk2rmlIYHstZAMwQZDZD";
 
-enum requestType {
+enum  {
     REQUEST_TYPE_LOGIN,
     REQUEST_TYPE_QUERY,
     REQUSET_TYPE_THUMB,
     REQUEST_TYPE_IMAGE,
-    REQUEST_TYPE_RECOMMENDATION
+    REQUEST_TYPE_RECOMMENDATION,
+    REQUSET_TYPE_UPLOAD_IMAGE,
+    REQUSET_TYPE_POST_RECOMMENDATION
     
+};
+
+enum {
+    STATE_MAP,
+    STATE_CAMERA,
+
 };
 
 //--------------------------------------------------------------
@@ -95,6 +103,10 @@ void testApp::setup(){
     queue[ofxLoadURLAsync(ofxHttpRequest(url,url))] = REQUEST_TYPE_LOGIN;
     
     selected = items.end();
+    
+    state = STATE_MAP;
+    bStartCamera = false;
+    bStopCamera = false;
 
 }
 
@@ -338,6 +350,44 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                         }
                         break;
                         
+                    case REQUSET_TYPE_UPLOAD_IMAGE: {
+                        string image_path;
+                        cJSON *result = cJSON_Parse(response.data.getText().c_str());
+                        if ( result )
+                        {
+                            cJSON *path = cJSON_GetObjectItem(result,"image_path");
+                            image_path = path->valuestring;
+                            
+                        }
+                        
+                        cout << "image_path: " << image_path << endl;
+                        vector <pair<string,string> > nvc;
+                        std::map<string,string> files;
+                        nvc.push_back(make_pair("mode", "new"));
+                        nvc.push_back(make_pair("id", "0"));
+                        nvc.push_back(make_pair("title", "ponding"));
+                        nvc.push_back(make_pair("free_text", "indeed"));
+                        nvc.push_back(make_pair("creation_date", ""));
+                        nvc.push_back(make_pair("modification_date", ""));
+                        nvc.push_back(make_pair("category", "1"));
+                        nvc.push_back(make_pair("age_from", ""));
+                        nvc.push_back(make_pair("age_to", ""));
+                        nvc.push_back(make_pair("location", "mobile_location"));
+                        nvc.push_back(make_pair("location_longitude", "34.790130615234"));
+                        nvc.push_back(make_pair("location_latitude", "32.085258483887"));
+                        nvc.push_back(make_pair("location_accuracy", "true"));
+                        nvc.push_back(make_pair("uploaded_image_path", image_path));
+                        
+                        
+                        queue[ofxLoadURLAsync(ofxHttpRequest("http://"+HOST_NAME+"/recommendation/post", nvc, files,cookies))] = REQUSET_TYPE_POST_RECOMMENDATION;
+                        
+                    } break;
+                        
+                    case REQUSET_TYPE_POST_RECOMMENDATION:
+                        cout << "posted " << endl;
+                        break;
+                        
+                        
                     default:
                         break;
                     }
@@ -402,6 +452,29 @@ void testApp::update(){
             selected = items.end();
         }
     }
+    
+    cam.update();
+    
+    if (bStopCamera) {
+        ease.update();
+        if (!ease.getIsEasing()) {
+            bStopCamera = false;
+            cam.stop();
+        }
+    } else if (cam.getIsPlaying()) {
+        if (bStartCamera) {
+            ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
+            ease.setup(EASE_OUT_QUAD, values(pos,0.01,0),values(pos,1.0,90));
+            ofxRegisterVolumeButtonsNotification(this);
+            volumeButtons.start();
+            bStartCamera = false;
+        }
+        
+        
+        ease.update();
+        
+    }
+    
 
 }
 
@@ -412,23 +485,19 @@ void testApp::draw(){
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     
-
-	
-    
-	
     ofFill();
-	
-	for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
+    
+    for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
         if (iter!=selected) {
-        
+            
             ofPushMatrix();
-
+            
             //ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->latitude, iter->longitude));
             ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude));
             float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
             
             if (iter->image.getWidth()) {
-
+                
                 float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
                 ofScale(scale, scale);
                 ofTranslate(-0.5*ofPoint(iter->image.getWidth(),iter->image.getHeight()));
@@ -451,12 +520,26 @@ void testApp::draw(){
         
     }
     
+    
     if (selected!=items.end()) {
         ease.begin();
         ofTranslate(ofVec2f(selected->image.getWidth(), selected->image.getHeight())*-0.5);
         selected->image.draw(0, 0);
         ease.end();
     }
+           
+    
+    if (bStartCamera || cam.getIsPlaying()) {
+    
+        ease.begin();
+
+        float width = ofGetHeight(); 
+        float height = width/cam.getWidth()*cam.getHeight();
+        cam.draw(ofRectangle(-width/2,-height/2,width,height), ofRectangle(0,0,1,1));
+        ease.end();
+    }  
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -506,48 +589,96 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 //    cout << "touchDoubleTap" << endl;
     float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
-    if (selected != items.end()) {
-        if (!bDeselect) {
-            bDeselect = true;
-            list<item>::iterator iter = selected;
-            ofVec2f pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
-            ofRectangle rect;
-            float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
-            rect.setFromCenter(pos, iter->image.getWidth()*scale, iter->image.getHeight()*scale);
-            
-            
-            float srcScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
-            ease.setup(EASE_OUT_QUAD, values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,srcScl,0),values(pos,scale,0));
-            hideRecommendation();
-        }
-        
-    } else {
-        bDeselect = false;
-        
-        for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
-            ofVec2f pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
-            ofRectangle rect;
-            float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
-            rect.setFromCenter(pos, iter->image.getWidth()*scale, iter->image.getHeight()*scale);
-            
-            if (rect.inside(ofVec2f(touch.x,touch.y))) {
-//                cout << "found: " << iter->itemID << endl;
-                selected = iter;
-                float targetScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
-                ease.setup(EASE_OUT_QUAD, values(pos,scale,0), values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,targetScl,0));
+    
+    switch (state) {
+        case STATE_MAP: 
+            if (selected != items.end()) {
+                if (!bDeselect) {
+                    bDeselect = true;
+                    list<item>::iterator iter = selected;
+                    ofVec2f pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
+                    ofRectangle rect;
+                    float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
+                    rect.setFromCenter(pos, iter->image.getWidth()*scale, iter->image.getHeight()*scale);
+                    
+                    
+                    float srcScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
+                    ease.setup(EASE_OUT_QUAD, values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,srcScl,0),values(pos,scale,0));
+                    hideRecommendation();
+                }
+                
+            } else {
+                bDeselect = false;
+                list<item>::iterator iter;
+                for (iter = items.begin();iter!=items.end();iter++) {
+                    ofVec2f pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
+                    ofRectangle rect;
+                    float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
+                    rect.setFromCenter(pos, iter->image.getWidth()*scale, iter->image.getHeight()*scale);
+                    
+                    if (rect.inside(ofVec2f(touch.x,touch.y))) {
+                        //                cout << "found: " << iter->itemID << endl;
+                        selected = iter;
+                        float targetScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
+                        ease.setup(EASE_OUT_QUAD, values(pos,scale,0), values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,targetScl,0));
+                        
+                        
+                        string url = "http://"+HOST_NAME+"/mobile/recommendation/"+ofToString(iter->itemID);
+                        cout << url << endl;
+                        queue[ofxLoadURLAsync(ofxHttpRequest(url,cookies))] = REQUEST_TYPE_RECOMMENDATION;
+                        
+                        break;
+                    }
+                    
+                }
+                
+                if (iter ==items.end()) {
+                    bStartCamera = true;
+                    cam.preview();
+                    state = STATE_CAMERA;
+                }
                 
                 
-                string url = "http://"+HOST_NAME+"/mobile/recommendation/"+ofToString(iter->itemID);
-                cout << url << endl;
-                queue[ofxLoadURLAsync(ofxHttpRequest(url,cookies))] = REQUEST_TYPE_RECOMMENDATION;
-                
-                break;
             }
+            break;
             
-        }
-        
-        
+        case STATE_CAMERA: {
+            ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
+            ease.setup(EASE_OUT_QUAD, values(pos,1.0,90),values(pos,0.01,0));
+            ofxUnregisterVolumeButtonsNotification(this);
+            volumeButtons.stop();
+            bStopCamera = true;
+            state = STATE_MAP;
+        }   break;
+        default:
+            
+            break;
     }
+}
+
+void testApp::volumeButtonPressed(int &button) {
+    ofxRegisterStillCameraNotification(this);
+    cam.snap();
+}
+
+void testApp::pictureTaken(ofImage &image) {
+    ofxUnregisterStillCameraNotification(this);
+    cout << image.getWidth() << "\t" << image.getHeight() << endl;
+ 
+    ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
+    ease.setup(EASE_OUT_QUAD, values(pos,1.0,90),values(pos,0.01,0));
+    ofxUnregisterVolumeButtonsNotification(this);
+    volumeButtons.stop();
+    bStopCamera = true;
+    state = STATE_MAP;
+
+    
+    vector <pair<string,string> > nvc;
+    std::map<string,string> files;
+    
+    files["qqfile"]=ofxNSStringToString([NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"]);
+    
+    queue[ofxLoadURLAsync(ofxHttpRequest("http://"+HOST_NAME+"/ajax/upload_image", nvc, files, cookies))] = REQUSET_TYPE_UPLOAD_IMAGE;   
     
 }
 
