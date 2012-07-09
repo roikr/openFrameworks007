@@ -365,16 +365,16 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                         std::map<string,string> files;
                         nvc.push_back(make_pair("mode", "new"));
                         nvc.push_back(make_pair("id", "0"));
-                        nvc.push_back(make_pair("title", "ponding"));
-                        nvc.push_back(make_pair("free_text", "indeed"));
+                        nvc.push_back(make_pair("title", "mobile test"));
+                        nvc.push_back(make_pair("free_text", "testing mobile camera"));
                         nvc.push_back(make_pair("creation_date", ""));
                         nvc.push_back(make_pair("modification_date", ""));
                         nvc.push_back(make_pair("category", "1"));
                         nvc.push_back(make_pair("age_from", ""));
                         nvc.push_back(make_pair("age_to", ""));
                         nvc.push_back(make_pair("location", "mobile_location"));
-                        nvc.push_back(make_pair("location_longitude", "34.790130615234"));
-                        nvc.push_back(make_pair("location_latitude", "32.085258483887"));
+                        nvc.push_back(make_pair("location_longitude",ofToString(imageLocation.longitude,15)));
+                        nvc.push_back(make_pair("location_latitude", ofToString(imageLocation.latitude,15)));
                         nvc.push_back(make_pair("location_accuracy", "true"));
                         nvc.push_back(make_pair("uploaded_image_path", image_path));
                         
@@ -384,6 +384,8 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                     } break;
                         
                     case REQUSET_TYPE_POST_RECOMMENDATION:
+                        image.clear();
+                        bQueryLocation = true;
                         cout << "posted " << endl;
                         break;
                         
@@ -483,7 +485,7 @@ void testApp::draw(){
     
 	glClearColor(0,0,0,0);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
     
     ofFill();
     
@@ -494,7 +496,7 @@ void testApp::draw(){
             
             //ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->latitude, iter->longitude));
             ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude));
-            float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
+            
             
             if (iter->image.getWidth()) {
                 
@@ -528,6 +530,21 @@ void testApp::draw(){
         ease.end();
     }
            
+    if (image.isAllocated()) {
+        ofPushMatrix();
+        ofTranslate(mapKit.getScreenCoordinatesForLocation(imageLocation.latitude, imageLocation.longitude));
+        
+        float scale = blockWidth/max(image.getWidth(),image.getHeight());
+        ofScale(scale, scale);
+        ofTranslate(-0.5*ofPoint(image.getWidth(),image.getHeight()));
+        float margin = 10;
+        ofSetHexColor(0xc9dfaf);
+        ofRect(-margin, -margin, image.getWidth()+2*margin, image.getHeight()+2*margin);
+        ofSetHexColor(0xFFFFFF);
+        image.draw(0, 0);
+        
+        ofPopMatrix();
+    }
     
     if (bStartCamera || cam.getIsPlaying()) {
     
@@ -538,7 +555,7 @@ void testApp::draw(){
         cam.draw(ofRectangle(-width/2,-height/2,width,height), ofRectangle(0,0,1,1));
         ease.end();
     }  
-    
+        
     
 }
 
@@ -663,7 +680,11 @@ void testApp::volumeButtonPressed(int &button) {
 
 void testApp::pictureTaken(ofImage &image) {
     ofxUnregisterStillCameraNotification(this);
-    cout << image.getWidth() << "\t" << image.getHeight() << endl;
+//    cout << image.getWidth() << "\t" << image.getHeight() << endl;
+    
+    image.saveImage(ofxNSStringToString([NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"]));
+    imageLocation = mapKit.getMKMapView().userLocation.location.coordinate;
+    this->image = image;
  
     ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
     ease.setup(EASE_OUT_QUAD, values(pos,1.0,90),values(pos,0.01,0));

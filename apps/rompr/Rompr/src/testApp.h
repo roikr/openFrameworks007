@@ -77,5 +77,6 @@ public:
     bool bStartCamera;
     bool bStopCamera;
     
-    
+    ofImage image;
+    ofxMapKitLocation imageLocation;
 };

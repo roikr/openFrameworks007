@@ -24,6 +24,7 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
 @property (readwrite) AVCaptureVideoOrientation videoOrientation;
 @property(readwrite, getter=isCapturingStillImage) BOOL capturingStillImage;
 
+
 @end
 
 @implementation StillCamera
@@ -230,10 +231,10 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
 	[stillImageConnection setVideoOrientation:avcaptureOrientation];
     //	[stillImageConnection setVideoScaleAndCropFactor:effectiveScale];
 	
-    [stillImageOutput setOutputSettings:[NSDictionary dictionaryWithObject:AVVideoCodecJPEG forKey:AVVideoCodecKey]]; 
+//    [stillImageOutput setOutputSettings:[NSDictionary dictionaryWithObject:AVVideoCodecJPEG forKey:AVVideoCodecKey]]; 
     
-//    [stillImageOutput setOutputSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA] 
-//                                                                    forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey]]; 
+    [stillImageOutput setOutputSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA] 
+                                                                    forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey]]; 
 	
     
 	[stillImageOutput captureStillImageAsynchronouslyFromConnection:stillImageConnection

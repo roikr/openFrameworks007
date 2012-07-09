@@ -57,6 +57,7 @@ enum {
 - (id)init;
 - (void)takePicture;
 - (void)stop;
+- (AVCaptureVideoOrientation)avOrientationForDeviceOrientation:(UIDeviceOrientation)deviceOrientation;
 
 @end
 

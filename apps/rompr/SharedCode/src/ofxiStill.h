@@ -50,7 +50,7 @@ public:
     void bind();
     void unbind();
     
-    ofImage image;
+//    ofImage image;
     bool bSnap;
 	
 protected:

@@ -11,6 +11,7 @@
 #include "StillCamera.h"
 #include "ofxiPhoneExtras.h"
 
+float angleOffsetFromPortraitOrientation(AVCaptureVideoOrientation orientation);
 
 ofEvent<ofImage> ofxiStillCameraEvent;
 
@@ -38,16 +39,16 @@ void ofxiStill::preview() {
 
 void ofxiStill::snap() {
     if (bPlaying && ![stillCamera isCapturingStillImage]) {
-        image.clear();
+//        image.clear();
         
-        NSString *filePath = [NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-            NSError *error;
-            if ([[NSFileManager defaultManager] removeItemAtPath:filePath error:&error] == NO) {
-                NSLog(@"removeFile error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
-                
-            }
-        }
+//        NSString *filePath = [NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"];
+//        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+//            NSError *error;
+//            if ([[NSFileManager defaultManager] removeItemAtPath:filePath error:&error] == NO) {
+//                NSLog(@"removeFile error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
+//                
+//            }
+//        }
         [stillCamera takePicture];
     }
 }
@@ -130,60 +131,59 @@ void ofxiStill::update() {
         
         sbuf = (CMSampleBufferRef)CMBufferQueueDequeueAndRetain([stillCamera imagesBufferQueue]);
         if (sbuf) {
-            NSData *jpegData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sbuf];
-            NSString *filePath = [NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"];
-            NSError *error;
-            if ([[NSFileManager defaultManager] createFileAtPath:filePath contents:jpegData attributes:nil] == NO) {
-                NSLog(@"createFileAtPath error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
-                
-            }
             
-            image.loadImage(ofxNSStringToString(filePath));
+//            NSString *filePath = [NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"];
+            
+//            NSData *jpegData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sbuf];
+//            
+//            NSError *error;
+//            if ([[NSFileManager defaultManager] createFileAtPath:filePath contents:jpegData attributes:nil] == NO) {
+//                NSLog(@"createFileAtPath error: %@, reason: %@",[error localizedDescription],[error localizedFailureReason]);
+//                
+//            }
+            
+//            image.loadImage(ofxNSStringToString(filePath));
+            
+            
+            CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sbuf);
+                        
+            CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
+            
+            int bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
+            int bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
+            unsigned char *pixel = (unsigned char *)CVPixelBufferGetBaseAddress(pixelBuffer);
+            
+            ofImage image;
+            
+            image.setFromPixels(pixel, bufferWidth, bufferHeight, OF_IMAGE_COLOR_ALPHA);
+            
+            CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 ); 
+            CFRelease(sbuf);
+            
+            image.setImageType(OF_IMAGE_COLOR);
+            
+            
+            
+            int nRotations = (angleOffsetFromPortraitOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT)-angleOffsetFromPortraitOrientation([stillCamera avOrientationForDeviceOrientation:[[UIDevice currentDevice] orientation]])) / -90.0;
+                                                                                                                                       
+            cout << "snap: " << image.getWidth() << "\t" << image.getHeight() << "\t" << nRotations << endl;
+            
+            
+            image.rotate90(nRotations);
+                
+//            image.saveImage(ofxNSStringToString(filePath));
+            
+            
             ofNotifyEvent(ofxiStillCameraEvent , image);
             
-//            CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sbuf);
-//                        
-//            CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
-//            
-//            int bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
-//            int bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
-//            unsigned char *pixel = (unsigned char *)CVPixelBufferGetBaseAddress(pixelBuffer);
-//            
-//            image.setFromPixels(pixel, bufferWidth, bufferHeight, OF_IMAGE_COLOR_ALPHA);
-//            
-//            cout << image.getWidth() << "\t" << image.getHeight() << endl;
-//                        
-//            CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );            
-            CFRelease(sbuf);
+            
         }
         
 
     }    
 }
 
-float angleOffsetFromPortraitOrientation(AVCaptureVideoOrientation orientation)
-{
-	CGFloat angle = 0.0;
-	
-	switch (orientation) {
-		case AVCaptureVideoOrientationPortrait:
-			angle = 0.0;
-			break;
-		case AVCaptureVideoOrientationPortraitUpsideDown:
-			angle = 180;
-			break;
-		case AVCaptureVideoOrientationLandscapeRight:
-			angle = -90;
-			break;
-		case AVCaptureVideoOrientationLandscapeLeft:
-			angle = 90;
-			break;
-		default:
-			break;
-	}
-    
-	return angle;
-}
+
 
 void ofxiStill::draw(ofRectangle rect,ofRectangle tex) {
 	if (!videoTexture) {
@@ -283,4 +283,26 @@ bool ofxiStill::getIsFrameVisible() {
 }
 
 
-
+float angleOffsetFromPortraitOrientation(AVCaptureVideoOrientation orientation)
+{
+	CGFloat angle = 0.0;
+	
+	switch (orientation) {
+		case AVCaptureVideoOrientationPortrait:
+			angle = 0.0;
+			break;
+		case AVCaptureVideoOrientationPortraitUpsideDown:
+			angle = 180;
+			break;
+		case AVCaptureVideoOrientationLandscapeRight:
+			angle = -90;
+			break;
+		case AVCaptureVideoOrientationLandscapeLeft:
+			angle = 90;
+			break;
+		default:
+			break;
+	}
+    
+	return angle;
+}
