@@ -154,14 +154,16 @@ void ofxiStill::update() {
             unsigned char *pixel = (unsigned char *)CVPixelBufferGetBaseAddress(pixelBuffer);
             
             ofImage image;
-            
+            image.setUseTexture(false);
             image.setFromPixels(pixel, bufferWidth, bufferHeight, OF_IMAGE_COLOR_ALPHA);
             
             CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 ); 
             CFRelease(sbuf);
             
             image.setImageType(OF_IMAGE_COLOR);
-            
+            image.getPixelsRef().swapRgb();
+            image.setUseTexture(true);
+            image.reloadTexture();
             
             
             int nRotations = (angleOffsetFromPortraitOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT)-angleOffsetFromPortraitOrientation([stillCamera avOrientationForDeviceOrientation:[[UIDevice currentDevice] orientation]])) / -90.0;
