@@ -9,11 +9,14 @@
 #include "ofxiVolumeButtons.h"
 
 struct item {
+    item():bQueued(false) {}
+    
     ofImage image;
     ofImage thumb;
     ofxMapKitLocation location;
     string img_path;
     int itemID;
+    bool bQueued;
     
 };
 
@@ -32,7 +35,8 @@ public:
     
     void queryViewLocation();
     void processQuery(ofBuffer &query);
-    bool getIsItemExist(int itemID);
+    void updateItems(vector<item> newItems);
+    
     void showRecommendation(string html);
     void hideRecommendation();
     void urlResponse(ofxHttpResponse &response);
@@ -57,7 +61,7 @@ public:
     
     list<item> items;
     list<item>::iterator selected;
-    vector<string> imagesList;
+    vector<int> downloads;
     bool bQuery;
     map<int,int> queue;
     

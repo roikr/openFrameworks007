@@ -9,7 +9,7 @@
 
 #define MAP_BLOCK_WIDTH     1500.0
 
-#define SIMULTANEOUS_CONNECTIONS 15
+#define SIMULTANEOUS_CONNECTIONS 5
 
 #define MAP_RECT_WIDTH      mapKit.getMKMapView().visibleMapRect.size.width
 
@@ -110,15 +110,6 @@ void testApp::setup(){
 
 }
 
-bool testApp::getIsItemExist(int itemID) {
-    for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
-        if (iter->itemID == itemID) {
-            return true;
-        }
-    }
-    return false;
-}
-
 
 void testApp::queryViewLocation() {
 //    ofxMapKitLocation location;
@@ -131,15 +122,24 @@ void testApp::queryViewLocation() {
     MKMapRect rect = mapKit.getMKMapView().visibleMapRect;
     double meters = MKMetersBetweenMapPoints(rect.origin, MKMapPointMake(MKMapRectGetMaxX(rect), MKMapRectGetMaxY(rect)));
     
-    for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
-        if (MKMetersBetweenMapPoints(MKMapPointForCoordinate(mapKit.getCenterLocation()),MKMapPointForCoordinate(iter->location))> 2*meters) {
-            iter = items.erase(iter);
-        }
-    }
+
     
     int distance = round(meters/1000.0);
     string url = "http://"+HOST_NAME+"/mobile/recommendations/circle/"+ofToString(location.latitude,6)+"/"+ofToString(location.longitude,6)+"/"+ofToString(distance);
-    cout << "viewDiagonal: " << meters << "\t" << distance << "\t" << url << endl;;
+//    cout << "viewDiagonal: " << meters << "\t" << distance << "\t" << url << endl;;
+    
+    
+    // remove previous unloaded queries from queue
+    map<int,int>::iterator iter= queue.begin();
+    while (iter!=queue.end()) {
+        if (iter->second == REQUEST_TYPE_QUERY) {
+            queue.erase(iter);
+            iter = queue.begin();
+        } else {
+            iter++;
+        }
+    }
+    
     queue[ofxLoadURLAsync(ofxHttpRequest(url,cookies))] = REQUEST_TYPE_QUERY;
 }
 
@@ -151,7 +151,10 @@ void testApp::processQuery(ofBuffer &query) {
 	if ( result )
     {
 //		cout << result.getRawString() << endl;
+        
         cJSON *elements = cJSON_GetObjectItem(result, "user_recommendation_list");
+        
+        vector<item> newItems;
         
         int j = 0;
         for(int i=0; i<cJSON_GetArraySize(elements); i++)
@@ -168,35 +171,96 @@ void testApp::processQuery(ofBuffer &query) {
 //                cout << i << "\t" << r_id->string << "\t" << longitude->string << "\t" << latitude->string << "\t" << img_path->string << endl;
 //            }
             
-            int itemID = atoi(r_id->valuestring);
-            
+           
+        
             
                 
-            if (!getIsItemExist(itemID)) {
-                item r;
-                r.img_path = img_path->valuestring;
-                r.location.longitude = longitude->type == cJSON_Number ? longitude->valuedouble : atof(longitude->valuestring);
-                r.location.latitude = latitude->type == cJSON_Number ? latitude->valuedouble : atof(latitude->valuestring);
-                r.itemID = itemID;
-                if (r.location.longitude && r.location.latitude && !r.img_path.empty()) {
-                    cout << i << "\t" << j << "\t" << r.itemID << "\t" << r.location.longitude << "\t" << r.location.latitude << "\t" << r.img_path << endl;
+            
+            item r;
+            r.img_path = img_path->valuestring;
+            r.location.longitude = longitude->type == cJSON_Number ? longitude->valuedouble : atof(longitude->valuestring);
+            r.location.latitude = latitude->type == cJSON_Number ? latitude->valuedouble : atof(latitude->valuestring);
+            r.itemID = atoi(r_id->valuestring);
+            if (r.location.longitude && r.location.latitude && !r.img_path.empty()) {
+//                cout << i << "\t" << j << "\t" << r.itemID << "\t" << r.location.longitude << "\t" << r.location.latitude << "\t" << r.img_path << endl;
 //                    cout << j << MKMetersBetweenMapPoints(MKMapPointForCoordinate(mapKit.getCenterLocation()),MKMapPointForCoordinate(r.location)) << endl;
-                    items.push_back(r);
-                    selected = items.end(); // roikr: assume that it can't happend while easing
-                    imagesList.push_back(r.img_path);
-                    j++;
-                }
+                newItems.push_back(r);
                 
+//                    imagesList.push_back(r.img_path);
+                j++;
             }
+                
+            
         }
         
         cJSON_Delete(result);
+        updateItems(newItems);
 	}
     else
     {
 		cout  << "Failed to parse JSON" << endl;
 	}
 
+}
+
+void testApp::updateItems(vector<item> newItems) {
+//    for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
+//        if (MKMetersBetweenMapPoints(MKMapPointForCoordinate(mapKit.getCenterLocation()),MKMapPointForCoordinate(iter->location))> 2*meters) {
+//            iter = items.erase(iter);
+//        }
+//    }
+    
+    
+    
+   
+    vector<item>::iterator niter;
+    list<item>::iterator iter;
+    
+     // pass 1: remove items from list which are not appear in the new items vector
+    
+    int i=0;
+    iter=items.begin();
+    while (iter!=items.end()) {
+        
+        for (niter=newItems.begin(); niter!=newItems.end(); niter++) {
+            if (niter->itemID == iter->itemID) {
+                break;
+            }
+        }
+        if (niter==newItems.end()) {
+            iter = items.erase(iter);
+        } else {
+            iter++;
+            i++;
+        }
+    }
+    
+    // pass 2: add new items in the vector to the list
+    
+    int j=0;
+    for (niter=newItems.begin(); niter!=newItems.end(); niter++) {
+        for (iter=items.begin(); iter!=items.end(); iter++) {
+            if (niter->itemID == iter->itemID) {
+                break;
+            }
+        }
+        if (iter==items.end()) {
+            items.push_back(*niter);
+            j++;
+        }
+    }
+    
+    cout << "updateItems: " << newItems.size() << " items parsed, "<< i << " items kept, " << j << " items added" << endl ;
+    
+    // pass 3: add items without downloaded images and which are not in the queue to downloads
+    downloads.clear();
+    for (iter=items.begin(); iter!=items.end(); iter++) {
+        if (!iter->image.bAllocated() && !iter->bQueued) {
+            downloads.push_back(iter->itemID);
+        }
+    }
+    
+    selected = items.end(); // roikr: assume that it can't happend while easing
 }
 
 void testApp::showRecommendation(string html) {
@@ -292,7 +356,7 @@ void testApp::urlResponse(ofxHttpResponse &response) {
     string url = response.request.name;
     status = response.status;
     
-    cout << "urlResponse: " << url <<", status: " << status << endl;
+//    cout << "urlResponse: " << url <<", status: " << status << endl;
     
     
     map<int,int>::iterator iter = queue.find(response.request.getID());
@@ -314,7 +378,7 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                         
                     case REQUEST_TYPE_IMAGE: {
                         list<item>::iterator riter=items.begin();
-                        while (riter->img_path != url &&  riter!=items.end()) {
+                        while (riter!=items.end() && riter->img_path != url ) {
                             riter++;
                         }
                         
@@ -322,7 +386,7 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                             ofImage &image = riter->image; 
                             image.setUseTexture(false);
                             image.loadImage(response.data);
-                            cout << "imageLoaded:" << url << "\t" << image.getWidth() << "\t" << image.getHeight() << "\tid: " << riter->itemID << endl;
+//                            cout << "imageLoaded:" << url << "\t" << image.getWidth() << "\t" << image.getHeight() << "\tid: " << riter->itemID << endl;
                             
                             float size = MAX(image.getWidth(),image.getHeight());
                             float maxSize = 1024;
@@ -360,7 +424,7 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                             
                         }
                         
-                        cout << "image_path: " << image_path << endl;
+//                        cout << "image_path: " << image_path << endl;
                         vector <pair<string,string> > nvc;
                         std::map<string,string> files;
                         nvc.push_back(make_pair("mode", "new"));
@@ -436,12 +500,27 @@ void testApp::update(){
             
         }
         
-        vector<string>::iterator iter = imagesList.begin();
+        vector<int>::iterator diter = downloads.begin();
         
-        while (iter!=imagesList.end() && queue.size()<SIMULTANEOUS_CONNECTIONS) {
-            queue[ofxLoadURLAsync(*iter)] = REQUEST_TYPE_IMAGE;
-            imagesList.erase(iter);
-            iter = imagesList.begin();
+        while (diter!=downloads.end() && queue.size()<SIMULTANEOUS_CONNECTIONS) {
+            
+            list<item>::iterator iter;
+            for (iter=items.begin();iter!=items.end();iter++) {
+                if (*diter == iter->itemID) {
+                    break;
+                }
+            }
+            
+            if (iter!=items.end()) {
+                queue[ofxLoadURLAsync(iter->img_path)] = REQUEST_TYPE_IMAGE;
+                iter->bQueued = true;
+                
+            } else {
+                cout << "update: would not download itemID: " << *diter << endl;
+                
+            }
+            
+            diter = downloads.erase(diter);
             
         }
     }
