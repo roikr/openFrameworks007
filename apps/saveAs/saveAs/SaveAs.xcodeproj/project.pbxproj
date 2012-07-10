@@ -29,6 +29,9 @@
 		E43C2382156FA5C3003E2587 /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E43C2358156FA5C2003E2587 /* ofxiVideoPlayer.mm */; };
 		E43C2383156FA5C3003E2587 /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E43C235A156FA5C2003E2587 /* VideoPlayer.m */; };
 		E44EC088156CCA88000C13E7 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44EC087156CCA88000C13E7 /* ofxiTexture.mm */; };
+		E49D8DE515AC9129000E914E /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49D8D1715AC9129000E914E /* ofxFlash.cpp */; };
+		E49D8DE615AC9129000E914E /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E49D8D1715AC9129000E914E /* ofxFlash.cpp */; };
+		E49D8DEB15ACBBF2000E914E /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D9056D15877369001020BF /* ofxPanZoom.cpp */; };
 		E4AF826F15935C01003510E9 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E4AF826815935C01003510E9 /* Default-Portrait.png */; };
 		E4AF827015935C01003510E9 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E4AF826815935C01003510E9 /* Default-Portrait.png */; };
 		E4AF827115935C01003510E9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E4AF826915935C01003510E9 /* Default.png */; };
@@ -47,7 +50,6 @@
 		E4AF8294159363DA003510E9 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E4AF8289159363DA003510E9 /* Icon.png */; };
 		E4AF8295159363DA003510E9 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4AF828A159363DA003510E9 /* Icon@2x.png */; };
 		E4AF8296159363DA003510E9 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4AF828A159363DA003510E9 /* Icon@2x.png */; };
-		E4BF3E3E15742F09007F9113 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E3C15742F09007F9113 /* ofxFlash.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 		E4D9056E15877369001020BF /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D9056D15877369001020BF /* ofxPanZoom.cpp */; };
@@ -62,7 +64,6 @@
 		E4DDFE6015780F70007F7128 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44EC087156CCA88000C13E7 /* ofxiTexture.mm */; };
 		E4DDFE6115780F70007F7128 /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E43C2358156FA5C2003E2587 /* ofxiVideoPlayer.mm */; };
 		E4DDFE6215780F70007F7128 /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E43C235A156FA5C2003E2587 /* VideoPlayer.m */; };
-		E4DDFE6315780F70007F7128 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E3C15742F09007F9113 /* ofxFlash.cpp */; };
 		E4DDFE6515780F70007F7128 /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
 		E4DDFE6615780F70007F7128 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		E4DDFE6715780F70007F7128 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -137,6 +138,8 @@
 		E43C235A156FA5C2003E2587 /* VideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayer.m; sourceTree = "<group>"; };
 		E44EC086156CCA88000C13E7 /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
 		E44EC087156CCA88000C13E7 /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
+		E49D8D1715AC9129000E914E /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlash.cpp; sourceTree = "<group>"; };
+		E49D8D1815AC9129000E914E /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4AF826715935BF3003510E9 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		E4AF826815935C01003510E9 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
@@ -149,8 +152,6 @@
 		E4AF8289159363DA003510E9 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		E4AF828A159363DA003510E9 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		E4BEB6F0157810E6003F4672 /* SaveAsDutch-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SaveAsDutch-Info.plist"; sourceTree = "<group>"; };
-		E4BF3E3C15742F09007F9113 /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlash.cpp; sourceTree = "<group>"; };
-		E4BF3E3D15742F09007F9113 /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -256,7 +257,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E4BF3E3A15742F09007F9113 /* SharedCode */,
+				E49D8C9515AC9128000E914E /* ofxFlash */,
 				E43C2322156FA5C2003E2587 /* ofxiVideoPlayer */,
 				E43124C0156BADCC00791240 /* ofxPanZoom */,
 				E43124B0156BA78C00791240 /* common */,
@@ -417,20 +418,20 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		E4BF3E3A15742F09007F9113 /* SharedCode */ = {
+		E49D8C9515AC9128000E914E /* ofxFlash */ = {
 			isa = PBXGroup;
 			children = (
-				E4BF3E3B15742F09007F9113 /* src */,
+				E49D8D1615AC9129000E914E /* src */,
 			);
-			name = SharedCode;
-			path = ../SharedCode;
+			name = ofxFlash;
+			path = "../../../My Addons/ofxFlash";
 			sourceTree = "<group>";
 		};
-		E4BF3E3B15742F09007F9113 /* src */ = {
+		E49D8D1615AC9129000E914E /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4BF3E3D15742F09007F9113 /* ofxFlash.h */,
-				E4BF3E3C15742F09007F9113 /* ofxFlash.cpp */,
+				E49D8D1715AC9129000E914E /* ofxFlash.cpp */,
+				E49D8D1815AC9129000E914E /* ofxFlash.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -611,8 +612,8 @@
 				E44EC088156CCA88000C13E7 /* ofxiTexture.mm in Sources */,
 				E43C2382156FA5C3003E2587 /* ofxiVideoPlayer.mm in Sources */,
 				E43C2383156FA5C3003E2587 /* VideoPlayer.m in Sources */,
-				E4BF3E3E15742F09007F9113 /* ofxFlash.cpp in Sources */,
 				E4D9056E15877369001020BF /* ofxPanZoom.cpp in Sources */,
+				E49D8DE515AC9129000E914E /* ofxFlash.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,7 +631,8 @@
 				E4DDFE6015780F70007F7128 /* ofxiTexture.mm in Sources */,
 				E4DDFE6115780F70007F7128 /* ofxiVideoPlayer.mm in Sources */,
 				E4DDFE6215780F70007F7128 /* VideoPlayer.m in Sources */,
-				E4DDFE6315780F70007F7128 /* ofxFlash.cpp in Sources */,
+				E49D8DE615AC9129000E914E /* ofxFlash.cpp in Sources */,
+				E49D8DEB15ACBBF2000E914E /* ofxPanZoom.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,7 +747,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
-				PROVISIONING_PROFILE = "B953076B-07CD-449A-B687-323F3E4FB100";
+				PROVISIONING_PROFILE = "D70BA8FD-0333-4AEE-B18F-BDAB9567E3F0";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "-no_arch_warnings";
@@ -770,7 +772,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Roee Kremer";
+				CODE_SIGN_IDENTITY = "";
 				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = YES;
@@ -782,7 +784,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
-				PROVISIONING_PROFILE = "B949599D-C691-4F5D-8B68-2C7C30746A66";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "-no_arch_warnings";

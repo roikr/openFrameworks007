@@ -58,7 +58,6 @@ void testApp::setup(){
     int bufferSize = 512;
 	int sampleRate = 44100;
     ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 2);	
-    ofSetFrameRate(60);
     
     for (vector<layer>::iterator liter=layout.layers.begin();liter!=layout.layers.end();liter++) {
         for (vector<shape>::iterator siter=liter->shapes.begin(); siter!=liter->shapes.end(); siter++) {
