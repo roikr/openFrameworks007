@@ -314,7 +314,7 @@ void testApp::updateItems(vector<item> newItems) {
 
     }
         
-    bSelected = false; // roikr: assume that it can't happend while easing
+ 
 
 }
 
@@ -489,8 +489,11 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                     } break;
                         
                     case REQUEST_TYPE_RECOMMENDATION:
-                        if (bSelected && !bDeselect) {
-                            showRecommendation(response.data.getText());
+                        if (bSelected && !bDeselect ) {
+                            int itemID = atoi((url.substr(url.find_last_of('/')+1)).c_str());
+                            if (itemID == selectedID) {
+                                showRecommendation(response.data.getText());
+                            }
                         }
                         break;
                         
@@ -606,13 +609,17 @@ void testApp::update(){
     }
     
     if (bSelected) {
-        ease.update();
+        if (ease.getIsEasing()) {
+             ease.update();
+        }
         
         if (bDeselect && !ease.getIsEasing()) {
             bDeselect = false;
             bSelected = false;
         }
     }
+    
+    
     
     cam.update();
     
@@ -735,10 +742,13 @@ void testApp::draw(){
     
     if (bSelected) {
         list<item>::iterator iter = findItem(selectedID);
-        ease.begin();
-        ofTranslate(ofVec2f(iter->image.getWidth(), iter->image.getHeight())*-0.5);
-        iter->image.draw(0, 0);
-        ease.end();
+        if (iter!=items.end()) {
+            ease.begin();
+            ofTranslate(ofVec2f(iter->image.getWidth(), iter->image.getHeight())*-0.5);
+            iter->image.draw(0, 0);
+            ease.end();
+        }
+        
     }
            
     if (image.isAllocated()) {
@@ -837,10 +847,12 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                 if (!bDeselect) {
                     bDeselect = true;
                     list<item>::iterator iter = findItem(selectedID);
+                    if (iter!=items.end()) {
+                        float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
+                        float srcScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
+                        ease.setup(EASE_OUT_QUAD, values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,srcScl,0),values(iter->rect.getCenter(),scale,0));
+                    }
                     
-                    float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
-                    float srcScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
-                    ease.setup(EASE_OUT_QUAD, values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,srcScl,0),values(iter->rect.getCenter(),scale,0));
                     hideRecommendation();
                 }
                 
