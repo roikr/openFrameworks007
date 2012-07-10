@@ -34,6 +34,7 @@ enum {
 
 };
 
+
 //--------------------------------------------------------------
 void testApp::setup(){	
     
@@ -102,7 +103,7 @@ void testApp::setup(){
     string url = "http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+FB_ACCESS_TOKEN;
     queue[ofxLoadURLAsync(ofxHttpRequest(url,url))] = REQUEST_TYPE_LOGIN;
     
-    selected = items.end();
+    bSelected = false;
     
     state = STATE_MAP;
     bStartCamera = false;
@@ -120,12 +121,12 @@ void testApp::queryViewLocation() {
     
     ofxMapKitLocation location=mapKit.getCenterLocation();
     MKMapRect rect = mapKit.getMKMapView().visibleMapRect;
-    double meters = MKMetersBetweenMapPoints(rect.origin, MKMapPointMake(MKMapRectGetMaxX(rect), MKMapRectGetMaxY(rect)));
+    double meters = MKMetersBetweenMapPoints(rect.origin, MKMapPointMake(MKMapRectGetMaxX(rect), MKMapRectGetMaxY(rect)))/2;
     
 
     
     int distance = round(meters/1000.0);
-    string url = "http://"+HOST_NAME+"/mobile/recommendations/circle/"+ofToString(location.latitude,6)+"/"+ofToString(location.longitude,6)+"/"+ofToString(distance);
+    string url = "http://"+HOST_NAME+"/mobile/recommendations/circle/"+ofToString(location.latitude,6)+"/"+ofToString(location.longitude,6)+"/"+ofToString(MAX(1.0,distance)); // roikr: minimum distance for query
 //    cout << "viewDiagonal: " << meters << "\t" << distance << "\t" << url << endl;;
     
     
@@ -180,6 +181,9 @@ void testApp::processQuery(ofBuffer &query) {
             r.img_path = img_path->valuestring;
             r.location.longitude = longitude->type == cJSON_Number ? longitude->valuedouble : atof(longitude->valuestring);
             r.location.latitude = latitude->type == cJSON_Number ? latitude->valuedouble : atof(latitude->valuestring);
+            MKMapPoint mapPoint = MKMapPointForCoordinate(r.location);
+            r.gridPos = ofVec2f(floor(mapPoint.x/MAP_BLOCK_WIDTH),floor(mapPoint.y/MAP_BLOCK_WIDTH));
+//            cout << r.gridPos << endl;
             r.itemID = atoi(r_id->valuestring);
             if (r.location.longitude && r.location.latitude && !r.img_path.empty()) {
 //                cout << i << "\t" << j << "\t" << r.itemID << "\t" << r.location.longitude << "\t" << r.location.latitude << "\t" << r.img_path << endl;
@@ -203,6 +207,22 @@ void testApp::processQuery(ofBuffer &query) {
 
 }
 
+list<item>::iterator testApp::findItem(int itemID) {
+    
+    for (list<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+        if (itemID == iter->itemID) {
+            return iter;
+        }
+    }
+    
+    return items.end();
+}
+
+class compare { // simple comparison function
+public:
+    bool operator()(const ofVec2f a,const ofVec2f b) const { return (a.y - b.y)<0 ? true : (a.x - b.x)<0; } // returns a<b
+};
+
 void testApp::updateItems(vector<item> newItems) {
 //    for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
 //        if (MKMetersBetweenMapPoints(MKMapPointForCoordinate(mapKit.getCenterLocation()),MKMapPointForCoordinate(iter->location))> 2*meters) {
@@ -210,7 +230,7 @@ void testApp::updateItems(vector<item> newItems) {
 //        }
 //    }
     
-    
+    map <ofVec2f,int,compare > grid;
     
    
     vector<item>::iterator niter;
@@ -218,7 +238,8 @@ void testApp::updateItems(vector<item> newItems) {
     
      // pass 1: remove items from list which are not appear in the new items vector
     
-    int i=0;
+    int removed=0;
+    
     iter=items.begin();
     while (iter!=items.end()) {
         
@@ -229,15 +250,15 @@ void testApp::updateItems(vector<item> newItems) {
         }
         if (niter==newItems.end()) {
             iter = items.erase(iter);
+            removed++;
         } else {
             iter++;
-            i++;
         }
     }
     
     // pass 2: add new items in the vector to the list
     
-    int j=0;
+    int added=0;
     for (niter=newItems.begin(); niter!=newItems.end(); niter++) {
         for (iter=items.begin(); iter!=items.end(); iter++) {
             if (niter->itemID == iter->itemID) {
@@ -246,21 +267,80 @@ void testApp::updateItems(vector<item> newItems) {
         }
         if (iter==items.end()) {
             items.push_back(*niter);
-            j++;
+            added++;
         }
     }
     
-    cout << "updateItems: " << newItems.size() << " items parsed, "<< i << " items kept, " << j << " items added" << endl ;
+    cout << "updateItems: " << newItems.size() << " parsed, " << removed <<  " items removed, " << added << " items added, " << items.size() << " totla " << endl ;
     
-    // pass 3: add items without downloaded images and which are not in the queue to downloads
-    downloads.clear();
-    for (iter=items.begin(); iter!=items.end(); iter++) {
-        if (!iter->image.bAllocated() && !iter->bQueued) {
-            downloads.push_back(iter->itemID);
+
+    if (added || removed) {
+        // pass 3: add items without downloaded images and which are not in the queue to downloads
+        grid.clear();
+        downloads.clear();
+        for (iter=items.begin(); iter!=items.end(); iter++) {
+            if (!iter->image.bAllocated() && !iter->bQueued) {
+                downloads.push_back(iter->itemID);
+            }
+            
+            if (grid.count(iter->gridPos)) {
+                grid[iter->gridPos]++;
+            } else {
+                grid[iter->gridPos] = 1;
+            }
+            
         }
+        
+        for (map<ofVec2f,int>::iterator miter=grid.begin();miter!=grid.end();miter++) {
+            cout << miter->first << "\t" << miter->second  << endl;
+            
+            
+            int i=0;
+            for (iter=items.begin(); iter!=items.end(); iter++) {
+                
+                if (iter->gridPos == miter->first) {
+                    iter->count = miter->second;
+                    iter->angle = i*360/miter->second;
+                    i++;
+                }
+            }
+            
+        }
+        
+        for (iter=items.begin(); iter!=items.end(); iter++) {
+            cout << iter->count << "\t" << iter->angle <<  endl;
+        }
+        
+
     }
+        
+    bSelected = false; // roikr: assume that it can't happend while easing
+
+}
+
+
+
+void testApp::calcItems() {
+    float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
+    MKMapRect mapRect = mapKit.getMKMapView().visibleMapRect;
     
-    selected = items.end(); // roikr: assume that it can't happend while easing
+    for (list<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+        ofVec2f pos;
+        
+        
+        float width = iter->image.bAllocated() ? iter->image.getWidth() : logo.getWidth();
+        float height = iter->image.bAllocated() ? iter->image.getHeight() : logo.getHeight();
+        float scale = blockWidth/max(width,height);
+        
+        if (iter->count>1) {
+            scale *= 0.5;
+            pos = iter->gridPos*MAP_BLOCK_WIDTH - ofVec2f(mapRect.origin.x,mapRect.origin.y);
+            pos = ofVec2f(pos.x*ofGetWidth()/mapRect.size.width, pos.y*ofGetHeight()/mapRect.size.height)+0.5*blockWidth*ofVec2f(cos(iter->angle*PI/180.0),sin(iter->angle*PI/180.0));
+        } else {
+            pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
+        }
+        iter->rect.setFromCenter(pos, width*scale, height*scale);
+    }
 }
 
 void testApp::showRecommendation(string html) {
@@ -409,7 +489,7 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                     } break;
                         
                     case REQUEST_TYPE_RECOMMENDATION:
-                        if (selected != items.end() && !bDeselect) {
+                        if (bSelected && !bDeselect) {
                             showRecommendation(response.data.getText());
                         }
                         break;
@@ -489,7 +569,7 @@ void testApp::urlResponse(ofxHttpResponse &response) {
 void testApp::update(){
 	if (bUpdatingRegion) {
 //        cout << mapKit.getScreenCoordinatesForLocation(HOME_LATITUDE, HOME_LONGITUDE) << endl;
-        
+                
     }
    
     if (queue.size()<SIMULTANEOUS_CONNECTIONS) {
@@ -525,59 +605,75 @@ void testApp::update(){
         }
     }
     
-    if (selected!=items.end()) {
+    if (bSelected) {
         ease.update();
         
         if (bDeselect && !ease.getIsEasing()) {
             bDeselect = false;
-            selected = items.end();
+            bSelected = false;
         }
     }
     
     cam.update();
     
+    if (bStartCamera) {
+        ease.update();
+        if (!ease.getIsEasing()) {
+            bStartCamera = false;
+            cam.preview();
+            ofxRegisterVolumeButtonsNotification(this);
+            volumeButtons.start();
+        }
+    }
+    
     if (bStopCamera) {
         ease.update();
         if (!ease.getIsEasing()) {
-            bStopCamera = false;
             cam.stop();
+            bStopCamera = false;
         }
-    } else if (cam.getIsPlaying()) {
-        if (bStartCamera) {
-            ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
-            ease.setup(EASE_OUT_QUAD, values(pos,0.01,0),values(pos,1.0,90));
-            ofxRegisterVolumeButtonsNotification(this);
-            volumeButtons.start();
-            bStartCamera = false;
-        }
-        
-        
-        ease.update();
-        
-    }
+    } 
     
+    calcItems(); 
 
 }
+
 
 //--------------------------------------------------------------
 void testApp::draw(){	
     
 	glClearColor(0,0,0,0);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
+    
+
+//    nearestID = min_element(items.begin(), items.end(), compare_items) ->itemID;
+
     
     ofFill();
     
+    
+/*    
     for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
-        if (iter!=selected) {
+        if (!bSelected || iter->itemID!=selectedID) {
             
             ofPushMatrix();
             
             //ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->latitude, iter->longitude));
-            ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude));
+            if (iter->count>1) {
+                ofVec2f pos = iter->gridPos*MAP_BLOCK_WIDTH - ofVec2f(mapRect.origin.x,mapRect.origin.y);
+                
+                ofTranslate(pos.x*ofGetWidth()/mapRect.size.width, pos.y*ofGetHeight()/mapRect.size.height);
+                ofRotate(iter->angle, 0, 0, 1.0);
+                ofTranslate(blockWidth/4, blockWidth/4);
+                ofRotate(-iter->angle, 0, 0, 1.0);
+                ofScale(0.5, 0.5);
+            } else {
+                ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude));
+                
+            }
             
             
-            if (iter->image.getWidth()) {
+            if (iter->image.bAllocated()) {
                 
                 float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
                 ofScale(scale, scale);
@@ -600,12 +696,48 @@ void testApp::draw(){
         } 
         
     }
+*/
     
+    ofVec2f center = 0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+    float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
+
+    ofSetHexColor(0xFFFFFF);
+    list<item>::iterator nearest = items.begin();
     
-    if (selected!=items.end()) {
+    for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
+        if ((iter->rect.getCenter()-center).squareLength()<(nearest->rect.getCenter()-center).squareLength()) {
+            nearest = iter;
+        }
+        if (!bSelected || iter->itemID!=selectedID) {
+           if (iter->image.bAllocated()) {
+                iter->image.draw(iter->rect);
+            } else {
+              
+                ofEnableAlphaBlending();
+                logo.draw(iter->rect);
+                ofDisableAlphaBlending();
+            }
+        } 
+        
+    }
+
+    
+    ofSetHexColor(0xFFFFFF);
+    if (!bSelected  || nearest->itemID!=selectedID) {
+        if (nearest->image.bAllocated()) {
+            nearest->image.draw(nearest->rect);
+        } else {
+            ofEnableAlphaBlending();
+            logo.draw(nearest->rect);
+            ofDisableAlphaBlending();
+        }
+    }
+    
+    if (bSelected) {
+        list<item>::iterator iter = findItem(selectedID);
         ease.begin();
-        ofTranslate(ofVec2f(selected->image.getWidth(), selected->image.getHeight())*-0.5);
-        selected->image.draw(0, 0);
+        ofTranslate(ofVec2f(iter->image.getWidth(), iter->image.getHeight())*-0.5);
+        iter->image.draw(0, 0);
         ease.end();
     }
            
@@ -630,8 +762,18 @@ void testApp::draw(){
         ease.begin();
 
         float width = ofGetHeight(); 
-        float height = width/cam.getWidth()*cam.getHeight();
-        cam.draw(ofRectangle(-width/2,-height/2,width,height), ofRectangle(0,0,1,1));
+        float height = cam.getHeight() ? width/cam.getWidth()*cam.getHeight() : 270;
+        ofRectangle camRect(-width/2,-height/2,width,height);
+        
+        if (cam.getIsPlaying()) {
+            cam.draw(camRect, ofRectangle(0,0,1,1));
+        } else {
+            ofEnableAlphaBlending();
+            ofSetColor(255, 255, 255,100);
+            ofRect(camRect);
+            ofDisableAlphaBlending();
+        }
+        
         ease.end();
     }  
         
@@ -649,6 +791,8 @@ void testApp::regionDidChange(bool animated){
 //	printf("testApp::regionDidChange | animated: %i\n", animated);
     bUpdatingRegion = false;
     bQueryLocation = true;
+    
+
 }
 
 //--------------------------------------------------------------
@@ -674,6 +818,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch){
 //    cout << "touchMoved" << endl;
+    
 }
 
 //--------------------------------------------------------------
@@ -688,18 +833,14 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
     
     switch (state) {
         case STATE_MAP: 
-            if (selected != items.end()) {
+            if (bSelected) {
                 if (!bDeselect) {
                     bDeselect = true;
-                    list<item>::iterator iter = selected;
-                    ofVec2f pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
-                    ofRectangle rect;
-                    float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
-                    rect.setFromCenter(pos, iter->image.getWidth()*scale, iter->image.getHeight()*scale);
+                    list<item>::iterator iter = findItem(selectedID);
                     
-                    
+                    float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
                     float srcScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
-                    ease.setup(EASE_OUT_QUAD, values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,srcScl,0),values(pos,scale,0));
+                    ease.setup(EASE_OUT_QUAD, values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,srcScl,0),values(iter->rect.getCenter(),scale,0));
                     hideRecommendation();
                 }
                 
@@ -707,16 +848,16 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                 bDeselect = false;
                 list<item>::iterator iter;
                 for (iter = items.begin();iter!=items.end();iter++) {
-                    ofVec2f pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
-                    ofRectangle rect;
-                    float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
-                    rect.setFromCenter(pos, iter->image.getWidth()*scale, iter->image.getHeight()*scale);
+
                     
-                    if (rect.inside(ofVec2f(touch.x,touch.y))) {
+                    if (iter->rect.inside(ofVec2f(touch.x,touch.y))) {
                         //                cout << "found: " << iter->itemID << endl;
-                        selected = iter;
+                        bSelected = true;
+                        selectedID = iter->itemID;
+                       
                         float targetScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
-                        ease.setup(EASE_OUT_QUAD, values(pos,scale,0), values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,targetScl,0));
+                        float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
+                        ease.setup(EASE_OUT_QUAD, values(iter->rect.getCenter(),scale,0), values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,targetScl,0));
                         
                         
                         string url = "http://"+HOST_NAME+"/mobile/recommendation/"+ofToString(iter->itemID);
@@ -729,8 +870,10 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                 }
                 
                 if (iter ==items.end()) {
+                    
                     bStartCamera = true;
-                    cam.preview();
+                    ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
+                    ease.setup(EASE_OUT_QUAD, values(pos,0.01,0),values(pos,1.0,90));
                     state = STATE_CAMERA;
                 }
                 
@@ -743,6 +886,7 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
             ease.setup(EASE_OUT_QUAD, values(pos,1.0,90),values(pos,0.01,0));
             ofxUnregisterVolumeButtonsNotification(this);
             volumeButtons.stop();
+            
             bStopCamera = true;
             state = STATE_MAP;
         }   break;

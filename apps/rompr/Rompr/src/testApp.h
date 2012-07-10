@@ -8,16 +8,24 @@
 #include "ofxiStill.h"
 #include "ofxiVolumeButtons.h"
 
+
+
 struct item {
     item():bQueued(false) {}
     
     ofImage image;
     ofImage thumb;
     ofxMapKitLocation location;
+    
     string img_path;
     int itemID;
     bool bQueued;
     
+    int count;
+    ofVec2f gridPos;
+    float angle;
+    
+    ofRectangle rect;
 };
 
 class testApp : public ofxiPhoneApp, ofxiPhoneMapKitListener{
@@ -35,7 +43,10 @@ public:
     
     void queryViewLocation();
     void processQuery(ofBuffer &query);
+    list<item>::iterator findItem(int itemID);
     void updateItems(vector<item> newItems);
+    void calcItems();
+    
     
     void showRecommendation(string html);
     void hideRecommendation();
@@ -60,7 +71,11 @@ public:
     
     
     list<item> items;
-    list<item>::iterator selected;
+    int nearestID;
+    
+    bool bSelected;
+    int selectedID;
+    
     vector<int> downloads;
     bool bQuery;
     map<int,int> queue;
@@ -83,4 +98,6 @@ public:
     
     ofImage image;
     ofxMapKitLocation imageLocation;
+    
+    
 };
