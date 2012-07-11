@@ -388,7 +388,7 @@ void testApp::showRecommendation(string html) {
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:1.0 delay:0.0 options: UIViewAnimationOptionTransitionNone | UIViewAnimationOptionCurveEaseOut 
                          animations:^{
-                             blackView.alpha = 0.5;
+                             blackView.alpha = 0.0;
                              CGRect frame = webView.frame;
                              frame.origin.y = 0;
                              webView.frame = frame;
