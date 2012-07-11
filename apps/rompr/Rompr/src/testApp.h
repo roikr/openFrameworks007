@@ -5,6 +5,7 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxURLFileLoader.h"
 #include "ofxPenner.h"
+#include "ofxTransform.h"
 #include "ofxiStill.h"
 #include "ofxiVolumeButtons.h"
 
@@ -86,7 +87,7 @@ public:
     string error; // last error
     
     ofImage logo;
-    ofxPenner ease;
+    ofxTransform xform;
     bool bDeselect;
    
     int state;
@@ -99,5 +100,6 @@ public:
     ofImage image;
     ofxMapKitLocation imageLocation;
     
+    ofxPenner penner;
     
 };

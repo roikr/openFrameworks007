@@ -10,31 +10,29 @@
 
 #include "ofMain.h"
 
+#define EASE_DURATION 0.5f
+
 enum {
     EASE_OUT_QUAD,
 };
 
-struct values {
-    values(ofVec2f pos=ofVec2f(0,0),float scl=0,float rot=0) : pos(pos),scl(scl),rot(rot) {}
-    
-    ofVec2f pos;
-    float scl;
-    float rot;
+struct parameter {
+    int ease_function;
+    float time;
+    float b,e,c,v;
+    float duration;
+    bool bEasing;
 };
+
 
 class ofxPenner {
 public:
-    void setup(int ease,values b,values e);
+    void start(int paramID,int ease_function,float b,float e,float duration = EASE_DURATION);
     void update();
-    void begin();
-    void end();
-    bool getIsEasing();
+    bool getIsEasing(int paramID);
+    float getParam(int paramID);
     
 private:
-    int ease;
-    
-    values b,e,c,v;
-    float time;
-    bool bEasing;
+    map<int,parameter> params;
     
 };

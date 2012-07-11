@@ -8,7 +8,6 @@
 
 #include "ofxPenner.h"
 
-#define EASE_DURATION 0.5f
 
 // back easing in - backtracking slightly, then reversing direction and moving to target
 // t: current time, b: beginning value, c: c in value, d: duration, s: overshoot amount (optional)
@@ -27,54 +26,58 @@ inline float easeOutBack(float t, float b, float c, float d, float s) {
 inline float easeOutQuad(float t, float b, float c, float d) {
     return -c *(t/=d)*(t-2) + b;
 };
+ 
 
-void ofxPenner::setup(int ease,values b,values e) {
-    this->ease = ease;
-    this->b = this->v = b;
-    this->e = e;
-    this->c.pos = e.pos-b.pos;
-    this->c.scl = e.scl-b.scl;
-    this->c.rot = e.rot-b.rot;
-    time = ofGetElapsedTimef();
-    bEasing = true;
+void ofxPenner::start(int paramID,int ease_function,float b,float e,float duration) {
+    parameter p;
+
+    p.ease_function = ease_function;
+    p.b = p.v = b;
+    p.e = e;
+    p.c = p.e-p.b;
+
+    p.time = ofGetElapsedTimef();
+    p.bEasing = true;
+    p.duration = duration;
+    
+    params[paramID] = p;
+    
+    
     
 }
 
 void ofxPenner::update() {
-    if (bEasing) {
-        float t = ofGetElapsedTimef();
-        float delta = t-time;
-        if (delta<EASE_DURATION) {
-            switch (ease) {
-                case EASE_OUT_QUAD:
-                    v.pos.x = easeOutBack(delta, b.pos.x, c.pos.x, EASE_DURATION);
-                    v.pos.y = easeOutBack(delta, b.pos.y, c.pos.y, EASE_DURATION);
-                    v.scl = easeOutBack(delta, b.scl, c.scl, EASE_DURATION);
-                    v.rot = easeOutBack(delta, b.rot, c.rot, EASE_DURATION);
-                    break;
-                    
-                default:
-                    break;
+    float t = ofGetElapsedTimef();
+    for (map<int,parameter>::iterator iter=params.begin(); iter!=params.end(); iter++) {
+        parameter &p = iter->second;
+        if (p.bEasing) {
+       
+            float delta = t-p.time;
+            if (delta<p.duration) {
+                switch (p.ease_function) {
+                    case EASE_OUT_QUAD:
+                        p.v = easeOutBack(delta, p.b, p.c, p.duration);
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+            } else {
+                p.v = p.e;
+                p.bEasing = false;
             }
-            
-        } else {
-            v = e;
-            bEasing = false;
         }
     }
 }
 
-void ofxPenner::begin() {
-    ofPushMatrix();
-    ofTranslate(v.pos);
-    ofScale(v.scl, v.scl);
-    ofRotate(v.rot);
+
+bool ofxPenner::getIsEasing(int paramID) {
+    map<int,parameter>::iterator iter=params.find(paramID);
+    return iter!=params.end() ? iter->second.bEasing : false;
 }
 
-void ofxPenner::end() {
-    ofPopMatrix();
-}
-
-bool ofxPenner::getIsEasing() {
-    return bEasing;
+float ofxPenner::getParam(int paramID) {
+    map<int,parameter>::iterator iter=params.find(paramID);
+    return iter!=params.end() ? iter->second.v : 0;
 }

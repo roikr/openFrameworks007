@@ -29,6 +29,10 @@ enum  {
 };
 
 enum {
+    PENNER_BLACK
+};
+
+enum {
     STATE_MAP,
     STATE_CAMERA,
 
@@ -609,11 +613,11 @@ void testApp::update(){
     }
     
     if (bSelected) {
-        if (ease.getIsEasing()) {
-             ease.update();
+        if (xform.getIsEasing()) {
+             xform.update();
         }
         
-        if (bDeselect && !ease.getIsEasing()) {
+        if (bDeselect && !xform.getIsEasing()) {
             bDeselect = false;
             bSelected = false;
         }
@@ -624,8 +628,8 @@ void testApp::update(){
     cam.update();
     
     if (bStartCamera) {
-        ease.update();
-        if (!ease.getIsEasing()) {
+        xform.update();
+        if (!xform.getIsEasing()) {
             bStartCamera = false;
             cam.preview();
             ofxRegisterVolumeButtonsNotification(this);
@@ -634,14 +638,15 @@ void testApp::update(){
     }
     
     if (bStopCamera) {
-        ease.update();
-        if (!ease.getIsEasing()) {
+        xform.update();
+        if (!xform.getIsEasing()) {
             cam.stop();
             bStopCamera = false;
         }
     } 
     
     calcItems(); 
+    penner.update();
 
 }
 
@@ -659,51 +664,6 @@ void testApp::draw(){
     ofFill();
     
     
-/*    
-    for (list<item>::iterator iter = items.begin();iter!=items.end();iter++) {
-        if (!bSelected || iter->itemID!=selectedID) {
-            
-            ofPushMatrix();
-            
-            //ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->latitude, iter->longitude));
-            if (iter->count>1) {
-                ofVec2f pos = iter->gridPos*MAP_BLOCK_WIDTH - ofVec2f(mapRect.origin.x,mapRect.origin.y);
-                
-                ofTranslate(pos.x*ofGetWidth()/mapRect.size.width, pos.y*ofGetHeight()/mapRect.size.height);
-                ofRotate(iter->angle, 0, 0, 1.0);
-                ofTranslate(blockWidth/4, blockWidth/4);
-                ofRotate(-iter->angle, 0, 0, 1.0);
-                ofScale(0.5, 0.5);
-            } else {
-                ofTranslate(mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude));
-                
-            }
-            
-            
-            if (iter->image.bAllocated()) {
-                
-                float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight());
-                ofScale(scale, scale);
-                ofTranslate(-0.5*ofPoint(iter->image.getWidth(),iter->image.getHeight()));
-                float margin = 10;
-                ofSetHexColor(0xc9dfaf);
-                ofRect(-margin, -margin, iter->image.getWidth()+2*margin, iter->image.getHeight()+2*margin);
-                ofSetHexColor(0xFFFFFF);
-                iter->image.draw(0, 0);
-            } else {
-                float scale = blockWidth/logo.getWidth();
-                ofScale(scale, scale);
-                ofTranslate(-0.5*ofPoint(logo.getWidth(),logo.getHeight()));
-                ofSetHexColor(0xFFFFFF);
-                ofEnableAlphaBlending();
-                logo.draw(0, 0);
-                ofDisableAlphaBlending();
-            }
-            ofPopMatrix();
-        } 
-        
-    }
-*/
     
     ofVec2f center = 0.5*ofVec2f(ofGetWidth(),ofGetHeight());
     float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
@@ -741,15 +701,24 @@ void testApp::draw(){
     }
     
     if (bSelected) {
+        ofSetColor(0, 0,0,150);
+        ofEnableAlphaBlending();
+        ofRect(0, penner.getParam(PENNER_BLACK), ofGetWidth(), ofGetHeight());
+        ofDisableAlphaBlending();
+        ofSetColor(255);
         list<item>::iterator iter = findItem(selectedID);
         if (iter!=items.end()) {
-            ease.begin();
+            xform.begin();
             ofTranslate(ofVec2f(iter->image.getWidth(), iter->image.getHeight())*-0.5);
             iter->image.draw(0, 0);
-            ease.end();
+            xform.end();
+            
+            
         }
         
     }
+    
+    
            
     if (image.isAllocated()) {
         ofPushMatrix();
@@ -769,22 +738,24 @@ void testApp::draw(){
     
     if (bStartCamera || cam.getIsPlaying()) {
     
-        ease.begin();
+        xform.begin();
 
         float width = ofGetHeight(); 
         float height = cam.getHeight() ? width/cam.getWidth()*cam.getHeight() : 270;
-        ofRectangle camRect(-width/2,-height/2,width,height);
         
-        if (cam.getIsPlaying()) {
-            cam.draw(camRect, ofRectangle(0,0,1,1));
-        } else {
-            ofEnableAlphaBlending();
-            ofSetColor(255, 255, 255,100);
-            ofRect(camRect);
-            ofDisableAlphaBlending();
-        }
+        ofEnableAlphaBlending();
+        ofSetColor(0, 0, 0,200);
         
-        ease.end();
+        ofRect(-ofGetHeight()/2,-ofGetWidth()/2,ofGetHeight(),ofGetWidth());
+        ofDisableAlphaBlending();
+        
+        ofSetColor(255, 255, 255,255);
+        
+        if (cam.getIsFrameVisible()) {
+            cam.draw(ofRectangle(-width/2,-height/2,width,height), ofRectangle(0,0,1,1));
+        } 
+        
+        xform.end();
     }  
         
     
@@ -850,7 +821,8 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                     if (iter!=items.end()) {
                         float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
                         float srcScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
-                        ease.setup(EASE_OUT_QUAD, values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,srcScl,0),values(iter->rect.getCenter(),scale,0));
+                        xform.start(EASE_OUT_QUAD,ofVec2f(ofGetWidth(),ofGetHeight())*0.5,iter->rect.getCenter(),srcScl,scale);
+                        penner.start(PENNER_BLACK,EASE_OUT_QUAD, 0,ofGetHeight());
                     }
                     
                     hideRecommendation();
@@ -869,8 +841,8 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                        
                         float targetScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
                         float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
-                        ease.setup(EASE_OUT_QUAD, values(iter->rect.getCenter(),scale,0), values(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,targetScl,0));
-                        
+                        xform.start(EASE_OUT_QUAD, iter->rect.getCenter(),ofVec2f(ofGetWidth(),ofGetHeight())*0.5,scale,targetScl,0,0);
+                        penner.start(PENNER_BLACK, EASE_OUT_QUAD, ofGetHeight(), 0);
                         
                         string url = "http://"+HOST_NAME+"/mobile/recommendation/"+ofToString(iter->itemID);
                         cout << url << endl;
@@ -885,7 +857,7 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                     
                     bStartCamera = true;
                     ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
-                    ease.setup(EASE_OUT_QUAD, values(pos,0.01,0),values(pos,1.0,90));
+                    xform.start(EASE_OUT_QUAD, pos,pos,0.01,1.0,0,90);
                     state = STATE_CAMERA;
                 }
                 
@@ -895,7 +867,7 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
             
         case STATE_CAMERA: {
             ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
-            ease.setup(EASE_OUT_QUAD, values(pos,1.0,90),values(pos,0.01,0));
+            xform.start(EASE_OUT_QUAD, pos,pos,1.0,0.01,90,0);
             ofxUnregisterVolumeButtonsNotification(this);
             volumeButtons.stop();
             
@@ -922,7 +894,7 @@ void testApp::pictureTaken(ofImage &image) {
     this->image = image;
  
     ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
-    ease.setup(EASE_OUT_QUAD, values(pos,1.0,90),values(pos,0.01,0));
+     xform.start(EASE_OUT_QUAD, pos,pos,1.0,0.01,90,0);
     ofxUnregisterVolumeButtonsNotification(this);
     volumeButtons.stop();
     bStopCamera = true;
