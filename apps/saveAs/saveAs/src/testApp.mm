@@ -24,7 +24,7 @@ void testApp::setup(){
     
     
     doc.setup("DOMDocument.xml");
-    layout.setup("Spread_1.xml",doc);
+    layout.setup("Spread_1.xml",&doc);
     
     for (vector<layer>::iterator iter=layout.layers.begin(); iter!=layout.layers.end(); iter++) {
         layers[iter->name] = distance(layout.layers.begin(), iter);
@@ -36,7 +36,7 @@ void testApp::setup(){
     
    
     
-    layout.load();
+    doc.load();
     
 //    for (int i=0; i<references.bitmaps.size(); i++) {
 //        zOffsets.push_back(ofRandom(-20, 20));
@@ -66,15 +66,17 @@ void testApp::setup(){
                 
                 videoItem v;
                 bitmap &bi = siter->bitmapFill.front();
-                                
-                if ( ofFile(ofToDataPath(bi.path+".mp4")).exists()) {
-                    v.path = bi.path;
+                bitmapItem &item = doc.bitmaps[bi.bitmapItemID];
+                
+                v.path = ofToDataPath(ofFile(item.href).getBaseName()+".mp4");
+                            
+                if ( ofFile(v.path).exists()) {
                     v.rect = bi.rect;
                     v.translation = bi.translation;
                     v.sx = bi.sx;
                     v.sy = bi.sy;
-                    v.width = bi.width;
-                    v.height = bi.height;
+                    v.width = item.width;
+                    v.height = item.height;
                     v.bVisible = false;
                     cout << "video: " << v.path << endl;
                     videos.push_back(v);
@@ -110,7 +112,7 @@ void testApp::update(){
         } else {
             if (current==videos.end() && iter->bVisible) {
                 current = iter;
-                player.play(ofToDataPath(current->path+".mp4"));
+                player.play(current->path);
                 break;
             }
         }
@@ -274,7 +276,7 @@ void testApp::audioOut( float * output, int bufferSize, int nChannels ){
 
 //--------------------------------------------------------------
 void testApp::exit(){
-    layout.release();
+    doc.release();
 }
 
 //--------------------------------------------------------------
