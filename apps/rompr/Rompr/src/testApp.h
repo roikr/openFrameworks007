@@ -29,7 +29,7 @@ struct item {
     ofRectangle rect;
 };
 
-class testApp : public ofxiPhoneApp, ofxiPhoneMapKitListener{
+class testApp : public ofxiPhoneApp, ofxiPhoneMapKitListener {
 	
 public:
 	void setup();
@@ -52,8 +52,13 @@ public:
     void showRecommendation(string html);
     void hideRecommendation();
     void urlResponse(ofxHttpResponse &response);
+    
+    ofxMapKitLocation getUserLocation();
 	    
     ofxiPhoneMapKit mapKit;
+    ofxiPhoneCoreLocation coreLocation;
+    ofxMapKitLocation userLocation;
+    bool bStartLocation;
     
     // optional callbacks for Map related events
     void regionWillChange(bool animated);
@@ -74,8 +79,7 @@ public:
     list<item> items;
     int nearestID;
     
-    bool bSelected;
-    int selectedID;
+    
     
     vector<int> downloads;
     bool bQuery;
@@ -88,7 +92,13 @@ public:
     
     ofImage logo;
     ofxTransform xform;
+    
+    bool bSelected;
+    int selectedID;
     bool bDeselect;
+    bool bRecommendation;
+    
+    
    
     int state;
     
@@ -99,6 +109,7 @@ public:
     
     ofImage image;
     ofxMapKitLocation imageLocation;
+    
     
     ofxPenner penner;
     

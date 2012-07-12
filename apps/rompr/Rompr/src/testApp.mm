@@ -70,8 +70,13 @@ void testApp::setup(){
     
     mapKit.open();
     
+    coreLocation.startLocation();
     // set initial position to specified coordinates, and cover 1000 Km x 1000 Km area
-    mapKit.setRegionWithMeters(HOME_LATITUDE, HOME_LONGITUDE, 1000, 1000);
+    userLocation = getUserLocation();
+    cout << userLocation.latitude << "\t" << userLocation.longitude << endl;
+//    mapKit.setRegionWithMeters(HOME_LATITUDE, HOME_LONGITUDE, 1000, 1000);
+    bStartLocation = true;
+    
     
 	// optionally add testApp as a listener for map event (callbacks below)
 	mapKit.addListener(this);
@@ -90,7 +95,7 @@ void testApp::setup(){
 
 	
 	// set other optional parameters
-	mapKit.setShowUserLocation(true);
+	mapKit.setShowUserLocation(false);
 	mapKit.setType(OFXIPHONE_MAPKIT_MAP); // OFXIPHONE_MAPKIT_HYRBID
     //	mapKit.setAllowZoom(false);
     //	mapKit.setAllowScroll(false);
@@ -108,6 +113,7 @@ void testApp::setup(){
     queue[ofxLoadURLAsync(ofxHttpRequest(url,url))] = REQUEST_TYPE_LOGIN;
     
     bSelected = false;
+    bRecommendation = false;
     
     state = STATE_MAP;
     bStartCamera = false;
@@ -348,6 +354,7 @@ void testApp::calcItems() {
 }
 
 void testApp::showRecommendation(string html) {
+    bRecommendation = true;
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ofGetWidth(), ofGetHeight())];
     view.opaque = NO;
 	view.backgroundColor = [UIColor clearColor];
@@ -426,7 +433,7 @@ void testApp::hideRecommendation() {
                                  } 
                                  completion:^(BOOL finished){ 
                                      [view removeFromSuperview];
-                                     
+                                     bRecommendation = false;
                                  }
                  ];
             });
@@ -435,6 +442,8 @@ void testApp::hideRecommendation() {
         }
     }
 }
+
+
 
 void testApp::urlResponse(ofxHttpResponse &response) {
     string url = response.request.name;
@@ -492,14 +501,12 @@ void testApp::urlResponse(ofxHttpResponse &response) {
                         
                     } break;
                         
-                    case REQUEST_TYPE_RECOMMENDATION:
-                        if (bSelected && !bDeselect ) {
-                            int itemID = atoi((url.substr(url.find_last_of('/')+1)).c_str());
-                            if (itemID == selectedID) {
-                                showRecommendation(response.data.getText());
-                            }
+                    case REQUEST_TYPE_RECOMMENDATION: {
+                        int itemID = atoi((url.substr(url.find_last_of('/')+1)).c_str());
+                        if (bSelected && !bRecommendation && itemID == selectedID ) {
+                            showRecommendation(response.data.getText());
                         }
-                        break;
+                    } break;
                         
                     case REQUSET_TYPE_UPLOAD_IMAGE: {
                         string image_path;
@@ -571,12 +578,26 @@ void testApp::urlResponse(ofxHttpResponse &response) {
     } 
 }
 
+ofxMapKitLocation testApp::getUserLocation() {
+//    return mapKit.getMKMapView().userLocation.location.coordinate;
+    
+    return CLLocationCoordinate2DMake(coreLocation.getLatitude(),coreLocation.getLongitude());
+}
 
 //--------------------------------------------------------------
 void testApp::update(){
 	if (bUpdatingRegion) {
 //        cout << mapKit.getScreenCoordinatesForLocation(HOME_LATITUDE, HOME_LONGITUDE) << endl;
                 
+    }
+    
+    if (bStartLocation) {
+        
+        if (userLocation.latitude!=getUserLocation().latitude || userLocation.longitude!=getUserLocation().longitude) {
+        
+            bStartLocation = false;
+            mapKit.setRegionWithMeters(getUserLocation().latitude, getUserLocation().longitude, 1000, 1000);
+        }
     }
    
     if (queue.size()<SIMULTANEOUS_CONNECTIONS) {
@@ -700,6 +721,40 @@ void testApp::draw(){
         }
     }
     
+        
+    
+           
+    if (image.isAllocated()) {
+        ofPushMatrix();
+        ofTranslate(mapKit.getScreenCoordinatesForLocation(imageLocation.latitude, imageLocation.longitude));
+        
+        float scale = blockWidth/max(image.getWidth(),image.getHeight());
+        ofScale(scale, scale);
+        ofTranslate(-0.5*ofPoint(image.getWidth(),image.getHeight()));
+        float margin = 10;
+        ofSetHexColor(0xc9dfaf);
+        ofRect(-margin, -margin, image.getWidth()+2*margin, image.getHeight()+2*margin);
+        ofSetHexColor(0xFFFFFF);
+        image.draw(0, 0);
+        
+        ofPopMatrix();
+    } 
+    
+    
+    
+    ofPushMatrix();
+    ofTranslate(mapKit.getScreenCoordinatesForLocation(getUserLocation().latitude, getUserLocation().longitude));
+    
+    float scale = 0.25*blockWidth/max(logo.getWidth(),logo.getHeight());
+    ofScale(scale, scale);
+    ofTranslate(-0.5*ofPoint(logo.getWidth(),logo.getHeight()));
+    ofSetHexColor(0xFFFFFF);
+    ofEnableAlphaBlending();
+    logo.draw(0, 0);
+    ofDisableAlphaBlending();
+    
+    ofPopMatrix();
+    
     if (bSelected) {
         ofSetColor(0, 0,0,150);
         ofEnableAlphaBlending();
@@ -717,24 +772,7 @@ void testApp::draw(){
         }
         
     }
-    
-    
-           
-    if (image.isAllocated()) {
-        ofPushMatrix();
-        ofTranslate(mapKit.getScreenCoordinatesForLocation(imageLocation.latitude, imageLocation.longitude));
-        
-        float scale = blockWidth/max(image.getWidth(),image.getHeight());
-        ofScale(scale, scale);
-        ofTranslate(-0.5*ofPoint(image.getWidth(),image.getHeight()));
-        float margin = 10;
-        ofSetHexColor(0xc9dfaf);
-        ofRect(-margin, -margin, image.getWidth()+2*margin, image.getHeight()+2*margin);
-        ofSetHexColor(0xFFFFFF);
-        image.draw(0, 0);
-        
-        ofPopMatrix();
-    }
+
     
     if (bStartCamera || cam.getIsPlaying()) {
     
@@ -859,6 +897,7 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                     ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
                     xform.start(EASE_OUT_QUAD, pos,pos,0.01,1.0,0,90);
                     state = STATE_CAMERA;
+                    mapKit.setRegionWithMeters(getUserLocation().latitude, getUserLocation().longitude, 1000, 1000);
                 }
                 
                 
@@ -890,7 +929,7 @@ void testApp::pictureTaken(ofImage &image) {
 //    cout << image.getWidth() << "\t" << image.getHeight() << endl;
     
     image.saveImage(ofxNSStringToString([NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"]));
-    imageLocation = mapKit.getMKMapView().userLocation.location.coordinate;
+    imageLocation = getUserLocation();
     this->image = image;
  
     ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
