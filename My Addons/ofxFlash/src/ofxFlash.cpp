@@ -59,7 +59,7 @@ void ofxDocument::load() {
 //        cout << iter->libraryItemName << endl;
 //        cout << iter->image.loadImage("LIBRARY/"+iter->libraryItemName);
 //        cout << iter->image.loadImage(iter->sourceExternalFilepath);
-        cout << iter->image.loadImage("LIBRARY/"+iter->href);
+        cout << iter->href << ": " << iter->image.loadImage("LIBRARY/"+iter->href) << endl;
         iter->image.update();
         
         //            cout << iter->href << " loaded" <<endl;
@@ -388,60 +388,14 @@ void ofxSymbolItem::setup(string name,ofxDocument *doc) {
 }
 
 
-/*
-void ofxSymbolItem::load() {
-    for (vector<layer>::iterator liter=layers.begin();liter!=layers.end();liter++) {
-        for (vector<bitmapInstance>::iterator iter=liter->bitmaps.begin(); iter!=liter->bitmaps.end(); iter++) {
-
-            
- 
-#ifndef TARGET_OPENGLES
-            cout << iter->libraryItemName << endl;
-            cout << iter->image.loadImage("LIBRARY/"+iter->libraryItemName);
-            iter->image.update();
-            
-//            cout << iter->href << " loaded" <<endl;
-#else
-            
-            ofFile file = ofFile("LIBRARY/"+iter->libraryItemName);
-            iter->texture.load(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
-            
-            iter->uWidth = iter->width/(float)iter->texture._width;
-            iter->vHeight =  iter->height/(float)iter->texture._height;
-
-#endif
-            
-            
-        }
-        
-        for (vector<shape>::iterator siter=liter->shapes.begin(); siter!=liter->shapes.end(); siter++) {
-            if (!siter->bitmapFill.empty()) {
-                vector<bitmap>::iterator iter = siter->bitmapFill.begin();
-                
-#ifndef TARGET_OPENGLES
-                iter->image.loadImage("LIBRARY/"+iter->href);
-                iter->image.update();
-                cout << iter->href << " loaded" <<endl;
-#else
-                ofFile file = ofFile("LIBRARY/"+iter->path);
-                iter->texture.load(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
-#endif                
-                
-                
-                
-            }
-            
-        }
-        
-    }
-    
-    
-    
+ofRectangle ofxSymbolItem::getScreenRect(ofRectangle& rect) {
+    ofVec2f p = (ofVec2f(rect.x,rect.y)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+    ofRectangle newRect(p.x,p.y,rect.width*zoom , rect.height*zoom);
+    cout << newRect.x << "\t" << newRect.y << "\t" << newRect.width << "\t" << newRect.height << endl;
+    return newRect;
 }
-*/
 
-
-void ofxSymbolItem::drawBitmap(bitmap &bm,ofVec2f offset,float zoom) {
+void ofxSymbolItem::drawBitmap(bitmap &bm) {
     
     glEnable(GL_SCISSOR_TEST);
     ofRectangle &rect = bm.rect;
@@ -481,7 +435,7 @@ void ofxSymbolItem::drawBitmap(bitmap &bm,ofVec2f offset,float zoom) {
 }
 
 
-void ofxSymbolItem::drawLayer(layer &ly,ofVec2f offset,float zoom) {
+void ofxSymbolItem::drawLayer(layer &ly) {
     
 
     for (vector<bitmapInstance>::iterator iter=ly.bitmaps.begin(); iter!=ly.bitmaps.end(); iter++) {
@@ -562,7 +516,7 @@ void ofxSymbolItem::drawLayer(layer &ly,ofVec2f offset,float zoom) {
                 
                 
                 if (!siter->bitmapFill.empty()) {
-                    drawBitmap(siter->bitmapFill.front(), offset, zoom);
+                    drawBitmap(siter->bitmapFill.front());
                     
                 }
             } else {
@@ -607,11 +561,25 @@ void ofxSymbolItem::drawLayer(layer &ly,ofVec2f offset,float zoom) {
     ofPopStyle();
 }
 
-void ofxSymbolItem::draw(ofVec2f offset,float zoom) {
-    for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
-        drawLayer(*iter, offset, zoom);
+void ofxSymbolItem::draw() {
+    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+        drawLayer(*riter);
     }
 }
 
 
-
+void ofxSymbolItem::hitTest(ofVec2f pos) {
+    cout << "testing" << endl;
+    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+        for (vector<bitmapInstance>::iterator iter=riter->bitmaps.begin(); iter!=riter->bitmaps.end(); iter++) {
+            bitmapItem &item = doc->bitmaps[iter->bitmapItemID];
+            ofRectangle rect;
+            rect.setFromCenter(iter->translation+0.5*iter->scale*ofVec2f(item.width,item.height),iter->scale*item.width,iter->scale*item.height);
+            cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
+            if (getScreenRect(rect).inside(pos)) {
+                cout << iter->bitmapItemID;
+            }
+            cout << endl << endl;
+        }
+    }
+}

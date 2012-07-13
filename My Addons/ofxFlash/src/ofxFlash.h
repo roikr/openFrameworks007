@@ -146,18 +146,22 @@ class ofxSymbolItem {
 public:    
     
     void setup(string name,ofxDocument *doc);
+    ofRectangle getScreenRect(ofRectangle& rect);
     
-    void drawBitmap(bitmap &bm,ofVec2f offset,float zoom);
-    void drawLayer(layer &ly,ofVec2f offset,float zoom);
-    void draw(ofVec2f offset = ofVec2f(0,0),float zoom = 1);
+    void drawBitmap(bitmap &bm);
+    void drawLayer(layer &ly);
+    void draw();
+    
+    void hitTest(ofVec2f pos);
     
     vector<layer> layers;
    
-    
     ofTrueTypeFont font;
     float lineHeight;
     
     ofxDocument *doc;
-   
+    
+    ofVec2f offset;
+    float zoom;
 };
 

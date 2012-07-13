@@ -12,6 +12,8 @@ void testApp::setup(){
     
     doc.setup("DOMDocument.xml");
     layout.setup("Start.xml",&doc);
+    layout.zoom = 1;
+    layout.offset = -0.5*ofVec2f(ofGetWidth(),ofGetHeight())/layout.zoom;
     
     
 //    layout.font.setGlobalDpi(72);
@@ -36,7 +38,7 @@ void testApp::draw(){
 //    float zoom = 1;
 //    ofVec2f center = -0.5*ofVec2f(ofGetWidth(),ofGetHeight())/zoom;
 //    ofScale(zoom, zoom);
-    layout.draw(ofVec2f(0,0),1.0);
+    layout.draw();
     ofPopMatrix();
 
     glColor4f(0,0,0,1);
@@ -70,7 +72,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-
+    layout.hitTest(ofVec2f(x,y));
 }
 
 //--------------------------------------------------------------
