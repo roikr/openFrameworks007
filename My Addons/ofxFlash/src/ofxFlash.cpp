@@ -22,7 +22,7 @@ void ofxDocument::setup(string name) {
    
     
     ofxXmlSettings xml;
-    bitmaps.clear();
+    bitmapItems.clear();
     
     if (xml.loadFile(name)) {
         xml.pushTag("DOMDocument");
@@ -37,13 +37,30 @@ void ofxDocument::setup(string name) {
             item.frameBottom = xml.getAttribute("DOMBitmapItem", "frameBottom", 0,i);
             item.width = item.frameRight/PIXEL_SCALE;
             item.height = item.frameBottom/PIXEL_SCALE;
-            bitmaps.push_back(item);
+            bitmapItems.push_back(item);
 //            cout << name << "\t" << frameRight/20 << "x" << frameBottom/20 << endl;
-            bitsMap[item.name]=bitmaps.size()-1;
+            itemsMap[item.name]=bitmapItems.size()-1;
         }
         xml.popTag();
+        
+        xml.pushTag("symbols");
+        for (int i=0; i<xml.getNumTags("Include"); i++) {
+            ofxSymbolItem item;
+            item.href = xml.getAttribute("Include", "href", "",i);
+            itemsMap[ofFile(item.href).getBaseName()]=symbolItems.size();
+            symbolItems.push_back(item);
+        }
+        
+        
+        
         xml.popTag();
         
+        xml.popTag();
+        
+    }
+    
+    for (vector<ofxSymbolItem>::iterator iter = symbolItems.begin(); iter!=symbolItems.end(); iter++) {
+        iter->setup(this);
     }
     
 }
@@ -51,7 +68,7 @@ void ofxDocument::setup(string name) {
 
 void ofxDocument::load() {
 
-    for (vector<bitmapItem>::iterator iter=bitmaps.begin(); iter!=bitmaps.end(); iter++) {
+    for (vector<bitmapItem>::iterator iter=bitmapItems.begin(); iter!=bitmapItems.end(); iter++) {
         
         
         
@@ -102,7 +119,7 @@ void ofxDocument::load() {
 }
 
 void ofxDocument::release() {
-    for (vector<bitmapItem>::iterator iter=bitmaps.begin(); iter!=bitmaps.end(); iter++) {
+    for (vector<bitmapItem>::iterator iter=bitmapItems.begin(); iter!=bitmapItems.end(); iter++) {
 #ifndef TARGET_OPENGLES
         iter->image.clear();
 #else
@@ -123,12 +140,12 @@ vector<ofVec2f> parseVec(string str) {
     return vec;
 }
 
-void ofxSymbolItem::setup(string name,ofxDocument *doc) {
+void ofxSymbolItem::setup(ofxDocument *doc) {
     
     ofxXmlSettings xml;
     this->doc = doc;
     
-    if (xml.loadFile("LIBRARY/"+name)) {
+    if (xml.loadFile("LIBRARY/"+href)) {
         xml.pushTag("DOMSymbolItem");
         xml.pushTag("timeline");
         xml.pushTag("DOMTimeline");
@@ -141,8 +158,8 @@ void ofxSymbolItem::setup(string name,ofxDocument *doc) {
             xml.pushTag("DOMFrame");
             xml.pushTag("elements");
             for (int i=0; i<xml.getNumTags("DOMBitmapInstance"); i++) {
-                bitmapInstance bi;
-                bi.bitmapItemID = doc->bitsMap[xml.getAttribute("DOMBitmapInstance", "libraryItemName", "",i)];
+                instance bi;
+                bi.itemID = doc->itemsMap[xml.getAttribute("DOMBitmapInstance", "libraryItemName", "",i)];
                
 //                bi.width = (float)doc.items[bi.libraryItemName].frameRight/PIXEL_SCALE;
 //                bi.height = (float)doc.items[bi.libraryItemName].frameBottom/PIXEL_SCALE;
@@ -167,7 +184,7 @@ void ofxSymbolItem::setup(string name,ofxDocument *doc) {
                     bi.transformationPoint = ofVec2f(xml.getAttribute("Point", "x", 0.0),xml.getAttribute("Point", "y", 0.0));
                     xml.popTag();
                 } else {
-                    bi.transformationPoint = ofVec2f(doc->bitmaps[bi.bitmapItemID].width/2,doc->bitmaps[bi.bitmapItemID].height/2);
+                    bi.transformationPoint = ofVec2f(doc->bitmapItems[bi.itemID].width/2,doc->bitmapItems[bi.itemID].height/2);
                 }
                 
                 xml.popTag();
@@ -258,7 +275,7 @@ void ofxSymbolItem::setup(string name,ofxDocument *doc) {
                     
                     if (xml.tagExists("BitmapFill")) {
                         bitmap bi;
-                        bi.bitmapItemID = doc->bitsMap[xml.getAttribute("BitmapFill", "bitmapPath", "")];
+                        bi.itemID = doc->itemsMap[xml.getAttribute("BitmapFill", "bitmapPath", "")];
                         xml.pushTag("BitmapFill");
                         xml.pushTag("matrix");
                         float a = xml.getAttribute("Matrix", "a", 1.0);
@@ -389,8 +406,8 @@ void ofxSymbolItem::setup(string name,ofxDocument *doc) {
 
 
 ofRectangle ofxSymbolItem::getScreenRect(ofRectangle& rect) {
-    ofVec2f p = (ofVec2f(rect.x,rect.y)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-    ofRectangle newRect(p.x,p.y,rect.width*zoom , rect.height*zoom);
+    ofVec2f p = (ofVec2f(rect.x,rect.y)+doc->offset)*doc->zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+    ofRectangle newRect(p.x,p.y,rect.width*doc->zoom , rect.height*doc->zoom);
     cout << newRect.x << "\t" << newRect.y << "\t" << newRect.width << "\t" << newRect.height << endl;
     return newRect;
 }
@@ -401,9 +418,9 @@ void ofxSymbolItem::drawBitmap(bitmap &bm) {
     ofRectangle &rect = bm.rect;
     
 #ifndef TARGET_OPENGLES                   
-    ofVec2f p = (ofVec2f(rect.x,rect.y+rect.height)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+    ofVec2f p = (ofVec2f(rect.x,rect.y+rect.height)+doc->offset)*doc->zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
     
-    glScissor(p.x, ofGetHeight()-p.y, rect.width*zoom , rect.height*zoom);
+    glScissor(p.x, ofGetHeight()-p.y, rect.width*doc->zoom , rect.height*doc->zoom);
     
 #else                    
     ofVec2f q = (ofVec2f(rect.x+rect.width,rect.y+rect.height)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
@@ -423,9 +440,9 @@ void ofxSymbolItem::drawBitmap(bitmap &bm) {
     
     
 #ifndef TARGET_OPENGLES
-   doc->bitmaps[bm.bitmapItemID].image.draw(0, 0);
+   doc->bitmapItems[bm.itemID].image.draw(0, 0);
 #else
-    doc->bitmaps[bm.bitmapItemID].texture.draw();
+    doc->bitmapItems[bm.itemID].texture.draw();
 #endif
     
     
@@ -438,12 +455,12 @@ void ofxSymbolItem::drawBitmap(bitmap &bm) {
 void ofxSymbolItem::drawLayer(layer &ly) {
     
 
-    for (vector<bitmapInstance>::iterator iter=ly.bitmaps.begin(); iter!=ly.bitmaps.end(); iter++) {
+    for (vector<instance>::iterator iter=ly.bitmaps.begin(); iter!=ly.bitmaps.end(); iter++) {
         ofPushMatrix();
         ofTranslate(iter->translation);
         ofScale(iter->scale, iter->scale);
 //            iter->texture.draw(iter->u,iter->v);
-        bitmapItem &item = doc->bitmaps[iter->bitmapItemID];
+        bitmapItem &item = doc->bitmapItems[iter->itemID];
 #ifndef TARGET_OPENGLES
         item.image.draw(0, 0);
 #else
@@ -571,13 +588,13 @@ void ofxSymbolItem::draw() {
 void ofxSymbolItem::hitTest(ofVec2f pos) {
     cout << "testing" << endl;
     for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-        for (vector<bitmapInstance>::iterator iter=riter->bitmaps.begin(); iter!=riter->bitmaps.end(); iter++) {
-            bitmapItem &item = doc->bitmaps[iter->bitmapItemID];
+        for (vector<instance>::iterator iter=riter->bitmaps.begin(); iter!=riter->bitmaps.end(); iter++) {
+            bitmapItem &item = doc->bitmapItems[iter->itemID];
             ofRectangle rect;
             rect.setFromCenter(iter->translation+0.5*iter->scale*ofVec2f(item.width,item.height),iter->scale*item.width,iter->scale*item.height);
             cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
             if (getScreenRect(rect).inside(pos)) {
-                cout << iter->bitmapItemID;
+                cout << iter->itemID;
             }
             cout << endl << endl;
         }

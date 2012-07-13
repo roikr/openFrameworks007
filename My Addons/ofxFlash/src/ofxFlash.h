@@ -16,45 +16,7 @@
 
 #define PIXEL_SCALE 20.0
 
-struct bitmapItem {
-    string name;
-    string href;
-    
-    int frameRight;
-    int frameBottom;
-    
-    
-    //    ofxiTexture texture;
-    float u; // width and height from 0 to 1
-    float v;
-    
-#ifndef TARGET_OPENGLES
-    ofImage image;
-#else
-    ofxiTexture texture;
-    float uWidth; // width and height from 0 to 1
-    float vHeight;
-    
-    //#ifndef TARGET_OPENGLES
-    //    ofImage image;
-    //#else
-    //    ofxiTexture texture;
-    //#endif
-#endif
-    float width;
-    float height;
-};
-
-class ofxDocument {
-    
-public:
-    void setup(string name); 
-    void load();
-    void release();
-    
-    vector<bitmapItem> bitmaps;
-    map<string, int> bitsMap;
-};
+class ofxDocument;
 
 struct curvePath {
     ofVec2f p0;
@@ -68,11 +30,10 @@ struct linePath {
     bool bClosed;
 };
 
-
 struct bitmap {
     
 //    string path;
-    int bitmapItemID;
+    int itemID;
 //    string href;
     
     ofMatrix4x4 mat;
@@ -81,9 +42,7 @@ struct bitmap {
     float sx;
     float sy;
     float r;
-    
-
-    
+        
     ofRectangle rect;
 };
 
@@ -119,20 +78,19 @@ struct tlfText {
 };
 
 
+struct instance {
 
-struct bitmapInstance {
-
-    int bitmapItemID;
+    int itemID;
     ofVec2f translation;
     float scale;
     float rotation;
     
     ofVec2f transformationPoint;
-    
 };
 
 struct layer {
-    vector<bitmapInstance> bitmaps;  
+    vector<instance> bitmaps;
+    vector<instance> symbols;
     vector<shape> shapes;
     vector<tlfText> texts;
     
@@ -145,7 +103,7 @@ class ofxSymbolItem {
 
 public:    
     
-    void setup(string name,ofxDocument *doc);
+    void setup(ofxDocument *doc);
     ofRectangle getScreenRect(ofRectangle& rect);
     
     void drawBitmap(bitmap &bm);
@@ -154,6 +112,7 @@ public:
     
     void hitTest(ofVec2f pos);
     
+    string href;
     vector<layer> layers;
    
     ofTrueTypeFont font;
@@ -161,7 +120,58 @@ public:
     
     ofxDocument *doc;
     
+    
+};
+
+
+struct bitmapItem {
+    string name;
+    string href;
+    
+    int frameRight;
+    int frameBottom;
+    
+    
+    //    ofxiTexture texture;
+    float u; // width and height from 0 to 1
+    float v;
+    
+#ifndef TARGET_OPENGLES
+    ofImage image;
+#else
+    ofxiTexture texture;
+    float uWidth; // width and height from 0 to 1
+    float vHeight;
+    
+    //#ifndef TARGET_OPENGLES
+    //    ofImage image;
+    //#else
+    //    ofxiTexture texture;
+    //#endif
+#endif
+    float width;
+    float height;
+};
+
+
+class ofxDocument {
+    
+public:
+    void setup(string name); 
+    void load();
+    void release();
+    
+    vector<bitmapItem> bitmapItems;
+    vector<ofxSymbolItem> symbolItems; 
+    map<string, int> itemsMap;
+    
     ofVec2f offset;
     float zoom;
 };
+
+
+
+
+
+
 

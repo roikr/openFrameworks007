@@ -22,8 +22,8 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    ofxSymbolItem layout;
-    ofxDocument doc;
     
+    ofxDocument doc;
+    int layoutID;
     		
 };

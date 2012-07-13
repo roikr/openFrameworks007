@@ -11,11 +11,13 @@ void testApp::setup(){
     ofBackground(255);
     
     doc.setup("DOMDocument.xml");
-    layout.setup("Start.xml",&doc);
-    layout.zoom = 1;
-    layout.offset = -0.5*ofVec2f(ofGetWidth(),ofGetHeight())/layout.zoom;
     
+    doc.zoom = 1;
+    doc.offset = -0.5*ofVec2f(ofGetWidth(),ofGetHeight())/doc.zoom;
     
+    layoutID = doc.itemsMap["Start"];
+    cout << "layoutID: " << layoutID << endl;
+   
 //    layout.font.setGlobalDpi(72);
 //    layout.font.loadFont("LetterGothicStd.otf", 72,true,false);  // antialiased, no full charset
 //    layout.lineHeight = 1.2;
@@ -38,7 +40,8 @@ void testApp::draw(){
 //    float zoom = 1;
 //    ofVec2f center = -0.5*ofVec2f(ofGetWidth(),ofGetHeight())/zoom;
 //    ofScale(zoom, zoom);
-    layout.draw();
+    doc.symbolItems[layoutID].draw();
+
     ofPopMatrix();
 
     glColor4f(0,0,0,1);
@@ -72,7 +75,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    layout.hitTest(ofVec2f(x,y));
+    doc.symbolItems[layoutID].hitTest(ofVec2f(x,y));
 }
 
 //--------------------------------------------------------------
