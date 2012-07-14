@@ -77,20 +77,26 @@ struct tlfText {
 
 };
 
+enum {
+    SYMBOL_INSTANCE,
+    BITMAP_INSTANCE
+};
 
 struct instance {
 
+    string name;
     int itemID;
     ofVec2f translation;
     float scale;
     float rotation;
     
     ofVec2f transformationPoint;
+    
+    int type;
 };
 
 struct layer {
-    vector<instance> bitmaps;
-    vector<instance> symbols;
+    vector<instance> instances;
     vector<shape> shapes;
     vector<tlfText> texts;
     
