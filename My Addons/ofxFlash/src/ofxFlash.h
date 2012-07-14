@@ -112,14 +112,12 @@ class ofxSymbolItem {
 
 public:    
     
-    void setup(ofxDocument *doc);
-    ofRectangle getBoundingBox();
-    
+    void setup(ofxDocument *doc);    
     void bitmapFill(bitmap &bm);
     void drawLayer(instance &si,layer &ly);
     void draw(instance &si);
     
-    void hitTest(instance &si,ofVec2f pos);
+    vector<instance> hitTest(instance &si,ofVec2f pos);
     
     string href;
     vector<layer> layers;

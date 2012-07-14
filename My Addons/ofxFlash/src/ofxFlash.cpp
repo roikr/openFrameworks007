@@ -198,6 +198,7 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
                 instance si = parseInstance(xml);
                 xml.popTag();
                 si.itemID = doc->itemsMap[xml.getAttribute("DOMSymbolInstance", "libraryItemName", "",i)];
+                si.name = xml.getAttribute("DOMSymbolInstance", "name", "",i);
                 si.type = SYMBOL_INSTANCE;
                 l.instances.push_back(si);
             }
@@ -618,6 +619,7 @@ void ofxSymbolItem::draw(instance &si) {
     }
 }
 
+/*
 ofRectangle ofxSymbolItem::getBoundingBox() {
 //    cout << "bounding box" << endl;
     ofRectangle rect(0,0,0,0);
@@ -651,26 +653,36 @@ ofRectangle ofxSymbolItem::getBoundingBox() {
     
     return rect;
 }
+*/
 
-
-void ofxSymbolItem::hitTest(instance &si,ofVec2f pos) {
+vector<instance> ofxSymbolItem::hitTest(instance &si,ofVec2f pos) {
 //    cout << "testing" << endl;
+    vector<instance> items;
+    
     pos = si.mat.getInverse().preMult(ofVec3f(pos));
     
     for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
         for (vector<instance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
-            ofMatrix4x4 imat = iter->mat.getInverse();
-            ofVec2f wpos = imat.preMult(ofVec3f(pos));
+            
 //            cout << wpos << "\t" << endl;
-            ofRectangle rect;
+           
             switch (iter->type) {
                 case BITMAP_INSTANCE: {
+                    ofMatrix4x4 imat = iter->mat.getInverse();
+                    ofVec2f wpos = imat.preMult(ofVec3f(pos));
                     bitmapItem &item = doc->bitmapItems[iter->itemID];
-                    rect =ofRectangle(0,0,item.width,item.height);
+                    if (ofRectangle(0,0,item.width,item.height).inside(wpos)) {
+                        
+                        items.push_back(*iter);
+                    }
                 }   break;
                 case SYMBOL_INSTANCE: {
-                    ofxSymbolItem &item = doc->symbolItems[iter->itemID];
-                    rect =item.getBoundingBox();
+                    vector<instance> tempItems = doc->symbolItems[iter->itemID].hitTest(*iter, pos);
+                    if (!tempItems.empty()) {
+                        items.push_back(*iter);
+                        items.insert(items.end(), tempItems.begin(), tempItems.end());
+                    }
+                    
                 }   break;
                     
                 default:
@@ -678,11 +690,9 @@ void ofxSymbolItem::hitTest(instance &si,ofVec2f pos) {
                     
             }
 //            cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-            if (rect.inside(wpos)) { // need to add stage transform (getScreenRect)
-                cout << iter->itemID << "\t";
-            }
+
         }
     }
     
-    cout << endl;
+    return items;
 }
