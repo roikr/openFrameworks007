@@ -86,6 +86,9 @@ struct instance {
 
     string name;
     int itemID;
+    
+    ofMatrix4x4 mat;
+    
     ofVec2f translation;
     float scale;
     float rotation;
@@ -110,13 +113,13 @@ class ofxSymbolItem {
 public:    
     
     void setup(ofxDocument *doc);
-    ofRectangle getScreenRect(ofRectangle& rect);
+    ofRectangle getBoundingBox();
     
-    void drawBitmap(bitmap &bm);
-    void drawLayer(layer &ly);
-    void draw();
+    void bitmapFill(bitmap &bm);
+    void drawLayer(instance &si,layer &ly);
+    void draw(instance &si);
     
-    void hitTest(ofVec2f pos);
+    void hitTest(instance &si,ofVec2f pos);
     
     string href;
     vector<layer> layers;
@@ -171,8 +174,8 @@ public:
     vector<ofxSymbolItem> symbolItems; 
     map<string, int> itemsMap;
     
-    ofVec2f offset;
-    float zoom;
+//    ofVec2f offset;
+//    float zoom;
 };
 
 

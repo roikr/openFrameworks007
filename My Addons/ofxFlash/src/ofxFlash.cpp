@@ -133,6 +133,35 @@ vector<ofVec2f> parseVec(string str) {
     return vec;
 }
 
+instance parseInstance(ofxXmlSettings &xml) {
+    instance i;
+    if (xml.tagExists("matrix")) {
+        xml.pushTag("matrix");
+        i.translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
+        i.scale = xml.getAttribute("Matrix", "a", 1.0);
+        i.rotation = xml.getAttribute("Matrix", "c", 0.0);
+        xml.popTag();
+    } else {
+        i.translation = ofVec2f(0.0,0.0);
+        i.scale = 1.0;
+        i.rotation = 0.0;
+    }
+    
+    ofMatrix4x4 mat;
+    mat.makeIdentityMatrix();
+    mat.translate(i.translation);
+    mat.scale(i.scale, i.scale, 1.0);
+    i.mat = mat;
+    
+    if (xml.tagExists("transformationPoint")) {
+        xml.pushTag("transformationPoint");
+        i.transformationPoint = ofVec2f(xml.getAttribute("Point", "x", 0.0),xml.getAttribute("Point", "y", 0.0));
+        xml.popTag();
+    } 
+    
+    return i;
+}
+
 void ofxSymbolItem::setup(ofxDocument *doc) {
     
     ofxXmlSettings xml;
@@ -151,72 +180,25 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
             xml.pushTag("DOMFrame");
             xml.pushTag("elements");
             for (int i=0; i<xml.getNumTags("DOMBitmapInstance"); i++) {
-                instance bi;
-                bi.type = BITMAP_INSTANCE;
-                bi.itemID = doc->itemsMap[xml.getAttribute("DOMBitmapInstance", "libraryItemName", "",i)];
-               
-//                bi.width = (float)doc.items[bi.libraryItemName].frameRight/PIXEL_SCALE;
-//                bi.height = (float)doc.items[bi.libraryItemName].frameBottom/PIXEL_SCALE;
-                
+                int itemID = doc->itemsMap[xml.getAttribute("DOMBitmapInstance", "libraryItemName", "",i)];
                 xml.pushTag("DOMBitmapInstance",i);
-                
-                if (xml.tagExists("matrix")) {
-                    xml.pushTag("matrix");
-                    bi.translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
-                    bi.scale = xml.getAttribute("Matrix", "a", 1.0);
-                    bi.rotation = xml.getAttribute("Matrix", "c", 0.0);
-                    xml.popTag();
-                } else {
-                    bi.translation = ofVec2f(0.0,0.0);
-                    bi.scale = 1.0;
-                    bi.rotation = 0.0;
-                }
-                                
-               
-                if (xml.tagExists("transformationPoint")) {
-                    xml.pushTag("transformationPoint");
-                    bi.transformationPoint = ofVec2f(xml.getAttribute("Point", "x", 0.0),xml.getAttribute("Point", "y", 0.0));
-                    xml.popTag();
-                } else {
+                instance bi = parseInstance(xml);
+                bi.itemID = itemID;
+                if (!xml.tagExists("transformationPoint")) {
                     bi.transformationPoint = ofVec2f(doc->bitmapItems[bi.itemID].width/2,doc->bitmapItems[bi.itemID].height/2);
                 }
-                
                 xml.popTag();
+                
+                bi.type = BITMAP_INSTANCE;
                 l.instances.push_back(bi);
             }
             
             for (int i=0; i<xml.getNumTags("DOMSymbolInstance"); i++) {
-                instance si;
-                si.type = SYMBOL_INSTANCE;
-                si.itemID = doc->itemsMap[xml.getAttribute("DOMSymbolInstance", "libraryItemName", "",i)];
-                
-                //                si.width = (float)doc.items[si.libraryItemName].frameRight/PIXEL_SCALE;
-                //                si.height = (float)doc.items[si.libraryItemName].frameBottom/PIXEL_SCALE;
-                
                 xml.pushTag("DOMSymbolInstance",i);
-                
-                if (xml.tagExists("matrix")) {
-                    xml.pushTag("matrix");
-                    si.translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
-                    si.scale = xml.getAttribute("Matrix", "a", 1.0);
-                    si.rotation = xml.getAttribute("Matrix", "c", 0.0);
-                    xml.popTag();
-                } else {
-                    si.translation = ofVec2f(0.0,0.0);
-                    si.scale = 1.0;
-                    si.rotation = 0.0;
-                }
-                
-                
-                if (xml.tagExists("transformationPoint")) {
-                    xml.pushTag("transformationPoint");
-                    si.transformationPoint = ofVec2f(xml.getAttribute("Point", "x", 0.0),xml.getAttribute("Point", "y", 0.0));
-                    xml.popTag();
-                } else {
-                    si.transformationPoint = ofVec2f(doc->bitmapItems[si.itemID].width/2,doc->bitmapItems[si.itemID].height/2);
-                }
-                
+                instance si = parseInstance(xml);
                 xml.popTag();
+                si.itemID = doc->itemsMap[xml.getAttribute("DOMSymbolInstance", "libraryItemName", "",i)];
+                si.type = SYMBOL_INSTANCE;
                 l.instances.push_back(si);
             }
 
@@ -435,64 +417,70 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
     
 }
 
-
+/*
 ofRectangle ofxSymbolItem::getScreenRect(ofRectangle& rect) {
+    cout << ofGetWidth() << "\t" << ofGetHeight() << "\t" << doc->offset << "\t" << doc->zoom << "\t";
     ofVec2f p = (ofVec2f(rect.x,rect.y)+doc->offset)*doc->zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
     ofRectangle newRect(p.x,p.y,rect.width*doc->zoom , rect.height*doc->zoom);
     cout << newRect.x << "\t" << newRect.y << "\t" << newRect.width << "\t" << newRect.height << endl;
     return newRect;
 }
+*/
 
-void ofxSymbolItem::drawBitmap(bitmap &bm) {
+void ofxSymbolItem::bitmapFill(bitmap &bm) {
     
-    glEnable(GL_SCISSOR_TEST);
-    ofRectangle &rect = bm.rect;
-    
-#ifndef TARGET_OPENGLES                   
-    ofVec2f p = (ofVec2f(rect.x,rect.y+rect.height)+doc->offset)*doc->zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-    
-    glScissor(p.x, ofGetHeight()-p.y, rect.width*doc->zoom , rect.height*doc->zoom);
-    
-#else                    
-    ofVec2f q = (ofVec2f(rect.x+rect.width,rect.y+rect.height)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-    ofVec2f p = ofVec2f(ofGetHeight(),ofGetWidth())-ofVec2f(q.y,q.x);
-    
-    glScissor(p.x, p.y, rect.height*zoom , rect.width*zoom);
-#endif
-    
-    
-    
-    
-    ofPushMatrix();
-    //                glMultMatrixf(iter->mat.getPtr());
-    ofTranslate(bm.translation);
-    ofRotate(bm.r*180/PI);
-    ofScale(bm.sx, bm.sy);
-    
-    
-#ifndef TARGET_OPENGLES
-   doc->bitmapItems[bm.itemID].image.draw(0, 0);
-#else
-    doc->bitmapItems[bm.itemID].texture.draw();
-#endif
-    
-    
-    ofPopMatrix();
-    
-    glDisable(GL_SCISSOR_TEST);
+//    glEnable(GL_SCISSOR_TEST);
+//    ofRectangle &rect = bm.rect;
+//    
+//#ifndef TARGET_OPENGLES                   
+//    ofVec2f p = (ofVec2f(rect.x,rect.y+rect.height)+doc->offset)*doc->zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+//    
+//    glScissor(p.x, ofGetHeight()-p.y, rect.width*doc->zoom , rect.height*doc->zoom);
+//    
+//#else                    
+//    ofVec2f q = (ofVec2f(rect.x+rect.width,rect.y+rect.height)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+//    ofVec2f p = ofVec2f(ofGetHeight(),ofGetWidth())-ofVec2f(q.y,q.x);
+//    
+//    glScissor(p.x, p.y, rect.height*zoom , rect.width*zoom);
+//#endif
+//    
+//    
+//    
+//    
+//    ofPushMatrix();
+//    //                glMultMatrixf(iter->mat.getPtr());
+//    ofTranslate(bm.translation);
+//    ofRotate(bm.r*180/PI);
+//    ofScale(bm.sx, bm.sy);
+//    
+//    
+//#ifndef TARGET_OPENGLES
+//   doc->bitmapItems[bm.itemID].image.draw(0, 0);
+//#else
+//    doc->bitmapItems[bm.itemID].texture.draw();
+//#endif
+//    
+//    
+//    ofPopMatrix();
+//    
+//    glDisable(GL_SCISSOR_TEST);
 }
 
 
-void ofxSymbolItem::drawLayer(layer &ly) {
-    
-
+void ofxSymbolItem::drawLayer(instance &si,layer &ly) {
+    ofPushMatrix();
+    glMultMatrixf(si.mat.getPtr());
     for (vector<instance>::iterator iter=ly.instances.begin(); iter!=ly.instances.end(); iter++) {
-        ofPushMatrix();
-        ofTranslate(iter->translation);
-        ofScale(iter->scale, iter->scale);
+        
+//        ofTranslate(iter->translation);
+//        ofScale(iter->scale, iter->scale);
+//      
+        
         
         switch (iter->type) {
             case BITMAP_INSTANCE: {
+                ofPushMatrix();
+                glMultMatrixf(iter->mat.getPtr());
                 //            iter->texture.draw(iter->u,iter->v);
                 bitmapItem &item = doc->bitmapItems[iter->itemID];
 #ifndef TARGET_OPENGLES
@@ -501,17 +489,19 @@ void ofxSymbolItem::drawLayer(layer &ly) {
                 
                 item.texture.draw(item.uWidth,item.vHeight);
 #endif
+                
+                ofPopMatrix();
             } break;
             
             case SYMBOL_INSTANCE: {
                 //            iter->texture.draw(iter->u,iter->v);
                 ofxSymbolItem &item = doc->symbolItems[iter->itemID];
-                item.draw();
+                item.draw(*iter);
             } break;
                 
         }
 
-        ofPopMatrix();
+        
     }
     
      
@@ -568,17 +558,14 @@ void ofxSymbolItem::drawLayer(layer &ly) {
                     for (vector<ofVec2f>::iterator iter=liter->segments.begin(); iter!=liter->segments.end(); iter++) {
                         ofVertex(iter->x,iter->y);
                     }
-                    
+
                     ofEndShape();
                     ofPopStyle();
                     
                 };
                 
-                
-                
-                
                 if (!siter->bitmapFill.empty()) {
-                    drawBitmap(siter->bitmapFill.front());
+                    bitmapFill(siter->bitmapFill.front());
                     
                 }
             } else {
@@ -621,38 +608,81 @@ void ofxSymbolItem::drawLayer(layer &ly) {
                         
     }
     ofPopStyle();
+    
+    ofPopMatrix();
 }
 
-void ofxSymbolItem::draw() {
+void ofxSymbolItem::draw(instance &si) {
     for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-        drawLayer(*riter);
+        drawLayer(si,*riter);
     }
 }
 
-
-void ofxSymbolItem::hitTest(ofVec2f pos) {
-    cout << "testing" << endl;
+ofRectangle ofxSymbolItem::getBoundingBox() {
+//    cout << "bounding box" << endl;
+    ofRectangle rect(0,0,0,0);
     for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
         for (vector<instance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
             switch (iter->type) {
                 case BITMAP_INSTANCE: {
                     bitmapItem &item = doc->bitmapItems[iter->itemID];
-                    ofRectangle rect;
-                    rect.setFromCenter(iter->translation+0.5*iter->scale*ofVec2f(item.width,item.height),iter->scale*item.width,iter->scale*item.height);
-                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-                    if (getScreenRect(rect).inside(pos)) {
-                        cout << iter->itemID;
+                    ofVec2f p0 = iter->mat.preMult(ofVec3f(0,0,0));
+                    ofVec2f p1 = iter->mat.preMult(ofVec3f(item.width,item.height));
+                    
+                    if (rect.width==0 || rect.height==0) {
+                        rect = ofRectangle(p0.x,p0.y,p1.x-p0.x,p1.y-p0.y);
+                    } else {
+                        ofVec2f q0(rect.x,rect.y);
+                        ofVec2f q1(q0.x+rect.width,q0.y+rect.height);
+                        ofVec2f pos(MIN(p0.x,q0.x),MIN(p0.y,q0.y));
+                        rect = ofRectangle(pos.x,pos.y,MAX(p1.x,q1.x)-pos.x,MAX(p1.y,q1.y)-pos.y);
                     }
-                    cout << endl << endl;
-                } break;
-                case SYMBOL_INSTANCE:
+//                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
+                    
+                }
+                    
                     break;
+                    
+                default:
+                    break;
+            }
+        }
+    }
+    
+    return rect;
+}
+
+
+void ofxSymbolItem::hitTest(instance &si,ofVec2f pos) {
+//    cout << "testing" << endl;
+    pos = si.mat.getInverse().preMult(ofVec3f(pos));
+    
+    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+        for (vector<instance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
+            ofMatrix4x4 imat = iter->mat.getInverse();
+            ofVec2f wpos = imat.preMult(ofVec3f(pos));
+//            cout << wpos << "\t" << endl;
+            ofRectangle rect;
+            switch (iter->type) {
+                case BITMAP_INSTANCE: {
+                    bitmapItem &item = doc->bitmapItems[iter->itemID];
+                    rect =ofRectangle(0,0,item.width,item.height);
+                }   break;
+                case SYMBOL_INSTANCE: {
+                    ofxSymbolItem &item = doc->symbolItems[iter->itemID];
+                    rect =item.getBoundingBox();
+                }   break;
                     
                 default:
                     break;
                     
             }
-            
+//            cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
+            if (rect.inside(wpos)) { // need to add stage transform (getScreenRect)
+                cout << iter->itemID << "\t";
+            }
         }
     }
+    
+    cout << endl;
 }

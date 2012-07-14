@@ -24,6 +24,6 @@ class testApp : public ofBaseApp{
     
     
     ofxDocument doc;
-    int layoutID;
+    instance layout;
     		
 };
