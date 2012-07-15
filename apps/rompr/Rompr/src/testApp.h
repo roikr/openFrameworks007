@@ -6,7 +6,7 @@
 #include "ofxURLFileLoader.h"
 #include "ofxPenner.h"
 #include "ofxTransform.h"
-#include "ofxiStill.h"
+#include "ofxiStillCamera.h"
 #include "ofxiVolumeButtons.h"
 
 
@@ -53,6 +53,7 @@ public:
     void hideRecommendation();
     void urlResponse(ofxHttpResponse &response);
     
+    ofVec2f getScreenCoordinatesForLocation(ofxMapKitLocation location);
     ofxMapKitLocation getUserLocation();
 	    
     ofxiPhoneMapKit mapKit;
@@ -102,7 +103,7 @@ public:
    
     int state;
     
-    ofxiStill cam;
+    ofxiStillCamera cam;
     ofxiVolumeButtons volumeButtons;
     bool bStartCamera;
     bool bStopCamera;

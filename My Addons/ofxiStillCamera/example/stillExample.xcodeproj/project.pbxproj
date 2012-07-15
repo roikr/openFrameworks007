@@ -22,9 +22,9 @@
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
 		E41D421413B3A95300A75A5D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
+		E44BC49A15B2C48500CD7BBD /* ofxiStillCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC46915B2C48500CD7BBD /* ofxiStillCamera.mm */; };
+		E44BC49B15B2C48500CD7BBD /* StillCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = E44BC46B15B2C48500CD7BBD /* StillCamera.m */; };
 		E45CC4B115A635B600864B84 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45CC4B015A635B600864B84 /* AssetsLibrary.framework */; };
-		E4B0492A15A58B3400B7BEAB /* ofxiStill.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4B0492915A58B3400B7BEAB /* ofxiStill.mm */; };
-		E4B0493015A5948300B7BEAB /* StillCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B0492F15A5948300B7BEAB /* StillCamera.m */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -67,12 +67,12 @@
 		E41D400813B39D2100A75A5D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		E41D400913B39D2100A75A5D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iPhone+OF Lib.xcodeproj"; path = "../../../libs/openFrameworksCompiled/project/iphone/iPhone+OF Lib.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		E44BC46815B2C48500CD7BBD /* ofxiStillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiStillCamera.h; sourceTree = "<group>"; };
+		E44BC46915B2C48500CD7BBD /* ofxiStillCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiStillCamera.mm; sourceTree = "<group>"; };
+		E44BC46A15B2C48500CD7BBD /* StillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillCamera.h; sourceTree = "<group>"; };
+		E44BC46B15B2C48500CD7BBD /* StillCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
 		E45CC4B015A635B600864B84 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E4B0492815A588CC00B7BEAB /* ofxiStill.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxiStill.h; sourceTree = "<group>"; };
-		E4B0492915A58B3400B7BEAB /* ofxiStill.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiStill.mm; sourceTree = "<group>"; };
-		E4B0492E15A5948300B7BEAB /* StillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillCamera.h; sourceTree = "<group>"; };
-		E4B0492F15A5948300B7BEAB /* StillCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -156,7 +156,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E4B0491A15A588AD00B7BEAB /* SharedCode */,
+				E44BC42315B2C48500CD7BBD /* ofxiStillCamera */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -199,22 +199,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E4B0491A15A588AD00B7BEAB /* SharedCode */ = {
+		E44BC42315B2C48500CD7BBD /* ofxiStillCamera */ = {
 			isa = PBXGroup;
 			children = (
-				E4B0491B15A588AD00B7BEAB /* src */,
+				E44BC46715B2C48500CD7BBD /* src */,
 			);
-			name = SharedCode;
-			path = ../SharedCode;
+			name = ofxiStillCamera;
+			path = ..;
 			sourceTree = "<group>";
 		};
-		E4B0491B15A588AD00B7BEAB /* src */ = {
+		E44BC46715B2C48500CD7BBD /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4B0492815A588CC00B7BEAB /* ofxiStill.h */,
-				E4B0492915A58B3400B7BEAB /* ofxiStill.mm */,
-				E4B0492E15A5948300B7BEAB /* StillCamera.h */,
-				E4B0492F15A5948300B7BEAB /* StillCamera.m */,
+				E44BC46815B2C48500CD7BBD /* ofxiStillCamera.h */,
+				E44BC46915B2C48500CD7BBD /* ofxiStillCamera.mm */,
+				E44BC46A15B2C48500CD7BBD /* StillCamera.h */,
+				E44BC46B15B2C48500CD7BBD /* StillCamera.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -329,8 +329,8 @@
 			files = (
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E4B0492A15A58B3400B7BEAB /* ofxiStill.mm in Sources */,
-				E4B0493015A5948300B7BEAB /* StillCamera.m in Sources */,
+				E44BC49A15B2C48500CD7BBD /* ofxiStillCamera.mm in Sources */,
+				E44BC49B15B2C48500CD7BBD /* StillCamera.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

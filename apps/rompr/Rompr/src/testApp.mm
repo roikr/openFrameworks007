@@ -68,6 +68,8 @@ void testApp::setup(){
     ofxiPhoneSetGLViewTransparent(true);
     ofxiPhoneSetGLViewUserInteraction(false);
     
+    cout << "of: " << ofGetWidth() <<"\t" << ofGetHeight() << endl;
+    
     mapKit.open();
     
     coreLocation.startLocation();
@@ -343,11 +345,11 @@ void testApp::calcItems() {
         float scale = blockWidth/max(width,height);
         
         if (iter->count>1) {
-            scale *= 0.5;
+            scale *= 0.5 ;
             pos = iter->gridPos*MAP_BLOCK_WIDTH - ofVec2f(mapRect.origin.x,mapRect.origin.y);
-            pos = ofVec2f(pos.x*ofGetWidth()/mapRect.size.width, pos.y*ofGetHeight()/mapRect.size.height)+0.5*blockWidth*ofVec2f(cos(iter->angle*PI/180.0),sin(iter->angle*PI/180.0));
+            pos = ofVec2f(pos.x*ofGetWidth()/mapRect.size.width, pos.y*ofGetHeight()/mapRect.size.height)* [[UIScreen mainScreen] scale] +0.5*blockWidth*ofVec2f(cos(iter->angle*PI/180.0),sin(iter->angle*PI/180.0));
         } else {
-            pos = mapKit.getScreenCoordinatesForLocation(iter->location.latitude, iter->location.longitude);
+            pos = getScreenCoordinatesForLocation(iter->location);
         }
         iter->rect.setFromCenter(pos, width*scale, height*scale);
     }
@@ -578,6 +580,12 @@ void testApp::urlResponse(ofxHttpResponse &response) {
     } 
 }
 
+ofVec2f testApp::getScreenCoordinatesForLocation(ofxMapKitLocation location) {
+    CGPoint cgPoint = [mapKit.getMKMapView() convertCoordinate:location toPointToView:nil];
+    
+	return ofVec2f(cgPoint.x, cgPoint.y) *[[UIScreen mainScreen] scale] ;
+}
+
 ofxMapKitLocation testApp::getUserLocation() {
 //    return mapKit.getMKMapView().userLocation.location.coordinate;
     
@@ -726,7 +734,7 @@ void testApp::draw(){
            
     if (image.isAllocated()) {
         ofPushMatrix();
-        ofTranslate(mapKit.getScreenCoordinatesForLocation(imageLocation.latitude, imageLocation.longitude));
+        ofTranslate(getScreenCoordinatesForLocation(imageLocation));
         
         float scale = blockWidth/max(image.getWidth(),image.getHeight());
         ofScale(scale, scale);
@@ -743,7 +751,7 @@ void testApp::draw(){
     
     
     ofPushMatrix();
-    ofTranslate(mapKit.getScreenCoordinatesForLocation(getUserLocation().latitude, getUserLocation().longitude));
+    ofTranslate(getScreenCoordinatesForLocation(getUserLocation()));
     
     float scale = 0.25*blockWidth/max(logo.getWidth(),logo.getHeight());
     ofScale(scale, scale);
@@ -778,8 +786,7 @@ void testApp::draw(){
     
         xform.begin();
 
-        float width = ofGetHeight(); 
-        float height = cam.getHeight() ? width/cam.getWidth()*cam.getHeight() : 270;
+        
         
         ofEnableAlphaBlending();
         ofSetColor(0, 0, 0,200);
@@ -790,6 +797,8 @@ void testApp::draw(){
         ofSetColor(255, 255, 255,255);
         
         if (cam.getIsFrameVisible()) {
+            float width = ofGetHeight(); 
+            float height = width/cam.getWidth()*cam.getHeight() ;
             cam.draw(ofRectangle(-width/2,-height/2,width,height), ofRectangle(0,0,1,1));
         } 
         

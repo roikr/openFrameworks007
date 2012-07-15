@@ -12,11 +12,11 @@ void testApp::setup(){
 	ofxiPhoneAlerts.addListener(this);
 	
 	//If you want a landscape oreintation 
-	//iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
+	iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
 	
 	ofBackground(127,127,127);
     
-    ofSetFrameRate(60);
+
 }
 
 //--------------------------------------------------------------
@@ -26,17 +26,13 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	float aspectRatio = cam.getWidth()/cam.getHeight();
-    float width = ofGetHeight()*aspectRatio;
-    ofRectangle rect((ofGetWidth() - width)/2,0,width,ofGetHeight());
+	
     
-    if (cam.getIsPlaying()) {
-        cam.draw(rect, ofRectangle(0,0,1,1));
-    } else {
-        if (cam.image.isAllocated()) {
-            cam.image.draw(0, 0);
-        }
-    }
+    if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
+        float width = ofGetWidth(); 
+        float height = width/cam.getWidth()*cam.getHeight();
+        cam.draw(ofRectangle(0,0,width,height), ofRectangle(0,0,1,1));
+    } 
     
 	
     glColor4f(1,1,1,1);
@@ -104,3 +100,6 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 
 }
 
+void testApp::pictureTaken(ofImage &image) {
+    cout << "pictureTaken: " << image.getWidth() << "\t" << image.getHeight() << endl;
+}

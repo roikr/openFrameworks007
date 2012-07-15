@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
-#include "ofxiStill.h"
+#include "ofxiStillCamera.h"
 
 class testApp : public ofxiPhoneApp {
 	
@@ -23,8 +23,10 @@ public:
 	void gotFocus();
 	void gotMemoryWarning();
 	void deviceOrientationChanged(int newOrientation);
+    
+    void pictureTaken(ofImage &image);
 
-    ofxiStill cam;
+    ofxiStillCamera cam;
 };
 
 

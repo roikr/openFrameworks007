@@ -1,3 +1,4 @@
 1. start camera on double tap (add splash texture till playing)
 2. remove apple user locator
 3. prediction
+4. retina display issues [[UIScreen mainScreen] scale]
