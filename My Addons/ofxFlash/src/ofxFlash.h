@@ -139,16 +139,18 @@ struct bitmapItem {
     int frameBottom;
     
     
-    //    ofxiTexture texture;
-    float u; // width and height from 0 to 1
-    float v;
+
     
-#ifndef TARGET_OPENGLES
+
     ofImage image;
-#else
+#ifdef TARGET_OPENGLES
     ofxiTexture texture;
     float uWidth; // width and height from 0 to 1
     float vHeight;
+    
+    //    ofxiTexture texture;
+    float u; // width and height from 0 to 1
+    float v;
     
     //#ifndef TARGET_OPENGLES
     //    ofImage image;

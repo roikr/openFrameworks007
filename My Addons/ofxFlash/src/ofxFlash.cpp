@@ -74,13 +74,22 @@ void ofxDocument::load() {
         
         //            cout << iter->href << " loaded" <<endl;
 #else
+        ofFile file = ofFile(ofToDataPath("LIBRARY/"+iter->href));
+        if (file.exists()) {
+            cout << iter->href << ": " << iter->image.loadImage("LIBRARY/"+iter->href) << endl;
+        } else {
+            file = ofFile(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
+            if (file.exists()) {
+                cout << "load pvr for: " << file.getAbsolutePath();
+                iter->texture.load(file.getAbsolutePath());
+                iter->uWidth = iter->width/(float)iter->texture._width;
+                iter->vHeight =  iter->height/(float)iter->texture._height;
+            } else {
+                cout << "no pvr for: " << file.getAbsolutePath();
+            }
+        }
+ //        ofFile file = ofFile(iter->sourceExternalFilepath);
         
-        ofFile file = ofFile("LIBRARY/"+iter->href);
-//        ofFile file = ofFile(iter->sourceExternalFilepath);
-        iter->texture.load(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
-        
-        iter->uWidth = iter->width/(float)iter->texture._width;
-        iter->vHeight =  iter->height/(float)iter->texture._height;
         
 #endif
         
@@ -113,9 +122,8 @@ void ofxDocument::load() {
 
 void ofxDocument::release() {
     for (vector<bitmapItem>::iterator iter=bitmapItems.begin(); iter!=bitmapItems.end(); iter++) {
-#ifndef TARGET_OPENGLES
         iter->image.clear();
-#else
+#ifdef TARGET_OPENGLES
         iter->texture.release();
 #endif
         
@@ -487,8 +495,12 @@ void ofxSymbolItem::drawLayer(instance &si,layer &ly) {
 #ifndef TARGET_OPENGLES
                 item.image.draw(0, 0);
 #else
-                
-                item.texture.draw(item.uWidth,item.vHeight);
+                if (item.image.bAllocated()) {
+                    item.image.draw(0, 0);
+                } else {
+                    item.texture.draw(item.uWidth,item.vHeight);
+                }
+            
 #endif
                 
                 ofPopMatrix();
