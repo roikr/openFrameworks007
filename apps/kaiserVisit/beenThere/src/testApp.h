@@ -5,6 +5,8 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxScrollCollection.h"
 #include "ofxDraggable.h"
+#include "ofxiStillCamera.h"
+#include "ofxFlash.h"
 
 struct item {
     int objectNum;
@@ -24,7 +26,9 @@ public:
 	void touchUp(ofTouchEventArgs &touch);
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
-	
+    
+    void pictureTaken(ofImage &image);
+    
     ofxScrollCollection images;
     ofxScrollCollection objects;
     
@@ -39,5 +43,9 @@ public:
     ofImage scratch;
     ofImage photo;
     
+    ofxiStillCamera cam;
+    
+    ofxDocument doc;
+    instance camera;
     
 };

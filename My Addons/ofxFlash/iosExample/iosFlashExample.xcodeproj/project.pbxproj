@@ -22,19 +22,15 @@
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
 		E41D421413B3A95300A75A5D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
-		E44BC5C015B2CF2600CD7BBD /* ofxiStillCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC58615B2CF2500CD7BBD /* ofxiStillCamera.mm */; };
-		E44BC5C115B2CF2600CD7BBD /* StillCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = E44BC58815B2CF2500CD7BBD /* StillCamera.m */; };
-		E44BC7D415B2D6B900CD7BBD /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC6E615B2D6B800CD7BBD /* ofxFlash.cpp */; };
-		E44BC7E015B2D70400CD7BBD /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7DF15B2D70400CD7BBD /* ofxiTexture.mm */; };
-		E44BC7EB15B2D84F00CD7BBD /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E44BC7E215B2D84F00CD7BBD /* install.xml */; };
-		E44BC7EC15B2D84F00CD7BBD /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E415B2D84F00CD7BBD /* tinyxml.cpp */; };
-		E44BC7ED15B2D84F00CD7BBD /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E615B2D84F00CD7BBD /* tinyxmlerror.cpp */; };
-		E44BC7EE15B2D84F00CD7BBD /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */; };
-		E44BC7EF15B2D84F00CD7BBD /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */; };
-		E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */; };
+		E44BC3CE15B2A19B00CD7BBD /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC33115B2A19B00CD7BBD /* ofxFlash.cpp */; };
+		E44BC3DC15B2A22A00CD7BBD /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E44BC3D315B2A22A00CD7BBD /* install.xml */; };
+		E44BC3DD15B2A22A00CD7BBD /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3D515B2A22A00CD7BBD /* tinyxml.cpp */; };
+		E44BC3DE15B2A22A00CD7BBD /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3D715B2A22A00CD7BBD /* tinyxmlerror.cpp */; };
+		E44BC3DF15B2A22A00CD7BBD /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3D815B2A22A00CD7BBD /* tinyxmlparser.cpp */; };
+		E44BC3E015B2A22A00CD7BBD /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3DA15B2A22A00CD7BBD /* ofxXmlSettings.cpp */; };
+		E44BC3E515B2A35C00CD7BBD /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3E415B2A35C00CD7BBD /* ofxiTexture.mm */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
-		E4DF99D8159A08CE003F8AB3 /* ofxDraggable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DF99D6159A08CD003F8AB3 /* ofxDraggable.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +52,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* beenThere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = beenThere.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* iosFlashExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosFlashExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
@@ -75,33 +71,21 @@
 		E41D400813B39D2100A75A5D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		E41D400913B39D2100A75A5D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iPhone+OF Lib.xcodeproj"; path = "../../../libs/openFrameworksCompiled/project/iphone/iPhone+OF Lib.xcodeproj"; sourceTree = SOURCE_ROOT; };
-		E44BC57F15B2CF2500CD7BBD /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
-		E44BC58015B2CF2500CD7BBD /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
-		E44BC58515B2CF2500CD7BBD /* ofxiStillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiStillCamera.h; sourceTree = "<group>"; };
-		E44BC58615B2CF2500CD7BBD /* ofxiStillCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiStillCamera.mm; sourceTree = "<group>"; };
-		E44BC58715B2CF2500CD7BBD /* StillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillCamera.h; sourceTree = "<group>"; };
-		E44BC58815B2CF2500CD7BBD /* StillCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
-		E44BC6E315B2D6B800CD7BBD /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
-		E44BC6E415B2D6B800CD7BBD /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
-		E44BC6E615B2D6B800CD7BBD /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlash.cpp; sourceTree = "<group>"; };
-		E44BC6E715B2D6B800CD7BBD /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
-		E44BC7DE15B2D70400CD7BBD /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
-		E44BC7DF15B2D70400CD7BBD /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
-		E44BC7E215B2D84F00CD7BBD /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
-		E44BC7E415B2D84F00CD7BBD /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
-		E44BC7E515B2D84F00CD7BBD /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
-		E44BC7E615B2D84F00CD7BBD /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
-		E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
-		E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
-		E44BC7EA15B2D84F00CD7BBD /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
-		E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxScrollCollection.h; sourceTree = "<group>"; };
-		E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxScrollCollection.cpp; sourceTree = "<group>"; };
+		E44BC33115B2A19B00CD7BBD /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlash.cpp; sourceTree = "<group>"; };
+		E44BC33215B2A19B00CD7BBD /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
+		E44BC3D315B2A22A00CD7BBD /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
+		E44BC3D515B2A22A00CD7BBD /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		E44BC3D615B2A22A00CD7BBD /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		E44BC3D715B2A22A00CD7BBD /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		E44BC3D815B2A22A00CD7BBD /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		E44BC3DA15B2A22A00CD7BBD /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
+		E44BC3DB15B2A22A00CD7BBD /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		E44BC3E315B2A35C00CD7BBD /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
+		E44BC3E415B2A35C00CD7BBD /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
-		E4DF99D6159A08CD003F8AB3 /* ofxDraggable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDraggable.cpp; sourceTree = "<group>"; };
-		E4DF99D7159A08CD003F8AB3 /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,7 +115,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* beenThere.app */,
+				1D6058910D05DD3D006BFB54 /* iosFlashExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -180,11 +164,9 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E44BC7E115B2D84F00CD7BBD /* ofxXmlSettings */,
-				E44BC7DC15B2D70400CD7BBD /* ofxiTexture */,
-				E44BC5CC15B2D6B700CD7BBD /* ofxFlash */,
-				E44BC53B15B2CF2500CD7BBD /* ofxiStillCamera */,
-				E40A07AE1589DED10033811A /* SharedCode */,
+				E44BC26415B2A19B00CD7BBD /* ofxFlash */,
+				E44BC3E115B2A35C00CD7BBD /* ofxiTexture */,
+				E44BC3D215B2A22A00CD7BBD /* ofxXmlSettings */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -219,26 +201,6 @@
 			name = core;
 			sourceTree = "<group>";
 		};
-		E40A07AE1589DED10033811A /* SharedCode */ = {
-			isa = PBXGroup;
-			children = (
-				E40A07AF1589DED10033811A /* src */,
-			);
-			name = SharedCode;
-			path = ../SharedCode;
-			sourceTree = "<group>";
-		};
-		E40A07AF1589DED10033811A /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4DF99D6159A08CD003F8AB3 /* ofxDraggable.cpp */,
-				E4DF99D7159A08CD003F8AB3 /* ofxDraggable.h */,
-				E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */,
-				E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		E41D40FE13B3A0D800A75A5D /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,125 +209,69 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E44BC53B15B2CF2500CD7BBD /* ofxiStillCamera */ = {
+		E44BC26415B2A19B00CD7BBD /* ofxFlash */ = {
 			isa = PBXGroup;
 			children = (
-				E44BC53C15B2CF2500CD7BBD /* example */,
-				E44BC58415B2CF2500CD7BBD /* src */,
-			);
-			name = ofxiStillCamera;
-			path = "../../../My Addons/ofxiStillCamera";
-			sourceTree = "<group>";
-		};
-		E44BC53C15B2CF2500CD7BBD /* example */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC57D15B2CF2500CD7BBD /* src */,
-			);
-			path = example;
-			sourceTree = "<group>";
-		};
-		E44BC57D15B2CF2500CD7BBD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC57F15B2CF2500CD7BBD /* testApp.h */,
-				E44BC58015B2CF2500CD7BBD /* testApp.mm */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E44BC58415B2CF2500CD7BBD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC58515B2CF2500CD7BBD /* ofxiStillCamera.h */,
-				E44BC58615B2CF2500CD7BBD /* ofxiStillCamera.mm */,
-				E44BC58715B2CF2500CD7BBD /* StillCamera.h */,
-				E44BC58815B2CF2500CD7BBD /* StillCamera.m */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E44BC5CC15B2D6B700CD7BBD /* ofxFlash */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC65E15B2D6B700CD7BBD /* iosExample */,
-				E44BC6E515B2D6B800CD7BBD /* src */,
+				E44BC33015B2A19B00CD7BBD /* src */,
 			);
 			name = ofxFlash;
-			path = "../../../My Addons/ofxFlash";
+			path = ..;
 			sourceTree = "<group>";
 		};
-		E44BC65E15B2D6B700CD7BBD /* iosExample */ = {
+		E44BC33015B2A19B00CD7BBD /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E44BC6E115B2D6B800CD7BBD /* src */,
-			);
-			path = iosExample;
-			sourceTree = "<group>";
-		};
-		E44BC6E115B2D6B800CD7BBD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC6E315B2D6B800CD7BBD /* testApp.h */,
-				E44BC6E415B2D6B800CD7BBD /* testApp.mm */,
+				E44BC33115B2A19B00CD7BBD /* ofxFlash.cpp */,
+				E44BC33215B2A19B00CD7BBD /* ofxFlash.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
 		};
-		E44BC6E515B2D6B800CD7BBD /* src */ = {
+		E44BC3D215B2A22A00CD7BBD /* ofxXmlSettings */ = {
 			isa = PBXGroup;
 			children = (
-				E44BC6E615B2D6B800CD7BBD /* ofxFlash.cpp */,
-				E44BC6E715B2D6B800CD7BBD /* ofxFlash.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E44BC7DC15B2D70400CD7BBD /* ofxiTexture */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC7DD15B2D70400CD7BBD /* src */,
-			);
-			name = ofxiTexture;
-			path = "../../../My Addons/ofxiTexture";
-			sourceTree = "<group>";
-		};
-		E44BC7DD15B2D70400CD7BBD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC7DE15B2D70400CD7BBD /* ofxiTexture.h */,
-				E44BC7DF15B2D70400CD7BBD /* ofxiTexture.mm */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E44BC7E115B2D84F00CD7BBD /* ofxXmlSettings */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC7E215B2D84F00CD7BBD /* install.xml */,
-				E44BC7E315B2D84F00CD7BBD /* libs */,
-				E44BC7E815B2D84F00CD7BBD /* src */,
+				E44BC3D315B2A22A00CD7BBD /* install.xml */,
+				E44BC3D415B2A22A00CD7BBD /* libs */,
+				E44BC3D915B2A22A00CD7BBD /* src */,
 			);
 			name = ofxXmlSettings;
 			path = ../../../addons/ofxXmlSettings;
 			sourceTree = "<group>";
 		};
-		E44BC7E315B2D84F00CD7BBD /* libs */ = {
+		E44BC3D415B2A22A00CD7BBD /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				E44BC7E415B2D84F00CD7BBD /* tinyxml.cpp */,
-				E44BC7E515B2D84F00CD7BBD /* tinyxml.h */,
-				E44BC7E615B2D84F00CD7BBD /* tinyxmlerror.cpp */,
-				E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */,
+				E44BC3D515B2A22A00CD7BBD /* tinyxml.cpp */,
+				E44BC3D615B2A22A00CD7BBD /* tinyxml.h */,
+				E44BC3D715B2A22A00CD7BBD /* tinyxmlerror.cpp */,
+				E44BC3D815B2A22A00CD7BBD /* tinyxmlparser.cpp */,
 			);
 			path = libs;
 			sourceTree = "<group>";
 		};
-		E44BC7E815B2D84F00CD7BBD /* src */ = {
+		E44BC3D915B2A22A00CD7BBD /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */,
-				E44BC7EA15B2D84F00CD7BBD /* ofxXmlSettings.h */,
+				E44BC3DA15B2A22A00CD7BBD /* ofxXmlSettings.cpp */,
+				E44BC3DB15B2A22A00CD7BBD /* ofxXmlSettings.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E44BC3E115B2A35C00CD7BBD /* ofxiTexture */ = {
+			isa = PBXGroup;
+			children = (
+				E44BC3E215B2A35C00CD7BBD /* src */,
+			);
+			name = ofxiTexture;
+			path = ../../ofxiTexture;
+			sourceTree = "<group>";
+		};
+		E44BC3E215B2A35C00CD7BBD /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E44BC3E315B2A35C00CD7BBD /* ofxiTexture.h */,
+				E44BC3E415B2A35C00CD7BBD /* ofxiTexture.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -383,9 +289,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* beenThere */ = {
+		1D6058900D05DD3D006BFB54 /* iosFlashExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "beenThere" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iosFlashExample" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -397,9 +303,9 @@
 			dependencies = (
 				E41D410413B3A11300A75A5D /* PBXTargetDependency */,
 			);
-			name = beenThere;
+			name = iosFlashExample;
 			productName = iPhone;
-			productReference = 1D6058910D05DD3D006BFB54 /* beenThere.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* iosFlashExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -410,7 +316,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "beenThere" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iosFlashExample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -430,7 +336,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* beenThere */,
+				1D6058900D05DD3D006BFB54 /* iosFlashExample */,
 			);
 		};
 /* End PBXProject section */
@@ -452,7 +358,7 @@
 			files = (
 				BB24DD8F10DA77E000E9C588 /* Default.png in Resources */,
 				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
-				E44BC7EB15B2D84F00CD7BBD /* install.xml in Resources */,
+				E44BC3DC15B2A22A00CD7BBD /* install.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,16 +387,12 @@
 			files = (
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */,
-				E4DF99D8159A08CE003F8AB3 /* ofxDraggable.cpp in Sources */,
-				E44BC5C015B2CF2600CD7BBD /* ofxiStillCamera.mm in Sources */,
-				E44BC5C115B2CF2600CD7BBD /* StillCamera.m in Sources */,
-				E44BC7D415B2D6B900CD7BBD /* ofxFlash.cpp in Sources */,
-				E44BC7E015B2D70400CD7BBD /* ofxiTexture.mm in Sources */,
-				E44BC7EC15B2D84F00CD7BBD /* tinyxml.cpp in Sources */,
-				E44BC7ED15B2D84F00CD7BBD /* tinyxmlerror.cpp in Sources */,
-				E44BC7EE15B2D84F00CD7BBD /* tinyxmlparser.cpp in Sources */,
-				E44BC7EF15B2D84F00CD7BBD /* ofxXmlSettings.cpp in Sources */,
+				E44BC3CE15B2A19B00CD7BBD /* ofxFlash.cpp in Sources */,
+				E44BC3DD15B2A22A00CD7BBD /* tinyxml.cpp in Sources */,
+				E44BC3DE15B2A22A00CD7BBD /* tinyxmlerror.cpp in Sources */,
+				E44BC3DF15B2A22A00CD7BBD /* tinyxmlparser.cpp in Sources */,
+				E44BC3E015B2A22A00CD7BBD /* ofxXmlSettings.cpp in Sources */,
+				E44BC3E515B2A35C00CD7BBD /* ofxiTexture.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,7 +414,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = beenThere;
+				PRODUCT_NAME = iosFlashExample;
 			};
 			name = Debug;
 		};
@@ -522,7 +424,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = beenThere;
+				PRODUCT_NAME = iosFlashExample;
 			};
 			name = Release;
 		};
@@ -549,7 +451,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Debug;
@@ -574,66 +476,28 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Release;
 		};
-		E434642F15A1BAA800534614 /* Ad Hoc */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E41D3ED613B38FB500A75A5D /* Project.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roee Kremer";
-				COMPRESS_PNG_FILES = NO;
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_DYNAMIC_NO_PIC = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
-				ONLY_ACTIVE_ARCH = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CFC8F73B-9E8B-4010-B1BF-F8DA7F61B27A";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WARNING_LDFLAGS = "-no_arch_warnings";
-			};
-			name = "Ad Hoc";
-		};
-		E434643015A1BAA800534614 /* Ad Hoc */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
-				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = beenThere;
-			};
-			name = "Ad Hoc";
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "beenThere" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iosFlashExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
-				E434643015A1BAA800534614 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "beenThere" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iosFlashExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
-				E434642F15A1BAA800534614 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

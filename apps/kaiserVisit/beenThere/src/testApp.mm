@@ -1,6 +1,7 @@
 #include "testApp.h"
 
 enum {
+    STATE_CAMERA,
     STATE_IMAGES,
     STATE_OBJECTS
 };
@@ -21,12 +22,14 @@ void testApp::setup(){
 
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
     
+    ofxRegisterStillCameraNotification(this);
+    
     images.setup(scrollCollectionPrefs(true,ofRectangle(ofGetWidth()-100,0,100, ofGetHeight()),20,20,5,0x00FF00,100));
     objects.setup(scrollCollectionPrefs(true,ofRectangle(ofGetWidth()-100,0,100, ofGetHeight()),20,20,5,0x00FF00,100));
     
     ofDirectory dir;
     dir.allowExt("jpg");
-    dir.listDir("images");
+    dir.listDir(ofxiPhoneGetDocumentsDirectory());
     for (int i=0; i<dir.numFiles(); i++) {
         images.addItem(dir.getPath(i));
     }
@@ -38,10 +41,29 @@ void testApp::setup(){
         objects.addItem(dir.getPath(i));
     }
     
-    state = STATE_IMAGES;
+    state = STATE_CAMERA;
     bTouchObject = false;
     
     scratch.loadImage("SCRATCHES_OVERLAY.png");
+    
+    doc.setup("DOMDocument.xml");
+    
+    camera.itemID = doc.itemsMap["Start"];
+    camera.mat.makeIdentityMatrix();
+    
+    cout << ofxNSStringToString([[UIDevice currentDevice] model]) << endl;
+    cout << iPhoneGetDeviceType() << endl;
+    
+    
+    
+    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
+        camera.mat.translate(64, 0, 0);
+        camera.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
+    }
+    
+    doc.load();
+    
+    cam.preview();
     
 }
 
@@ -51,7 +73,7 @@ void testApp::update(){
    
     images.update();
     objects.update();
-    
+    cam.update();
   
 }
 
@@ -78,6 +100,14 @@ void testApp::draw(){
 
     
     switch (state) {
+        case STATE_CAMERA: {
+            doc.symbolItems[camera.itemID].draw(camera);
+            if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
+                float width = ofGetWidth(); 
+                float height = width/cam.getWidth()*cam.getHeight();
+                cam.draw(ofRectangle(0,0.5*(ofGetHeight()-height),width,height), ofRectangle(0,0,1,1));
+            } 
+        } break;
         case STATE_IMAGES:
             images.draw();
             break;
@@ -122,7 +152,21 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         
     
     switch (state) {
+        case STATE_CAMERA: {
+            vector<instance> items = doc.symbolItems[camera.itemID].hitTest(camera,ofVec2f(touch.x,touch.y));
+            
+            for (vector<instance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+                cout << iter->itemID << "\t";
+                if (iter->type == SYMBOL_INSTANCE) {
+                    cout << iter->name << "\t";
+                }
+            }
+            
+            cout << endl;
+
+        } break;
         case STATE_IMAGES:
+           
             images.touchDown(touch);
             break;
         case STATE_OBJECTS: {
@@ -223,6 +267,9 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
     if (ofRectangle(0, 0, 100, 20).inside(ofVec2f(touch.x,touch.y))) {
         
         switch (state) {
+            case STATE_CAMERA:
+                cam.snap();
+                break;
             case STATE_IMAGES:
                 state=STATE_OBJECTS;
                 break;
@@ -245,3 +292,16 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 
 }
 
+void testApp::pictureTaken(ofImage &image) {
+    cout << "pictureTaken: " << image.getWidth() << "\t" << image.getHeight() << endl;
+    ofDirectory dir;
+    
+    dir.allowExt("jpg");
+    dir.listDir(ofxiPhoneGetDocumentsDirectory());
+    string filename = ofxiPhoneGetDocumentsDirectory()+"IMAGE_"+ofToString(dir.numFiles())+".jpg";
+    cout<<filename << endl;
+    image.saveImage(filename);
+    images.addItem(filename);
+    state = STATE_IMAGES;
+    cam.stop();
+}
