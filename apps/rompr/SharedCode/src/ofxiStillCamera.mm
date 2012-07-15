@@ -1,12 +1,12 @@
 //
-//  ofxiStill.mm
+//  ofxiStillCamera.mm
 //  stillExample
 //
 //  Created by Roee Kremer on 7/5/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#include "ofxiStill.h"
+#include "ofxiStillCamera.h"
 
 #include "StillCamera.h"
 #include "ofxiPhoneExtras.h"
@@ -15,7 +15,7 @@ float angleOffsetFromPortraitOrientation(AVCaptureVideoOrientation orientation);
 
 ofEvent<ofImage> ofxiStillCameraEvent;
 
-void ofxiStill::preview() {
+void ofxiStillCamera::preview() {
     
     
     //-- Create CVOpenGLESTextureCacheRef for optimal CVImageBufferRef to GLES texture conversion.
@@ -37,7 +37,7 @@ void ofxiStill::preview() {
     
 }
 
-void ofxiStill::snap() {
+void ofxiStillCamera::snap() {
     if (bPlaying && ![stillCamera isCapturingStillImage]) {
 //        image.clear();
         
@@ -53,7 +53,7 @@ void ofxiStill::snap() {
     }
 }
 
-void ofxiStill::stop() {
+void ofxiStillCamera::stop() {
     if (bPlaying) {
         
         cleanUpTextures();
@@ -78,7 +78,7 @@ void ofxiStill::stop() {
 
 
 
-void ofxiStill::update() {
+void ofxiStillCamera::update() {
 	
     if (stillCamera == NULL) {
         return;
@@ -187,7 +187,7 @@ void ofxiStill::update() {
 
 
 
-void ofxiStill::draw(ofRectangle rect,ofRectangle tex) {
+void ofxiStillCamera::draw(ofRectangle rect,ofRectangle tex) {
 	if (!videoTexture) {
         return;
 	}
@@ -239,17 +239,17 @@ void ofxiStill::draw(ofRectangle rect,ofRectangle tex) {
     glFlush();
 }
 
-void ofxiStill::bind() {
+void ofxiStillCamera::bind() {
     glBindTexture(CVOpenGLESTextureGetTarget(videoTexture), CVOpenGLESTextureGetName(videoTexture));
     
 	
 }
 
-void ofxiStill::unbind() {
+void ofxiStillCamera::unbind() {
     glBindTexture(CVOpenGLESTextureGetTarget(videoTexture), 0);
 }
 
-void ofxiStill::cleanUpTextures()
+void ofxiStillCamera::cleanUpTextures()
 {    
     if (videoTexture)
     {
@@ -263,24 +263,24 @@ void ofxiStill::cleanUpTextures()
 
 
 
-float ofxiStill::getFrameRate() {
+float ofxiStillCamera::getFrameRate() {
 	return stillCamera ? stillCamera.videoFrameRate : 0;
 }
 
 
-float ofxiStill::getWidth() {
+float ofxiStillCamera::getWidth() {
 	return width;
 }
 
-float ofxiStill::getHeight() {
+float ofxiStillCamera::getHeight() {
 	return height;
 }
 
-bool ofxiStill::getIsPlaying() {
+bool ofxiStillCamera::getIsPlaying() {
 	return bPlaying;
 }
 
-bool ofxiStill::getIsFrameVisible() {
+bool ofxiStillCamera::getIsFrameVisible() {
     return videoTexture;
 }
 

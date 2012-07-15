@@ -1,5 +1,5 @@
 //
-//  ofxiStill.h
+//  ofxiStillCamera.h
 //  stillExample
 //
 //  Created by Roee Kremer on 7/5/12.
@@ -26,7 +26,7 @@ void ofxUnregisterStillCameraNotification(T * obj){
 
 @class StillCamera;
 
-class ofxiStill {
+class ofxiStillCamera {
 	
 public:
 	
