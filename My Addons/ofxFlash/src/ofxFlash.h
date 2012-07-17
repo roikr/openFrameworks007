@@ -16,7 +16,15 @@
 
 #define PIXEL_SCALE 20.0
 
+enum {
+    SYMBOL_INSTANCE,
+    BITMAP_INSTANCE
+};
+
+
 class ofxDocument;
+class ofxSymbolInstance;
+class ofxSymbolItem;
 
 struct curvePath {
     ofVec2f p0;
@@ -30,21 +38,6 @@ struct linePath {
     bool bClosed;
 };
 
-struct bitmap {
-    
-//    string path;
-    int itemID;
-//    string href;
-    
-    ofMatrix4x4 mat;
-    
-    ofVec2f translation;
-    float sx;
-    float sy;
-    float r;
-        
-    ofRectangle rect;
-};
 
 struct shape {
     vector<curvePath> curve;
@@ -52,7 +45,7 @@ struct shape {
     
     vector<int> solidColorStroke;
     vector<int> solidColorFill;
-    vector<bitmap> bitmapFill;
+    vector<ofxSymbolInstance> bitmapFill;
     
 };
 
@@ -77,61 +70,7 @@ struct tlfText {
 
 };
 
-enum {
-    SYMBOL_INSTANCE,
-    BITMAP_INSTANCE
-};
-
-struct instance {
-
-    instance():bVisible(true) {};
-    string name;
-    int itemID;
-    
-    ofMatrix4x4 mat;
-    
-    ofVec2f transformationPoint;
-    
-    int type;
-    bool bVisible;
-};
-
-struct layer {
-    vector<instance> instances;
-    vector<shape> shapes;
-    vector<tlfText> texts;
-    
-    string name;
-};
-
-
-
-class ofxSymbolItem {
-
-public:    
-    
-    void setup(ofxDocument *doc);    
-    void bitmapFill(bitmap &bm);
-    void drawLayer(instance &si,layer &ly);
-    void draw(instance &si);
-    
-    vector<instance> hitTest(instance &si,ofVec2f pos);
-    instance *getInstance(string name);
-    layer *getLayer(string name);
-    
-    string href;
-    vector<layer> layers;
-   
-    ofTrueTypeFont font;
-    float lineHeight;
-    
-    ofxDocument *doc;
-    
-    
-};
-
-
-struct bitmapItem {
+struct ofxBitmapItem {
     string name;
     string href;
     
@@ -139,9 +78,9 @@ struct bitmapItem {
     int frameBottom;
     
     
-
     
-
+    
+    
     ofImage image;
 #ifdef TARGET_OPENGLES
     ofxiTexture texture;
@@ -163,6 +102,72 @@ struct bitmapItem {
 };
 
 
+
+class ofxSymbolInstance;
+
+
+struct layer {
+    vector<ofxSymbolInstance> instances;
+    vector<shape> shapes;
+    vector<tlfText> texts;
+    
+    string name;
+};
+
+
+
+class ofxSymbolItem {
+    
+public:    
+    
+    void setup(ofxDocument *doc);    
+    
+    ofxSymbolInstance createInstance(string name,ofMatrix4x4 mat=ofMatrix4x4(),ofVec2f transformationPoint=ofVec2f());
+    
+    
+    string href;
+    vector<layer> layers;
+    
+    ofTrueTypeFont font;
+    float lineHeight;
+    
+    ofxDocument *doc;
+    
+   
+};
+
+
+
+class ofxSymbolInstance {
+public:
+    ofxSymbolInstance():bVisible(true) {};
+    void bitmapFill(ofxSymbolInstance &instance);
+    void drawLayer(layer *ly);
+    void draw();
+    vector<ofxSymbolInstance> hitTest(ofVec2f pos);
+    
+    ofxSymbolInstance *getChild(string name);
+    layer *getLayer(string name);
+    string name;
+    
+    bool bVisible;
+    
+    vector<layer> layers;
+    
+    
+    
+    int type;
+    ofMatrix4x4 mat;
+    ofVec2f transformationPoint;
+    
+    ofxSymbolItem *symbolItem;
+    ofxBitmapItem *bitmapItem;
+};
+
+
+
+
+
 class ofxDocument {
     
 public:
@@ -170,10 +175,15 @@ public:
     void load();
     void release();
     
-    vector<bitmapItem> bitmapItems;
-    vector<ofxSymbolItem> symbolItems; 
-    map<string, int> itemsMap;
+    ofxSymbolItem* getSymbolItem(string name);
+    ofxBitmapItem* getBitmapItem(string name);
     
+
+private:
+    
+    vector<ofxSymbolItem> symbolItems; 
+    vector<ofxBitmapItem> bitmapItems;
+        
 //    ofVec2f offset;
 //    float zoom;
 };

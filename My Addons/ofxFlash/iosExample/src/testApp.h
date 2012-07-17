@@ -25,7 +25,7 @@ public:
 	void deviceOrientationChanged(int newOrientation);
 
     ofxDocument doc;
-    instance layout;
+    ofxSymbolInstance layout;
 };
 
 

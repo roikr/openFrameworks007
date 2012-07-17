@@ -7,7 +7,8 @@
 enum {
     STATE_CAMERA,
     STATE_IMAGES,
-    STATE_OBJECTS
+    STATE_OBJECTS,
+    STATE_SHARE
 };
 
 ofColor transformColor(ofColor &src) {
@@ -29,53 +30,41 @@ void testApp::setup(){
     
     ofxRegisterStillCameraNotification(this);
     
-        
-    
-    
-   
-    
     doc.setup("DOMDocument.xml");
-    
-    layout.itemID = doc.itemsMap["Layout"];
-    
-    
-    cout << ofxNSStringToString([[UIDevice currentDevice] model]) << endl;
-    cout << iPhoneGetDeviceType() << endl;
-    
-    
-    
-    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
-        layout.mat.translate(64, 0, 0);
-        layout.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
-    }
-    
     doc.load();
     
-    layoutSymbol = doc.symbolItems[layout.itemID]; // roikr - not so good, for non existing symbols...
+    ofMatrix4x4 mat;
+    
+    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
+        mat.translate(64, 0, 0);
+        mat.scale(5.0/6.0, 5.0/6.0, 1.0);
+    }
+    
+    layout = doc.getSymbolItem("Layout")->createInstance("layout", mat);
     
     
-    layoutSymbol.getInstance("pimp")->bVisible = false;
-    layoutSymbol.getInstance("share")->bVisible = false;
-    layoutSymbol.getInstance("back")->bVisible = false;
+    layout.getChild("pimp")->bVisible = false;
+    layout.getChild("share")->bVisible = false;
+    layout.getChild("back")->bVisible = false;
     
-    background = layoutSymbol.getLayer("background");
-    scratch = layoutSymbol.getLayer("scratch");
+    background = layout.getLayer("background");
+    scratch = layout.getLayer("scratch");
     
-    bitmapItem &scratchItem = doc.bitmapItems[doc.itemsMap["SCRATCHES OVERLAY.png"]];
-    imageRect = ofRectangle(0,0,scratchItem.width,scratchItem.height);
-    camMat = layout.mat;
-    camMat.preMult(layoutSymbol.getInstance("scratch")->mat);
+    ofxBitmapItem *scratchItem = doc.getBitmapItem("SCRATCHES OVERLAY.png");
+    imageRect = ofRectangle(0,0,scratchItem->width,scratchItem->height);
+    camMat = mat;
+    camMat.preMult(layout.getChild("scratch")->mat);
     
-    bitmapItem &menuItem = doc.bitmapItems[doc.itemsMap["MENU_BACKGROUND.png"]];
-    ofMatrix4x4 menuMat = layout.mat;
-    menuMat.preMult(layoutSymbol.getInstance("menu")->mat);
+    ofxBitmapItem *menuItem = doc.getBitmapItem("MENU_BACKGROUND.png");
+    ofMatrix4x4 menuMat = mat;
+    menuMat.preMult(layout.getChild("menu")->mat);
 //    cout << menuMat << endl;
 //    ofVec2f pos = menuMat.preMult(ofVec3f(0,0,0));
 //    cout << pos << endl;
 //    
 //    ofRectangle menuRect(pos.x,pos.y,menuItem.width,menuItem.height);
-    images.setup(scrollCollectionPrefs(true,menuMat,menuItem.width,menuItem.height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
-    objects.setup(scrollCollectionPrefs(true,menuMat,menuItem.width,menuItem.height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    images.setup(scrollCollectionPrefs(true,menuMat,menuItem->width,menuItem->height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    objects.setup(scrollCollectionPrefs(true,menuMat,menuItem->width,menuItem->height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
     
     ofDirectory dir;
     dir.allowExt("jpg");
@@ -90,8 +79,14 @@ void testApp::setup(){
     for (int i=0; i<dir.numFiles(); i++) {
         objects.addItem(dir.getPath(i));
     }
-
     
+    
+    shareLayout = doc.getSymbolItem("ShareLayout")->createInstance("shareLayout", mat);
+
+    shareBackground = shareLayout.getLayer("background");
+    shareScratch = shareLayout.getLayer("scratch");
+    shareMat = mat;
+    shareMat.preMult(shareLayout.getChild("scratch")->mat);
     
     
     bTouchObject = false;
@@ -116,15 +111,9 @@ void testApp::update(){
 void testApp::draw(){	
     ofSetHexColor(0xFFFFFF);
     
-    ofRectangle rect;
-    
-
-    
-    
-    
     switch (state) {
         case STATE_CAMERA: {
-            layoutSymbol.drawLayer(layout, *background);
+            layout.drawLayer(background);
             ofPushMatrix();
             glMultMatrixf(camMat.getPtr());
             if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
@@ -134,7 +123,7 @@ void testApp::draw(){
             ofPopMatrix();
         } break;
         case STATE_IMAGES:
-            layoutSymbol.drawLayer(layout, *background);
+            layout.drawLayer(background);
             images.draw();
             
             if (images.getIsSelected()) {
@@ -156,11 +145,11 @@ void testApp::draw(){
                 
             }
             ofEnableAlphaBlending();
-            layoutSymbol.drawLayer(layout, *scratch);
+            layout.drawLayer(scratch);
             ofDisableAlphaBlending();
             break;
         case STATE_OBJECTS:
-            layoutSymbol.drawLayer(layout, *background);
+            layout.drawLayer(background);
             if (images.getIsSelected()) {
                 ofPushMatrix();
                 glMultMatrixf(camMat.getPtr());
@@ -179,9 +168,41 @@ void testApp::draw(){
 //                iter->drag.draw();
                 iter->drag.end();
             }
-            layoutSymbol.drawLayer(layout, *scratch);
+            layout.drawLayer(scratch);
             ofDisableAlphaBlending();
 
+            break;
+            
+        
+        case STATE_SHARE:
+           
+            
+            shareLayout.drawLayer(shareBackground);
+            
+            ofPushMatrix();
+            glMultMatrixf(shareMat.getPtr());
+            
+            if (images.getIsSelected()) {
+                
+                images.getImage(images.getSelectedNum()).draw(imageRect);
+               
+            }
+            
+            
+            ofEnableAlphaBlending();
+            for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+                iter->drag.begin();
+                ofPushMatrix();
+                ofScale(iter->scale, iter->scale);
+                objects.getImage(iter->objectNum).draw(0,0);
+                ofPopMatrix();
+                //                iter->drag.draw();
+                iter->drag.end();
+            }
+            ofPopMatrix();
+            shareLayout.drawLayer(shareScratch);
+            ofDisableAlphaBlending();
+            
             break;
 
             
@@ -195,11 +216,11 @@ void testApp::draw(){
 void testApp::touchDown(ofTouchEventArgs &touch){
     
         
-    vector<instance> hits = layoutSymbol.hitTest(layout,ofVec2f(touch.x,touch.y));
+    vector<ofxSymbolInstance> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
     switch (state) {
         case STATE_CAMERA: {
             
-            for (vector<instance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
                 if (iter->type==SYMBOL_INSTANCE && iter->name=="snap") {
                     cam.snap();
                     break;
@@ -207,7 +228,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             }
                 
             
-//            for (vector<instance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+//            for (vector<ofxSymbolInstance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
 //                cout << iter->itemID << "\t";
 //                if (iter->type == SYMBOL_INSTANCE) {
 //                    cout << iter->name << "\t";
@@ -221,12 +242,12 @@ void testApp::touchDown(ofTouchEventArgs &touch){
            
             images.touchDown(touch);
             
-            for (vector<instance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
                 if (iter->type==SYMBOL_INSTANCE && iter->name=="pimp") {
                     state=STATE_OBJECTS;
-                    layoutSymbol.getInstance("pimp")->bVisible = false;
-                    layoutSymbol.getInstance("share")->bVisible = true;
-                    layoutSymbol.getInstance("back")->bVisible = true;
+                    layout.getChild("pimp")->bVisible = false;
+                    layout.getChild("share")->bVisible = true;
+                    layout.getChild("back")->bVisible = true;
                     break;
                 }
             }
@@ -248,24 +269,19 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 }
             }
             
-            for (vector<instance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
                 if (iter->type==SYMBOL_INSTANCE && iter->name=="share") {
-                    state=STATE_CAMERA;
+                    state=STATE_SHARE;
                     
-                    layoutSymbol.getInstance("snap")->bVisible = true;
-                    layoutSymbol.getInstance("share")->bVisible = false;
-                    layoutSymbol.getInstance("back")->bVisible = false;
                     
-                    items.clear();
-                    cam.preview();
                     break;
                 }
                 if (iter->type==SYMBOL_INSTANCE && iter->name=="back") {
                     state=STATE_IMAGES;
                     
-                    layoutSymbol.getInstance("pimp")->bVisible = true;
-                    layoutSymbol.getInstance("share")->bVisible = false;
-                    layoutSymbol.getInstance("back")->bVisible = false;
+                    layout.getChild("pimp")->bVisible = true;
+                    layout.getChild("share")->bVisible = false;
+                    layout.getChild("back")->bVisible = false;
                     
                     items.clear();
                     break;
@@ -273,6 +289,17 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             }
            
         }   break;
+            
+        case STATE_SHARE: {
+            state = STATE_CAMERA;
+            layout.getChild("snap")->bVisible = true;
+            layout.getChild("pimp")->bVisible = false;
+            layout.getChild("share")->bVisible = false;
+            layout.getChild("back")->bVisible = false;
+            
+            items.clear();
+            cam.preview();
+        } break;
             
         default:
             break;
@@ -381,8 +408,8 @@ void testApp::pictureTaken(ofImage &image) {
     image.saveImage(filename);
     images.addItem(filename);
     
-    layoutSymbol.getInstance("snap")->bVisible = false;
-    layoutSymbol.getInstance("pimp")->bVisible = true;
+    layout.getChild("snap")->bVisible = false;
+    layout.getChild("pimp")->bVisible = true;
     
     
     state = STATE_IMAGES;

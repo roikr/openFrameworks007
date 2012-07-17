@@ -68,9 +68,9 @@ void testApp::exit(){
 
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
-    vector<instance> items = doc.symbolItems[layout.itemID].hitTest(layout,ofVec2f(touch.x,touch.y));
+    vector<ofxSymbolInstance> items = doc.symbolItems[layout.itemID].hitTest(layout,ofVec2f(touch.x,touch.y));
     
-    for (vector<instance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+    for (vector<ofxSymbolInstance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
         cout << iter->itemID << "\t";
         if (iter->type == SYMBOL_INSTANCE) {
             cout << iter->name << "\t";

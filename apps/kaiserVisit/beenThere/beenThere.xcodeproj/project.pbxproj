@@ -83,7 +83,7 @@
 		E44BC58815B2CF2500CD7BBD /* StillCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
 		E44BC6E315B2D6B800CD7BBD /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
 		E44BC6E415B2D6B800CD7BBD /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
-		E44BC6E615B2D6B800CD7BBD /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlash.cpp; sourceTree = "<group>"; };
+		E44BC6E615B2D6B800CD7BBD /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ofxFlash.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		E44BC6E715B2D6B800CD7BBD /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
 		E44BC7DE15B2D70400CD7BBD /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
 		E44BC7DF15B2D70400CD7BBD /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
