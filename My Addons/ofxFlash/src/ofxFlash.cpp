@@ -143,22 +143,25 @@ vector<ofVec2f> parseVec(string str) {
 
 instance parseInstance(ofxXmlSettings &xml) {
     instance i;
+    ofVec2f translation;
+    float scale;
+    float rotation;
+    
     if (xml.tagExists("matrix")) {
         xml.pushTag("matrix");
-        i.translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
-        i.scale = xml.getAttribute("Matrix", "a", 1.0);
-        i.rotation = xml.getAttribute("Matrix", "c", 0.0);
+        translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
+        scale = xml.getAttribute("Matrix", "a", 1.0);
+        rotation = xml.getAttribute("Matrix", "c", 0.0);
         xml.popTag();
     } else {
-        i.translation = ofVec2f(0.0,0.0);
-        i.scale = 1.0;
-        i.rotation = 0.0;
+        translation = ofVec2f(0.0,0.0);
+        scale = 1.0;
+        rotation = 0.0;
     }
     
     ofMatrix4x4 mat;
-    mat.makeIdentityMatrix();
-    mat.translate(i.translation);
-    mat.scale(i.scale, i.scale, 1.0);
+    mat.translate(translation);
+    mat.scale(scale, scale, 1.0);
     i.mat = mat;
     
     if (xml.tagExists("transformationPoint")) {
@@ -480,43 +483,38 @@ void ofxSymbolItem::drawLayer(instance &si,layer &ly) {
     ofPushMatrix();
     glMultMatrixf(si.mat.getPtr());
     for (vector<instance>::iterator iter=ly.instances.begin(); iter!=ly.instances.end(); iter++) {
-        
-//        ofTranslate(iter->translation);
-//        ofScale(iter->scale, iter->scale);
-//      
-        
-        
-        switch (iter->type) {
-            case BITMAP_INSTANCE: {
-                ofPushMatrix();
-                glMultMatrixf(iter->mat.getPtr());
-                //            iter->texture.draw(iter->u,iter->v);
-                bitmapItem &item = doc->bitmapItems[iter->itemID];
+        if (iter->bVisible) {
+            switch (iter->type) {
+                case BITMAP_INSTANCE: {
+                    ofPushMatrix();
+                    glMultMatrixf(iter->mat.getPtr());
+                    //            iter->texture.draw(iter->u,iter->v);
+                    bitmapItem &item = doc->bitmapItems[iter->itemID];
 #ifndef TARGET_OPENGLES
-                item.image.draw(0, 0);
-#else
-                if (item.image.bAllocated()) {
                     item.image.draw(0, 0);
-                } else {
-                    item.texture.draw(item.uWidth,item.vHeight);
-                }
-            
+#else
+                    if (item.image.bAllocated()) {
+                        item.image.draw(0, 0);
+                    } else {
+                        item.texture.draw(item.uWidth,item.vHeight);
+                    }
+                
 #endif
+                    
+                    ofPopMatrix();
+                } break;
                 
-                ofPopMatrix();
-            } break;
-            
-            case SYMBOL_INSTANCE: {
-                //            iter->texture.draw(iter->u,iter->v);
-                ofxSymbolItem &item = doc->symbolItems[iter->itemID];
-                item.draw(*iter);
-            } break;
-                
-        }
+                case SYMBOL_INSTANCE: {
+                    //            iter->texture.draw(iter->u,iter->v);
+                    ofxSymbolItem &item = doc->symbolItems[iter->itemID];
+                    item.draw(*iter);
+                } break;
+                    
+            }
 
-        
+            
+        }
     }
-    
      
     
     for (vector<shape>::iterator siter=ly.shapes.begin(); siter!=ly.shapes.end(); siter++) {
@@ -707,4 +705,29 @@ vector<instance> ofxSymbolItem::hitTest(instance &si,ofVec2f pos) {
     }
     
     return items;
+}
+
+instance *ofxSymbolItem::getInstance(string name) {
+    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+        for (vector<instance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
+            if (iter->type==SYMBOL_INSTANCE && iter->name == name) {
+                return &(*iter);
+            }
+        }
+    }
+    
+    cout << "can not found instance: " << name << " - expect a crash" << endl;
+    return NULL;
+}
+
+layer *ofxSymbolItem::getLayer(string name) {
+    for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
+        if (iter->name == name) {
+            return &(*iter);
+        }
+    }
+    
+    cout << "can not found layer: " << name << " - expect a crash" << endl;
+    return NULL;
+    
 }

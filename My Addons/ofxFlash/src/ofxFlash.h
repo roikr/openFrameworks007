@@ -84,18 +84,16 @@ enum {
 
 struct instance {
 
+    instance():bVisible(true) {};
     string name;
     int itemID;
     
     ofMatrix4x4 mat;
     
-    ofVec2f translation;
-    float scale;
-    float rotation;
-    
     ofVec2f transformationPoint;
     
     int type;
+    bool bVisible;
 };
 
 struct layer {
@@ -118,6 +116,8 @@ public:
     void draw(instance &si);
     
     vector<instance> hitTest(instance &si,ofVec2f pos);
+    instance *getInstance(string name);
+    layer *getLayer(string name);
     
     string href;
     vector<layer> layers;
