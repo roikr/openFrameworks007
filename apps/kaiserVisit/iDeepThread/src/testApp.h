@@ -6,6 +6,7 @@
 
 #include "ofxPanZoom.h"
 #include "ofxDeepZoom.h"
+#include "ofxFlash.h"
 
 class testApp : public ofxiPhoneApp {
 	
@@ -30,6 +31,16 @@ public:
 
 	ofxPanZoom	cam;
 	ofxDeepZoom deep;
+    
+    ofxDocument doc;
+    ofxSymbolInstance composition;
+    ofxSymbolInstance caption;
+    layer *background;
+    layer *outlines;
+    
+    float width;
+    float height;
+    
 };
 
 

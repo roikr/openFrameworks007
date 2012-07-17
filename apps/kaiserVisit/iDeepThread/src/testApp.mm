@@ -17,6 +17,28 @@ void testApp::setup(){
 	ofxAccelerometer.setup();	
 	//iPhoneAlerts will be sent to this.
 	ofxiPhoneAlerts.addListener(this);
+    
+    doc.setup("DOMDocument.xml");
+    doc.load();
+    
+    ofMatrix4x4 mat;
+    
+    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
+        mat.translate(64, 0, 0);
+        mat.scale(5.0/6.0, 5.0/6.0, 1.0);
+    }
+    
+    composition = doc.getSymbolItem("COMPOSITION_1")->createInstance("composition", mat);
+//    layout.getChild("pimp")->bVisible = false;
+    background = composition.getLayer("background");
+    outlines = composition.getLayer("outlines");
+    
+    ofMatrix4x4 captionMat = mat;
+    captionMat.preMult(composition.getChild("CAPTION_1")->mat);
+    caption = doc.getSymbolItem("CAPTION_1")->createInstance("caption", captionMat);
+    
+    //    layout.getChild("pimp")->bVisible = false;
+    
 	
 	ofEnableAlphaBlending();
 	
@@ -30,7 +52,9 @@ void testApp::setup(){
 	cam.setViewportConstrain( ofVec3f(-limitX, -limitY), ofVec3f(limitX, limitY)); //limit browseable area, in world units
 	
 //    deep.setup("IMAGE_1", "png",5053, 3517, ofRectangle(100,100, ofGetWidth()-200,ofGetHeight()-200));
-    deep.setup("IMAGE_1", "png",5053, 3517, ofRectangle(0,0, ofGetWidth(),ofGetHeight()));
+    width = 5053;
+    height = 3517;
+    deep.setup("IMAGE_1", "png",width, height, ofRectangle(0,0, ofGetWidth(),ofGetHeight()));
     deep.transform( camOffset(), cam.zoom);
     
     deep.start();
@@ -57,7 +81,15 @@ void testApp::draw() {
 		
 	cam.apply(); //put all our drawing under the ofxPanZoom effect
         ofPushMatrix();
+        
+        
         deep.draw();
+    
+        
+        composition.drawLayer(outlines);
+        caption.draw();
+        
+    
         ofPopMatrix();
     
     
