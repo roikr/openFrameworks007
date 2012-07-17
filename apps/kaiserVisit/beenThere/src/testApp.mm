@@ -1,5 +1,9 @@
 #include "testApp.h"
 
+#define MENU_INSET 20.0
+#define MENU_SEPERATOR 20.0
+
+
 enum {
     STATE_CAMERA,
     STATE_IMAGES,
@@ -8,8 +12,9 @@ enum {
 
 ofColor transformColor(ofColor &src) {
     
-    static ofMatrix4x4 colorMat(0.393,0.349,0.272,0.0,0.769,0.686,0.534,0.0,0.189,0.168,0.131,0.0,0.0,0.0,0.0,1.0);
-    ofVec4f dst = colorMat*ofVec4f(src.r,src.g,src.b,1.0);
+//    static ofMatrix4x4 colorMat(0.393,0.349,0.272,0.0,0.769,0.686,0.534,0.0,0.189,0.168,0.131,0.0,0.0,0.0,0.0,1.0);
+    static ofMatrix4x4 colorMat(0.393,0.769,0.189,0.0,0.349,0.686,0.168,0.0,0.272,0.534,0.131,0.0,0.0,0.0,0.0,1.0);
+    ofVec4f dst = colorMat.postMult(ofVec4f(src.r,src.g,src.b,255.0));
     
     return ofColor(dst.x,dst.y,dst.z);
 }
@@ -24,8 +29,53 @@ void testApp::setup(){
     
     ofxRegisterStillCameraNotification(this);
     
-    images.setup(scrollCollectionPrefs(true,ofRectangle(ofGetWidth()-100,0,100, ofGetHeight()),20,20,5,0x00FF00,100));
-    objects.setup(scrollCollectionPrefs(true,ofRectangle(ofGetWidth()-100,0,100, ofGetHeight()),20,20,5,0x00FF00,100));
+        
+    
+    
+   
+    
+    doc.setup("DOMDocument.xml");
+    
+    layout.itemID = doc.itemsMap["Layout"];
+    
+    
+    cout << ofxNSStringToString([[UIDevice currentDevice] model]) << endl;
+    cout << iPhoneGetDeviceType() << endl;
+    
+    
+    
+    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
+        layout.mat.translate(64, 0, 0);
+        layout.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
+    }
+    
+    doc.load();
+    
+    layoutSymbol = doc.symbolItems[layout.itemID]; // roikr - not so good, for non existing symbols...
+    
+    
+    layoutSymbol.getInstance("pimp")->bVisible = false;
+    layoutSymbol.getInstance("share")->bVisible = false;
+    layoutSymbol.getInstance("back")->bVisible = false;
+    
+    background = layoutSymbol.getLayer("background");
+    scratch = layoutSymbol.getLayer("scratch");
+    
+    bitmapItem &scratchItem = doc.bitmapItems[doc.itemsMap["SCRATCHES OVERLAY.png"]];
+    imageRect = ofRectangle(0,0,scratchItem.width,scratchItem.height);
+    camMat = layout.mat;
+    camMat.preMult(layoutSymbol.getInstance("scratch")->mat);
+    
+    bitmapItem &menuItem = doc.bitmapItems[doc.itemsMap["MENU_BACKGROUND.png"]];
+    ofMatrix4x4 menuMat = layout.mat;
+    menuMat.preMult(layoutSymbol.getInstance("menu")->mat);
+//    cout << menuMat << endl;
+//    ofVec2f pos = menuMat.preMult(ofVec3f(0,0,0));
+//    cout << pos << endl;
+//    
+//    ofRectangle menuRect(pos.x,pos.y,menuItem.width,menuItem.height);
+    images.setup(scrollCollectionPrefs(true,menuMat,menuItem.width,menuItem.height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    objects.setup(scrollCollectionPrefs(true,menuMat,menuItem.width,menuItem.height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
     
     ofDirectory dir;
     dir.allowExt("jpg");
@@ -40,29 +90,12 @@ void testApp::setup(){
     for (int i=0; i<dir.numFiles(); i++) {
         objects.addItem(dir.getPath(i));
     }
+
     
-    state = STATE_CAMERA;
+    
+    
     bTouchObject = false;
-    
-    scratch.loadImage("SCRATCHES_OVERLAY.png");
-    
-    doc.setup("DOMDocument.xml");
-    
-    camera.itemID = doc.itemsMap["Start"];
-    camera.mat.makeIdentityMatrix();
-    
-    cout << ofxNSStringToString([[UIDevice currentDevice] model]) << endl;
-    cout << iPhoneGetDeviceType() << endl;
-    
-    
-    
-    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
-        camera.mat.translate(64, 0, 0);
-        camera.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
-    }
-    
-    doc.load();
-    
+    state = STATE_CAMERA;
     cam.preview();
     
 }
@@ -74,6 +107,8 @@ void testApp::update(){
     images.update();
     objects.update();
     cam.update();
+    
+    
   
 }
 
@@ -83,35 +118,56 @@ void testApp::draw(){
     
     ofRectangle rect;
     
-    if (images.getIsSelected()) {
-        ofImage &image = images.getImage(images.getSelectedNum());
-        float inset = 20; 
-        float dw = ofGetWidth() - 100 - 2*inset;
-        float dh = ofGetHeight() - 2 * inset;
-        float sw = dw/image.getWidth();
-        float sh = dh/image.getHeight();
-        float scale = MIN(sh,sw);
-        float w = scale*image.getWidth();
-        float h = scale*image.getHeight();
-        rect = ofRectangle(inset+(dw-w)/2, inset+(dh-h)/2,w, h);
-        image.draw(rect);
-        
-    }
 
+    
+    
     
     switch (state) {
         case STATE_CAMERA: {
-            doc.symbolItems[camera.itemID].draw(camera);
+            layoutSymbol.drawLayer(layout, *background);
+            ofPushMatrix();
+            glMultMatrixf(camMat.getPtr());
             if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
-                float width = ofGetWidth(); 
-                float height = width/cam.getWidth()*cam.getHeight();
-                cam.draw(ofRectangle(0,0.5*(ofGetHeight()-height),width,height), ofRectangle(0,0,1,1));
+                float tw = imageRect.width/imageRect.height*cam.getHeight()/cam.getWidth();
+                cam.draw(imageRect, ofRectangle((1-tw)/2,0,tw,1));
             } 
+            ofPopMatrix();
         } break;
         case STATE_IMAGES:
+            layoutSymbol.drawLayer(layout, *background);
             images.draw();
+            
+            if (images.getIsSelected()) {
+                ofPushMatrix();
+                glMultMatrixf(camMat.getPtr());
+                images.getImage(images.getSelectedNum()).draw(imageRect);
+                ofPopMatrix();
+//                ofImage &image = images.getImage(images.getSelectedNum());
+//                float inset = 20; 
+//                float dw = ofGetWidth() - 100 - 2*inset;
+//                float dh = ofGetHeight() - 2 * inset;
+//                float sw = dw/image.getWidth();
+//                float sh = dh/image.getHeight();
+//                float scale = MIN(sh,sw);
+//                float w = scale*image.getWidth();
+//                float h = scale*image.getHeight();
+//                rect = ofRectangle(inset+(dw-w)/2, inset+(dh-h)/2,w, h);
+//                image.draw(rect);
+                
+            }
+            ofEnableAlphaBlending();
+            layoutSymbol.drawLayer(layout, *scratch);
+            ofDisableAlphaBlending();
             break;
         case STATE_OBJECTS:
+            layoutSymbol.drawLayer(layout, *background);
+            if (images.getIsSelected()) {
+                ofPushMatrix();
+                glMultMatrixf(camMat.getPtr());
+                images.getImage(images.getSelectedNum()).draw(imageRect);
+                ofPopMatrix();
+            }
+            
             objects.draw();
             ofEnableAlphaBlending();
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
@@ -123,6 +179,7 @@ void testApp::draw(){
 //                iter->drag.draw();
                 iter->drag.end();
             }
+            layoutSymbol.drawLayer(layout, *scratch);
             ofDisableAlphaBlending();
 
             break;
@@ -132,43 +189,49 @@ void testApp::draw(){
             break;
     }
     
-    if (images.getIsSelected()) {
-        ofEnableAlphaBlending();
-        scratch.draw(rect);
-        ofDisableAlphaBlending();
-        
-    }
-    
-    ofSetHexColor(0x000000);
-    
-    ofDrawBitmapString("tap me twice", 0, 10);
-
-	
 }
 
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
     
         
-    
+    vector<instance> hits = layoutSymbol.hitTest(layout,ofVec2f(touch.x,touch.y));
     switch (state) {
         case STATE_CAMERA: {
-            vector<instance> items = doc.symbolItems[camera.itemID].hitTest(camera,ofVec2f(touch.x,touch.y));
             
-            for (vector<instance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-                cout << iter->itemID << "\t";
-                if (iter->type == SYMBOL_INSTANCE) {
-                    cout << iter->name << "\t";
+            for (vector<instance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if (iter->type==SYMBOL_INSTANCE && iter->name=="snap") {
+                    cam.snap();
+                    break;
+                }
+            }
+                
+            
+//            for (vector<instance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+//                cout << iter->itemID << "\t";
+//                if (iter->type == SYMBOL_INSTANCE) {
+//                    cout << iter->name << "\t";
+//                }
+//            }
+//            
+//            cout << endl;
+
+        } break;
+        case STATE_IMAGES: {
+           
+            images.touchDown(touch);
+            
+            for (vector<instance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if (iter->type==SYMBOL_INSTANCE && iter->name=="pimp") {
+                    state=STATE_OBJECTS;
+                    layoutSymbol.getInstance("pimp")->bVisible = false;
+                    layoutSymbol.getInstance("share")->bVisible = true;
+                    layoutSymbol.getInstance("back")->bVisible = true;
+                    break;
                 }
             }
             
-            cout << endl;
-
         } break;
-        case STATE_IMAGES:
-           
-            images.touchDown(touch);
-            break;
         case STATE_OBJECTS: {
             
             objects.touchDown(touch);
@@ -181,6 +244,30 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
                 if (iter->drag.inside(touch)) {
                     iter->drag.touchDown(touch);
+                    break;
+                }
+            }
+            
+            for (vector<instance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if (iter->type==SYMBOL_INSTANCE && iter->name=="share") {
+                    state=STATE_CAMERA;
+                    
+                    layoutSymbol.getInstance("snap")->bVisible = true;
+                    layoutSymbol.getInstance("share")->bVisible = false;
+                    layoutSymbol.getInstance("back")->bVisible = false;
+                    
+                    items.clear();
+                    cam.preview();
+                    break;
+                }
+                if (iter->type==SYMBOL_INSTANCE && iter->name=="back") {
+                    state=STATE_IMAGES;
+                    
+                    layoutSymbol.getInstance("pimp")->bVisible = true;
+                    layoutSymbol.getInstance("share")->bVisible = false;
+                    layoutSymbol.getInstance("back")->bVisible = false;
+                    
+                    items.clear();
                     break;
                 }
             }
@@ -218,7 +305,8 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
                     x.drag.touchDown(lastTouch);
                     x.drag.touchMoved(touch);
                     x.objectNum = objectNum;
-                    x.scale = (100-40)/objects.getImage(x.objectNum).getWidth();
+//                    x.scale = (100-40)/objects.getImage(x.objectNum).getWidth();
+                    x.scale = rect.width/objects.getImage(x.objectNum).getWidth();
                     items.push_back(x);
                     objects.touchUp(touch);
                 } 
@@ -264,27 +352,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
     
-    if (ofRectangle(0, 0, 100, 20).inside(ofVec2f(touch.x,touch.y))) {
-        
-        switch (state) {
-            case STATE_CAMERA:
-                cam.snap();
-                break;
-            case STATE_IMAGES:
-                state=STATE_OBJECTS;
-                break;
-            case STATE_OBJECTS:
-                state=STATE_IMAGES;
-                items.clear();
-                break;
-                
-            default:
-                break;
-        }    
-    }
     
-
-    //images.touchDoubleTap(touch);
 }
 
 //--------------------------------------------------------------
@@ -300,8 +368,23 @@ void testApp::pictureTaken(ofImage &image) {
     dir.listDir(ofxiPhoneGetDocumentsDirectory());
     string filename = ofxiPhoneGetDocumentsDirectory()+"IMAGE_"+ofToString(dir.numFiles())+".jpg";
     cout<<filename << endl;
+    float width = imageRect.width/imageRect.height*image.getHeight();
+    image.crop((image.width-width)/2, 0, width, image.height);
+    ofPixels &pixels = image.getPixelsRef();
+    for (int i=0;i<pixels.getHeight();i++) {
+        for (int j=0;j<pixels.getWidth();j++) {
+            ofColor src = pixels.getColor(j, i);
+            pixels.setColor(j, i, transformColor(src));
+        }
+    }
+    
     image.saveImage(filename);
     images.addItem(filename);
+    
+    layoutSymbol.getInstance("snap")->bVisible = false;
+    layoutSymbol.getInstance("pimp")->bVisible = true;
+    
+    
     state = STATE_IMAGES;
     cam.stop();
 }

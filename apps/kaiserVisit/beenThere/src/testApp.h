@@ -40,12 +40,18 @@ public:
     bool bTouchObject;
     int objectNum;
     
-    ofImage scratch;
     ofImage photo;
     
     ofxiStillCamera cam;
     
     ofxDocument doc;
-    instance camera;
+    ofxSymbolItem layoutSymbol;
+    instance layout;
+    layer *background;
+    layer *scratch;
+    
+    
+    ofRectangle imageRect;
+    ofMatrix4x4 camMat;
     
 };
