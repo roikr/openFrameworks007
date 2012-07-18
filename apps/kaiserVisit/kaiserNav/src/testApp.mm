@@ -55,7 +55,7 @@ void testApp::setup(){
     
     deep.start();
 
-	floating.setup(ofRectangle(0, 0, ofGetWidth(), ofGetHeight()), 100, 150);
+	floating.setup(ofRectangle(0, 0, ofGetWidth(), ofGetHeight()), 150, 150);
 }
 
 
@@ -109,10 +109,10 @@ void testApp::draw() {
 	cam.reset();	//back to normal ofSetupScreen() projection
 	
     ofPushStyle();
-    ofSetColor(100);
-    ofSetLineWidth(3);
+    ofSetColor(0);
+    ofSetLineWidth(2);
     ofVec2f vec = floating.getAnchor()-floating.getPos();
-    vec = vec.normalized()*(vec.length()-50);
+    vec = vec.normalized()*(vec.length()-200*cam.zoom);
     ofLine(floating.getPos(), floating.getPos()+vec);
     ofPopStyle();
     caption.draw();
