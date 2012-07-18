@@ -23,20 +23,16 @@ void testApp::setup(){
     
     ofMatrix4x4 mat;
     
-    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
-        mat.translate(64, 0, 0);
-        mat.scale(5.0/6.0, 5.0/6.0, 1.0);
-    }
-    
     composition = doc.getSymbolItem("COMPOSITION_1")->createInstance("composition", mat);
 //    layout.getChild("pimp")->bVisible = false;
     background = composition.getLayer("background");
     outlines = composition.getLayer("outlines");
     
-    ofMatrix4x4 captionMat = mat;
+    captionMat = mat;
     captionMat.preMult(composition.getChild("CAPTION_1")->mat);
     caption = doc.getSymbolItem("CAPTION_1")->createInstance("caption", captionMat);
     
+
     //    layout.getChild("pimp")->bVisible = false;
     
 	
@@ -59,7 +55,7 @@ void testApp::setup(){
     
     deep.start();
 
-	
+	floating.setup(ofRectangle(0, 0, ofGetWidth(), ofGetHeight()), 100, 150);
 }
 
 
@@ -68,6 +64,9 @@ void testApp::update() {
     
     if (cam.getIsAnimating()) {
         deep.transform( camOffset(), cam.zoom);
+        floating.setAnchor(cam.worldToScreen(captionMat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height))); 
+        caption.mat.makeTranslationMatrix(floating.getPos());
+
     }
     
 	deep.update();
@@ -82,15 +81,17 @@ void testApp::draw() {
 	cam.apply(); //put all our drawing under the ofxPanZoom effect
         ofPushMatrix();
         
-        
+    
         deep.draw();
     
         
-        composition.drawLayer(outlines);
-        caption.draw();
-        
     
+        composition.drawLayer(outlines);
+        
+        
         ofPopMatrix();
+    
+        
     
     
 		//draw grid
@@ -107,6 +108,15 @@ void testApp::draw() {
 	
 	cam.reset();	//back to normal ofSetupScreen() projection
 	
+    ofPushStyle();
+    ofSetColor(100);
+    ofSetLineWidth(3);
+    ofVec2f vec = floating.getAnchor()-floating.getPos();
+    vec = vec.normalized()*(vec.length()-50);
+    ofLine(floating.getPos(), floating.getPos()+vec);
+    ofPopStyle();
+    caption.draw();
+    
 	cam.drawDebug(); //see info on ofxPanZoom status
 	
 	glColor4f(1,1,1,1);
@@ -129,6 +139,9 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 void testApp::touchMoved(ofTouchEventArgs &touch){
 	cam.touchMoved(touch); //fw event to cam
     deep.transform(camOffset(), cam.zoom);
+    
+    floating.setAnchor(cam.worldToScreen(captionMat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height))); 
+    caption.mat.makeTranslationMatrix(floating.getPos());
 }
 
 

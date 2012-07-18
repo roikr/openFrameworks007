@@ -7,6 +7,7 @@
 #include "ofxPanZoom.h"
 #include "ofxDeepZoom.h"
 #include "ofxFlash.h"
+#include "ofxFloatingCaption.h"
 
 class testApp : public ofxiPhoneApp {
 	
@@ -35,11 +36,15 @@ public:
     ofxDocument doc;
     ofxSymbolInstance composition;
     ofxSymbolInstance caption;
+    ofxFloatingCaption floating;
     layer *background;
     layer *outlines;
     
     float width;
     float height;
+    
+    ofMatrix4x4 captionMat;
+   
     
 };
 

@@ -29,6 +29,7 @@
 		E430147915B59B6B005347AE /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147215B59B6B005347AE /* tinyxmlerror.cpp */; };
 		E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147315B59B6B005347AE /* tinyxmlparser.cpp */; };
 		E430147B15B59B6B005347AE /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147515B59B6B005347AE /* ofxXmlSettings.cpp */; };
+		E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
 		E4A2754415A389EF009F7B62 /* ofxDeepZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A2753E15A389EF009F7B62 /* ofxDeepZoom.cpp */; };
 		E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
@@ -54,7 +55,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* iDeepThread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iDeepThread.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* kaiserNav.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kaiserNav.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
@@ -85,6 +86,8 @@
 		E430147315B59B6B005347AE /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E430147515B59B6B005347AE /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E430147615B59B6B005347AE /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFloatingCaption.cpp; sourceTree = "<group>"; };
+		E431347315B6BA9300864C97 /* ofxFloatingCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFloatingCaption.h; sourceTree = "<group>"; };
 		E4A2753E15A389EF009F7B62 /* ofxDeepZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDeepZoom.cpp; sourceTree = "<group>"; };
 		E4A2753F15A389EF009F7B62 /* ofxDeepZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDeepZoom.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -122,7 +125,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* iDeepThread.app */,
+				1D6058910D05DD3D006BFB54 /* kaiserNav.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -306,6 +309,8 @@
 		E4A2753D15A389EF009F7B62 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */,
+				E431347315B6BA9300864C97 /* ofxFloatingCaption.h */,
 				E4A2753E15A389EF009F7B62 /* ofxDeepZoom.cpp */,
 				E4A2753F15A389EF009F7B62 /* ofxDeepZoom.h */,
 			);
@@ -343,9 +348,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* iDeepThread */ = {
+		1D6058900D05DD3D006BFB54 /* kaiserNav */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iDeepThread" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "kaiserNav" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -357,9 +362,9 @@
 			dependencies = (
 				E41D410413B3A11300A75A5D /* PBXTargetDependency */,
 			);
-			name = iDeepThread;
+			name = kaiserNav;
 			productName = iPhone;
-			productReference = 1D6058910D05DD3D006BFB54 /* iDeepThread.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* kaiserNav.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -370,7 +375,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iDeepThread" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "kaiserNav" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -390,7 +395,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* iDeepThread */,
+				1D6058900D05DD3D006BFB54 /* kaiserNav */,
 			);
 		};
 /* End PBXProject section */
@@ -449,6 +454,7 @@
 				E430147915B59B6B005347AE /* tinyxmlerror.cpp in Sources */,
 				E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */,
 				E430147B15B59B6B005347AE /* ofxXmlSettings.cpp in Sources */,
+				E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,7 +476,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = iDeepThread;
+				PRODUCT_NAME = kaiserNav;
 			};
 			name = Debug;
 		};
@@ -480,7 +486,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = iDeepThread;
+				PRODUCT_NAME = kaiserNav;
 			};
 			name = Release;
 		};
@@ -538,7 +544,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iDeepThread" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "kaiserNav" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
@@ -547,7 +553,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iDeepThread" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "kaiserNav" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,

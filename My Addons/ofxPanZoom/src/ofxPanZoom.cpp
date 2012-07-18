@@ -106,6 +106,9 @@ ofVec3f ofxPanZoom::screenToWorld( ofVec3f p ){
 	return p;
 }
 
+ofVec3f ofxPanZoom::worldToScreen(ofVec3f p) {
+    return (p+offset)*zoom+0.5f*ofVec2f(ofGetWidth(),ofGetHeight());
+}
 
 void ofxPanZoom::drawDebug(){
 

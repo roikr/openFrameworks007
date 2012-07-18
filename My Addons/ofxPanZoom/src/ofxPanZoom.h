@@ -70,6 +70,7 @@ public:
 	void reset();
 	void drawDebug();
 	ofVec3f screenToWorld(ofVec3f p);
+    ofVec3f worldToScreen(ofVec3f p);
     
     void update(); // update loop for animation
     bool getIsAnimating();

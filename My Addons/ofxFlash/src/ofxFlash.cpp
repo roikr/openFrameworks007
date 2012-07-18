@@ -432,8 +432,8 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
 }
 
 ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,ofVec2f transformationPoint) {
-    cout << this->href << "\t" << name << endl;
-    cout << mat << endl;
+//    cout << this->href << "\t" << name << endl;
+//    cout << mat << endl;
     ofxSymbolInstance newInstance;
     newInstance.name = name;
     newInstance.symbolItem = this;
