@@ -11,15 +11,7 @@ enum {
     STATE_SHARE
 };
 
-ofColor transformColor(ofColor &src) {
-    
-//    static ofMatrix4x4 colorMat(0.393,0.349,0.272,0.0,0.769,0.686,0.534,0.0,0.189,0.168,0.131,0.0,0.0,0.0,0.0,1.0);
-    static ofMatrix4x4 colorMat(0.393,0.769,0.189,0.0,0.349,0.686,0.168,0.0,0.272,0.534,0.131,0.0,0.0,0.0,0.0,1.0);
-    ofVec4f dst = colorMat.postMult(ofVec4f(src.r,src.g,src.b,255.0));
-    
-    return ofColor(dst.x,dst.y,dst.z);
-}
-    
+
 
 //--------------------------------------------------------------
 void testApp::setup(){	
@@ -397,14 +389,34 @@ void testApp::pictureTaken(ofImage &image) {
     cout<<filename << endl;
     float width = imageRect.width/imageRect.height*image.getHeight();
     image.crop((image.width-width)/2, 0, width, image.height);
-    ofPixels &pixels = image.getPixelsRef();
-    for (int i=0;i<pixels.getHeight();i++) {
-        for (int j=0;j<pixels.getWidth();j++) {
-            ofColor src = pixels.getColor(j, i);
-            pixels.setColor(j, i, transformColor(src));
-        }
+    
+       
+    UInt8 *data = image.getPixels(); // unsigned char
+    
+    
+    NSInteger myDataLength = image.getWidth() * image.getHeight() * 3;
+    
+    for (int i = 0; i < myDataLength; i+=3)
+    {
+        UInt8 r_pixel = data[i];
+        UInt8 g_pixel = data[i+1];
+        UInt8 b_pixel = data[i+2];
+        
+        int outputRed = (r_pixel * .393) + (g_pixel *.769) + (b_pixel * .189);
+        int outputGreen = (r_pixel * .349) + (g_pixel *.686) + (b_pixel * .168);
+        int outputBlue = (r_pixel * .272) + (g_pixel *.534) + (b_pixel * .131);
+        
+        if(outputRed>255)outputRed=255;
+        if(outputGreen>255)outputGreen=255;
+        if(outputBlue>255)outputBlue=255;
+        
+        
+        data[i] = outputRed;
+        data[i+1] = outputGreen;
+        data[i+2] = outputBlue;
     }
     
+        
     image.saveImage(filename);
     images.addItem(filename);
     
