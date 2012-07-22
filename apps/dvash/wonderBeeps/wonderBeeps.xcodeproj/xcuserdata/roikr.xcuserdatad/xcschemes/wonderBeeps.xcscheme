@@ -14,16 +14,16 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-               BuildableName = "emptyExample.app"
-               BlueprintName = "emptyExample"
-               ReferencedContainer = "container:emptyExample.xcodeproj">
+               BuildableName = "wonderBeeps.app"
+               BlueprintName = "wonderBeeps"
+               ReferencedContainer = "container:wonderBeeps.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
@@ -32,27 +32,28 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-            BuildableName = "emptyExample.app"
-            BlueprintName = "emptyExample"
-            ReferencedContainer = "container:emptyExample.xcodeproj">
+            BuildableName = "wonderBeeps.app"
+            BlueprintName = "wonderBeeps"
+            ReferencedContainer = "container:wonderBeeps.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
    <LaunchAction
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Debug"
+      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-            BuildableName = "emptyExample.app"
-            BlueprintName = "emptyExample"
-            ReferencedContainer = "container:emptyExample.xcodeproj">
+            BuildableName = "wonderBeeps.app"
+            BlueprintName = "wonderBeeps"
+            ReferencedContainer = "container:wonderBeeps.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -68,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
-            BuildableName = "emptyExample.app"
-            BlueprintName = "emptyExample"
-            ReferencedContainer = "container:emptyExample.xcodeproj">
+            BuildableName = "wonderBeeps.app"
+            BlueprintName = "wonderBeeps"
+            ReferencedContainer = "container:wonderBeeps.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
