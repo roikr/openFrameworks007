@@ -41,6 +41,8 @@ public:
     bool bEditMode;
     int keyNum;
     bool bButtonDown;
+    
+    deque<int> queue;
 };
 
 

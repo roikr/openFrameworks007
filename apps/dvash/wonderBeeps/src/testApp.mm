@@ -16,7 +16,7 @@ void testApp::setup(){
 	//iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
 	
 	    
-    keyboard = new ofxiPhoneKeyboard(0,60,320,40);
+    keyboard = new ofxiPhoneKeyboard(80,60,160,40);
 	keyboard->setVisible(false);
    	keyboard->setBgColor(75, 75, 75, 255);
 	keyboard->setFontColor(150,150,150, 255);
@@ -70,6 +70,11 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    
+    
+    
+    
     if(keyboard->isKeyboardShowing()) {
         buttons[keyNum].text = keyboard->getLabelText();
     } else {
@@ -92,7 +97,19 @@ void testApp::update(){
         }
     }
     
+    bool bPlaying = false;
+    for (vector<button>::iterator iter = buttons.begin(); iter!=buttons.end(); iter++) {
+        
+        if (iter->audio.getNumPlaying()) {
+            bPlaying = true;
+            break;
+        }
+    }
     
+    if (!bPlaying && !queue.empty()) {
+        buttons[queue.back()].audio.play();
+        queue.pop_back();
+    }
 }
 
 //--------------------------------------------------------------
@@ -187,20 +204,8 @@ void testApp::touchUp(ofTouchEventArgs &touch){
             } 
             
         } else {
-            for (vector<button>::iterator iter = buttons.begin(); iter!=buttons.end(); iter++) {
-                
-                if (iter->audio.getNumPlaying()) {
-                    return;
-                }
-            }
+            queue.push_front(keyNum);
             
-            for (vector<button>::iterator iter = buttons.begin(); iter!=buttons.end(); iter++) {
-                
-                if (iter->rect.inside(ofVec2f(touch.x,touch.y))) {
-                    iter->audio.play();
-                    break;
-                }
-            }
         }
     }
 }
