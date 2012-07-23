@@ -12,7 +12,7 @@ void testApp::setup(){
 	ofxiPhoneAlerts.addListener(this);
 	
 	//If you want a landscape oreintation 
-	iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
+//	iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
     
 	
     ofEnableAlphaBlending();
@@ -24,18 +24,17 @@ void testApp::setup(){
     doc.load();
     
     ofMatrix4x4 mat;
+    layout = doc.getSymbolItem("Layout")->createInstance("layout",mat);
+    layout.getChild("brush_open")->bVisible = false;
+    layout.getChild("crayons_open")->bVisible = false;
+    layout.getChild("colors")->bVisible = false;
+    layout.getChild("patterns")->bVisible = false;
     
-    cout << ofxNSStringToString([[UIDevice currentDevice] model]) << endl;
-    cout << iPhoneGetDeviceType() << endl;
     
-    
-    
-    layout = doc.getSymbolItem("Start")->createInstance("layout",mat);
-    
-    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
-        layout.mat.translate(64, 0, 0);
-        layout.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
-    }
+//    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
+//        layout.mat.translate(64, 0, 0);
+//        layout.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
+//    }
         
     cout << ofGetWidth() << "\t" << ofGetHeight() << endl;
 
