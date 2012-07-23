@@ -122,7 +122,7 @@ public:
     
     void setup(ofxDocument *doc);    
     
-    ofxSymbolInstance createInstance(string name,ofMatrix4x4 mat=ofMatrix4x4(),ofVec2f transformationPoint=ofVec2f());
+    ofxSymbolInstance createInstance(string name,ofMatrix4x4 mat=ofMatrix4x4(),float alpha = 1.0f,ofVec2f transformationPoint=ofVec2f());
     
     
     string href;
@@ -158,7 +158,8 @@ public:
     
     int type;
     ofMatrix4x4 mat;
-    ofVec2f transformationPoint;
+    vector<ofVec2f> transformationPoint;
+    float alphaMultiplier;
     
     ofxSymbolItem *symbolItem;
     ofxBitmapItem *bitmapItem;

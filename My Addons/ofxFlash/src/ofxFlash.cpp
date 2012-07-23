@@ -184,7 +184,14 @@ ofxSymbolInstance parseInstance(ofxXmlSettings &xml) {
     
     if (xml.tagExists("transformationPoint")) {
         xml.pushTag("transformationPoint");
-        i.transformationPoint = ofVec2f(xml.getAttribute("Point", "x", 0.0),xml.getAttribute("Point", "y", 0.0));
+        i.transformationPoint.push_back(ofVec2f(xml.getAttribute("Point", "x", 0.0),xml.getAttribute("Point", "y", 0.0)));
+        xml.popTag();
+    } 
+    
+    i.alphaMultiplier = 1.0;
+    if (xml.tagExists("color")) {
+        xml.pushTag("color");
+        i.alphaMultiplier = xml.getAttribute("Color", "alphaMultiplier", 1.0);
         xml.popTag();
     } 
     
@@ -213,8 +220,8 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
                 xml.pushTag("DOMBitmapInstance",i);
                 ofxSymbolInstance bi = parseInstance(xml);
                 bi.bitmapItem = doc->getBitmapItem(libraryItemName);
-                if (!xml.tagExists("transformationPoint")) {
-                    bi.transformationPoint = ofVec2f(bi.bitmapItem->width/2,bi.bitmapItem->height/2);
+                if (bi.transformationPoint.empty()) {
+                    bi.transformationPoint.push_back(ofVec2f(bi.bitmapItem->width/2,bi.bitmapItem->height/2));
                 }
                 xml.popTag();
                 
@@ -431,7 +438,8 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
     
 }
 
-ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,ofVec2f transformationPoint) {
+// propogate alpha multiplier
+ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,float alpha ,ofVec2f transformationPoint) {
 //    cout << this->href << "\t" << name << endl;
 //    cout << mat << endl;
     ofxSymbolInstance newInstance;
@@ -439,7 +447,7 @@ ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,ofVe
     newInstance.symbolItem = this;
     newInstance.mat = mat;
     newInstance.type = SYMBOL_INSTANCE;
-    newInstance.transformationPoint = transformationPoint;
+    newInstance.transformationPoint.push_back(transformationPoint);
     
     for (vector<layer>::iterator liter = layers.begin();liter!=layers.end();liter++) {
         layer l;
@@ -448,9 +456,10 @@ ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,ofVe
             switch (iter->type) {
                 case BITMAP_INSTANCE:
                     l.instances.push_back(*iter);
+                    l.instances.back().alphaMultiplier = alpha;
                     break;
                 case SYMBOL_INSTANCE:
-                    l.instances.push_back(iter->symbolItem->createInstance(iter->name, iter->mat,iter->transformationPoint));
+                    l.instances.push_back(iter->symbolItem->createInstance(iter->name, iter->mat,iter->alphaMultiplier*alpha,iter->transformationPoint.front()));
                     break;
                 default:
                     break;
@@ -524,6 +533,7 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
                     glMultMatrixf(iter->mat.getPtr());
                     //            iter->texture.draw(iter->u,iter->v);
 //                    bitmapItem *bitmapItem = item->doc->bitmapItems[iter->itemID];
+                    ofSetColor(255, 255, 255,iter->alphaMultiplier*255);
 #ifndef TARGET_OPENGLES
                     iter->bitmapItem->image.draw(0, 0);
 #else
@@ -534,7 +544,7 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
                     }
                 
 #endif
-                    
+                    ofSetColor(255, 255, 255,255);
                     ofPopMatrix();
                 } break;
                 

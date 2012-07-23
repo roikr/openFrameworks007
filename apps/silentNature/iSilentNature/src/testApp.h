@@ -23,9 +23,13 @@ public:
 	void gotFocus();
 	void gotMemoryWarning();
 	void deviceOrientationChanged(int newOrientation);
+    
+    void setTool(int tool);
 
     ofxDocument doc;
     ofxSymbolInstance layout;
+    
+    int tool;
 };
 
 
