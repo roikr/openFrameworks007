@@ -28,11 +28,21 @@ inline float easeOutQuad(float t, float b, float c, float d) {
 };
  
 
-void ofxPenner::start(int paramID,int ease_function,float b,float e,float duration) {
+void ofxPenner::setup(int paramID,float b) {
     parameter p;
+    
+   
+    p.v = b;
+    p.bEasing = false;
+   
+    params[paramID] = p;
+}
+
+void ofxPenner::start(int paramID,int ease_function,float e,float duration) {
+    parameter p = params[paramID];
 
     p.ease_function = ease_function;
-    p.b = p.v = b;
+    p.b = p.v;
     p.e = e;
     p.c = p.e-p.b;
 

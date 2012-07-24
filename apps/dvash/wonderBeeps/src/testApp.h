@@ -4,6 +4,8 @@
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
 #include "ofxAudioFile.h"
+#include "ofxVolumeSlider.h"
+#include "ofxTransform.h"
 
 struct button {
     ofRectangle rect;
@@ -41,8 +43,14 @@ public:
     bool bEditMode;
     int keyNum;
     bool bButtonDown;
+    float volume;
+//    float launchVolume;
     
     deque<int> queue;
+    int delayTimer;
+    
+    ofxVolumeSlider slider;
+    ofxTransform trans;
 };
 
 

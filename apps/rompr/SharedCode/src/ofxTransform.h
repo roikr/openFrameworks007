@@ -12,7 +12,8 @@
 
 class ofxTransform {
 public:
-    void start(int ease_function,ofVec2f pos1,ofVec2f pos2,float scl1=1.0f,float scl2=1.0f,float rot1=0.0f,float rot2=0.0f);
+    void setup(ofVec2f pos=ofVec2f(0,0),float scl=1.0f,float rot=0.0f);
+    void start(int ease_function,ofVec2f pos=ofVec2f(0,0),float scl=1.0f,float rot=0.0f);
     void update();
     bool getIsEasing();
     void begin();

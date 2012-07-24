@@ -27,7 +27,8 @@ struct parameter {
 
 class ofxPenner {
 public:
-    void start(int paramID,int ease_function,float b,float e,float duration = EASE_DURATION);
+    void setup(int paramID,float b);
+    void start(int paramID,int ease_function,float e,float duration = EASE_DURATION);
     void update();
     bool getIsEasing(int paramID);
     float getParam(int paramID);

@@ -1,8 +1,17 @@
 #include "testApp.h"
 #include "ofxXmlSettings.h"
 
+#import <MediaPlayer/MediaPlayer.h>
+
 //--------------------------------------------------------------
 void testApp::setup(){	
+    volume  = [[MPMusicPlayerController applicationMusicPlayer] volume];
+    
+    CGRect frame = CGRectMake(0, -100, 10, 0);
+    MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:frame] autorelease];
+    [volumeView sizeToFit];
+    [[[[UIApplication sharedApplication] windows] objectAtIndex:0] addSubview:volumeView];
+    
 	// register touch events
 	ofRegisterTouchEvents(this);
 	
@@ -16,14 +25,15 @@ void testApp::setup(){
 	//iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
 	
 	    
-    keyboard = new ofxiPhoneKeyboard(80,60,160,40);
+//    keyboard = new ofxiPhoneKeyboard(80,60,160,40);
+    keyboard = new ofxiPhoneKeyboard(80,-40,160,40);
 	keyboard->setVisible(false);
    	keyboard->setBgColor(75, 75, 75, 255);
 	keyboard->setFontColor(150,150,150, 255);
 	keyboard->setFontSize(32);
 
 	    
-    font.loadFont("segoescb.ttf", 24);
+    font.loadFont("LCDPHONE.TTF", 32);
 	
 	int bufferSize = 256;
     float size = ofGetWidth()/4;
@@ -39,6 +49,7 @@ void testApp::setup(){
     
     ofxXmlSettings xml;
     if (xml.loadFile(ofxiPhoneGetDocumentsDirectory()+"buttons.xml")) {
+        volume = xml.getAttribute("buttons", "volume", 1.0f);
         xml.pushTag("buttons");
         for (int i=0;i<xml.getNumTags("button");i++) {
             string text = xml.getAttribute("button", "text", "",i);
@@ -48,7 +59,9 @@ void testApp::setup(){
         xml.popTag();
     }
     
+    slider.setup(ofRectangle(20,ofGetHeight()-130,240,100),volume);
     
+    [[MPMusicPlayerController applicationMusicPlayer] setVolume:volume];
     
 	
     
@@ -58,21 +71,20 @@ void testApp::setup(){
     ofSetColor(150);
 
     ofEnableAlphaBlending();
-    background.setUseTexture(false);
-    background.loadImage("Default@2x.png");
-    background.setImageType(OF_IMAGE_GRAYSCALE);
-    background.setUseTexture(true);
-    background.reloadTexture();
     
+    background.loadImage("background.png");
+   
     bEditMode = false;
     bButtonDown = false;
+    delayTimer = ofGetElapsedTimeMillis();
+    trans.setup();
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
     
     
-    
+    trans.update();
     
     
     if(keyboard->isKeyboardShowing()) {
@@ -80,20 +92,10 @@ void testApp::update(){
     } else {
         if (bEditMode) {
             bEditMode = false;
+            trans.start(EASE_OUT_QUAD,ofVec2f(0,0));
             keyboard->setVisible(false);
             
-            ofxXmlSettings xml;
-            xml.addTag("buttons");
-            xml.pushTag("buttons");
             
-            for (vector<button>::iterator iter = buttons.begin(); iter!=buttons.end(); iter++) {
-                int i = distance(buttons.begin(), iter);
-                xml.addTag("button");
-                xml.addAttribute("button", "text", iter->text,i);
-            }
-            xml.popTag();
-                
-            xml.saveFile(ofxiPhoneGetDocumentsDirectory()+"buttons.xml");
         }
     }
     
@@ -106,7 +108,8 @@ void testApp::update(){
         }
     }
     
-    if (!bPlaying && !queue.empty()) {
+    if (!bPlaying && !queue.empty() && ofGetElapsedTimeMillis()>delayTimer) {
+
         buttons[queue.back()].audio.play();
         queue.pop_back();
     }
@@ -114,13 +117,18 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    ofSetColor(255, 255, 255, 25);
+    
+    
+    ofSetColor(255, 255, 255, 30);
+    
     background.draw(0, 0);
+    
+    trans.begin();
 	for (vector<button>::iterator iter = buttons.begin(); iter!=buttons.end(); iter++) {
         
         ofSetColor(150);
         
-        if (iter->audio.getNumPlaying() || (bButtonDown && distance(buttons.begin(), iter) == keyNum)) {
+        if (iter->audio.getNumPlaying() || ((bButtonDown || bEditMode) && distance(buttons.begin(), iter) == keyNum)) {
             ofFill();
             ofRect(iter->rect);
             ofSetColor(75);
@@ -138,11 +146,29 @@ void testApp::draw(){
         
         
     }
+    trans.end();
+    
+    slider.draw();
+   
+   
 }
 
 //--------------------------------------------------------------
 void testApp::exit(){
-
+    ofxXmlSettings xml;
+    xml.addTag("buttons");
+    xml.addAttribute("buttons", "volume", volume,0);
+    xml.pushTag("buttons");
+    
+    for (vector<button>::iterator iter = buttons.begin(); iter!=buttons.end(); iter++) {
+        int i = distance(buttons.begin(), iter);
+        xml.addTag("button");
+        xml.addAttribute("button", "text", iter->text,i);
+    }
+    xml.popTag();
+    
+    xml.saveFile(ofxiPhoneGetDocumentsDirectory()+"buttons.xml");
+//    [[MPMusicPlayerController applicationMusicPlayer] setVolume:launchVolume];
 }
 
 void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
@@ -153,6 +179,10 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
             iter->audio.mixChannel(output, 0, nChannels);
             iter->audio.mixChannel(output, 1, nChannels);
             iter->audio.postProcess();
+            
+            if (!iter->audio.getNumPlaying()) {
+                delayTimer = ofGetElapsedTimeMillis() + 300;
+            }
         }
     }
 	
@@ -162,6 +192,10 @@ void testApp::audioRequested( float * output, int bufferSize, int nChannels ) {
 
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
+    if(keyboard->isKeyboardShowing()) {
+        return;
+    }
+    
     if (touch.id == 0) {
         
         
@@ -180,16 +214,26 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         }
     }
     
-    
+    slider.touchDown(touch);
 }
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch){
-
+    if(keyboard->isKeyboardShowing()) {
+        return;
+    }
+    
+    
+    slider.touchMoved(touch);
+    
 }
 
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){
+    if(keyboard->isKeyboardShowing()) {
+        return;
+    }
+    
     if (touch.id == 0 && bButtonDown) {
         bButtonDown = false;
         if (ofGetElapsedTimeMillis()-downTime>500) {
@@ -203,10 +247,21 @@ void testApp::touchUp(ofTouchEventArgs &touch){
                 
             } 
             
+            ofVec2f pos = 0.5*ofVec2f(ofGetWidth(),0.5*(ofGetHeight()-ofGetWidth()));
+            ofVec2f rel = buttons[keyNum].rect.getCenter()-ofVec2f(buttons[0].rect.x,buttons[0].rect.y) ;
+            trans.start(EASE_OUT_QUAD,pos-rel);
+            
         } else {
             queue.push_front(keyNum);
             
         }
+    }
+    
+    slider.touchUp(touch);
+    
+    if (volume!=slider.value) {
+        volume = slider.value;
+        [[MPMusicPlayerController applicationMusicPlayer] setVolume:volume];
     }
 }
 

@@ -15,11 +15,19 @@ enum {
     ROTATION
 };
 
-void ofxTransform::start(int ease_function,ofVec2f pos1,ofVec2f pos2,float scl1,float scl2,float rot1,float rot2) {
-    penner.start(POSITION_X, ease_function, pos1.x, pos2.x);
-    penner.start(POSITION_Y, ease_function, pos1.y, pos2.y);
-    penner.start(SCALE, ease_function, scl1, scl2);
-    penner.start(ROTATION, ease_function, rot1, rot2);
+void ofxTransform::setup(ofVec2f pos,float scl,float rot) {
+    
+    penner.setup(POSITION_X,  pos.x);
+    penner.setup(POSITION_Y, pos.y);
+    penner.setup(SCALE, scl);
+    penner.setup(ROTATION, rot);
+}
+
+void ofxTransform::start(int ease_function,ofVec2f pos,float scl,float rot) {
+    penner.start(POSITION_X, ease_function, pos.x);
+    penner.start(POSITION_Y, ease_function,  pos.y);
+    penner.start(SCALE, ease_function, scl);
+    penner.start(ROTATION, ease_function, rot);
 }
 
 void ofxTransform::update() {
@@ -33,6 +41,7 @@ void ofxTransform::begin() {
     ofPushMatrix();
     ofTranslate(pos);
     ofScale(scl, scl);
+    
     ofRotate(rot);
 }
 
