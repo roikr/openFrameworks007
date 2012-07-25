@@ -34,4 +34,10 @@ class testApp : public ofBaseApp{
     string root;
     
     
+    int delayTimer;
+    bool bTrigger;
+    ofSoundPlayer sound;
+    int delay;
+    ofImage image;
+    
 };

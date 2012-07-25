@@ -12,14 +12,18 @@ void testApp::setup(){
     
     ofxXmlSettings xml;
     if (xml.loadFile("settings.xml")) {
-        root = xml.getAttribute("settings", "root", "",0);
+        root = xml.getAttribute("settings", "root", "");
         xml.pushTag("settings");
-        receiver.setup(xml.getAttribute("receiver", "port", 10001,0));
-        
+        receiver.setup(xml.getAttribute("receiver", "port", 10001));
+        sound.loadSound(xml.getAttribute("trigger", "sound", ""));
+        delay = xml.getAttribute("trigger", "delay", 3000);
     }
     
 	cout << root << endl;
-//	videoInverted 	= new unsigned char[camWidth*camHeight*3];
+    
+    
+    bTrigger = false;
+   //	videoInverted 	= new unsigned char[camWidth*camHeight*3];
 //	videoTexture.allocate(camWidth,camHeight, GL_RGB);	
 }
 
@@ -30,6 +34,23 @@ void testApp::update(){
 	ofBackground(100,100,100);
 	
 	vidGrabber.grabFrame();
+    
+    if (bTrigger && ofGetElapsedTimeMillis()>delayTimer ) {
+        bTrigger = false;
+        image.setFromPixels(vidGrabber.getPixelsRef());
+        stringstream ss;
+        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds() << ".png";
+        cout << ss.str() << endl;
+        image.saveImage(root+"/"+ss.str());
+        
+        for (vector<ofxOscSender>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+            ofxOscMessage m;
+            m.setAddress("/add");
+            m.addStringArg(ss.str());
+            iter->sendMessage(m);
+        }
+        
+    }
 	
 //	if (vidGrabber.isFrameNew()){
 //		int totalPixels = camWidth*camHeight*3;
@@ -96,6 +117,9 @@ void testApp::update(){
 void testApp::draw(){
 	ofSetHexColor(0xffffff);
 	vidGrabber.draw(20,20);
+    if (image.getTextureReference().bAllocated()) {
+        image.draw(40,40,camWidth/3,camHeight/3);
+    }
 //	videoTexture.draw(20+camWidth,20,camWidth,camHeight);
 }
 
@@ -113,21 +137,10 @@ void testApp::keyPressed  (int key){
 		vidGrabber.videoSettings();
 	}
     
-    if (key == ' ') {
-        ofImage image;
-        image.setFromPixels(vidGrabber.getPixelsRef());
-        stringstream ss;
-        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds() << ".png";
-        cout << ss.str() << endl;
-        image.saveImage(root+"/"+ss.str());
-        
-        for (vector<ofxOscSender>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
-            ofxOscMessage m;
-            m.setAddress("/add");
-            m.addStringArg(ss.str());
-            iter->sendMessage(m);
-        }
-        
+    if (key == ' ' && !bTrigger) {
+        delayTimer = ofGetElapsedTimeMillis()+3000;
+        bTrigger = true;
+        sound.play();        
     }
 	
 	
