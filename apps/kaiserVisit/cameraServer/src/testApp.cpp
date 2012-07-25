@@ -1,6 +1,7 @@
 #include "testApp.h"
 #include "ofxXmlSettings.h"
 
+
 //--------------------------------------------------------------
 void testApp::setup(){
 	
@@ -12,14 +13,22 @@ void testApp::setup(){
     
     ofxXmlSettings xml;
     if (xml.loadFile("settings.xml")) {
-        root = xml.getAttribute("settings", "root", "");
+        
+        //xml.getAttribute("settings", "root", "");
         xml.pushTag("settings");
-        receiver.setup(xml.getAttribute("receiver", "port", 10001));
+        receiver.setup(xml.getAttribute("receiver", "port", 10000));
         sound.loadSound(xml.getAttribute("trigger", "sound", ""));
         delay = xml.getAttribute("trigger", "delay", 3000);
+        
+        server = ofxHTTPServer::getServer(); // get the instance of the server
+        server->setServerRoot("photos");		 // folder with files to be served
+        server->start(xml.getAttribute("server", "port", 8888));
     }
     
-	cout << root << endl;
+	
+    
+    
+    
     
     
     bTrigger = false;
@@ -41,13 +50,13 @@ void testApp::update(){
         stringstream ss;
         ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds() << ".png";
         cout << ss.str() << endl;
-        image.saveImage(root+"/"+ss.str());
+        image.saveImage("photos/"+ss.str());
         
-        for (vector<ofxOscSender>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
-            ofxOscMessage m;
-            m.setAddress("/add");
-            m.addStringArg(ss.str());
-            iter->sendMessage(m);
+        ofxOscMessage m;
+        m.setAddress("/add");
+        m.addStringArg(ss.str());
+        for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+            iter->second->sendMessage(m);
         }
         
     }
@@ -70,40 +79,40 @@ void testApp::update(){
         
 		// check for mouse moved message
 		if ( m.getAddress() == "/remove" ) {
-			ofFile file(root+"/"+m.getArgAsString(0));
+			ofFile file(ofToDataPath("photos/"+m.getArgAsString(0)));
             if (file.exists()) {
                 file.remove();
             }
             
 		}  else if ( m.getAddress() == "/list" ) {
             
+            ofxOscSender *sender;
+            
             string host = m.getRemoteIp();
-            if (sendersMap.find(host)==sendersMap.end()) {
-                sendersMap[host]=senders.size();
-                ofxOscSender s;
-                
-                senders.push_back(s);
-                
+            if (senders.find(host)==senders.end()) {
                 
                 int port = m.getArgAsInt32(0);
-                senders.back().setup(host,port);
+                sender = new ofxOscSender();
+                sender->setup(host,port);
                 
-                cout <<host << "\t" << port << endl;
+                senders[host]=sender;
+                
+                cout <<"new client: " << host << "\t" << port << endl;
+            } else {
+                sender = senders[host];
+                cout <<"existing client: " << host << endl;
             }
             
-            int senderNum = sendersMap[host];
-            cout << senderNum << endl;
-            ofxOscSender &sender = senders[senderNum];
             
-            ofxOscMessage m;
+            
                         
-            ofDirectory dir(root);
+            ofDirectory dir(ofToDataPath("photos"));
             dir.listDir();
             for (int i=0;i<dir.size();i++) {
-                m.clear();
+                ofxOscMessage m;
                 m.setAddress("/add");
                 m.addStringArg(dir.getName(i));
-                sender.sendMessage(m);
+                sender->sendMessage(m);
             }
             
 		}
@@ -123,6 +132,11 @@ void testApp::draw(){
 //	videoTexture.draw(20+camWidth,20,camWidth,camHeight);
 }
 
+void testApp::exit() {
+    for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+        delete iter->second;
+    }
+}
 
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){ 
@@ -142,46 +156,5 @@ void testApp::keyPressed  (int key){
         bTrigger = true;
         sound.play();        
     }
-	
-	
 }
 
-//--------------------------------------------------------------
-void testApp::keyReleased(int key){ 
-	
-}
-
-//--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
-	
-}
-
-//--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
-	
-}
-
-//--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
-	
-}
-
-//--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
-
-}
