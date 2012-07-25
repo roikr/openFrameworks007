@@ -1,0 +1,150 @@
+// !$*UTF8*$!
+{
+	1D6058900D05DD3D006BFB54 /* oscSenderExample */ = {
+		activeExec = 0;
+		executables = (
+			E4B9D1551414A93800EC96CD /* oscSenderExample */,
+		);
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = E4B9D1551414A93800EC96CD /* oscSenderExample */;
+		activeSDKPreference = iphoneos4.3;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* oscSenderExample */;
+		codeSenseManager = E4B9D1721414A96000EC96CD /* Code sense */;
+		executables = (
+			E4B9D1551414A93800EC96CD /* oscSenderExample */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					560,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 336898360;
+			PBXWorkspaceStateSaveDate = 336898360;
+		};
+		perUserProjectItems = {
+			E4B9D1731414A97000EC96CD /* PBXTextBookmark */ = E4B9D1731414A97000EC96CD /* PBXTextBookmark */;
+			E4B9D1741414A97000EC96CD /* PBXTextBookmark */ = E4B9D1741414A97000EC96CD /* PBXTextBookmark */;
+			E4B9D1751414A97000EC96CD /* PBXBookmark */ = E4B9D1751414A97000EC96CD /* PBXBookmark */;
+			E4B9D1761414A97000EC96CD /* PBXTextBookmark */ = E4B9D1761414A97000EC96CD /* PBXTextBookmark */;
+		};
+		sourceControlManager = E4B9D1711414A96000EC96CD /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	E4B9D13E1414A93800EC96CD /* ofxOsc.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {738, 593}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1616}";
+		};
+	};
+	E4B9D13F1414A93800EC96CD /* ofxOscArg.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {738, 1586}}";
+			sepNavSelRange = "{1684, 18}";
+			sepNavVisRange = "{281, 1534}";
+		};
+	};
+	E4B9D1421414A93800EC96CD /* ofxOscMessage.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {738, 1261}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{1968, 1303}";
+		};
+	};
+	E4B9D1551414A93800EC96CD /* oscSenderExample */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = oscSenderExample;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	E4B9D1711414A96000EC96CD /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	E4B9D1721414A96000EC96CD /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	E4B9D1731414A97000EC96CD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B9D13F1414A93800EC96CD /* ofxOscArg.h */;
+		name = "ofxOscArg.h: 42";
+		rLen = 18;
+		rLoc = 1684;
+		rType = 0;
+		vrLen = 1534;
+		vrLoc = 281;
+	};
+	E4B9D1741414A97000EC96CD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B9D13E1414A93800EC96CD /* ofxOsc.h */;
+		name = "ofxOsc.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1616;
+		vrLoc = 0;
+	};
+	E4B9D1751414A97000EC96CD /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = E4B9D1421414A93800EC96CD /* ofxOscMessage.h */;
+	};
+	E4B9D1761414A97000EC96CD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B9D1421414A93800EC96CD /* ofxOscMessage.h */;
+		name = "ofxOscMessage.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1303;
+		vrLoc = 1968;
+	};
+}
