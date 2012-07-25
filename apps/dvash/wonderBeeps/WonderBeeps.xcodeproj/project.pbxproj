@@ -14,7 +14,6 @@
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		BB16EBD20F2B2A9500518274 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
 		BB16EBD90F2B2AB500518274 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
-		BB24DD9010DA77E000E9C588 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8D10DA77E000E9C588 /* Icon.png */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E41D400B13B39D2100A75A5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
 		E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
@@ -25,12 +24,19 @@
 		E428D61715BC55C200A8BDC2 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428D60E15BC55C200A8BDC2 /* CAXException.cpp */; };
 		E428D61815BC55C200A8BDC2 /* README in Resources */ = {isa = PBXBuildFile; fileRef = E428D61015BC55C200A8BDC2 /* README */; };
 		E428D61915BC55C200A8BDC2 /* ofxAudioFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = E428D61315BC55C200A8BDC2 /* ofxAudioFile.mm */; };
-		E428D61C15BC7A9600A8BDC2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E428D61B15BC7A9600A8BDC2 /* Default@2x.png */; };
 		E428D62715BC8B2800A8BDC2 /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E428D61E15BC8B2800A8BDC2 /* install.xml */; };
 		E428D62815BC8B2800A8BDC2 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428D62015BC8B2800A8BDC2 /* tinyxml.cpp */; };
 		E428D62915BC8B2800A8BDC2 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428D62215BC8B2800A8BDC2 /* tinyxmlerror.cpp */; };
 		E428D62A15BC8B2800A8BDC2 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428D62315BC8B2800A8BDC2 /* tinyxmlparser.cpp */; };
 		E428D62B15BC8B2800A8BDC2 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E428D62515BC8B2800A8BDC2 /* ofxXmlSettings.cpp */; };
+		E43D40D515BFCCA80093A973 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40CD15BFCCA80093A973 /* Default-Portrait.png */; };
+		E43D40D615BFCCA80093A973 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40CE15BFCCA80093A973 /* Default@2x.png */; };
+		E43D40D715BFCCA80093A973 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40CF15BFCCA80093A973 /* Icon-72.png */; };
+		E43D40D815BFCCA80093A973 /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40D015BFCCA80093A973 /* Icon-Small-50.png */; };
+		E43D40D915BFCCA80093A973 /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40D115BFCCA80093A973 /* Icon-Small.png */; };
+		E43D40DA15BFCCA80093A973 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40D215BFCCA80093A973 /* Icon-Small@2x.png */; };
+		E43D40DB15BFCCA80093A973 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40D315BFCCA80093A973 /* Icon.png */; };
+		E43D40DC15BFCCA80093A973 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40D415BFCCA80093A973 /* Icon@2x.png */; };
 		E4CB4F6315BEEB8400CBBCD1 /* ofxVolumeSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CB4F6115BEEB8400CBBCD1 /* ofxVolumeSlider.cpp */; };
 		E4CB4F7715BEEC7200CBBCD1 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CB4F6C15BEEC7200CBBCD1 /* ofxPenner.cpp */; };
 		E4CB4F7815BEEC7200CBBCD1 /* ofxTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CB4F6E15BEEC7200CBBCD1 /* ofxTransform.cpp */; };
@@ -58,7 +64,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* wonderBeeps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wonderBeeps.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* WonderBeeps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WonderBeeps.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
@@ -66,7 +72,6 @@
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		BB16EBD10F2B2A9500518274 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BB16EBD80F2B2AB500518274 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BB24DD8D10DA77E000E9C588 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E41D3ED613B38FB500A75A5D /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
@@ -85,7 +90,6 @@
 		E428D61015BC55C200A8BDC2 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		E428D61215BC55C200A8BDC2 /* ofxAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioFile.h; sourceTree = "<group>"; };
 		E428D61315BC55C200A8BDC2 /* ofxAudioFile.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxAudioFile.mm; sourceTree = "<group>"; };
-		E428D61B15BC7A9600A8BDC2 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		E428D61E15BC8B2800A8BDC2 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E428D62015BC8B2800A8BDC2 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		E428D62115BC8B2800A8BDC2 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -93,6 +97,14 @@
 		E428D62315BC8B2800A8BDC2 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E428D62515BC8B2800A8BDC2 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E428D62615BC8B2800A8BDC2 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		E43D40CD15BFCCA80093A973 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait.png"; path = "bin/data/Default-Portrait.png"; sourceTree = "<group>"; };
+		E43D40CE15BFCCA80093A973 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "bin/data/Default@2x.png"; sourceTree = "<group>"; };
+		E43D40CF15BFCCA80093A973 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "bin/data/Icon-72.png"; sourceTree = "<group>"; };
+		E43D40D015BFCCA80093A973 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "bin/data/Icon-Small-50.png"; sourceTree = "<group>"; };
+		E43D40D115BFCCA80093A973 /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "bin/data/Icon-Small.png"; sourceTree = "<group>"; };
+		E43D40D215BFCCA80093A973 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "bin/data/Icon-Small@2x.png"; sourceTree = "<group>"; };
+		E43D40D315BFCCA80093A973 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = bin/data/Icon.png; sourceTree = "<group>"; };
+		E43D40D415BFCCA80093A973 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "bin/data/Icon@2x.png"; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4CB4F6115BEEB8400CBBCD1 /* ofxVolumeSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVolumeSlider.cpp; sourceTree = "<group>"; };
 		E4CB4F6215BEEB8400CBBCD1 /* ofxVolumeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxVolumeSlider.h; sourceTree = "<group>"; };
@@ -138,7 +150,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* wonderBeeps.app */,
+				1D6058910D05DD3D006BFB54 /* WonderBeeps.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -146,8 +158,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				E43D40CC15BFCC9B0093A973 /* Resources */,
 				E4D8936A11527B74007E1F53 /* src */,
-				BB24DD8B10DA77E000E9C588 /* data */,
 				BB24E1F710DAA51900E9C588 /* openFrameworks */,
 				BB16F26B0F2B646B00518274 /* addons */,
 				BB16E9930F2B1E5900518274 /* libs */,
@@ -194,16 +206,6 @@
 				E428D60815BC55C200A8BDC2 /* ofxAudio */,
 			);
 			name = addons;
-			sourceTree = "<group>";
-		};
-		BB24DD8B10DA77E000E9C588 /* data */ = {
-			isa = PBXGroup;
-			children = (
-				E428D61B15BC7A9600A8BDC2 /* Default@2x.png */,
-				BB24DD8D10DA77E000E9C588 /* Icon.png */,
-			);
-			name = data;
-			path = bin/data;
 			sourceTree = "<group>";
 		};
 		BB24E1F710DAA51900E9C588 /* openFrameworks */ = {
@@ -298,6 +300,21 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E43D40CC15BFCC9B0093A973 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E43D40CD15BFCCA80093A973 /* Default-Portrait.png */,
+				E43D40CE15BFCCA80093A973 /* Default@2x.png */,
+				E43D40CF15BFCCA80093A973 /* Icon-72.png */,
+				E43D40D015BFCCA80093A973 /* Icon-Small-50.png */,
+				E43D40D115BFCCA80093A973 /* Icon-Small.png */,
+				E43D40D215BFCCA80093A973 /* Icon-Small@2x.png */,
+				E43D40D315BFCCA80093A973 /* Icon.png */,
+				E43D40D415BFCCA80093A973 /* Icon@2x.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		E4CB4F5F15BEEB8400CBBCD1 /* SharedCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -353,9 +370,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* wonderBeeps */ = {
+		1D6058900D05DD3D006BFB54 /* WonderBeeps */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "wonderBeeps" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "WonderBeeps" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -367,9 +384,9 @@
 			dependencies = (
 				E41D410413B3A11300A75A5D /* PBXTargetDependency */,
 			);
-			name = wonderBeeps;
+			name = WonderBeeps;
 			productName = iPhone;
-			productReference = 1D6058910D05DD3D006BFB54 /* wonderBeeps.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* WonderBeeps.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -380,7 +397,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "wonderBeeps" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "WonderBeeps" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -400,7 +417,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* wonderBeeps */,
+				1D6058900D05DD3D006BFB54 /* WonderBeeps */,
 			);
 		};
 /* End PBXProject section */
@@ -420,10 +437,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				E428D61815BC55C200A8BDC2 /* README in Resources */,
-				E428D61C15BC7A9600A8BDC2 /* Default@2x.png in Resources */,
 				E428D62715BC8B2800A8BDC2 /* install.xml in Resources */,
+				E43D40D515BFCCA80093A973 /* Default-Portrait.png in Resources */,
+				E43D40D615BFCCA80093A973 /* Default@2x.png in Resources */,
+				E43D40D715BFCCA80093A973 /* Icon-72.png in Resources */,
+				E43D40D815BFCCA80093A973 /* Icon-Small-50.png in Resources */,
+				E43D40D915BFCCA80093A973 /* Icon-Small.png in Resources */,
+				E43D40DA15BFCCA80093A973 /* Icon-Small@2x.png in Resources */,
+				E43D40DB15BFCCA80093A973 /* Icon.png in Resources */,
+				E43D40DC15BFCCA80093A973 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +506,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = wonderBeeps;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = WonderBeeps;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -493,7 +518,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = wonderBeeps;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = WonderBeeps;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -520,7 +547,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Debug;
@@ -545,7 +572,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Release;
@@ -571,7 +598,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = "Ad Hoc";
@@ -582,28 +609,70 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
-				PRODUCT_NAME = wonderBeeps;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = WonderBeeps;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Ad Hoc";
+		};
+		E43D40AC15BFBBA60093A973 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E41D3ED613B38FB500A75A5D /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roee Kremer";
+				COMPRESS_PNG_FILES = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				ONLY_ACTIVE_ARCH = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A5577186-1416-408F-AB3C-00A37198E503";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_LDFLAGS = "-no_arch_warnings";
+			};
+			name = Distribution;
+		};
+		E43D40AD15BFBBA60093A973 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = WonderBeeps;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Distribution;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "wonderBeeps" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "WonderBeeps" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				E43D40AD15BFBBA60093A973 /* Distribution */,
 				E428D63E15BC98CA00A8BDC2 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "wonderBeeps" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "WonderBeeps" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				E43D40AC15BFBBA60093A973 /* Distribution */,
 				E428D63D15BC98CA00A8BDC2 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;

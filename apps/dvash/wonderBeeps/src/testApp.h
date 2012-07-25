@@ -43,8 +43,7 @@ public:
     bool bEditMode;
     int keyNum;
     bool bButtonDown;
-    float volume;
-//    float launchVolume;
+
     
     deque<int> queue;
     int delayTimer;

@@ -5,7 +5,7 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){	
-    volume  = [[MPMusicPlayerController applicationMusicPlayer] volume];
+   
     
     CGRect frame = CGRectMake(0, -100, 10, 0);
     MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:frame] autorelease];
@@ -47,9 +47,10 @@ void testApp::setup(){
         buttons.push_back(b);
     }
     
+   
     ofxXmlSettings xml;
     if (xml.loadFile(ofxiPhoneGetDocumentsDirectory()+"buttons.xml")) {
-        volume = xml.getAttribute("buttons", "volume", 1.0f);
+        [[MPMusicPlayerController applicationMusicPlayer] setVolume:xml.getAttribute("buttons", "volume", 1.0f)];
         xml.pushTag("buttons");
         for (int i=0;i<xml.getNumTags("button");i++) {
             string text = xml.getAttribute("button", "text", "",i);
@@ -59,9 +60,9 @@ void testApp::setup(){
         xml.popTag();
     }
     
-    slider.setup(ofRectangle(20,ofGetHeight()-130,240,100),volume);
+    slider.setup(ofRectangle((ofGetWidth()-120)/2,ofGetHeight()-73,120,60),[[MPMusicPlayerController applicationMusicPlayer] volume]);
     
-    [[MPMusicPlayerController applicationMusicPlayer] setVolume:volume];
+    
     
 	
     
@@ -113,13 +114,15 @@ void testApp::update(){
         buttons[queue.back()].audio.play();
         queue.pop_back();
     }
+    
+    slider.value = [[MPMusicPlayerController applicationMusicPlayer] volume];
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
     
     
-    ofSetColor(255, 255, 255, 30);
+    ofSetColor(255, 255, 255, 50);
     
     background.draw(0, 0);
     
@@ -157,7 +160,7 @@ void testApp::draw(){
 void testApp::exit(){
     ofxXmlSettings xml;
     xml.addTag("buttons");
-    xml.addAttribute("buttons", "volume", volume,0);
+    xml.addAttribute("buttons", "volume", [[MPMusicPlayerController applicationMusicPlayer] volume],0);
     xml.pushTag("buttons");
     
     for (vector<button>::iterator iter = buttons.begin(); iter!=buttons.end(); iter++) {
@@ -214,7 +217,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         }
     }
     
-    slider.touchDown(touch);
+//    slider.touchDown(touch);
 }
 
 //--------------------------------------------------------------
@@ -224,7 +227,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
     }
     
     
-    slider.touchMoved(touch);
+//    slider.touchMoved(touch);
     
 }
 
@@ -236,7 +239,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
     
     if (touch.id == 0 && bButtonDown) {
         bButtonDown = false;
-        if (ofGetElapsedTimeMillis()-downTime>500) {
+        if (ofGetElapsedTimeMillis()-downTime>250) {
             
             bEditMode = true;
            
@@ -257,12 +260,8 @@ void testApp::touchUp(ofTouchEventArgs &touch){
         }
     }
     
-    slider.touchUp(touch);
+//    slider.touchUp(touch);
     
-    if (volume!=slider.value) {
-        volume = slider.value;
-        [[MPMusicPlayerController applicationMusicPlayer] setVolume:volume];
-    }
 }
 
 //--------------------------------------------------------------
