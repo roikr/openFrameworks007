@@ -148,6 +148,8 @@ public:
     
     ofxSymbolInstance *getChild(string name);
     layer *getLayer(string name);
+    vector<string> listLayers();
+    vector<string> listChilds(string name);
     string name;
     
     bool bVisible;

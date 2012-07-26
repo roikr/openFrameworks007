@@ -34,6 +34,7 @@
 		E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
+		E4D9893E15C14E9E00465293 /* kaiserNav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,7 +68,6 @@
 		BB24DD8D10DA77E000E9C588 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		E41C9753149EA47700E8DD4E /* bikers.jpg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = image.jpeg; name = bikers.jpg; path = bin/data/images/bikers.jpg; sourceTree = SOURCE_ROOT; };
 		E41D3ED613B38FB500A75A5D /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E41D3EE513B3906D00A75A5D /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/iphone/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E41D400613B39D2100A75A5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -96,6 +96,8 @@
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
+		E4D9893C15C14DFF00465293 /* kaiserNav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kaiserNav.h; sourceTree = "<group>"; };
+		E4D9893D15C14E9E00465293 /* kaiserNav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kaiserNav.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,7 +190,6 @@
 			children = (
 				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
-				E41C9757149EA47700E8DD4E /* images */,
 			);
 			name = data;
 			path = bin/data;
@@ -212,14 +213,6 @@
 				29B97323FDCFA39411CA2CEA /* core frameworks */,
 			);
 			name = core;
-			sourceTree = "<group>";
-		};
-		E41C9757149EA47700E8DD4E /* images */ = {
-			isa = PBXGroup;
-			children = (
-				E41C9753149EA47700E8DD4E /* bikers.jpg */,
-			);
-			name = images;
 			sourceTree = "<group>";
 		};
 		E41D40FE13B3A0D800A75A5D /* Products */ = {
@@ -313,6 +306,8 @@
 				E431347315B6BA9300864C97 /* ofxFloatingCaption.h */,
 				E4A2753E15A389EF009F7B62 /* ofxDeepZoom.cpp */,
 				E4A2753F15A389EF009F7B62 /* ofxDeepZoom.h */,
+				E4D9893C15C14DFF00465293 /* kaiserNav.h */,
+				E4D9893D15C14E9E00465293 /* kaiserNav.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -455,6 +450,7 @@
 				E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */,
 				E430147B15B59B6B005347AE /* ofxXmlSettings.cpp in Sources */,
 				E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */,
+				E4D9893E15C14E9E00465293 /* kaiserNav.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

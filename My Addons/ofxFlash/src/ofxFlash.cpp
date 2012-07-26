@@ -778,3 +778,24 @@ layer *ofxSymbolInstance::getLayer(string name) {
     return NULL;
     
 }
+
+vector<string> ofxSymbolInstance::listLayers() {
+    vector<string> res;
+    for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
+        res.push_back(iter->name);
+    }
+    return res;
+}
+
+vector<string> ofxSymbolInstance::listChilds(string name) {
+    vector<string> res;
+    layer *l = getLayer(name);
+    if (l!=NULL) {
+        for (vector<ofxSymbolInstance>::iterator iter=l->instances.begin(); iter!=l->instances.end(); iter++) {
+            if (iter->type==SYMBOL_INSTANCE) {
+                res.push_back(iter->name);
+            }
+        }
+    }
+    return res;
+}
