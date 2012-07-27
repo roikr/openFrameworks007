@@ -1,0 +1,23 @@
+1. drag FacebookSDK to Frameworks and check if its path was added to frameworks search path - if not, add it "$(SRCROOT)/../.."
+2. add Accounts framework as optional
+3. update Project.xcconfig to add -lsqlite3.0
+    OTHER_LDFLAGS = $(OF_CORE_LIBS) -lsqlite3.0
+4. add facebook registered bundle identifier to the property list
+    <key>CFBundleIdentifier</key>
+	<string>com.facebook.sdk.samples.justlogin</string>
+5. add facebookAppId and url scheme to the property list
+    <key>FacebookAppID</key>
+	<string>380615018626574</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb380615018626574</string>
+			</array>
+		</dict>
+	</array>
+6. remove 
+    <key>UIApplicationExitsOnSuspend</key>
+	<true/>
+	
