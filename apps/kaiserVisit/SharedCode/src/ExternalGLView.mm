@@ -1,5 +1,5 @@
 //
-//  SharedGLView.m
+//  ExternalGLView.m
 //  emptyExample
 //
 //  Created by Roee Kremer on 7/29/12.
@@ -43,12 +43,12 @@
 #import "ofMain.h"
 #import  "ofxiPhoneExtras.h"
 
-#import "SharedGLView.h"
+#import "ExternalGLView.h"
 
 #import "ES1Renderer.h"
 #import "ES2Renderer.h"
 
-@implementation SharedGLView
+@implementation ExternalGLView
 
 // You must implement this method
 + (Class) layerClass

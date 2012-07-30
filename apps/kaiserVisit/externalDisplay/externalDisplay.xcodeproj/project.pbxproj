@@ -25,10 +25,11 @@
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
 		E41D421413B3A95300A75A5D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
+		E468D4FD15C65A1C00BD75A5 /* ExternalGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E468D4FB15C65A1C00BD75A5 /* ExternalGLView.mm */; };
+		E468D50015C65D6800BD75A5 /* ofxiExternalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E468D4FF15C65D6800BD75A5 /* ofxiExternalView.mm */; };
 		E4A823A412561BE3002F86A2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4A823A312561BE3002F86A2 /* CoreGraphics.framework */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
-		E4FAF2F615C5A83B00F63B72 /* SharedGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FAF2F515C5A83B00F63B72 /* SharedGLView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,12 +70,14 @@
 		E41D400813B39D2100A75A5D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		E41D400913B39D2100A75A5D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iPhone+OF Lib.xcodeproj"; path = "../../../libs/openFrameworksCompiled/project/iphone/iPhone+OF Lib.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		E468D4FB15C65A1C00BD75A5 /* ExternalGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExternalGLView.mm; sourceTree = "<group>"; };
+		E468D4FC15C65A1C00BD75A5 /* ExternalGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalGLView.h; sourceTree = "<group>"; };
+		E468D4FE15C65D5200BD75A5 /* ofxiExternalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxiExternalView.h; sourceTree = "<group>"; };
+		E468D4FF15C65D6800BD75A5 /* ofxiExternalView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiExternalView.mm; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
-		E4FAF2F415C5A83B00F63B72 /* SharedGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedGLView.h; sourceTree = "<group>"; };
-		E4FAF2F515C5A83B00F63B72 /* SharedGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SharedGLView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,8 +222,10 @@
 		E4FAF2E415C5A80500F63B72 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4FAF2F415C5A83B00F63B72 /* SharedGLView.h */,
-				E4FAF2F515C5A83B00F63B72 /* SharedGLView.mm */,
+				E468D4FB15C65A1C00BD75A5 /* ExternalGLView.mm */,
+				E468D4FC15C65A1C00BD75A5 /* ExternalGLView.h */,
+				E468D4FE15C65D5200BD75A5 /* ofxiExternalView.h */,
+				E468D4FF15C65D6800BD75A5 /* ofxiExternalView.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -325,7 +330,8 @@
 			files = (
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E4FAF2F615C5A83B00F63B72 /* SharedGLView.mm in Sources */,
+				E468D4FD15C65A1C00BD75A5 /* ExternalGLView.mm in Sources */,
+				E468D50015C65D6800BD75A5 /* ofxiExternalView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

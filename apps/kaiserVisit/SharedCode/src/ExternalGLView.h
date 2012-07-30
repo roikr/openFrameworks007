@@ -1,5 +1,5 @@
 //
-//  SharedGLView.h
+//  ExternalGLView.h
 //  emptyExample
 //
 //  Created by Roee Kremer on 7/29/12.
@@ -45,7 +45,7 @@
 // This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
 // The view content is basically an EAGL surface you render your OpenGL scene into.
 // Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
-@interface SharedGLView : UIView
+@interface ExternalGLView : UIView
 {
 @private
     

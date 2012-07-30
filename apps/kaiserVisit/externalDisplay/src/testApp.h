@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
-#include "SharedGLView.h"
+#include "ofxiExternalView.h"
 
 class testApp : public ofxiPhoneApp {
 	
@@ -24,13 +24,8 @@ public:
 	void gotMemoryWarning();
 	void deviceOrientationChanged(int newOrientation);
 
-    SharedGLView *glView;
-    UIScreen					*extScreen;
-	UIWindow					*extWindow;
-    
+    ofxiExternalView extView;
     stringstream ss;
-    
-    bool bExt;
 };
 
 
