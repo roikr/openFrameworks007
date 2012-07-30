@@ -92,7 +92,7 @@ void ofxiExternalView::begin() {
             glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
         
-        ofSetupScreenPerspective(size.width, size.height, ofGetOrientation(), true);
+        ofSetupScreenPerspective(size.width, size.height, OFXIPHONE_ORIENTATION_PORTRAIT, true);
         
         
     }

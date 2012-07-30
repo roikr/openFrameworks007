@@ -32,5 +32,7 @@
 	<true/>
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationPortrait</string>
+	<key>UIPrerenderedIcon</key>
+	<true/>
 </dict>
 </plist>

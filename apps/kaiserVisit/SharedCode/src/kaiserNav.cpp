@@ -9,22 +9,18 @@
 #include "kaiserNav.h"
 
 
-int limitX = 6000;	//these define where the camera can pan to
-int limitY = 4000;
 
-ofVec2f kaiserNav::camOffset( ){
-	
-    //return (p-0.5*ofVec2f(limitX,limitY)+cam.offset)*cam.zoom+0.5f*ofVec2f(ofGetWidth(),ofGetHeight());
-    return cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-}
 
 void kaiserNav::updateOverlays() {
     for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
         iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height)));
     }
     
+    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+    deep.transform( camOffset, cam.zoom);
+    
     if (bCaptionActive) {
-//        deep.transform( camOffset(), cam.zoom);
+        
         
         
         ofxSymbolInstance *child = image.getChild(caption.name);
@@ -106,23 +102,24 @@ void kaiserNav::setup(){
 	ofEnableAlphaBlending();
 	
 	ofSetCircleResolution(32);
+    
+    width = 5053;
+    height = 3517;
+    limitX = width/2;
+    limitY = height/2;
+
 	
-	cam.setZoom(0.125f);
-    //    cam.setZoom(1.0f);
-	cam.setMinZoom(0.1f);
+    float minZoom = 1024.0/(float)width;
+//	cam.setZoom(0.125f);
+    cam.setZoom(minZoom);
+	cam.setMinZoom(minZoom);
 	cam.setMaxZoom(2.0f);
 	cam.setScreenSize( ofGetWidth(), ofGetHeight() );
 	cam.setViewportConstrain( ofVec3f(-limitX, -limitY), ofVec3f(limitX, limitY)); //limit browseable area, in world units
 	
-    //    deep.setup("IMAGE_1", "png",5053, 3517, ofRectangle(100,100, ofGetWidth()-200,ofGetHeight()-200));
-    width = 5053;
-    height = 3517;
-    deep.setup("IMAGE_1", "png",width, height, ofRectangle(0,0, ofGetWidth(),ofGetHeight()));
-    deep.transform( camOffset(), cam.zoom);
+        deep.setup("IMAGE_1", "png",width, height, ofRectangle(0,0, 1024,768)); // ofGetWidth(),ofGetHeight()
     
     deep.start();
-    
-	
     
     bCaptionActive = false;
     
@@ -143,15 +140,56 @@ void kaiserNav::update() {
     }
     
 	deep.update();
+    glFlush();
 }
 
+
+void kaiserNav::draw2nd() {
+    ofPushMatrix();
+ 	cam.apply(); //put all our drawing under the ofxPanZoom effect
+    ofPushMatrix();
+    
+    
+    deep.draw();
+    image.draw();
+    
+    ofPopMatrix();
+
+    int s = 25;
+    glColor4f(1, 0, 0, 1);
+    ofRect(-limitX , -limitY , 2 * limitX, s);
+    ofRect(limitX - s , -limitY , s, 2 * limitY);
+    ofRect(-limitX , limitY - s , s, -2 * limitY);	
+    ofRect(limitX , limitY - s, -2 * limitX, s);		
+    glColor4f(1, 1, 1, 1);
+	
+	cam.reset();	//back to normal ofSetupScreen() projection
+	
+    for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
+        iter->second.draw();
+    }
+    
+    if (bCaptionActive) {
+        ofPushStyle();
+        ofSetColor(0);
+        ofSetLineWidth(2);
+        ofVec2f vec = floating.getAnchor()-floating.getPos();
+        //    vec = vec.normalized()*(vec.length()-200*cam.zoom);
+        vec = vec.normalized()*(vec.length()-13.5);
+        ofLine(floating.getPos(), floating.getPos()+vec);
+        ofPopStyle();
+        caption.draw();
+    }
+    ofPopMatrix();
+    
+}
 
 void kaiserNav::draw() {
     //    deep.begin();
     //    deep.draw();
     //    deep.end();
     
-    
+    ofPushMatrix();
     
 	cam.apply(); //put all our drawing under the ofxPanZoom effect
     ofPushMatrix();
@@ -204,6 +242,7 @@ void kaiserNav::draw() {
     
     layout.draw();
     
+    ofPopMatrix();
 	cam.drawDebug(); //see info on ofxPanZoom status
 }
 

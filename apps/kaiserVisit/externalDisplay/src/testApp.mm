@@ -11,6 +11,8 @@ void testApp::setup(){
 	
 	//iPhoneAlerts will be sent to this.
 	ofxiPhoneAlerts.addListener(this);
+    
+    image.loadImage("Icon.png");
 	
 	//If you want a landscape oreintation 
 //	iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
@@ -40,6 +42,7 @@ void testApp::setup(){
 void testApp::update(){
     if (extView.getIsActive()) {
         extView.begin();
+        image.draw(0, 0);
         ofDrawBitmapString(ss.str(), 0,0);
         extView.end();
     }
@@ -48,6 +51,7 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    image.draw(0, 0);
 	ofDrawBitmapString(ss.str(), 0,0);
 }
 

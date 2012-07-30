@@ -25,6 +25,7 @@ public:
 	void deviceOrientationChanged(int newOrientation);
 
     ofxiExternalView extView;
+    ofImage image;
     stringstream ss;
 };
 

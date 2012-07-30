@@ -12,11 +12,32 @@ void testApp::setup(){
 	ofxiPhoneAlerts.addListener(this);
     
     nav.setup();
+    glFlush();
+    
+    vector<pair<int, int> > modes = extView.listModes();
+    
+    for (vector<pair<int, int> >::iterator iter=modes.begin(); iter!=modes.end(); iter++) {
+        if (iter->first == 1024 && iter->second == 768) {
+            extView.setupMode(distance(modes.begin(), iter));
+        }
+        
+    }
+    
+    
 }
 
 
 void testApp::update() {
+   
     nav.update();
+    
+    if (extView.getIsActive()) {
+        extView.begin();
+        nav.draw2nd();
+        extView.end();
+    }
+
+     
 }
 
 

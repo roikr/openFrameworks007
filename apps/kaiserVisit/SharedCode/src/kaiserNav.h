@@ -21,10 +21,9 @@ public:
 	void setup();
 	void update();
 	void draw();
+    void draw2nd();
 	void exit();
     
-    ofVec2f camOffset();
-	
 	void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
 	void touchUp(ofTouchEventArgs &touch);
@@ -52,6 +51,10 @@ public:
     
     float width;
     float height;
+    
+    int limitX;	//these define where the camera can pan to
+    int limitY;
+
     
         
     

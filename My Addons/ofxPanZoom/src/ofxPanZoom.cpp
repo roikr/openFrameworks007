@@ -299,6 +299,7 @@ void ofxPanZoom::update() {
             offset+=velocity*(t-lastTime);
             velocity*=0.8;
             lastTime = t;
+            applyConstrains();
         } else {
             state = SLIDER_STATE_IDLE;
         }

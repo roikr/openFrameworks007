@@ -3,6 +3,7 @@
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
 #include "kaiserNav.h"
+#include "ofxiExternalView.h"
 
 class testApp : public ofxiPhoneApp {
 	
@@ -26,6 +27,7 @@ public:
 	void deviceOrientationChanged(int newOrientation);
 
 	kaiserNav nav;   
+    ofxiExternalView extView;
     
 };
 
