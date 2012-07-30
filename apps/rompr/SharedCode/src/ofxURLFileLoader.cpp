@@ -143,7 +143,7 @@ void ofxURLFileLoader::threadedFunction() {
 		    	ofLog(OF_LOG_VERBOSE,"got request " + requests.front().name);
 				responses.push(response);
 				requests.pop_front();
-		    	ofAddListener(ofEvents.update,this,&ofxURLFileLoader::update);
+		    	ofAddListener(ofEvents().update,this,&ofxURLFileLoader::update);
 				unlock();
 			}else{
 		    	ofLog(OF_LOG_VERBOSE,"failed getting request " + requests.front().name);
@@ -278,7 +278,7 @@ void ofxURLFileLoader::update(ofEventArgs & args){
 		unlock();
 		ofNotifyEvent(ofxURLResponseEvent,response);
 	}else{
-		ofRemoveListener(ofEvents.update,this,&ofxURLFileLoader::update);
+		ofRemoveListener(ofEvents().update,this,&ofxURLFileLoader::update);
 		unlock();
 	}
 

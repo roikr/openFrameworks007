@@ -29,7 +29,7 @@ void ofxUnregisterStillCameraNotification(T * obj){
 class ofxiStillCamera {
 	
 public:
-	
+	ofxiStillCamera() : videoTexture(NULL) {};
 	void setup();
 	void update();
 	void draw(ofRectangle rect,ofRectangle tex);

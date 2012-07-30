@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include <map>
 
 #define EASE_DURATION 0.5f
 

@@ -41,11 +41,14 @@ enum {
 
 //--------------------------------------------------------------
 void testApp::setup(){	
-    
+ 
+    [ofxiPhoneGetGLParentView() removeFromSuperview];
     [ofxiPhoneGetGLView() removeFromSuperview];
+    
     UIWindow *oldWindow = ofxiPhoneGetUIWindow();
     [oldWindow resignKeyWindow];
     [oldWindow release];
+    
     
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
@@ -54,11 +57,12 @@ void testApp::setup(){
     [window setView:ofxiPhoneGetGLView()];
     //[self.window setOverlayListener:[self.viewController view]];
 	[window makeKeyAndVisible];
+     
     
         
 	// register touch events
 //    ofSetLogLevel(OF_LOG_VERBOSE); // roikr: verbose for details
-	ofRegisterTouchEvents(this);
+//	ofRegisterTouchEvents(this);
     ofxRegisterURLNotification(this);
 
 	//ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
@@ -104,7 +108,8 @@ void testApp::setup(){
     //	mapKit.setAllowUserInteraction(false);
 
 //    [ofxiPhoneGetUIWindow() addSubview:[[MKMapView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
-    [ofxiPhoneGetUIWindow() bringSubviewToFront:ofxiPhoneGetGLView()];
+//    [ofxiPhoneGetUIWindow() bringSubviewToFront:ofxiPhoneGetGLView()];
+    ofxiPhoneSendGLViewToFront();
     
     bUpdatingRegion = false;
     bQueryLocation = false;
@@ -718,7 +723,7 @@ void testApp::draw(){
 
     
     ofSetHexColor(0xFFFFFF);
-    if (!bSelected  || nearest->itemID!=selectedID) {
+    if (nearest!=items.end() && (!bSelected  || nearest->itemID!=selectedID)) {
         if (nearest->image.bAllocated()) {
             nearest->image.draw(nearest->rect);
         } else {
@@ -839,7 +844,7 @@ void testApp::errorLoadingMap(string errorDescription){
 
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
-//    cout << "touchDown" << endl;
+    cout << "touchDown" << endl;
 }
 
 //--------------------------------------------------------------
@@ -855,7 +860,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-//    cout << "touchDoubleTap" << endl;
+    cout << "touchDoubleTap" << endl;
     float blockWidth =  MAP_BLOCK_WIDTH / MAP_RECT_WIDTH * ofGetWidth();
     
     switch (state) {
