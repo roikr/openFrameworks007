@@ -2,18 +2,18 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    nav.setup();
+    nat.setup();
    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    nav.update();
+    
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    nav.draw();
+    nat.draw();
     
     glColor4f(1,1,1,1);
 	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );
@@ -39,7 +39,7 @@ void testApp::mouseDragged(int x, int y, int button) {
 //    cout << x << "\t" << y << "\t" << button << endl;
     if (emulator.getShouldMove()) {
         ofTouchEventArgs touch = emulator.mouseDragged(x, y);
-        nav.touchMoved(touch);
+        nat.touchMoved(touch);
     }
     
 
@@ -50,14 +50,14 @@ void testApp::mousePressed(int x, int y, int button) {
     
     
     ofTouchEventArgs touch = emulator.mousePressed(x, y, button);
-    nav.touchDown(touch);
+    nat.touchDown(touch);
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button) {
     
     ofTouchEventArgs touch = emulator.mouseReleased(x, y, button);
-    nav.touchUp(touch);
+    nat.touchUp(touch);
     
         
     

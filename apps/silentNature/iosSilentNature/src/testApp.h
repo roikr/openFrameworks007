@@ -4,6 +4,7 @@
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
 #include "ofxFlash.h"
+#include "silentNature.h"
 
 class testApp : public ofxiPhoneApp {
 	
@@ -24,12 +25,7 @@ public:
 	void gotMemoryWarning();
 	void deviceOrientationChanged(int newOrientation);
     
-    void setTool(int tool);
-
-    ofxDocument doc;
-    ofxSymbolInstance layout;
-    
-    int tool;
+    silentNature nat;
 };
 
 

@@ -1,79 +1,86 @@
 #include "testApp.h"
 
+
 //--------------------------------------------------------------
-void testApp::setup(){
-    nav.setup();
-   
+void testApp::setup(){	
+	// register touch events
+	ofRegisterTouchEvents(this);
+	
+	// initialize the accelerometer
+	ofxAccelerometer.setup();
+	
+	//iPhoneAlerts will be sent to this.
+	ofxiPhoneAlerts.addListener(this);
+	
+	//If you want a landscape oreintation 
+//	iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
+    
+	
+    nat.setup();
+
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    nav.update();
+
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    nav.draw();
-    
-    glColor4f(1,1,1,1);
+	nat.draw();   
+    glColor4f(0,0,0,1);
 	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
-    emulator.keyPressed(key);
-}
-
-//--------------------------------------------------------------
-void testApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
-    
-}
-
-//--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button) {
-//    cout << x << "\t" << y << "\t" << button << endl;
-    if (emulator.getShouldMove()) {
-        ofTouchEventArgs touch = emulator.mouseDragged(x, y);
-        nav.touchMoved(touch);
-    }
+void testApp::exit(){
     
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button) {
-    
-    
-    ofTouchEventArgs touch = emulator.mousePressed(x, y, button);
-    nav.touchDown(touch);
+void testApp::touchDown(ofTouchEventArgs &touch){
+    nat.touchDown(touch);
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button) {
-    
-    ofTouchEventArgs touch = emulator.mouseReleased(x, y, button);
-    nav.touchUp(touch);
-    
-        
-    
-}
-
-//--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void testApp::touchMoved(ofTouchEventArgs &touch){
 
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void testApp::touchUp(ofTouchEventArgs &touch){
 
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 
 }
+
+//--------------------------------------------------------------
+void testApp::lostFocus(){
+
+}
+
+//--------------------------------------------------------------
+void testApp::gotFocus(){
+
+}
+
+//--------------------------------------------------------------
+void testApp::gotMemoryWarning(){
+
+}
+
+//--------------------------------------------------------------
+void testApp::deviceOrientationChanged(int newOrientation){
+
+}
+
+
+//--------------------------------------------------------------
+void testApp::touchCancelled(ofTouchEventArgs& args){
+
+}
+
