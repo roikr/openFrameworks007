@@ -23,7 +23,6 @@
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
 		E41D421413B3A95300A75A5D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
 		E430146015B598F5005347AE /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430137215B598F4005347AE /* ofxFlash.cpp */; };
-		E430146C15B59B38005347AE /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E430146B15B59B38005347AE /* ofxiTexture.mm */; };
 		E430147715B59B6B005347AE /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E430146E15B59B6B005347AE /* install.xml */; };
 		E430147815B59B6B005347AE /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147015B59B6B005347AE /* tinyxml.cpp */; };
 		E430147915B59B6B005347AE /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147215B59B6B005347AE /* tinyxmlerror.cpp */; };
@@ -77,8 +76,6 @@
 		E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iPhone+OF Lib.xcodeproj"; path = "../../../libs/openFrameworksCompiled/project/iphone/iPhone+OF Lib.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		E430137215B598F4005347AE /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlash.cpp; sourceTree = "<group>"; };
 		E430137315B598F4005347AE /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
-		E430146A15B59B38005347AE /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
-		E430146B15B59B38005347AE /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E430146E15B59B6B005347AE /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E430147015B59B6B005347AE /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		E430147115B59B6B005347AE /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -177,7 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				E430146D15B59B6B005347AE /* ofxXmlSettings */,
-				E430146815B59B38005347AE /* ofxiTexture */,
 				E430125815B598F3005347AE /* ofxFlash */,
 				E4B7D98E15A3900500DA6DA8 /* ofxPanZoom */,
 				E4A2753C15A389EF009F7B62 /* SharedCode */,
@@ -237,24 +233,6 @@
 			children = (
 				E430137215B598F4005347AE /* ofxFlash.cpp */,
 				E430137315B598F4005347AE /* ofxFlash.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E430146815B59B38005347AE /* ofxiTexture */ = {
-			isa = PBXGroup;
-			children = (
-				E430146915B59B38005347AE /* src */,
-			);
-			name = ofxiTexture;
-			path = "../../../My Addons/ofxiTexture";
-			sourceTree = "<group>";
-		};
-		E430146915B59B38005347AE /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E430146A15B59B38005347AE /* ofxiTexture.h */,
-				E430146B15B59B38005347AE /* ofxiTexture.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -444,7 +422,6 @@
 				E4A2754415A389EF009F7B62 /* ofxDeepZoom.cpp in Sources */,
 				E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */,
 				E430146015B598F5005347AE /* ofxFlash.cpp in Sources */,
-				E430146C15B59B38005347AE /* ofxiTexture.mm in Sources */,
 				E430147815B59B6B005347AE /* tinyxml.cpp in Sources */,
 				E430147915B59B6B005347AE /* tinyxmlerror.cpp in Sources */,
 				E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */,

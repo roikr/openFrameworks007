@@ -93,22 +93,23 @@ void ofxDocument::load() {
 #ifndef TARGET_OPENGLES
 //        cout << iter->image.loadImage(iter->sourceExternalFilepath);
         cout << iter->href << ": " << iter->image.loadImage("LIBRARY/"+iter->href) << endl;
-        iter->image.update();
+       
         
 #else
         ofFile file = ofFile(ofToDataPath("LIBRARY/"+iter->href));
         if (file.exists()) {
             cout << iter->href << ": " << iter->image.loadImage("LIBRARY/"+iter->href) << endl;
         } else {
-            file = ofFile(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
-            if (file.exists()) {
-                cout << "load pvr for: " << file.getAbsolutePath();
-                iter->texture.load(file.getAbsolutePath());
-                iter->uWidth = iter->width/(float)iter->texture._width;
-                iter->vHeight =  iter->height/(float)iter->texture._height;
-            } else {
-                cout << "no pvr for: " << file.getAbsolutePath();
-            }
+            cout << "no image for: " << file.getAbsolutePath();
+//            file = ofFile(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
+//            if (file.exists()) {
+//                cout << "load pvr for: " << file.getAbsolutePath();
+//                iter->texture.load(file.getAbsolutePath());
+//                iter->uWidth = iter->width/(float)iter->texture._width;
+//                iter->vHeight =  iter->height/(float)iter->texture._height;
+//            } else {
+//                cout << "no pvr for: " << file.getAbsolutePath();
+//            }
         }
  //        ofFile file = ofFile(iter->sourceExternalFilepath);
         
@@ -145,9 +146,9 @@ void ofxDocument::load() {
 void ofxDocument::release() {
     for (vector<ofxBitmapItem>::iterator iter=bitmapItems.begin(); iter!=bitmapItems.end(); iter++) {
         iter->image.clear();
-#ifdef TARGET_OPENGLES
-        iter->texture.release();
-#endif
+//#ifdef TARGET_OPENGLES
+//        iter->texture.release();
+//#endif
         
     }
     
@@ -550,9 +551,11 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
 #else
                     if (iter->bitmapItem->image.bAllocated()) {
                         iter->bitmapItem->image.draw(0, 0);
-                    } else {
-                        iter->bitmapItem->texture.draw(iter->bitmapItem->uWidth,iter->bitmapItem->vHeight);
-                    }
+                    } 
+                    
+//                    else {
+//                        iter->bitmapItem->texture.draw(iter->bitmapItem->uWidth,iter->bitmapItem->vHeight);
+//                    }
                 
 #endif
                     ofSetColor(255, 255, 255,255);

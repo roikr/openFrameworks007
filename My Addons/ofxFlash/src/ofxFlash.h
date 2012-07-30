@@ -10,9 +10,9 @@
 
 #include "ofMain.h"
 
-#ifdef TARGET_OPENGLES
-#include "ofxiTexture.h"
-#endif
+//#ifdef TARGET_OPENGLES
+//#include "ofxiTexture.h"
+//#endif
 
 enum {
     SYMBOL_INSTANCE,
@@ -80,22 +80,22 @@ struct ofxBitmapItem {
     
     
     ofImage image;
-#ifdef TARGET_OPENGLES
-    ofxiTexture texture;
-    float uWidth; // width and height from 0 to 1
-    float vHeight;
-    
-    //    ofxiTexture texture;
-    float u; // width and height from 0 to 1
-    float v;
-    
-    //#ifndef TARGET_OPENGLES
-    //    ofImage image;
-    //#else
-    //    ofxiTexture texture;
-    //#endif
-    
-#endif
+//#ifdef TARGET_OPENGLES
+//    ofxiTexture texture;
+//    float uWidth; // width and height from 0 to 1
+//    float vHeight;
+//    
+//    //    ofxiTexture texture;
+//    float u; // width and height from 0 to 1
+//    float v;
+//    
+//    //#ifndef TARGET_OPENGLES
+//    //    ofImage image;
+//    //#else
+//    //    ofxiTexture texture;
+//    //#endif
+//    
+//#endif
 //    float width;
 //    float height;
     
