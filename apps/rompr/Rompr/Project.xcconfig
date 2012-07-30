@@ -6,7 +6,7 @@ OF_PATH = ../../..
 #include "../../../libs/openFrameworksCompiled/project/iphone/CoreOF.xcconfig"
 
 OTHER_LDFLAGS = $(OF_CORE_LIBS) 
-HEADER_SEARCH_PATHS = $(OF_CORE_HEADERS) $(OF_PATH)/addons/ofxJSON/lib/include
+HEADER_SEARCH_PATHS = $(OF_CORE_HEADERS)
 
 COMPRESS_PNG_FILES = NO
 GCC_THUMB_SUPPORT = NO

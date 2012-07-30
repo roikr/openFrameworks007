@@ -92,7 +92,8 @@ public:
     string error; // last error
     
     ofImage logo;
-    ofxTransform xform;
+    ofxTransform imageXform;
+    ofxTransform cameraXform;
     
     bool bSelected;
     int selectedID;

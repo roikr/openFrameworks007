@@ -120,6 +120,7 @@ void testApp::setup(){
     state = STATE_MAP;
     bStartCamera = false;
     bStopCamera = false;
+    cameraXform.setup(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,0.01,0);
 
 }
 
@@ -642,11 +643,9 @@ void testApp::update(){
     }
     
     if (bSelected) {
-        if (xform.getIsEasing()) {
-             xform.update();
-        }
+        imageXform.update();
         
-        if (bDeselect && !xform.getIsEasing()) {
+        if (bDeselect && !imageXform.getIsEasing()) {
             bDeselect = false;
             bSelected = false;
         }
@@ -657,8 +656,8 @@ void testApp::update(){
     cam.update();
     
     if (bStartCamera) {
-        xform.update();
-        if (!xform.getIsEasing()) {
+        cameraXform.update();
+        if (!cameraXform.getIsEasing()) {
             bStartCamera = false;
             cam.preview();
             ofxRegisterVolumeButtonsNotification(this);
@@ -667,8 +666,8 @@ void testApp::update(){
     }
     
     if (bStopCamera) {
-        xform.update();
-        if (!xform.getIsEasing()) {
+        cameraXform.update();
+        if (!cameraXform.getIsEasing()) {
             cam.stop();
             bStopCamera = false;
         }
@@ -771,10 +770,10 @@ void testApp::draw(){
         ofSetColor(255);
         list<item>::iterator iter = findItem(selectedID);
         if (iter!=items.end()) {
-            xform.begin();
+            imageXform.begin();
             ofTranslate(ofVec2f(iter->image.getWidth(), iter->image.getHeight())*-0.5);
             iter->image.draw(0, 0);
-            xform.end();
+            imageXform.end();
             
             
         }
@@ -784,7 +783,7 @@ void testApp::draw(){
     
     if (bStartCamera || cam.getIsPlaying()) {
     
-        xform.begin();
+        cameraXform.begin();
 
         
         
@@ -802,7 +801,7 @@ void testApp::draw(){
             cam.draw(ofRectangle(-width/2,-height/2,width,height), ofRectangle(0,0,1,1));
         } 
         
-        xform.end();
+        cameraXform.end();
     }  
         
     
@@ -867,8 +866,7 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                     list<item>::iterator iter = findItem(selectedID);
                     if (iter!=items.end()) {
                         float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
-                        float srcScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
-                        xform.start(EASE_OUT_QUAD,ofVec2f(ofGetWidth(),ofGetHeight())*0.5,iter->rect.getCenter(),srcScl,scale);
+                        imageXform.start(EASE_OUT_QUAD,iter->rect.getCenter(),scale);
                         penner.start(PENNER_BLACK,EASE_OUT_QUAD, 0,ofGetHeight());
                     }
                     
@@ -888,7 +886,8 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                        
                         float targetScl = MIN(ofGetWidth()/iter->image.getWidth(),ofGetHeight()/iter->image.getHeight());
                         float scale = blockWidth/max(iter->image.getWidth(),iter->image.getHeight())*(iter->count>1 ? 0.5 : 1.0);
-                        xform.start(EASE_OUT_QUAD, iter->rect.getCenter(),ofVec2f(ofGetWidth(),ofGetHeight())*0.5,scale,targetScl,0,0);
+                        imageXform.setup(iter->rect.getCenter(),scale);
+                        imageXform.start(EASE_OUT_QUAD, ofVec2f(ofGetWidth(),ofGetHeight())*0.5,targetScl);
                         penner.start(PENNER_BLACK, EASE_OUT_QUAD, ofGetHeight(), 0);
                         
                         string url = "http://"+HOST_NAME+"/mobile/recommendation/"+ofToString(iter->itemID);
@@ -903,8 +902,9 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
                 if (iter ==items.end()) {
                     
                     bStartCamera = true;
-                    ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
-                    xform.start(EASE_OUT_QUAD, pos,pos,0.01,1.0,0,90);
+                    ofVec2f pos();
+                    
+                    cameraXform.start(EASE_OUT_QUAD, ofVec2f(ofGetWidth(),ofGetHeight())*0.5,1.0,90);
                     state = STATE_CAMERA;
                     mapKit.setRegionWithMeters(getUserLocation().latitude, getUserLocation().longitude, 1000, 1000);
                 }
@@ -914,8 +914,8 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
             break;
             
         case STATE_CAMERA: {
-            ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
-            xform.start(EASE_OUT_QUAD, pos,pos,1.0,0.01,90,0);
+            
+            cameraXform.start(EASE_OUT_QUAD, ofVec2f(ofGetWidth(),ofGetHeight()),0.01,0);
             ofxUnregisterVolumeButtonsNotification(this);
             volumeButtons.stop();
             
@@ -941,8 +941,7 @@ void testApp::pictureTaken(ofImage &image) {
     imageLocation = getUserLocation();
     this->image = image;
  
-    ofVec2f pos(ofVec2f(ofGetWidth(),ofGetHeight())*0.5);
-     xform.start(EASE_OUT_QUAD, pos,pos,1.0,0.01,90,0);
+    cameraXform.start(EASE_OUT_QUAD, ofVec2f(ofGetWidth(),ofGetHeight()),0.01,0);
     ofxUnregisterVolumeButtonsNotification(this);
     volumeButtons.stop();
     bStopCamera = true;
