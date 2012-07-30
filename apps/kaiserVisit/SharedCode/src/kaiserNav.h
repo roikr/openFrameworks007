@@ -31,7 +31,8 @@ public:
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
     
-    void updateMarkers();
+    void updateOverlays();
+    void showCaption(string name,int lang);
     
 	ofxPanZoom	cam;
 	ofxDeepZoom deep;
@@ -39,9 +40,12 @@ public:
     ofxDocument doc;
     ofxSymbolInstance layout;
     ofxSymbolInstance image;
+    layer *background;
+    
+    bool bCaptionActive;
     ofxSymbolInstance caption;
     ofxFloatingCaption floating;
-    layer *background;
+    
     
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
     
@@ -49,7 +53,6 @@ public:
     float width;
     float height;
     
-    ofMatrix4x4 captionMat;
-    
+        
     
 };

@@ -18,14 +18,53 @@ ofVec2f kaiserNav::camOffset( ){
     return cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
 }
 
-void kaiserNav::updateMarkers() {
+void kaiserNav::updateOverlays() {
     for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
         iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height)));
     }
     
-    deep.transform( camOffset(), cam.zoom);
-    floating.setAnchor(cam.worldToScreen(captionMat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height))); 
-    caption.mat.makeTranslationMatrix(floating.getPos());
+    if (bCaptionActive) {
+//        deep.transform( camOffset(), cam.zoom);
+        
+        
+        ofxSymbolInstance *child = image.getChild(caption.name);
+        ofMatrix4x4 mat; // should initialized to general transform if any exist
+        mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
+                
+        floating.setAnchor(cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height))); 
+        
+        ofRectangle rect = caption.getBoundingBox();
+        
+//        cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
+
+        caption.mat.makeTranslationMatrix(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
+    }
+}
+
+void kaiserNav::showCaption(string name,int lang) {
+    bCaptionActive = true;
+    
+    string capName = name;
+    
+    switch (lang) {
+        case 0:
+            capName+="_HE";
+            break;
+        case 1:
+            capName+="_EN";
+            break;
+        case 2:
+            capName+="_AR";
+            break;
+            
+        default:
+            break;
+    }
+    
+    caption = doc.getSymbolItem(capName)->createInstance(name);
+    ofRectangle rect = caption.getBoundingBox();
+    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), 0.5*rect.width,0.5*rect.height, 150);
+    updateOverlays();
 }
 
 void kaiserNav::setup(){	
@@ -63,15 +102,6 @@ void kaiserNav::setup(){
         }
     }
      
-    //    layout.getChild("pimp")->bVisible = false;
-    
-    captionMat = mat;
-    captionMat.preMult(image.getChild("I1_B1")->mat);
-    caption = doc.getSymbolItem("I1_B3_EN")->createInstance("caption", captionMat);
-    
-    
-    //    layout.getChild("pimp")->bVisible = false;
-    
 	
 	ofEnableAlphaBlending();
 	
@@ -92,9 +122,11 @@ void kaiserNav::setup(){
     
     deep.start();
     
-	floating.setup(ofRectangle(0, 0, ofGetWidth(), ofGetHeight()), 150, 150);
+	
     
-    updateMarkers();
+    bCaptionActive = false;
+    
+    updateOverlays();
     
     
 }
@@ -106,7 +138,7 @@ void kaiserNav::update() {
     if (cam.getIsAnimating()) {
         
         
-        updateMarkers();
+        updateOverlays();
         
     }
     
@@ -151,18 +183,24 @@ void kaiserNav::draw() {
 	
 	cam.reset();	//back to normal ofSetupScreen() projection
 	
-    ofPushStyle();
-    ofSetColor(0);
-    ofSetLineWidth(2);
-    ofVec2f vec = floating.getAnchor()-floating.getPos();
-//    vec = vec.normalized()*(vec.length()-200*cam.zoom);
-    vec = vec.normalized()*(vec.length()-13.5);
-    ofLine(floating.getPos(), floating.getPos()+vec);
-    ofPopStyle();
-    caption.draw();
     for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
         iter->second.draw();
     }
+    
+    
+    
+    if (bCaptionActive) {
+        ofPushStyle();
+        ofSetColor(0);
+        ofSetLineWidth(2);
+        ofVec2f vec = floating.getAnchor()-floating.getPos();
+        //    vec = vec.normalized()*(vec.length()-200*cam.zoom);
+        vec = vec.normalized()*(vec.length()-13.5);
+        ofLine(floating.getPos(), floating.getPos()+vec);
+        ofPopStyle();
+        caption.draw();
+    }
+    
     
     layout.draw();
     
@@ -177,15 +215,25 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
     
 	cam.touchDown(touch); //fw event to cam
 	
-	ofVec3f p =  cam.screenToWorld( ofVec3f( touch.x, touch.y) );	//convert touch (in screen units) to world units
+//	ofVec2f p =  cam.screenToWorld( ofVec3f( touch.x, touch.y) ) + 0.5*ofVec2f(width,height);	//convert touch (in screen units) to world units
 	
+    ofVec2f p(touch.x,touch.y);
+    
+    cout << p.x << "\t" << p.y << endl;
+    for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
+        
+        if (!iter->second.hitTest(p).empty()) {
+            cout << iter->first->name << endl;
+            showCaption(iter->first->name, 0);
+        }
+    }
 }
 
 
 void kaiserNav::touchMoved(ofTouchEventArgs &touch){
 
 	cam.touchMoved(touch); //fw event to cam
-    updateMarkers();
+    updateOverlays();
 }
 
 

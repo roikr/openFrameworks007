@@ -8,9 +8,10 @@
 
 #include "ofxFloatingCaption.h"
 
-void ofxFloatingCaption::setup(ofRectangle rect,float margin,float radius) {
+void ofxFloatingCaption::setup(ofRectangle rect,float hMargin,float vMargin,float radius) {
     this->rect = rect;
-    this->margin = margin;
+    this->hMargin = hMargin;
+    this->vMargin = vMargin;
     this->radius = radius;
     
     dir = ofVec2f(0,-1);
@@ -32,7 +33,7 @@ void ofxFloatingCaption::setAnchor(ofVec2f anchor) {
     dir.rotate(a*outside+(1-a)*inside);
     
     float angle = -dir.angle(ofVec2f(1,0))*PI/180;
-    pos=ofVec2f((rect.width/2-margin)*cos(angle),(rect.height/2-margin)*sin(angle))+center;
+    pos=ofVec2f((rect.width/2-hMargin)*cos(angle),(rect.height/2-vMargin)*sin(angle))+center;
     
 }
 

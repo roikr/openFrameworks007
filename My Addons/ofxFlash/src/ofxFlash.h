@@ -14,8 +14,6 @@
 #include "ofxiTexture.h"
 #endif
 
-#define PIXEL_SCALE 20.0
-
 enum {
     SYMBOL_INSTANCE,
     BITMAP_INSTANCE
@@ -74,9 +72,9 @@ struct ofxBitmapItem {
     string name;
     string href;
     
-    int frameRight;
-    int frameBottom;
-    
+//    int frameRight;
+//    int frameBottom;
+//    
     
     
     
@@ -96,9 +94,11 @@ struct ofxBitmapItem {
     //#else
     //    ofxiTexture texture;
     //#endif
+    
 #endif
-    float width;
-    float height;
+//    float width;
+//    float height;
+    
 };
 
 
@@ -145,6 +145,8 @@ public:
     void drawLayer(layer *ly);
     void draw();
     vector<ofxSymbolInstance> hitTest(ofVec2f pos);
+    
+    ofRectangle getBoundingBox();
     
     ofxSymbolInstance *getChild(string name);
     layer *getLayer(string name);

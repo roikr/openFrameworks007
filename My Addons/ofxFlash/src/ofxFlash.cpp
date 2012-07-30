@@ -10,6 +10,7 @@
 
 #include "ofxXmlSettings.h"
 
+#define PIXEL_SCALE 20.0
 
 void ofxDocument::setup(string name) {
    
@@ -26,13 +27,17 @@ void ofxDocument::setup(string name) {
             item.name = xml.getAttribute("DOMBitmapItem", "name", "",i);
 //            item.sourceExternalFilepath = xml.getAttribute("DOMBitmapItem", "sourceExternalFilepath", "",i);
             item.href = xml.getAttribute("DOMBitmapItem", "href", "",i);
-            item.frameRight = xml.getAttribute("DOMBitmapItem", "frameRight", 0,i);
-            item.frameBottom = xml.getAttribute("DOMBitmapItem", "frameBottom", 0,i);
-            item.width = item.frameRight/PIXEL_SCALE;
-            item.height = item.frameBottom/PIXEL_SCALE;
-          
+// roikr: had to comment out frameRight and frameBotton because I got wrongs values from flash 
+// now I take image width and height from the image file - need to take care of ofxiTexture and transformation points            
+//            item.frameRight = xml.getAttribute("DOMBitmapItem", "frameRight", 0,i);
+//            item.frameBottom = xml.getAttribute("DOMBitmapItem", "frameBottom", 0,i);
+//            item.width = item.frameRight/PIXEL_SCALE;
+//            item.height = item.frameBottom/PIXEL_SCALE;
+//          
+//            cout << item.name << "\t" << item.frameRight/PIXEL_SCALE << "x" << item.frameBottom/PIXEL_SCALE << endl;
+            
             bitmapItems.push_back(item);
-//            cout << name << "\t" << frameRight/20 << "x" << frameBottom/20 << endl;
+            
         }
         xml.popTag();
         
@@ -220,9 +225,9 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
                 xml.pushTag("DOMBitmapInstance",i);
                 ofxSymbolInstance bi = parseInstance(xml);
                 bi.bitmapItem = doc->getBitmapItem(libraryItemName);
-                if (bi.transformationPoint.empty()) {
-                    bi.transformationPoint.push_back(ofVec2f(bi.bitmapItem->width/2,bi.bitmapItem->height/2));
-                }
+//                if (bi.transformationPoint.empty()) {
+//                    bi.transformationPoint.push_back(ofVec2f(bi.bitmapItem->width/2,bi.bitmapItem->height/2));
+//                }
                 xml.popTag();
                 
                 bi.type = BITMAP_INSTANCE;
@@ -454,10 +459,16 @@ ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,floa
         l.name = liter->name;
         for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin();iter!=liter->instances.end();iter++) {
             switch (iter->type) {
-                case BITMAP_INSTANCE:
-                    l.instances.push_back(*iter);
-                    l.instances.back().alphaMultiplier = alpha;
-                    break;
+                case BITMAP_INSTANCE: {
+                    ofxSymbolInstance i;
+                    i.type = iter->type;
+                    i.mat = iter->mat;
+                    i.transformationPoint = iter->transformationPoint;
+                    i.alphaMultiplier = alpha;
+                    i.bitmapItem = iter->bitmapItem;
+                    l.instances.push_back(i);
+                    
+                }   break;
                 case SYMBOL_INSTANCE:
                     l.instances.push_back(iter->symbolItem->createInstance(iter->name, iter->mat,iter->alphaMultiplier*alpha,iter->transformationPoint.front()));
                     break;
@@ -676,41 +687,52 @@ void ofxSymbolInstance::draw() {
     }
 }
 
-/*
-ofRectangle ofxSymbolItem::getBoundingBox() {
+
+ofRectangle ofxSymbolInstance::getBoundingBox() {
 //    cout << "bounding box" << endl;
     ofRectangle rect(0,0,0,0);
-    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
-            switch (iter->type) {
-                case BITMAP_INSTANCE: {
-                    bitmapItem &item = doc->bitmapItems[iter->itemID];
-                    ofVec2f p0 = iter->mat.preMult(ofVec3f(0,0,0));
-                    ofVec2f p1 = iter->mat.preMult(ofVec3f(item.width,item.height));
+    
+    switch (type) {
+        case BITMAP_INSTANCE: {
+            ofVec2f p0 = mat.preMult(ofVec3f(0,0,0));
+            ofVec2f p1 = mat.preMult(ofVec3f(bitmapItem->image.getWidth(),bitmapItem->image.getHeight()));
+            rect = ofRectangle(p0.x,p0.y,p1.x-p0.x,p1.y-p0.y);
+        } break;
+            
+        case SYMBOL_INSTANCE: {
+            
+            for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+                for (vector<ofxSymbolInstance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
                     
-                    if (rect.width==0 || rect.height==0) {
-                        rect = ofRectangle(p0.x,p0.y,p1.x-p0.x,p1.y-p0.y);
-                    } else {
-                        ofVec2f q0(rect.x,rect.y);
-                        ofVec2f q1(q0.x+rect.width,q0.y+rect.height);
+                    ofRectangle iterect = iter->getBoundingBox();
+                    if (iterect.width!=0 || iterect.height!=0) {
+                    
+                        ofVec2f p0(rect.x,rect.y);
+                        ofVec2f p1(p0.x+rect.width,p0.y+rect.height);
+                        
+                        ofVec2f q0(iterect.x,iterect.y);
+                        ofVec2f q1(q0.x+iterect.width,q0.y+iterect.height);
+                        
                         ofVec2f pos(MIN(p0.x,q0.x),MIN(p0.y,q0.y));
                         rect = ofRectangle(pos.x,pos.y,MAX(p1.x,q1.x)-pos.x,MAX(p1.y,q1.y)-pos.y);
+                            
+                       
+                            //                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
+                            
                     }
-//                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-                    
+                   
                 }
-                    
-                    break;
-                    
-                default:
-                    break;
             }
-        }
-    }
+        } break;
+            
+        default:
+            break;
+    } 
     
+        
     return rect;
 }
-*/
+
 
 vector<ofxSymbolInstance> ofxSymbolInstance::hitTest(ofVec2f pos) {
 //    cout << "testing" << endl;
@@ -728,7 +750,7 @@ vector<ofxSymbolInstance> ofxSymbolInstance::hitTest(ofVec2f pos) {
                     ofMatrix4x4 imat = iter->mat.getInverse();
                     ofVec2f wpos = imat.preMult(ofVec3f(pos));
                     
-                    if (ofRectangle(0,0,iter->bitmapItem->width,iter->bitmapItem->height).inside(wpos)) {
+                    if (ofRectangle(0,0,iter->bitmapItem->image.getWidth(),iter->bitmapItem->image.getHeight()).inside(wpos)) {
                         
                         instances.push_back(*iter);
                     }
