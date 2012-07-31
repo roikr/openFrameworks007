@@ -15,6 +15,13 @@
 #include "ofxFlash.h"
 #include "ofxFloatingCaption.h"
 
+struct image {
+    string name;
+    string prefix;
+    int width;
+    int height;
+};
+
 class kaiserNav  {
 	
 public:
@@ -30,6 +37,7 @@ public:
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
     
+    void setImage(string name);
     void updateOverlays();
     void showCaption(string name,int lang);
     
@@ -37,9 +45,8 @@ public:
 	ofxDeepZoom deep;
     
     ofxDocument doc;
-    ofxSymbolInstance layout;
-    ofxSymbolInstance image;
-    layer *background;
+    ofxSymbolInstance interfaceLayout;
+    ofxSymbolInstance imageLayout;
     
     bool bCaptionActive;
     ofxSymbolInstance caption;
@@ -48,14 +55,6 @@ public:
     
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
     
-    
-    float width;
-    float height;
-    
-    int limitX;	//these define where the camera can pan to
-    int limitY;
-
-    
+    vector<image> images;
         
-    
 };

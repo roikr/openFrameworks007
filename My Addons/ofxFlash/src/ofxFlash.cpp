@@ -736,44 +736,54 @@ ofRectangle ofxSymbolInstance::getBoundingBox() {
     return rect;
 }
 
-
-vector<ofxSymbolInstance> ofxSymbolInstance::hitTest(ofVec2f pos) {
-//    cout << "testing" << endl;
+vector<ofxSymbolInstance> ofxSymbolInstance::hitLayer(layer *lyr,ofVec2f pos)  {
     vector<ofxSymbolInstance> instances;
     
     pos = mat.getInverse().preMult(ofVec3f(pos));
     
-    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
-            
-//            cout << wpos << "\t" << endl;
-           
-            switch (iter->type) {
-                case BITMAP_INSTANCE: {
-                    ofMatrix4x4 imat = iter->mat.getInverse();
-                    ofVec2f wpos = imat.preMult(ofVec3f(pos));
+    for (vector<ofxSymbolInstance>::iterator iter=lyr->instances.begin(); iter!=lyr->instances.end(); iter++) {
+        
+        //            cout << wpos << "\t" << endl;
+        
+        switch (iter->type) {
+            case BITMAP_INSTANCE: {
+                ofMatrix4x4 imat = iter->mat.getInverse();
+                ofVec2f wpos = imat.preMult(ofVec3f(pos));
+                
+                if (ofRectangle(0,0,iter->bitmapItem->image.getWidth(),iter->bitmapItem->image.getHeight()).inside(wpos)) {
                     
-                    if (ofRectangle(0,0,iter->bitmapItem->image.getWidth(),iter->bitmapItem->image.getHeight()).inside(wpos)) {
-                        
-                        instances.push_back(*iter);
-                    }
-                }   break;
-                case SYMBOL_INSTANCE: {
-                    vector<ofxSymbolInstance> tempInstances = iter->hitTest(pos);
-                    if (!tempInstances.empty()) {
-                        instances.push_back(*iter);
-                        instances.insert(instances.end(), tempInstances.begin(), tempInstances.end());
-                    }
-                    
-                }   break;
-                    
-                default:
-                    break;
-                    
-            }
-//            cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-
+                    instances.push_back(*iter);
+                }
+            }   break;
+            case SYMBOL_INSTANCE: {
+                vector<ofxSymbolInstance> tempInstances = iter->hitTest(pos);
+                if (!tempInstances.empty()) {
+                    instances.push_back(*iter);
+                    instances.insert(instances.end(), tempInstances.begin(), tempInstances.end());
+                }
+                
+            }   break;
+                
+            default:
+                break;
+                
         }
+        //            cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
+        
+    }
+    
+    return instances;
+}
+
+
+vector<ofxSymbolInstance> ofxSymbolInstance::hitTest(ofVec2f pos) {
+//    cout << "testing" << endl;
+    
+    vector<ofxSymbolInstance> instances;
+    
+    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+        vector<ofxSymbolInstance> ins = hitLayer(&*riter, pos);
+        instances.insert(instances.end(), ins.begin(), ins.end());
     }
     
     return instances;

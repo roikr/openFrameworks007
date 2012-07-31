@@ -7,13 +7,15 @@
 //
 
 #include "kaiserNav.h"
+#include "ofxXmlSettings.h"
 
 
 
 
 void kaiserNav::updateOverlays() {
     for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
-        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height)));
+//        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height)));
+        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))+cam.topLeftConstrain));
     }
     
     ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
@@ -23,11 +25,11 @@ void kaiserNav::updateOverlays() {
         
         
         
-        ofxSymbolInstance *child = image.getChild(caption.name);
+        ofxSymbolInstance *child = imageLayout.getChild(caption.name);
         ofMatrix4x4 mat; // should initialized to general transform if any exist
         mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
                 
-        floating.setAnchor(cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height))); 
+        floating.setAnchor(cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))+cam.topLeftConstrain)); 
         
         ofRectangle rect = caption.getBoundingBox();
         
@@ -69,13 +71,13 @@ void kaiserNav::setup(){
     doc.setup("DOMDocument.xml");
     doc.load();
     
-    ofMatrix4x4 mat;
+   
     
-    layout = doc.getSymbolItem("LAYOUT")->createInstance("layout", mat);
+    interfaceLayout = doc.getSymbolItem("LAYOUT")->createInstance("layout");
     
    
-    for (vector<layer>::iterator liter=layout.layers.begin(); liter!=layout.layers.end(); liter++) {
-        if (liter->name!="interface") {
+    for (vector<layer>::iterator liter=interfaceLayout.layers.begin(); liter!=interfaceLayout.layers.end(); liter++) {
+        if (liter->name!="interface" && liter->name!="thumbs") {
             for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
                 if (iter->type==SYMBOL_INSTANCE) {
                     iter->bVisible = false;
@@ -84,11 +86,44 @@ void kaiserNav::setup(){
         }
     }
     
+    ofxXmlSettings xml;
+    xml.loadFile("images.xml");
+    xml.pushTag("images");
+    for (int i=0;i<xml.getNumTags("image");i++) {
+        image im;
+        im.name = xml.getAttribute("image", "name", "",i);
+        im.prefix = xml.getAttribute("image", "prefix", "",i);
+        im.width = xml.getAttribute("image", "width", 0,i);
+        im.height = xml.getAttribute("image", "height", 0,i);
+        images.push_back(im);
+    }
+
+	
+    setImage(images.front().name);	
     
-    image = doc.getSymbolItem("IMAGE_1")->createInstance("image", mat);
+    ofEnableAlphaBlending();
+	
+	ofSetCircleResolution(32);
+
     
-    layer *markersLayer = image.getLayer("markers");
+}
+
+void kaiserNav::setImage(string name) {
     
+    
+    
+    vector<image>::iterator iter;
+    for (iter = images.begin();iter!=images.end() && iter->name!=name;iter++);
+    if (iter==images.end()) {
+        cout << "setImage: could not find " << name << endl;
+        return;
+    }
+    
+    imageLayout = doc.getSymbolItem(name)->createInstance(name);
+    
+    layer *markersLayer = imageLayout.getLayer("markers");
+    
+    markers.clear();
     for (vector<ofxSymbolInstance>::iterator iter=markersLayer->instances.begin(); iter!=markersLayer->instances.end();iter++) {
         if (iter->type==SYMBOL_INSTANCE) {
             ofMatrix4x4 mat;
@@ -97,35 +132,24 @@ void kaiserNav::setup(){
             cout << iter->name << endl;
         }
     }
-     
-	
-	ofEnableAlphaBlending();
-	
-	ofSetCircleResolution(32);
     
-    width = 5053;
-    height = 3517;
-    limitX = width/2;
-    limitY = height/2;
-
-	
-    float minZoom = 1024.0/(float)width;
-//	cam.setZoom(0.125f);
+    float minZoom = 1024.0/(float)iter->width;
+    //	cam.setZoom(0.125f);
     cam.setZoom(minZoom);
 	cam.setMinZoom(minZoom);
 	cam.setMaxZoom(2.0f);
 	cam.setScreenSize( ofGetWidth(), ofGetHeight() );
-	cam.setViewportConstrain( ofVec3f(-limitX, -limitY), ofVec3f(limitX, limitY)); //limit browseable area, in world units
+    ofVec2f limit = 0.5*ofVec2f(iter->width,iter->height);
+    cam.setViewportConstrain( -limit, limit); //limit browseable area, in world units
 	
-        deep.setup("IMAGE_1", "png",width, height, ofRectangle(0,0, 1024,768)); // ofGetWidth(),ofGetHeight()
+    deep.stop();
+    deep.setup(iter->prefix, "png",iter->width, iter->height, ofRectangle(0,0, 1024,768)); // ofGetWidth(),ofGetHeight()
     
     deep.start();
     
     bCaptionActive = false;
     
     updateOverlays();
-    
-    
 }
 
 
@@ -133,10 +157,7 @@ void kaiserNav::update() {
     cam.update();
     
     if (cam.getIsAnimating()) {
-        
-        
         updateOverlays();
-        
     }
     
 	deep.update();
@@ -149,14 +170,15 @@ void kaiserNav::draw2nd() {
  	cam.apply(); //put all our drawing under the ofxPanZoom effect
     ofPushMatrix();
     
-    
     deep.draw();
-    image.draw();
+    imageLayout.draw();
     
     ofPopMatrix();
 
     int s = 25;
     glColor4f(1, 0, 0, 1);
+    float limitX = cam.bottomRightConstrain.x;
+    float limitY = cam.bottomRightConstrain.y;
     ofRect(-limitX , -limitY , 2 * limitX, s);
     ofRect(limitX - s , -limitY , s, 2 * limitY);
     ofRect(-limitX , limitY - s , s, -2 * limitY);	
@@ -199,18 +221,14 @@ void kaiserNav::draw() {
     
     
     
-    image.draw();
+    imageLayout.draw();
     
     
     ofPopMatrix();
     
-    
-    
-    
-    //draw grid
-    
-	
-    //draw space constrains		
+    //draw space constrains	
+	float limitX = cam.bottomRightConstrain.x;
+    float limitY = cam.bottomRightConstrain.y;
     int s = 25;
     glColor4f(1, 0, 0, 1);
     ofRect(-limitX , -limitY , 2 * limitX, s);
@@ -240,7 +258,7 @@ void kaiserNav::draw() {
     }
     
     
-    layout.draw();
+    interfaceLayout.draw();
     
     ofPopMatrix();
 	cam.drawDebug(); //see info on ofxPanZoom status
@@ -258,12 +276,21 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
 	
     ofVec2f p(touch.x,touch.y);
     
-    cout << p.x << "\t" << p.y << endl;
+//    cout << p.x << "\t" << p.y << endl;
     for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
         
-        if (!iter->second.hitTest(p).empty()) {
+        if (!iter->second.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
             cout << iter->first->name << endl;
             showCaption(iter->first->name, 0);
+        }
+    }
+    
+    
+    vector<ofxSymbolInstance> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
+    for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+        if (iter->type==SYMBOL_INSTANCE) {
+            cout << iter->name << endl;
+//            setImage(iter->name);
         }
     }
 }
