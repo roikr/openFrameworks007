@@ -39,7 +39,8 @@ public:
     
     void setImage(string name);
     void updateOverlays();
-    void showCaption(string name,int lang);
+    void setCaption(string name);
+    void setLanguage(string lang);
     
 	ofxPanZoom	cam;
 	ofxDeepZoom deep;
@@ -56,5 +57,8 @@ public:
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
     
     vector<image> images;
+    string lang;
+    string imageName;
+    string captionName;
         
 };

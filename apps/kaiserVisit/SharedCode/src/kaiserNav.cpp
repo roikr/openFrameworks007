@@ -11,7 +11,6 @@
 
 
 
-
 void kaiserNav::updateOverlays() {
     for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
 //        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height)));
@@ -39,27 +38,12 @@ void kaiserNav::updateOverlays() {
     }
 }
 
-void kaiserNav::showCaption(string name,int lang) {
+void kaiserNav::setCaption(string name) {
     bCaptionActive = true;
     
-    string capName = name;
+    captionName = name;
     
-    switch (lang) {
-        case 0:
-            capName+="_HE";
-            break;
-        case 1:
-            capName+="_EN";
-            break;
-        case 2:
-            capName+="_AR";
-            break;
-            
-        default:
-            break;
-    }
-    
-    caption = doc.getSymbolItem(capName)->createInstance(name);
+    caption = doc.getSymbolItem(captionName+'_'+lang)->createInstance(name);
     ofRectangle rect = caption.getBoundingBox();
     floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), 0.5*rect.width,0.5*rect.height, 150);
     updateOverlays();
@@ -76,15 +60,7 @@ void kaiserNav::setup(){
     interfaceLayout = doc.getSymbolItem("LAYOUT")->createInstance("layout");
     
    
-    for (vector<layer>::iterator liter=interfaceLayout.layers.begin(); liter!=interfaceLayout.layers.end(); liter++) {
-        if (liter->name!="interface" && liter->name!="thumbs") {
-            for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
-                if (iter->type==SYMBOL_INSTANCE) {
-                    iter->bVisible = false;
-                }
-            }
-        }
-    }
+    
     
     ofxXmlSettings xml;
     xml.loadFile("images.xml");
@@ -98,7 +74,7 @@ void kaiserNav::setup(){
         images.push_back(im);
     }
 
-	
+	lang = "HE";
     setImage(images.front().name);	
     
     ofEnableAlphaBlending();
@@ -108,16 +84,34 @@ void kaiserNav::setup(){
     
 }
 
+void kaiserNav::setLanguage(string lang) {
+    this->lang = lang;
+    
+    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+    string titleName = imageName+"_C_"+lang;
+    
+    for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
+            if (iter->type==SYMBOL_INSTANCE) {
+                iter->bVisible = iter->name == titleName;
+            }
+        }
+    }
+}
+
 void kaiserNav::setImage(string name) {
     
     
-    
+    this->imageName = name;
     vector<image>::iterator iter;
     for (iter = images.begin();iter!=images.end() && iter->name!=name;iter++);
     if (iter==images.end()) {
         cout << "setImage: could not find " << name << endl;
         return;
     }
+    
+    
+    
     
     imageLayout = doc.getSymbolItem(name)->createInstance(name);
     
@@ -132,6 +126,8 @@ void kaiserNav::setImage(string name) {
             cout << iter->name << endl;
         }
     }
+    
+    setLanguage(lang);
     
     float minZoom = 1024.0/(float)iter->width;
     //	cam.setZoom(0.125f);
@@ -281,7 +277,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
         
         if (!iter->second.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
             cout << iter->first->name << endl;
-            showCaption(iter->first->name, 0);
+            setCaption(iter->first->name);
         }
     }
     
@@ -293,6 +289,18 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
 //            setImage(iter->name);
         }
     }
+    
+    hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("language"),ofVec2f(touch.x,touch.y));
+    for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+        if (iter->type==SYMBOL_INSTANCE) {
+            cout << iter->name << endl;
+            setLanguage(iter->name);
+            if (bCaptionActive) {
+                setCaption(captionName);
+            }
+        }
+    }
+
 }
 
 
