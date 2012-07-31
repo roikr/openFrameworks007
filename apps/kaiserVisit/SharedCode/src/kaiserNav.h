@@ -11,7 +11,13 @@
 #include "ofMain.h"
 
 #include "ofxPanZoom.h"
+
+#ifdef TARGET_OPENGLES
+#include "ofxiDeepZoom.h"
+#else
 #include "ofxDeepZoom.h"
+#endif
+
 #include "ofxFlash.h"
 #include "ofxFloatingCaption.h"
 
@@ -43,7 +49,13 @@ public:
     void setLanguage(string lang);
     
 	ofxPanZoom	cam;
-	ofxDeepZoom deep;
+    
+#ifdef TARGET_OPENGLES
+    ofxiDeepZoom deep;
+#else
+    ofxDeepZoom deep;
+#endif
+	
     
     ofxDocument doc;
     ofxSymbolInstance interfaceLayout;

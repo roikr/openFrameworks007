@@ -139,7 +139,14 @@ void kaiserNav::setImage(string name) {
     cam.setViewportConstrain( -limit, limit); //limit browseable area, in world units
 	
     deep.stop();
-    deep.setup(iter->prefix, "png",iter->width, iter->height, ofRectangle(0,0, 1024,768)); // ofGetWidth(),ofGetHeight()
+    
+    
+#ifdef TARGET_OPENGLES
+    deep.setup(iter->prefix, "png",iter->width, iter->height, ofRectangle(0,0, 1024,768),iPhoneGetGLView().context.sharegroup);
+#else
+    deep.setup(iter->prefix, "png",iter->width, iter->height, ofRectangle(0,0, 1024,768));
+#endif    
+    
     
     deep.start();
     

@@ -18,6 +18,7 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
+		E45C6D7F15C8713200498D1F /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E45C6D7E15C8713200498D1F /* kaiserNav.mm */; };
 		E47132C615C6F43300D837E4 /* ofxTouchEmulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E47132C515C6F43300D837E4 /* ofxTouchEmulator.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */; };
@@ -26,7 +27,6 @@
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4D98B2E15C1510F00465293 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98A6715C1510D00465293 /* ofxFlash.cpp */; };
 		E4D98B4B15C1510F00465293 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98AD915C1510E00465293 /* ofxPanZoom.cpp */; };
-		E4D98B6115C1516600465293 /* kaiserNav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B5715C1516600465293 /* kaiserNav.cpp */; };
 		E4D98B6215C1516600465293 /* ofxDeepZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B5915C1516600465293 /* ofxDeepZoom.cpp */; };
 		E4D98B6415C1516600465293 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B5D15C1516600465293 /* ofxFloatingCaption.cpp */; };
 		E4D98B7015C1518F00465293 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6915C1518F00465293 /* tinyxml.cpp */; };
@@ -78,6 +78,7 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		E45C6D7E15C8713200498D1F /* kaiserNav.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = kaiserNav.mm; path = ../../SharedCode/src/kaiserNav.mm; sourceTree = "<group>"; };
 		E47132C415C6F40F00D837E4 /* ofxTouchEmulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTouchEmulator.h; sourceTree = "<group>"; };
 		E47132C515C6F43300D837E4 /* ofxTouchEmulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTouchEmulator.cpp; sourceTree = "<group>"; };
 		E4B69B5B0A3A1756003C02F2 /* osxKaiserNavDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = osxKaiserNavDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,7 +93,6 @@
 		E4D98A6815C1510D00465293 /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
 		E4D98AD915C1510E00465293 /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
 		E4D98ADA15C1510E00465293 /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
-		E4D98B5715C1516600465293 /* kaiserNav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kaiserNav.cpp; path = ../../SharedCode/src/kaiserNav.cpp; sourceTree = "<group>"; };
 		E4D98B5815C1516600465293 /* kaiserNav.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kaiserNav.h; path = ../../SharedCode/src/kaiserNav.h; sourceTree = "<group>"; };
 		E4D98B5915C1516600465293 /* ofxDeepZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDeepZoom.cpp; sourceTree = "<group>"; };
 		E4D98B5A15C1516600465293 /* ofxDeepZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDeepZoom.h; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
-				E4D98B5715C1516600465293 /* kaiserNav.cpp */,
+				E45C6D7E15C8713200498D1F /* kaiserNav.mm */,
 				E4D98B5815C1516600465293 /* kaiserNav.h */,
 			);
 			path = src;
@@ -403,7 +403,6 @@
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
 				E4D98B2E15C1510F00465293 /* ofxFlash.cpp in Sources */,
 				E4D98B4B15C1510F00465293 /* ofxPanZoom.cpp in Sources */,
-				E4D98B6115C1516600465293 /* kaiserNav.cpp in Sources */,
 				E4D98B6215C1516600465293 /* ofxDeepZoom.cpp in Sources */,
 				E4D98B6415C1516600465293 /* ofxFloatingCaption.cpp in Sources */,
 				E4D98B7015C1518F00465293 /* tinyxml.cpp in Sources */,
@@ -411,6 +410,7 @@
 				E4D98B7215C1518F00465293 /* tinyxmlparser.cpp in Sources */,
 				E4D98B7315C1518F00465293 /* ofxXmlSettings.cpp in Sources */,
 				E47132C615C6F43300D837E4 /* ofxTouchEmulator.cpp in Sources */,
+				E45C6D7F15C8713200498D1F /* kaiserNav.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

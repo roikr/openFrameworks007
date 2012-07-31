@@ -26,8 +26,8 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-
-	
+    ofTranslate(pos);
+	ofScale(scale, scale);
     deep.draw();
 }
 

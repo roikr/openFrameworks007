@@ -29,11 +29,11 @@
 		E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147315B59B6B005347AE /* tinyxmlparser.cpp */; };
 		E430147B15B59B6B005347AE /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147515B59B6B005347AE /* ofxXmlSettings.cpp */; };
 		E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
-		E4A2754415A389EF009F7B62 /* ofxDeepZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A2753E15A389EF009F7B62 /* ofxDeepZoom.cpp */; };
+		E45C6D7415C869A000498D1F /* ofxiDeepZoom.mm in Sources */ = {isa = PBXBuildFile; fileRef = E45C6D7215C869A000498D1F /* ofxiDeepZoom.mm */; };
 		E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
-		E4D9893E15C14E9E00465293 /* kaiserNav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.cpp */; };
+		E4D9893E15C14E9E00465293 /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
 		E4FB3AB015C689B40002E5C3 /* ofxiExternalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */; };
 		E4FB3AB115C689B40002E5C3 /* ExternalGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */; };
 /* End PBXBuildFile section */
@@ -87,8 +87,8 @@
 		E430147615B59B6B005347AE /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFloatingCaption.cpp; sourceTree = "<group>"; };
 		E431347315B6BA9300864C97 /* ofxFloatingCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFloatingCaption.h; sourceTree = "<group>"; };
-		E4A2753E15A389EF009F7B62 /* ofxDeepZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDeepZoom.cpp; sourceTree = "<group>"; };
-		E4A2753F15A389EF009F7B62 /* ofxDeepZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDeepZoom.h; sourceTree = "<group>"; };
+		E45C6D7215C869A000498D1F /* ofxiDeepZoom.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiDeepZoom.mm; sourceTree = "<group>"; };
+		E45C6D7315C869A000498D1F /* ofxiDeepZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiDeepZoom.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
 		E4B7D9FF15A3900600DA6DA8 /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
@@ -96,7 +96,7 @@
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
 		E4D9893C15C14DFF00465293 /* kaiserNav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kaiserNav.h; sourceTree = "<group>"; };
-		E4D9893D15C14E9E00465293 /* kaiserNav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kaiserNav.cpp; sourceTree = "<group>"; };
+		E4D9893D15C14E9E00465293 /* kaiserNav.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = kaiserNav.mm; sourceTree = "<group>"; };
 		E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiExternalView.mm; sourceTree = "<group>"; };
 		E4FB3AAD15C689B40002E5C3 /* ofxiExternalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiExternalView.h; sourceTree = "<group>"; };
 		E4FB3AAE15C689B40002E5C3 /* ExternalGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalGLView.h; sourceTree = "<group>"; };
@@ -292,10 +292,10 @@
 				E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */,
 				E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */,
 				E431347315B6BA9300864C97 /* ofxFloatingCaption.h */,
-				E4A2753E15A389EF009F7B62 /* ofxDeepZoom.cpp */,
-				E4A2753F15A389EF009F7B62 /* ofxDeepZoom.h */,
 				E4D9893C15C14DFF00465293 /* kaiserNav.h */,
-				E4D9893D15C14E9E00465293 /* kaiserNav.cpp */,
+				E4D9893D15C14E9E00465293 /* kaiserNav.mm */,
+				E45C6D7215C869A000498D1F /* ofxiDeepZoom.mm */,
+				E45C6D7315C869A000498D1F /* ofxiDeepZoom.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -409,14 +409,14 @@
 /* Begin PBXShellScriptBuildPhase section */
 		9255DD331112741900D6945E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "cp -rf bin/data/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"";
 		};
@@ -429,7 +429,6 @@
 			files = (
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E4A2754415A389EF009F7B62 /* ofxDeepZoom.cpp in Sources */,
 				E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */,
 				E430146015B598F5005347AE /* ofxFlash.cpp in Sources */,
 				E430147815B59B6B005347AE /* tinyxml.cpp in Sources */,
@@ -437,9 +436,10 @@
 				E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */,
 				E430147B15B59B6B005347AE /* ofxXmlSettings.cpp in Sources */,
 				E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */,
-				E4D9893E15C14E9E00465293 /* kaiserNav.cpp in Sources */,
+				E4D9893E15C14E9E00465293 /* kaiserNav.mm in Sources */,
 				E4FB3AB015C689B40002E5C3 /* ofxiExternalView.mm in Sources */,
 				E4FB3AB115C689B40002E5C3 /* ExternalGLView.mm in Sources */,
+				E45C6D7415C869A000498D1F /* ofxiDeepZoom.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
