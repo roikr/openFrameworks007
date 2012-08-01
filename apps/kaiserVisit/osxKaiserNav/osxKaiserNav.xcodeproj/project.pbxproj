@@ -27,13 +27,13 @@
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4D98B2E15C1510F00465293 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98A6715C1510D00465293 /* ofxFlash.cpp */; };
 		E4D98B4B15C1510F00465293 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98AD915C1510E00465293 /* ofxPanZoom.cpp */; };
-		E4D98B6215C1516600465293 /* ofxDeepZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B5915C1516600465293 /* ofxDeepZoom.cpp */; };
 		E4D98B6415C1516600465293 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B5D15C1516600465293 /* ofxFloatingCaption.cpp */; };
 		E4D98B7015C1518F00465293 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6915C1518F00465293 /* tinyxml.cpp */; };
 		E4D98B7115C1518F00465293 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6B15C1518F00465293 /* tinyxmlerror.cpp */; };
 		E4D98B7215C1518F00465293 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6C15C1518F00465293 /* tinyxmlparser.cpp */; };
 		E4D98B7315C1518F00465293 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6E15C1518F00465293 /* ofxXmlSettings.cpp */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		E4F96D3D15C9BD7800B0AE93 /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4F96D3B15C9BD7800B0AE93 /* ofxBigImage.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,8 +94,6 @@
 		E4D98AD915C1510E00465293 /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
 		E4D98ADA15C1510E00465293 /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
 		E4D98B5815C1516600465293 /* kaiserNav.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kaiserNav.h; path = ../../SharedCode/src/kaiserNav.h; sourceTree = "<group>"; };
-		E4D98B5915C1516600465293 /* ofxDeepZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDeepZoom.cpp; sourceTree = "<group>"; };
-		E4D98B5A15C1516600465293 /* ofxDeepZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDeepZoom.h; sourceTree = "<group>"; };
 		E4D98B5D15C1516600465293 /* ofxFloatingCaption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFloatingCaption.cpp; sourceTree = "<group>"; };
 		E4D98B5E15C1516600465293 /* ofxFloatingCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFloatingCaption.h; sourceTree = "<group>"; };
 		E4D98B6715C1518F00465293 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
@@ -107,6 +105,8 @@
 		E4D98B6F15C1518F00465293 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E4F96D3B15C9BD7800B0AE93 /* ofxBigImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBigImage.cpp; sourceTree = "<group>"; };
+		E4F96D3C15C9BD7800B0AE93 /* ofxBigImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBigImage.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,8 +262,8 @@
 		E4D98B5615C1516600465293 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4D98B5915C1516600465293 /* ofxDeepZoom.cpp */,
-				E4D98B5A15C1516600465293 /* ofxDeepZoom.h */,
+				E4F96D3B15C9BD7800B0AE93 /* ofxBigImage.cpp */,
+				E4F96D3C15C9BD7800B0AE93 /* ofxBigImage.h */,
 				E4D98B5D15C1516600465293 /* ofxFloatingCaption.cpp */,
 				E4D98B5E15C1516600465293 /* ofxFloatingCaption.h */,
 				E47132C415C6F40F00D837E4 /* ofxTouchEmulator.h */,
@@ -403,7 +403,6 @@
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
 				E4D98B2E15C1510F00465293 /* ofxFlash.cpp in Sources */,
 				E4D98B4B15C1510F00465293 /* ofxPanZoom.cpp in Sources */,
-				E4D98B6215C1516600465293 /* ofxDeepZoom.cpp in Sources */,
 				E4D98B6415C1516600465293 /* ofxFloatingCaption.cpp in Sources */,
 				E4D98B7015C1518F00465293 /* tinyxml.cpp in Sources */,
 				E4D98B7115C1518F00465293 /* tinyxmlerror.cpp in Sources */,
@@ -411,6 +410,7 @@
 				E4D98B7315C1518F00465293 /* ofxXmlSettings.cpp in Sources */,
 				E47132C615C6F43300D837E4 /* ofxTouchEmulator.cpp in Sources */,
 				E45C6D7F15C8713200498D1F /* kaiserNav.mm in Sources */,
+				E4F96D3D15C9BD7800B0AE93 /* ofxBigImage.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

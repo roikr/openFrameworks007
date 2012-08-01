@@ -18,8 +18,7 @@ void kaiserNav::updateOverlays() {
     }
     
     ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-    deep.transform( camOffset, cam.zoom);
-    
+        
     if (bCaptionActive) {
         
         
@@ -35,6 +34,11 @@ void kaiserNav::updateOverlays() {
 //        cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
 
         caption.mat.makeTranslationMatrix(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
+        ofVec2f vec = floating.getAnchor()-floating.getPos();
+        vec.normalize();
+        float a = vec.angle(ofVec2f(1,0))*PI/180;
+        captionLength = MIN(rect.width/(2.0*abs(cos(a))),rect.height/(2.0*abs(sin(a))));
+        cout << a*180/PI << "\t" << captionLength << endl;
     }
 }
 
@@ -60,24 +64,10 @@ void kaiserNav::setup(){
     interfaceLayout = doc.getSymbolItem("LAYOUT")->createInstance("layout");
     
    
-    
-    
-    ofxXmlSettings xml;
-    xml.loadFile("images.xml");
-    xml.pushTag("images");
-    for (int i=0;i<xml.getNumTags("image");i++) {
-        image im;
-        im.name = xml.getAttribute("image", "name", "",i);
-        im.prefix = xml.getAttribute("image", "prefix", "",i);
-        im.width = xml.getAttribute("image", "width", 0,i);
-        im.height = xml.getAttribute("image", "height", 0,i);
-        images.push_back(im);
-    }
-
 	lang = "HE";
-    setImage(images.front().name);	
+    setImage("I1");	
     
-    ofEnableAlphaBlending();
+    
 	
 	ofSetCircleResolution(32);
 
@@ -103,9 +93,9 @@ void kaiserNav::setImage(string name) {
     
     
     this->imageName = name;
-    vector<image>::iterator iter;
-    for (iter = images.begin();iter!=images.end() && iter->name!=name;iter++);
-    if (iter==images.end()) {
+    image.loadImage(name+".png", 1024);
+    
+    if (!image.getDidLoad()) {
         cout << "setImage: could not find " << name << endl;
         return;
     }
@@ -129,26 +119,15 @@ void kaiserNav::setImage(string name) {
     
     setLanguage(lang);
     
-    float minZoom = 1024.0/(float)iter->width;
+    float minZoom = 1024.0/(float)image.getWidth();
     //	cam.setZoom(0.125f);
-    cam.setZoom(minZoom);
+    cam.setZoom(minZoom*2);
 	cam.setMinZoom(minZoom);
 	cam.setMaxZoom(2.0f);
 	cam.setScreenSize( ofGetWidth(), ofGetHeight() );
-    ofVec2f limit = 0.5*ofVec2f(iter->width,iter->height);
+    ofVec2f limit = 0.5*ofVec2f(image.getWidth(),image.getHeight());
     cam.setViewportConstrain( -limit, limit); //limit browseable area, in world units
 	
-    deep.stop();
-    
-    
-#ifdef TARGET_OPENGLES
-    deep.setup(iter->prefix, "png",iter->width, iter->height, ofRectangle(0,0, 1024,768),iPhoneGetGLView().context.sharegroup);
-#else
-    deep.setup(iter->prefix, "png",iter->width, iter->height, ofRectangle(0,0, 1024,768));
-#endif    
-    
-    
-    deep.start();
     
     bCaptionActive = false;
     
@@ -162,9 +141,7 @@ void kaiserNav::update() {
     if (cam.getIsAnimating()) {
         updateOverlays();
     }
-    
-	deep.update();
-    glFlush();
+
 }
 
 
@@ -173,7 +150,9 @@ void kaiserNav::draw2nd() {
  	cam.apply(); //put all our drawing under the ofxPanZoom effect
     ofPushMatrix();
     
-    deep.draw();
+    ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
+    image.draw();
+    
     imageLayout.draw();
     
     ofPopMatrix();
@@ -199,9 +178,10 @@ void kaiserNav::draw2nd() {
         ofSetColor(0);
         ofSetLineWidth(2);
         ofVec2f vec = floating.getAnchor()-floating.getPos();
-        //    vec = vec.normalized()*(vec.length()-200*cam.zoom);
-        vec = vec.normalized()*(vec.length()-13.5);
-        ofLine(floating.getPos(), floating.getPos()+vec);
+        float totalLen = vec.length();
+        vec.normalize();
+        
+        ofLine(floating.getPos()+vec*(captionLength+20), floating.getPos()+vec*(totalLen-13.5-20));
         ofPopStyle();
         caption.draw();
     }
@@ -220,9 +200,10 @@ void kaiserNav::draw() {
     ofPushMatrix();
     
     
-    deep.draw();
-    
-    
+    ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
+    ofDisableAlphaBlending();
+    image.draw();
+    ofEnableAlphaBlending();
     
     imageLayout.draw();
     
@@ -253,9 +234,10 @@ void kaiserNav::draw() {
         ofSetColor(0);
         ofSetLineWidth(2);
         ofVec2f vec = floating.getAnchor()-floating.getPos();
-        //    vec = vec.normalized()*(vec.length()-200*cam.zoom);
-        vec = vec.normalized()*(vec.length()-13.5);
-        ofLine(floating.getPos(), floating.getPos()+vec);
+        float totalLen = vec.length();
+        vec.normalize();
+        
+        ofLine(floating.getPos()+vec*(captionLength+20), floating.getPos()+vec*(totalLen-13.5-20));
         ofPopStyle();
         caption.draw();
     }
@@ -268,7 +250,6 @@ void kaiserNav::draw() {
 }
 
 void kaiserNav::exit() {
-    deep.stop();
 }
 
 void kaiserNav::touchDown(ofTouchEventArgs &touch){
@@ -293,7 +274,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
     for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
         if (iter->type==SYMBOL_INSTANCE) {
             cout << iter->name << endl;
-//            setImage(iter->name);
+            setImage(iter->name);
         }
     }
     

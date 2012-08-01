@@ -19,10 +19,12 @@ struct tile {
 
 class ofxBigImage {
 public:
+    void loadImage(ofImage image,int size);
     void loadImage(string filename,int size);
     void draw();
     int getWidth();
     int getHeight();
+    bool getDidLoad();
     
 private:
     int size;

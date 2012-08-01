@@ -11,6 +11,7 @@
 #include "ofxXmlSettings.h"
 
 #define PIXEL_SCALE 20.0
+#define MAX_TEXTURE_SIZE 1024
 
 void ofxDocument::setup(string name) {
    
@@ -98,7 +99,18 @@ void ofxDocument::load() {
 #else
         ofFile file = ofFile(ofToDataPath("LIBRARY/"+iter->href));
         if (file.exists()) {
+            iter->image.setUseTexture(false);
             cout << iter->href << ": " << iter->image.loadImage("LIBRARY/"+iter->href) << endl;
+            iter->bUseBig =  (iter->image.getWidth() > MAX_TEXTURE_SIZE || iter->image.getHeight() > MAX_TEXTURE_SIZE);
+            if (iter->bUseBig) {
+                iter->bigImage.loadImage(iter->image, MAX_TEXTURE_SIZE);
+            } else {
+                iter->image.setUseTexture(true);
+                iter->image.reloadTexture();
+                iter->image.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // roikr: this was the trick to boost the fps as alternative to linear filtering...
+            }
+            
+
         } else {
             cout << "no image for: " << file.getAbsolutePath();
 //            file = ofFile(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
@@ -549,7 +561,9 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
 #ifndef TARGET_OPENGLES
                     iter->bitmapItem->image.draw(0, 0);
 #else
-                    if (iter->bitmapItem->image.bAllocated()) {
+                    if (iter->bitmapItem->bUseBig) {
+                        iter->bitmapItem->bigImage.draw();
+                    } else if (iter->bitmapItem->image.bAllocated()) {
                         iter->bitmapItem->image.draw(0, 0);
                     } 
                     

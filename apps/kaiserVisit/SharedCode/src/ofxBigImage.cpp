@@ -12,10 +12,14 @@
 void ofxBigImage::loadImage(string filename,int size) {
     ofImage image;
     image.setUseTexture(false);
-    image.loadImage("IMAGE_1.png");
+    image.loadImage(filename);
+    loadImage(image, size);
+}
     
+void ofxBigImage::loadImage(ofImage image,int size) {
     
-    float tileSize = size;
+    cout << "image type: " << image.type << endl;
+    
     width = image.getWidth();
     height = image.getHeight();
     
@@ -40,9 +44,13 @@ void ofxBigImage::loadImage(string filename,int size) {
     
     
     for (vector<tile>::iterator iter = tiles.begin();iter!=tiles.end();iter++) {
+         
+       
         iter->image.allocate(iter->rect.width, iter->rect.height, image.getPixelsRef().getImageType());
         image.getPixelsRef().cropTo(iter->image.getPixelsRef(), iter->rect.x, iter->rect.y, iter->rect.width, iter->rect.height);
         iter->image.update();
+        cout << distance(tiles.begin(), iter) << "\ttype: " << iter->image.getPixelsRef().getImageType() <<"\t" << iter->rect.x << "\t" << iter->rect.y << "\t" << iter->rect.width << "\t" << iter->rect.height << endl;
+        iter->image.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // roikr: this was the trick to boost the fps as alternative to linear filtering...
     }
     
     
@@ -62,5 +70,9 @@ int ofxBigImage::getWidth() {
 
 int ofxBigImage::getHeight() {
     return height;
+}
+
+bool ofxBigImage::getDidLoad() {
+    return !tiles.empty();
 }
 

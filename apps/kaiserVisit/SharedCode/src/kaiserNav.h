@@ -12,21 +12,11 @@
 
 #include "ofxPanZoom.h"
 
-#ifdef TARGET_OPENGLES
-#include "ofxiDeepZoom.h"
-#else
-#include "ofxDeepZoom.h"
-#endif
+#include "ofxBigImage.h"
+
 
 #include "ofxFlash.h"
 #include "ofxFloatingCaption.h"
-
-struct image {
-    string name;
-    string prefix;
-    int width;
-    int height;
-};
 
 class kaiserNav  {
 	
@@ -49,14 +39,8 @@ public:
     void setLanguage(string lang);
     
 	ofxPanZoom	cam;
-    
-#ifdef TARGET_OPENGLES
-    ofxiDeepZoom deep;
-#else
-    ofxDeepZoom deep;
-#endif
-	
-    
+    ofxBigImage image;
+    	
     ofxDocument doc;
     ofxSymbolInstance interfaceLayout;
     ofxSymbolInstance imageLayout;
@@ -68,9 +52,11 @@ public:
     
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
     
-    vector<image> images;
+    
     string lang;
     string imageName;
     string captionName;
+    float captionLength;
+    
         
 };
