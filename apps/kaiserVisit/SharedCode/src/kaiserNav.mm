@@ -268,7 +268,7 @@ void kaiserNav::draw() {
 }
 
 void kaiserNav::exit() {
-    //    deep.stop();
+    deep.stop();
 }
 
 void kaiserNav::touchDown(ofTouchEventArgs &touch){
