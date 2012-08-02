@@ -34,11 +34,13 @@ void kaiserNav::updateOverlays() {
 //        cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
 
         caption.mat.makeTranslationMatrix(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
-        ofVec2f vec = floating.getAnchor()-floating.getPos();
-        vec.normalize();
-        float a = vec.angle(ofVec2f(1,0))*PI/180;
-        captionLength = MIN(rect.width/(2.0*abs(cos(a))),rect.height/(2.0*abs(sin(a))));
-        cout << a*180/PI << "\t" << captionLength << endl;
+        
+        caption.update(floating.getFade());
+        if (floating.getFade()<=0) {
+            bCaptionActive = false;
+        }
+        
+        
     }
 }
 
@@ -49,7 +51,7 @@ void kaiserNav::setCaption(string name) {
     
     caption = doc.getSymbolItem(captionName+'_'+lang)->createInstance(name);
     ofRectangle rect = caption.getBoundingBox();
-    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), 0.5*rect.width,0.5*rect.height, 150);
+    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), rect, 150);
     updateOverlays();
 }
 
@@ -174,15 +176,7 @@ void kaiserNav::draw2nd() {
     }
     
     if (bCaptionActive) {
-        ofPushStyle();
-        ofSetColor(0);
-        ofSetLineWidth(2);
-        ofVec2f vec = floating.getAnchor()-floating.getPos();
-        float totalLen = vec.length();
-        vec.normalize();
-        
-        ofLine(floating.getPos()+vec*(captionLength+20), floating.getPos()+vec*(totalLen-13.5-20));
-        ofPopStyle();
+        floating.draw();
         caption.draw();
     }
     ofPopMatrix();
@@ -230,15 +224,7 @@ void kaiserNav::draw() {
     
     
     if (bCaptionActive) {
-        ofPushStyle();
-        ofSetColor(0);
-        ofSetLineWidth(2);
-        ofVec2f vec = floating.getAnchor()-floating.getPos();
-        float totalLen = vec.length();
-        vec.normalize();
-        
-        ofLine(floating.getPos()+vec*(captionLength+20), floating.getPos()+vec*(totalLen-13.5-20));
-        ofPopStyle();
+        floating.draw();
         caption.draw();
     }
     
@@ -287,6 +273,10 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
                 setCaption(captionName);
             }
         }
+    }
+    
+    if (!caption.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
+        bCaptionActive =false;
     }
 
 }

@@ -56,7 +56,7 @@ public:
     string lang;
     string imageName;
     string captionName;
-    float captionLength;
+    
     
         
 };

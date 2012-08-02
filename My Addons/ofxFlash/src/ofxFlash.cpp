@@ -496,6 +496,24 @@ ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,floa
     return newInstance;
 }
 
+void ofxSymbolInstance::update(float alpha) {
+    for (vector<layer>::iterator liter = layers.begin();liter!=layers.end();liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin();iter!=liter->instances.end();iter++) {
+            switch (iter->type) {
+                case BITMAP_INSTANCE: 
+                    iter->alphaMultiplier = alpha;
+                    break;
+                case SYMBOL_INSTANCE:
+                    update(alpha*iter->alphaMultiplier);
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+    }
+}
+
 /*
 ofRectangle ofxSymbolItem::getScreenRect(ofRectangle& rect) {
     cout << ofGetWidth() << "\t" << ofGetHeight() << "\t" << doc->offset << "\t" << doc->zoom << "\t";

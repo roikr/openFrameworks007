@@ -150,6 +150,7 @@ public:
     void draw();
     vector<ofxSymbolInstance> hitTest(ofVec2f pos);
     vector<ofxSymbolInstance> hitLayer(layer *lyr,ofVec2f pos);
+    void update(float alpha);
     
     ofRectangle getBoundingBox();
     

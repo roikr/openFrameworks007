@@ -12,18 +12,25 @@
 
 class ofxFloatingCaption {
 public:
-    void setup(ofRectangle rect,float hMargin,float vMargin,float radius);
+    void setup(ofRectangle screenRect,ofRectangle captionRect,float radius);
+    void draw();
     void setAnchor(ofVec2f anchor);
     ofVec2f getPos();
     ofVec2f getAnchor();
+    float getFade();
     
 private:
     ofVec2f anchor;
-    ofRectangle rect;
+    ofRectangle screenRect;
+    ofRectangle captionRect;
+    
     float hMargin;
     float vMargin;
     float radius;
     
     ofVec2f dir;
     ofVec2f pos;
+    
+    ofVec2f linep1,linep2;
+    float fade;
 };
