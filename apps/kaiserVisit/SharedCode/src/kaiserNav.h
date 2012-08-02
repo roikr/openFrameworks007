@@ -36,8 +36,7 @@ public:
     void setImage(string name);
     void updateOverlays();
     void setCaption(string name);
-    void setLanguage(string lang);
-    
+   
 	ofxPanZoom	cam;
     ofxBigImage image;
     	

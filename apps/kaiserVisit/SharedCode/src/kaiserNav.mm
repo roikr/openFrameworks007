@@ -76,20 +76,6 @@ void kaiserNav::setup(){
     
 }
 
-void kaiserNav::setLanguage(string lang) {
-    this->lang = lang;
-    
-    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
-    string titleName = imageName+"_C_"+lang;
-    
-    for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
-            if (iter->type==SYMBOL_INSTANCE) {
-                iter->bVisible = iter->name == titleName;
-            }
-        }
-    }
-}
 
 void kaiserNav::setImage(string name) {
     
@@ -119,7 +105,18 @@ void kaiserNav::setImage(string name) {
         }
     }
     
-    setLanguage(lang);
+    
+    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+    titles->bVisible = true;
+    string titleName = imageName+"_C_"+lang;
+    
+    for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
+            if (iter->type==SYMBOL_INSTANCE) {
+                iter->bVisible = iter->name == titleName;
+            }
+        }
+    }
     
     float minZoom = 1024.0/(float)image.getWidth();
     //	cam.setZoom(0.125f);
@@ -251,6 +248,8 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
         }
     }
     
+    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+    titles->bVisible = false;
     
     vector<ofxSymbolInstance> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
     for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
@@ -264,7 +263,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
     for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
         if (iter->type==SYMBOL_INSTANCE) {
             cout << iter->name << endl;
-            setLanguage(iter->name);
+            lang = iter->name;
             if (bCaptionActive) {
                 setCaption(captionName);
             }
@@ -291,9 +290,9 @@ void kaiserNav::touchUp(ofTouchEventArgs &touch){
 
 
 void kaiserNav::touchDoubleTap(ofTouchEventArgs &touch){
-	cam.touchDoubleTap(touch); //fw event to cam
-	cam.setZoom(1.0f);	//reset zoom
-	cam.lookAt( ofVec3f() ); //reset position
+//	cam.touchDoubleTap(touch); //fw event to cam
+//	cam.setZoom(1.0f);	//reset zoom
+//	cam.lookAt( ofVec3f() ); //reset position
 }
 
 

@@ -565,6 +565,10 @@ void ofxSymbolInstance::bitmapFill(ofxSymbolInstance &instance) {
 
 
 void ofxSymbolInstance::drawLayer(layer *ly) {
+    if (!ly) {
+        return;
+    }
+    
     ofPushMatrix();
     glMultMatrixf(mat.getPtr());
     for (vector<ofxSymbolInstance>::iterator iter=ly->instances.begin(); iter!=ly->instances.end(); iter++) {
