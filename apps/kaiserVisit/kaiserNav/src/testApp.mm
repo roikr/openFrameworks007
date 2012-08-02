@@ -44,8 +44,8 @@ void testApp::update() {
 void testApp::draw() {
     nav.draw();
 	
-	glColor4f(1,1,1,1);
-	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );	
+//	glColor4f(1,1,1,1);
+//	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );	
 }
 
 void testApp::exit() {

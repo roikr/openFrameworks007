@@ -171,10 +171,6 @@ void kaiserNav::draw2nd() {
 	
 	cam.reset();	//back to normal ofSetupScreen() projection
 	
-    for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
-        iter->second.draw();
-    }
-    
     if (bCaptionActive) {
         floating.draw();
         caption.draw();
@@ -232,7 +228,7 @@ void kaiserNav::draw() {
     interfaceLayout.draw();
     
     ofPopMatrix();
-	cam.drawDebug(); //see info on ofxPanZoom status
+//	cam.drawDebug(); //see info on ofxPanZoom status
 }
 
 void kaiserNav::exit() {

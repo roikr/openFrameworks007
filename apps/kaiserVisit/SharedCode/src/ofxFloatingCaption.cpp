@@ -19,7 +19,7 @@ void ofxFloatingCaption::setup(ofRectangle screenRect,ofRectangle captionRect,fl
 
 void ofxFloatingCaption::draw() {
     ofPushStyle();
-    ofSetColor(0,0,0,fade*255);
+    ofSetColor(255,240,0,fade*255);
     ofSetLineWidth(2);
     ofLine(linep1,linep2);
     
