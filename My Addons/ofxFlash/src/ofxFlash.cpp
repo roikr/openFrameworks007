@@ -13,6 +13,92 @@
 #define PIXEL_SCALE 20.0
 #define MAX_TEXTURE_SIZE 1024
 
+
+void ofxBitmapItem::load(float u,float v) {
+#ifndef TARGET_OPENGLES
+    //        cout << iter->image.loadImage(iter->sourceExternalFilepath);
+    cout << href << ": " << image.loadImage("LIBRARY/"+href) << endl;
+    
+    
+#else
+    ofFile file = ofFile(ofToDataPath("LIBRARY/"+href));
+    if (file.exists()) {
+        image.setUseTexture(false);
+        cout << href << ": " << image.loadImage("LIBRARY/"+href) << endl;
+        //            iter->bUseBig =  (iter->image.getWidth() > MAX_TEXTURE_SIZE || iter->image.getHeight() > MAX_TEXTURE_SIZE);
+        //            if (iter->bUseBig) {
+        //                iter->bigImage.loadImage(iter->image, MAX_TEXTURE_SIZE);
+        //            } else {
+        image.setUseTexture(true);
+        image.reloadTexture();
+        image.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // roikr: this was the trick to boost the fps as alternative to linear filtering...
+        //            }
+        
+        
+    } else {
+        cout << "no image for: " << href << endl;
+            file = ofFile(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
+            if (file.exists()) {
+                cout << "load pvr for: " << name << endl;
+                texture.load(file.getAbsolutePath());
+                this->u = u;
+                this->v = v;
+                this->width = u*texture._width;
+                this->height = v*texture._height;
+                
+            } else {
+                cout << "no pvr for: " << name << " - expect problems" << endl;
+            }
+    }
+    //        ofFile file = ofFile(iter->sourceExternalFilepath);
+    
+    
+#endif
+    
+    
+}
+
+void ofxBitmapItem::draw() {
+    
+    if (image.bAllocated()) {
+        image.draw(0,0);
+    }
+    
+#ifdef TARGET_OPENGLES
+    if (!image.bAllocated()) {
+        texture.draw(u,v);
+    }
+#endif
+     //                    if (iter->bitmapItem->bUseBig) {
+    //                        iter->bitmapItem->bigImage.draw();
+    //                    } else 
+}
+
+void ofxBitmapItem::release() {
+    image.clear();
+#ifdef TARGET_OPENGLES
+    texture.release();
+#endif 
+}
+
+
+
+int ofxBitmapItem::getWidth() {
+#ifndef TARGET_OPENGLES
+    return image.getWidth();
+#else
+    return image.bAllocated() ? image.getWidth() : width;
+#endif
+}
+
+int ofxBitmapItem::getHeight() {
+#ifndef TARGET_OPENGLES
+    return image.getHeight();
+#else
+    return image.bAllocated() ? image.getHeight() : height;
+#endif
+}
+
 void ofxDocument::setup(string name) {
    
     
@@ -24,10 +110,9 @@ void ofxDocument::setup(string name) {
         xml.pushTag("media");
         for (int i=0; i<xml.getNumTags("DOMBitmapItem"); i++) {
             
-            ofxBitmapItem item;
-            item.name = xml.getAttribute("DOMBitmapItem", "name", "",i);
+           
 //            item.sourceExternalFilepath = xml.getAttribute("DOMBitmapItem", "sourceExternalFilepath", "",i);
-            item.href = xml.getAttribute("DOMBitmapItem", "href", "",i);
+            
 // roikr: had to comment out frameRight and frameBotton because I got wrongs values from flash 
 // now I take image width and height from the image file - need to take care of ofxiTexture and transformation points            
 //            item.frameRight = xml.getAttribute("DOMBitmapItem", "frameRight", 0,i);
@@ -37,7 +122,7 @@ void ofxDocument::setup(string name) {
 //          
 //            cout << item.name << "\t" << item.frameRight/PIXEL_SCALE << "x" << item.frameBottom/PIXEL_SCALE << endl;
             
-            bitmapItems.push_back(item);
+            bitmapItems.push_back(ofxBitmapItem(xml.getAttribute("DOMBitmapItem", "name", "",i),xml.getAttribute("DOMBitmapItem", "href", "",i)));
             
         }
         xml.popTag();
@@ -60,6 +145,9 @@ void ofxDocument::setup(string name) {
     for (vector<ofxSymbolItem>::iterator iter = symbolItems.begin(); iter!=symbolItems.end(); iter++) {
         iter->setup(this);
     }
+    
+    
+        
     
 }
 
@@ -87,81 +175,35 @@ ofxBitmapItem* ofxDocument::getBitmapItem(string name) {
 
 void ofxDocument::load() {
 
+#ifdef TARGET_OPENGLES
+    ofxXmlSettings xml;
+    map<string, pair<float,float> > textures;
+    if (xml.loadFile("textures.xml")) {
+        xml.pushTag("textures");
+        for (int i=0;i<xml.getNumTags("texture");i++) {
+            textures[xml.getAttribute("texture", "filename", "",i)] = make_pair(xml.getAttribute("texture","width",1.0,i),xml.getAttribute("texture","height",1.0,i));
+        }
+    }
+
     for (vector<ofxBitmapItem>::iterator iter=bitmapItems.begin(); iter!=bitmapItems.end(); iter++) {
-        
-        
-        
-#ifndef TARGET_OPENGLES
-//        cout << iter->image.loadImage(iter->sourceExternalFilepath);
-        cout << iter->href << ": " << iter->image.loadImage("LIBRARY/"+iter->href) << endl;
-       
-        
-#else
-        ofFile file = ofFile(ofToDataPath("LIBRARY/"+iter->href));
-        if (file.exists()) {
-            iter->image.setUseTexture(false);
-            cout << iter->href << ": " << iter->image.loadImage("LIBRARY/"+iter->href) << endl;
-//            iter->bUseBig =  (iter->image.getWidth() > MAX_TEXTURE_SIZE || iter->image.getHeight() > MAX_TEXTURE_SIZE);
-//            if (iter->bUseBig) {
-//                iter->bigImage.loadImage(iter->image, MAX_TEXTURE_SIZE);
-//            } else {
-                iter->image.setUseTexture(true);
-                iter->image.reloadTexture();
-                iter->image.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // roikr: this was the trick to boost the fps as alternative to linear filtering...
-//            }
-            
-
+        map<string, pair<float,float> >::iterator titer = textures.find(iter->name);
+        if (titer!=textures.end()) {
+            iter->load(titer->second.first,titer->second.second);
         } else {
-            cout << "no image for: " << file.getAbsolutePath() << endl;
-//            file = ofFile(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
-//            if (file.exists()) {
-//                cout << "load pvr for: " << file.getAbsolutePath();
-//                iter->texture.load(file.getAbsolutePath());
-//                iter->uWidth = iter->width/(float)iter->texture._width;
-//                iter->vHeight =  iter->height/(float)iter->texture._height;
-//            } else {
-//                cout << "no pvr for: " << file.getAbsolutePath();
-//            }
+            iter->load();
         }
- //        ofFile file = ofFile(iter->sourceExternalFilepath);
-        
-        
-#endif
-        
-        
     }
-
-/*
-    for (vector<shape>::iterator siter=liter->shapes.begin(); siter!=liter->shapes.end(); siter++) {
-        if (!siter->bitmapFill.empty()) {
-            vector<bitmap>::iterator iter = siter->bitmapFill.begin();
-            
-#ifndef TARGET_OPENGLES
-            iter->image.loadImage("LIBRARY/"+iter->href);
-            iter->image.update();
-            cout << iter->href << " loaded" <<endl;
 #else
-            ofFile file = ofFile("LIBRARY/"+iter->path);
-            iter->texture.load(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
-#endif                
-            
-            
-            
-        }
+    for (vector<ofxBitmapItem>::iterator iter=bitmapItems.begin(); iter!=bitmapItems.end(); iter++) {
+        iter->load();
         
     }
-*/
-    
-    
+#endif
 }
 
 void ofxDocument::release() {
     for (vector<ofxBitmapItem>::iterator iter=bitmapItems.begin(); iter!=bitmapItems.end(); iter++) {
-        iter->image.clear();
-//#ifdef TARGET_OPENGLES
-//        iter->texture.release();
-//#endif
-        
+        iter->release();
     }
     
 }
@@ -176,23 +218,7 @@ vector<ofVec2f> parseVec(string str) {
     return vec;
 }
 
-ofMatrix4x4 parseMatrix(ofxXmlSettings &xml) {
-    
-    ofMatrix4x4 mat;
-    
-    if (xml.tagExists("matrix")) {
-        xml.pushTag("matrix");
-        ofVec2f translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
-        float scale = xml.getAttribute("Matrix", "a", 1.0);
-        float rotation = xml.getAttribute("Matrix", "c", 0.0);
-        xml.popTag();
-        
-        mat.scale(scale, scale, 1.0);
-        mat.translate(translation);
-    } 
-    
-    return mat;
-}
+
 
 //struct curvePath {
 //    ofVec2f p0;
@@ -312,8 +338,36 @@ ofxShape parseShape(ofxXmlSettings &xml) {
             ofxBitmapFill bf;
             bf.bitmapPath = xml.getAttribute("BitmapFill", "bitmapPath", "");
             xml.pushTag("BitmapFill");
-            bf.mat = parseMatrix(xml);
-            cout << bf.mat << endl;
+            
+            if (xml.tagExists("matrix")) {
+                xml.pushTag("matrix");
+                
+                float a = xml.getAttribute("Matrix", "a", 1.0);
+                float b = xml.getAttribute("Matrix", "b", 0.0);
+                float c = xml.getAttribute("Matrix", "c", 0.0);
+                float d = xml.getAttribute("Matrix", "d", 1.0);
+                float tx = xml.getAttribute("Matrix", "tx", 0.0);
+                float ty = xml.getAttribute("Matrix", "ty", 0.0);
+                
+                //bi.mat = ofMatrix4x4(a, c, 0, tx, b, d, 0, ty, 0, 0, 1, 0, 0, 0, 0, 1);
+                //bi.mat = ofMatrix4x4(sqrt(a*a+b*b)/20, 0, 0, 0, 0,sqrt(c*c+d*d)/20, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1);
+                
+                //                        bi.width = (float)doc.items[bi.path].frameRight/PIXEL_SCALE;
+                //                        bi.height = (float)doc.items[bi.path].frameBottom/PIXEL_SCALE;
+                //                        bi.href = doc.items[bi.path].href;
+                
+                
+                //                        cout << bi.path << "\t" << bi.width << "x" << bi.height << endl;
+                
+                xml.popTag();
+                
+                bf.mat.scale(sqrt(a*a+b*b)/PIXEL_SCALE, sqrt(c*c+d*d)/PIXEL_SCALE, 1.0);
+                bf.mat.rotate(atan2( b, a )*180/PI, 0, 0, 1.0);
+                bf.mat.translate(ofVec2f(tx,ty));
+            }
+            
+            
+//            cout << bf.mat << endl;
             xml.popTag();
             
                         
@@ -341,8 +395,20 @@ ofxShape parseShape(ofxXmlSettings &xml) {
 
 ofxSymbolInstance parseInstance(ofxXmlSettings &xml) {
     ofxSymbolInstance i;
-
-    i.mat = parseMatrix(xml);
+    
+    
+    
+    
+    if (xml.tagExists("matrix")) {
+        xml.pushTag("matrix");
+        ofVec2f translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
+        float scale = xml.getAttribute("Matrix", "a", 1.0);
+        float rotation = xml.getAttribute("Matrix", "c", 0.0);
+        xml.popTag();
+        
+        i.mat.scale(scale, scale, 1.0);
+        i.mat.translate(translation);
+    } 
     
     if (xml.tagExists("transformationPoint")) {
         xml.pushTag("transformationPoint");
@@ -605,24 +671,8 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
                 case BITMAP_INSTANCE: {
                     ofPushMatrix();
                     glMultMatrixf(iter->mat.getPtr());
-                    //            iter->texture.draw(iter->u,iter->v);
-//                    bitmapItem *bitmapItem = item->doc->bitmapItems[iter->itemID];
                     ofSetColor(255, 255, 255,iter->alphaMultiplier*255.0);
-#ifndef TARGET_OPENGLES
-                    iter->bitmapItem->image.draw(0, 0);
-#else
-//                    if (iter->bitmapItem->bUseBig) {
-//                        iter->bitmapItem->bigImage.draw();
-//                    } else 
-                    if (iter->bitmapItem->image.bAllocated()) {
-                        iter->bitmapItem->image.draw(0, 0);
-                    } 
-                    
-//                    else {
-//                        iter->bitmapItem->texture.draw(iter->bitmapItem->uWidth,iter->bitmapItem->vHeight);
-//                    }
-                
-#endif
+                    iter->bitmapItem->draw();
                     ofSetColor(255, 255, 255,255);
                     ofPopMatrix();
                 } break;
@@ -707,30 +757,13 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
 //                                glScissor(p.x, p.y, rect.height*zoom , rect.width*zoom);
 //#endif
                                 
-                                
-                                
-                                
                                 ofPushMatrix();
                                 glMultMatrixf(bitmapFill.mat.getPtr());
-                               
-                                
-                                
-#ifndef TARGET_OPENGLES
-                                doc->bitmapItems[bm.itemID].image.draw(0, 0);
-#else
-//                                doc->bitmapItems[bm.itemID].texture.draw();
-                                bitmapFill.bitmapItem->image.draw(0, 0);
-#endif
-                                
-                                
+                                bitmapFill.bitmapItem->draw();
                                 ofPopMatrix();
                                 
 //                                glDisable(GL_SCISSOR_TEST);
-                                
-                                
-                                
-                                
-                                
+            
                             }
                         } else {
                             
@@ -809,7 +842,7 @@ ofRectangle ofxSymbolInstance::getBoundingBox() {
     switch (type) {
         case BITMAP_INSTANCE: {
             ofVec2f p0 = mat.preMult(ofVec3f(0,0,0));
-            ofVec2f p1 = mat.preMult(ofVec3f(bitmapItem->image.getWidth(),bitmapItem->image.getHeight()));
+            ofVec2f p1 = mat.preMult(ofVec3f(bitmapItem->getWidth(),bitmapItem->getHeight()));
             rect = ofRectangle(p0.x,p0.y,p1.x-p0.x,p1.y-p0.y);
         } break;
             
@@ -861,7 +894,7 @@ vector<ofxSymbolInstance> ofxSymbolInstance::hitLayer(layer *lyr,ofVec2f pos)  {
                 ofMatrix4x4 imat = iter->mat.getInverse();
                 ofVec2f wpos = imat.preMult(ofVec3f(pos));
                 
-                if (ofRectangle(0,0,iter->bitmapItem->image.getWidth(),iter->bitmapItem->image.getHeight()).inside(wpos)) {
+                if (ofRectangle(0,0,iter->bitmapItem->getWidth(),iter->bitmapItem->getHeight()).inside(wpos)) {
                     
                     instances.push_back(*iter);
                 }

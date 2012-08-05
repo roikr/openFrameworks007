@@ -10,9 +10,9 @@
 
 #include "ofMain.h"
 
-//#ifdef TARGET_OPENGLES
-//#include "ofxBigImage.h"
-//#endif
+#ifdef TARGET_OPENGLES
+#include "ofxiTexture.h"
+#endif
 
 enum {
     BITMAP_INSTANCE,
@@ -78,40 +78,35 @@ struct tlfText {
 
 };
 
-struct ofxBitmapItem {
+class ofxBitmapItem {
+    
+public:
+    ofxBitmapItem(string name,string href):name(name),href(href) {};
+    void load(float u=1.0,float v=1.0);
+    void draw();
+    void release();
+    
+    int getWidth();
+    int getHeight();
+    
     string name;
     string href;
     
+private:
+    
+    
 //    int frameRight;
 //    int frameBottom;
-//    
-    
-    
-    
-    
+        
     ofImage image;
-//#ifdef TARGET_OPENGLES
-//    ofxBigImage bigImage;
-//    bool bUseBig;
-//#endif
-//#ifdef TARGET_OPENGLES
-//    ofxiTexture texture;
-//    float uWidth; // width and height from 0 to 1
-//    float vHeight;
-//    
-//    //    ofxiTexture texture;
-//    float u; // width and height from 0 to 1
-//    float v;
-//    
-//    //#ifndef TARGET_OPENGLES
-//    //    ofImage image;
-//    //#else
-//    //    ofxiTexture texture;
-//    //#endif
-//    
-//#endif
-//    float width;
-//    float height;
+
+#ifdef TARGET_OPENGLES
+    ofxiTexture texture;
+    int width;
+    int height;
+    float u,v;
+    
+#endif
     
 };
 
