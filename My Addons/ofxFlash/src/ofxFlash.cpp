@@ -112,7 +112,7 @@ void ofxDocument::load() {
             
 
         } else {
-            cout << "no image for: " << file.getAbsolutePath();
+            cout << "no image for: " << file.getAbsolutePath() << endl;
 //            file = ofFile(file.getEnclosingDirectory()+file.getBaseName()+".pvr");
 //            if (file.exists()) {
 //                cout << "load pvr for: " << file.getAbsolutePath();
@@ -176,29 +176,173 @@ vector<ofVec2f> parseVec(string str) {
     return vec;
 }
 
-ofxSymbolInstance parseInstance(ofxXmlSettings &xml) {
-    ofxSymbolInstance i;
-    ofVec2f translation;
-    float scale;
-    float rotation;
+ofMatrix4x4 parseMatrix(ofxXmlSettings &xml) {
+    
+    ofMatrix4x4 mat;
     
     if (xml.tagExists("matrix")) {
         xml.pushTag("matrix");
-        translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
-        scale = xml.getAttribute("Matrix", "a", 1.0);
-        rotation = xml.getAttribute("Matrix", "c", 0.0);
+        ofVec2f translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
+        float scale = xml.getAttribute("Matrix", "a", 1.0);
+        float rotation = xml.getAttribute("Matrix", "c", 0.0);
         xml.popTag();
+        
+        mat.scale(scale, scale, 1.0);
+        mat.translate(translation);
+    } 
+    
+    return mat;
+}
+
+//struct curvePath {
+//    ofVec2f p0;
+//    vector<vector<ofVec2f> > segments;
+//    
+//};
+//
+//struct linePath {
+//    ofVec2f p0;
+//    vector<ofVec2f> segments;
+//    bool bClosed;
+//};
+//
+//struct ofxBitmapFill {
+//    ofxBitmapItem *bitmapItem;
+//    ofMatrix4x4 mat;
+//    string bitmapPath;
+//};
+
+
+
+
+void dumpShape(ofxShape s) {
+    cout << "curvePath: " << s.curve.size() << endl;
+    cout << "line: " << s.line.size() << endl;
+    cout << "solidColorStroke: " << s.solidColorStroke.size() << endl;
+    cout << "solidColorFill: " << s.solidColorFill.size() << endl;
+    cout << "bitmapFill: " << s.bitmapFill.size() << endl;
+//    for (vector<curvePath>::iterator citer=s.curve.begin(); citer!=s.curve.end(); citer++) {
+//        <#statements#>
+//    }
+}
+
+ofxShape parseShape(ofxXmlSettings &xml) {
+    
+    ofxShape s;
+    
+    xml.pushTag("paths");
+    
+    string str = xml.getAttribute("Path", "data", "");
+    
+    size_t found = str.find('L');
+    if (found!=string::npos) {
+        linePath p;
+        p.p0 = parseVec(str.substr(1,found)).front(); // eliminate M (for moveTo)
+        //ln.p1 = parseVec(str.substr(found+1)).front();
+        
+        p.bClosed = str.at(str.length()-1) == 'z';
+        
+        
+        
+        if (p.bClosed) {
+            str = str.substr(found+1,str.npos-1); // eliminate z for closed
+        } else {
+            str = str.substr(found+1);
+        }
+        vector<string> svec = ofSplitString(str, "L");
+//        cout << "numSegments: " << svec.size() << ", closed: " << p.bClosed<< endl;
+        
+        for (vector<string>::iterator iter=svec.begin(); iter!=svec.end(); iter++) {
+            
+            p.segments.push_back(parseVec(*iter).front());  
+//            cout << p.segments.back().x << "," << p.segments.back().y << "\t";
+        }
+//        cout << endl;
+        
+        
+        s.line.push_back(p);
+        
+//        cout << "rectangle: " << rect.x << " " << rect.y << " " << rect.width << " " << rect.height << " " << endl;
+        
     } else {
-        translation = ofVec2f(0.0,0.0);
-        scale = 1.0;
-        rotation = 0.0;
+        found = str.find('C');
+        if (found!=string::npos) {
+            curvePath p;
+            p.p0 = parseVec(str.substr(1,found)).front(); // eliminate M
+            
+            vector<string> svec = ofSplitString(str.substr(found+1), "C");
+            //                        cout << "numCurves: " << svec.size() << endl;
+            
+            for (vector<string>::iterator iter=svec.begin(); iter!=svec.end(); iter++) {
+                vector<ofVec2f> bezier = parseVec(*iter);
+                
+                //                            cout << bezier.size() << "\t";
+                p.segments.push_back(bezier);
+            }
+            
+            s.curve.push_back(p);
+            
+            
+        }
     }
     
-    ofMatrix4x4 mat;
-    mat.scale(scale, scale, 1.0);
-    mat.translate(translation);
+    xml.pushTag("Path");
     
-    i.mat = mat;
+    if (xml.tagExists("stroke")) {
+        xml.pushTag("stroke");
+        xml.pushTag("SolidStroke");
+        xml.pushTag("fill");
+        
+        if (xml.tagExists("SolidColor")) {
+            s.solidColorStroke.push_back(ofHexToInt(xml.getAttribute("SolidColor", "color", "").substr(1)));
+        }
+        xml.popTag();
+        xml.popTag();
+        xml.popTag();
+    }
+    
+    if (xml.tagExists("fill")) {
+        xml.pushTag("fill");
+        
+        if (xml.tagExists("SolidColor")) {
+            s.solidColorFill.push_back(ofHexToInt(xml.getAttribute("SolidColor", "color", "").substr(1)));
+        } 
+        
+        if (xml.tagExists("BitmapFill")) {
+            ofxBitmapFill bf;
+            bf.bitmapPath = xml.getAttribute("BitmapFill", "bitmapPath", "");
+            xml.pushTag("BitmapFill");
+            bf.mat = parseMatrix(xml);
+            cout << bf.mat << endl;
+            xml.popTag();
+            
+                        
+            
+            
+            ofVec2f tl = s.line.front().segments[0];
+            ofVec2f br = s.line.front().segments[2];
+            
+            bf.rect = ofRectangle(tl.x, tl.y, br.x-tl.x, br.y-tl.y); // roikr: what did I forget ? inside rect ?
+            
+            
+            s.bitmapFill.push_back(bf);
+        }
+        
+        xml.popTag();
+    }
+    
+    xml.popTag(); 
+    xml.popTag();
+    
+    return s;
+}
+    
+    
+
+ofxSymbolInstance parseInstance(ofxXmlSettings &xml) {
+    ofxSymbolInstance i;
+
+    i.mat = parseMatrix(xml);
     
     if (xml.tagExists("transformationPoint")) {
         xml.pushTag("transformationPoint");
@@ -215,6 +359,7 @@ ofxSymbolInstance parseInstance(ofxXmlSettings &xml) {
     
     return i;
 }
+
 
 void ofxSymbolItem::setup(ofxDocument *doc) {
     
@@ -236,15 +381,15 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
             for (int i=0; i<xml.getNumTags("DOMBitmapInstance"); i++) {
                 string libraryItemName = xml.getAttribute("DOMBitmapInstance", "libraryItemName", "",i);
                 xml.pushTag("DOMBitmapInstance",i);
-                ofxSymbolInstance bi = parseInstance(xml);
-                bi.bitmapItem = doc->getBitmapItem(libraryItemName);
+                ofxSymbolInstance si = parseInstance(xml);
+                si.bitmapItem = doc->getBitmapItem(libraryItemName);
 //                if (bi.transformationPoint.empty()) {
 //                    bi.transformationPoint.push_back(ofVec2f(bi.bitmapItem->width/2,bi.bitmapItem->height/2));
 //                }
                 xml.popTag();
                 
-                bi.type = BITMAP_INSTANCE;
-                l.instances.push_back(bi);
+                si.type = BITMAP_INSTANCE;
+                l.instances.push_back(si);
             }
             
             for (int i=0; i<xml.getNumTags("DOMSymbolInstance"); i++) {
@@ -261,116 +406,19 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
             
             
             for (int i=0; i<xml.getNumTags("DOMShape"); i++) {
-                shape s;
-                
+
                 xml.pushTag("DOMShape",i);
-                xml.pushTag("paths");
-                
-                string str = xml.getAttribute("Path", "data", "");
-                
-                size_t found = str.find('L');
-                if (found!=string::npos) {
-                    linePath p;
-                    p.p0 = parseVec(str.substr(1,found)).front(); // eliminate M (for moveTo)
-                    //ln.p1 = parseVec(str.substr(found+1)).front();
-                    
-                    p.bClosed = str.at(str.length()-1) == 'z';
-                    
-                     
-                    
-                    if (p.bClosed) {
-                       str = str.substr(found+1,str.npos-1); // eliminate z for closed
-                    } else {
-                        str = str.substr(found+1);
-                    }
-                    vector<string> svec = ofSplitString(str, "L");
-//                    cout << "numSegments: " << svec.size() << ", closed: " << p.bClosed<< endl;
-                    
-                    for (vector<string>::iterator iter=svec.begin(); iter!=svec.end(); iter++) {
-                                                
-                        p.segments.push_back(parseVec(*iter).front());  
-//                         cout << p.segments.back().x << "," << p.segments.back().y << "\t";
-                    }
-//                    cout << endl;
-                    
-                    
-                    s.line.push_back(p);
-                    
-//                    cout << "rectangle: " << rect.x << " " << rect.y << " " << rect.width << " " << rect.height << " " << endl;
-                    
-                } else {
-                    found = str.find('C');
-                    if (found!=string::npos) {
-                        curvePath p;
-                        p.p0 = parseVec(str.substr(1,found)).front(); // eliminate M
-                        
-                        vector<string> svec = ofSplitString(str.substr(found+1), "C");
-//                        cout << "numCurves: " << svec.size() << endl;
-                        
-                        for (vector<string>::iterator iter=svec.begin(); iter!=svec.end(); iter++) {
-                            vector<ofVec2f> bezier = parseVec(*iter);
-                            
-//                            cout << bezier.size() << "\t";
-                            p.segments.push_back(bezier);
-                        }
-                        
-                        s.curve.push_back(p);
-                        
-                        
-                    }
+                ofxSymbolInstance si;
+                si.shapeIndex = shapes.size();
+                shapes.push_back(parseShape(xml));
+               
+                if (!shapes.back().bitmapFill.empty()) {
+                    ofxBitmapFill &bf = shapes.back().bitmapFill.front();
+                    bf.bitmapItem = doc->getBitmapItem(bf.bitmapPath);
                 }
-                
-                xml.pushTag("Path");
-                
-                if (xml.tagExists("stroke")) {
-                    xml.pushTag("stroke");
-                    xml.pushTag("SolidStroke");
-                    xml.pushTag("fill");
-                    
-                    if (xml.tagExists("SolidColor")) {
-                        s.solidColorStroke.push_back(ofHexToInt(xml.getAttribute("SolidColor", "color", "").substr(1)));
-                    }
-                    xml.popTag();
-                    xml.popTag();
-                    xml.popTag();
-                }
-                
-                if (xml.tagExists("fill")) {
-                    xml.pushTag("fill");
-                    
-                    if (xml.tagExists("SolidColor")) {
-                        s.solidColorFill.push_back(ofHexToInt(xml.getAttribute("SolidColor", "color", "").substr(1)));
-                    } 
-                    
-                    if (xml.tagExists("BitmapFill")) {
-                        
-                        string name = xml.getAttribute("BitmapFill", "bitmapPath", "");
-                        
-                        
-                        xml.pushTag("BitmapFill");
-                        
-                        ofxSymbolInstance bi = parseInstance(xml);
-                        bi.bitmapItem = doc->getBitmapItem(name);
-                        
-                        xml.popTag();
-                        
-                        
-                        ofVec2f tl = s.line.front().segments[0];
-                        ofVec2f br = s.line.front().segments[2];
-                        
-                        //bi.rect = ofRectangle(tl.x, tl.y, br.x-tl.x, br.y-tl.y); // roikr: what did I forget ? inside rect ?
-                        
-                        
-                        s.bitmapFill.push_back(bi);
-                    }
-                    
-                    xml.popTag();
-                }
-                
-                xml.popTag(); 
-                xml.popTag();           
                 xml.popTag();
-                l.shapes.push_back(s);
+                si.type = SHAPE;
+                l.instances.push_back(si);
             }
            
             for (int i=0; i<xml.getNumTags("DOMTLFText"); i++) {
@@ -482,9 +530,23 @@ ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,floa
                     l.instances.push_back(i);
                     
                 }   break;
+                    
+                case SHAPE: {
+                    ofxSymbolInstance si;
+                    si.type = iter->type;
+                    si.mat = iter->mat;
+                    si.transformationPoint = iter->transformationPoint;
+                    si.alphaMultiplier = alpha;
+                    si.shapeIndex = iter->shapeIndex;
+//                    dumpShape(si.shape);
+                    l.instances.push_back(si);
+                    
+                }   break;
+                    
                 case SYMBOL_INSTANCE:
                     l.instances.push_back(iter->symbolItem->createInstance(iter->name, iter->mat,iter->alphaMultiplier*alpha,iter->transformationPoint.front()));
                     break;
+                
                 default:
                     break;
             }
@@ -497,21 +559,25 @@ ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,floa
 }
 
 void ofxSymbolInstance::update(float alpha) {
-    for (vector<layer>::iterator liter = layers.begin();liter!=layers.end();liter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin();iter!=liter->instances.end();iter++) {
-            switch (iter->type) {
-                case BITMAP_INSTANCE: 
-                    iter->alphaMultiplier = alpha;
-                    break;
-                case SYMBOL_INSTANCE:
-                    update(alpha*iter->alphaMultiplier);
-                    break;
-                default:
-                    break;
+    switch (type) {
+        case BITMAP_INSTANCE: 
+        case SHAPE:
+            alphaMultiplier = alpha;
+            break;
+        case SYMBOL_INSTANCE:
+            for (vector<layer>::iterator liter = layers.begin();liter!=layers.end();liter++) {
+                for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin();iter!=liter->instances.end();iter++) {
+                    iter->update(alpha*alphaMultiplier);
+                    
+                }
             }
-            
-        }
+           
+            break;
+        default:
+            break;
     }
+    
+    
 }
 
 /*
@@ -524,44 +590,6 @@ ofRectangle ofxSymbolItem::getScreenRect(ofRectangle& rect) {
 }
 */
 
-void ofxSymbolInstance::bitmapFill(ofxSymbolInstance &instance) {
-    
-//    glEnable(GL_SCISSOR_TEST);
-//    ofRectangle &rect = bm.rect;
-//    
-//#ifndef TARGET_OPENGLES                   
-//    ofVec2f p = (ofVec2f(rect.x,rect.y+rect.height)+doc->offset)*doc->zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-//    
-//    glScissor(p.x, ofGetHeight()-p.y, rect.width*doc->zoom , rect.height*doc->zoom);
-//    
-//#else                    
-//    ofVec2f q = (ofVec2f(rect.x+rect.width,rect.y+rect.height)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-//    ofVec2f p = ofVec2f(ofGetHeight(),ofGetWidth())-ofVec2f(q.y,q.x);
-//    
-//    glScissor(p.x, p.y, rect.height*zoom , rect.width*zoom);
-//#endif
-//    
-//    
-//    
-//    
-//    ofPushMatrix();
-//    //                glMultMatrixf(iter->mat.getPtr());
-//    ofTranslate(bm.translation);
-//    ofRotate(bm.r*180/PI);
-//    ofScale(bm.sx, bm.sy);
-//    
-//    
-//#ifndef TARGET_OPENGLES
-//   doc->bitmapItems[bm.itemID].image.draw(0, 0);
-//#else
-//    doc->bitmapItems[bm.itemID].texture.draw();
-//#endif
-//    
-//    
-//    ofPopMatrix();
-//    
-//    glDisable(GL_SCISSOR_TEST);
-}
 
 
 void ofxSymbolInstance::drawLayer(layer *ly) {
@@ -579,7 +607,7 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
                     glMultMatrixf(iter->mat.getPtr());
                     //            iter->texture.draw(iter->u,iter->v);
 //                    bitmapItem *bitmapItem = item->doc->bitmapItems[iter->itemID];
-                    ofSetColor(255, 255, 255,iter->alphaMultiplier*255);
+                    ofSetColor(255, 255, 255,iter->alphaMultiplier*255.0);
 #ifndef TARGET_OPENGLES
                     iter->bitmapItem->image.draw(0, 0);
 #else
@@ -598,12 +626,138 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
                     ofSetColor(255, 255, 255,255);
                     ofPopMatrix();
                 } break;
+                    
+                    
+                case SHAPE: {
+                    
+                    ofxShape &shape = symbolItem->shapes[iter->shapeIndex]; 
+                    if (!shape.curve.empty()) {
+                        vector<curvePath>::iterator citer=shape.curve.begin(); 
+                        ofBeginShape();
+                        ofVertex(citer->p0.x,citer->p0.y);
+                        for (vector<vector<ofVec2f> >::iterator iter=citer->segments.begin(); iter!=citer->segments.end(); iter++) {
+                            
+                            ofBezierVertex(iter->at(0).x,iter->at(0).y,iter->at(1).x,iter->at(1).y,iter->at(2).x,iter->at(2).y);
+                        }
+                        ofEndShape();
+                    }
+                    
+                    
+                    
+                    if (!shape.line.empty()) {
+                        //linePath l = shape.line.front();
+                        vector<linePath>::iterator liter = shape.line.begin();
+                        
+                        if (liter->bClosed) {
+                            
+                            if (!shape.solidColorFill.empty()) {
+                                
+                                ofPushStyle();
+                                ofSetHexColor(shape.solidColorFill.front());
+                                
+                                ofFill();
+                                ofBeginShape();
+                                ofVertex(liter->p0.x,liter->p0.y);
+                                
+                                for (vector<ofVec2f>::iterator iter=liter->segments.begin(); iter!=liter->segments.end()-1; iter++) { // roikr: we don't need the end
+                                    ofVertex(iter->x,iter->y);
+                                }
+                                
+                                ofEndShape();
+                                ofPopStyle();
+                                
+                            };
+                            
+                            if (!shape.solidColorStroke.empty()) {
+                                
+                                ofPushStyle();
+                                ofSetHexColor(shape.solidColorStroke.front());
+                                
+                                ofNoFill();
+                                ofBeginShape();
+                                ofVertex(liter->p0.x,liter->p0.y);
+                                
+                                for (vector<ofVec2f>::iterator iter=liter->segments.begin(); iter!=liter->segments.end(); iter++) {
+                                    ofVertex(iter->x,iter->y);
+                                }
+                                
+                                ofEndShape();
+                                ofPopStyle();
+                                
+                            };
+                            
+                            if (!shape.bitmapFill.empty()) {
+                                
+                                ofxBitmapFill &bitmapFill = shape.bitmapFill.front();
+                                
+                                
+//                                
+//                                glEnable(GL_SCISSOR_TEST);
+//                                ofRectangle &rect = bitmapFill.rect;
+//                                
+//#ifndef TARGET_OPENGLES                   
+//                                ofVec2f p = (ofVec2f(rect.x,rect.y+rect.height)+doc->offset)*doc->zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+//                                
+//                                glScissor(p.x, ofGetHeight()-p.y, rect.width*doc->zoom , rect.height*doc->zoom);
+//                                
+//#else                    
+//                                ofVec2f q = (ofVec2f(rect.x+rect.width,rect.y+rect.height)+offset)*zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
+//                                ofVec2f p = ofVec2f(ofGetHeight(),ofGetWidth())-ofVec2f(q.y,q.x);
+//                                
+//                                glScissor(p.x, p.y, rect.height*zoom , rect.width*zoom);
+//#endif
+                                
+                                
+                                
+                                
+                                ofPushMatrix();
+                                glMultMatrixf(bitmapFill.mat.getPtr());
+                               
+                                
+                                
+#ifndef TARGET_OPENGLES
+                                doc->bitmapItems[bm.itemID].image.draw(0, 0);
+#else
+//                                doc->bitmapItems[bm.itemID].texture.draw();
+                                bitmapFill.bitmapItem->image.draw(0, 0);
+#endif
+                                
+                                
+                                ofPopMatrix();
+                                
+//                                glDisable(GL_SCISSOR_TEST);
+                                
+                                
+                                
+                                
+                                
+                            }
+                        } else {
+                            
+                            if (!shape.solidColorStroke.empty()) {
+                                ofPushStyle();
+                                ofSetHexColor(shape.solidColorStroke.front());
+                                ofLine(liter->p0, liter->segments.front());
+                                for (vector<ofVec2f>::iterator iter=liter->segments.begin(); iter!=liter->segments.end()-1; iter++) {
+                                    ofLine(*iter, *(iter+1));
+                                }
+                                ofPopStyle();
+                            }
+                        }
+                        
+                    }
+                }   break;
+                    
+            
+            
+            
                 
-                case SYMBOL_INSTANCE: {
-                   
+                case SYMBOL_INSTANCE: 
                     iter->draw();
-                   
-                } break;
+                    break;
+                    
+                default:
+                    break;
                     
             }
 
@@ -614,90 +768,10 @@ void ofxSymbolInstance::drawLayer(layer *ly) {
     ofPopMatrix();
      
 /*    
-    for (vector<shape>::iterator siter=ly.shapes.begin(); siter!=ly.shapes.end(); siter++) {
         
         
-        if (!siter->curve.empty()) {
-            vector<curvePath>::iterator citer=siter->curve.begin(); 
-            ofBeginShape();
-            ofVertex(citer->p0.x,citer->p0.y);
-            for (vector<vector<ofVec2f> >::iterator iter=citer->segments.begin(); iter!=citer->segments.end(); iter++) {
-                
-                ofBezierVertex(iter->at(0).x,iter->at(0).y,iter->at(1).x,iter->at(1).y,iter->at(2).x,iter->at(2).y);
-            }
-            ofEndShape();
-        }
-        
-        
-        
-        if (!siter->line.empty()) {
-            //linePath l = siter->line.front();
-            vector<linePath>::iterator liter = siter->line.begin();
-            
-            if (liter->bClosed) {
-
-                if (!siter->solidColorFill.empty()) {
-                    
-                    ofPushStyle();
-                    ofSetHexColor(siter->solidColorFill.front());
-                    
-                    ofFill();
-                    ofBeginShape();
-                    ofVertex(liter->p0.x,liter->p0.y);
-                    
-                    for (vector<ofVec2f>::iterator iter=liter->segments.begin(); iter!=liter->segments.end()-1; iter++) { // roikr: we don't need the end
-                        ofVertex(iter->x,iter->y);
-                    }
-                    
-                    ofEndShape();
-                    ofPopStyle();
-                    
-                };
-                
-                if (!siter->solidColorStroke.empty()) {
-                    
-                    ofPushStyle();
-                    ofSetHexColor(siter->solidColorStroke.front());
-                    
-                    ofNoFill();
-                    ofBeginShape();
-                    ofVertex(liter->p0.x,liter->p0.y);
-                    
-                    for (vector<ofVec2f>::iterator iter=liter->segments.begin(); iter!=liter->segments.end(); iter++) {
-                        ofVertex(iter->x,iter->y);
-                    }
-
-                    ofEndShape();
-                    ofPopStyle();
-                    
-                };
-                
-                if (!siter->bitmapFill.empty()) {
-                    bitmapFill(siter->bitmapFill.front());
-                    
-                }
-            } else {
-                
-                if (!siter->solidColorStroke.empty()) {
-                    ofPushStyle();
-                    ofSetHexColor(siter->solidColorStroke.front());
-                    ofLine(liter->p0, liter->segments.front());
-                    for (vector<ofVec2f>::iterator iter=liter->segments.begin(); iter!=liter->segments.end()-1; iter++) {
-                        ofLine(*iter, *(iter+1));
-                    }
-                    ofPopStyle();
-                }
-            }
-            
-        }
-   
-        
-    }
     
-   
     ofPushStyle();
-    
-    
     for (vector<tlfText>::iterator titer=ly.texts.begin();titer!=ly.texts.end();titer++) {
         
         float v = 0;

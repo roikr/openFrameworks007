@@ -15,14 +15,17 @@
 //#endif
 
 enum {
-    SYMBOL_INSTANCE,
-    BITMAP_INSTANCE
+    BITMAP_INSTANCE,
+    SHAPE,
+    SYMBOL_INSTANCE
+    
 };
 
 
 class ofxDocument;
 class ofxSymbolInstance;
 class ofxSymbolItem;
+class ofxBitmapItem;
 
 struct curvePath {
     ofVec2f p0;
@@ -36,14 +39,21 @@ struct linePath {
     bool bClosed;
 };
 
+struct ofxBitmapFill {
+    ofxBitmapItem *bitmapItem;
+    ofMatrix4x4 mat;
+    ofRectangle rect;
+    string bitmapPath;
+};
 
-struct shape {
+
+struct ofxShape {
     vector<curvePath> curve;
     vector<linePath> line;
     
     vector<int> solidColorStroke;
     vector<int> solidColorFill;
-    vector<ofxSymbolInstance> bitmapFill;
+    vector<ofxBitmapFill> bitmapFill;
     
 };
 
@@ -112,7 +122,6 @@ class ofxSymbolInstance;
 
 struct layer {
     vector<ofxSymbolInstance> instances;
-    vector<shape> shapes;
     vector<tlfText> texts;
     
     string name;
@@ -136,6 +145,7 @@ public:
     float lineHeight;
     
     ofxDocument *doc;
+    vector<ofxShape> shapes;
     
    
 };
@@ -145,7 +155,6 @@ public:
 class ofxSymbolInstance {
 public:
     ofxSymbolInstance():bVisible(true) {};
-    void bitmapFill(ofxSymbolInstance &instance);
     void drawLayer(layer *ly);
     void draw();
     vector<ofxSymbolInstance> hitTest(ofVec2f pos);
@@ -173,6 +182,7 @@ public:
     
     ofxSymbolItem *symbolItem;
     ofxBitmapItem *bitmapItem;
+    int shapeIndex;
 };
 
 
@@ -194,6 +204,8 @@ private:
     
     vector<ofxSymbolItem> symbolItems; 
     vector<ofxBitmapItem> bitmapItems;
+    
+   
         
 //    ofVec2f offset;
 //    float zoom;
