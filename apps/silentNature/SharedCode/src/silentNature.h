@@ -14,7 +14,15 @@
 enum {
     BRUSH_TOOL,
     CRAYON_TOOL,
-    CUTOUT_TOOL
+    CUTOUT_TOOL,
+    ERASER_TOOL
+};
+
+struct stroke {
+    stroke(int tool,ofMatrix4x4 mat, int color):tool(tool),mat(mat),color(color) {};
+    int tool;
+    int color;
+    ofMatrix4x4 mat;
 };
 
 class silentNature {
@@ -31,10 +39,13 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
     void setTool(int tool);
+    void applyTool(ofVec2f pos);
     
     ofxDocument doc;
     ofxSymbolInstance layout;
     
+     
     int tool;
+    vector<stroke> strokes;
 
 };

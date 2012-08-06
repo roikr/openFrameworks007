@@ -130,7 +130,7 @@ public:
     
     void setup(ofxDocument *doc);    
     
-    ofxSymbolInstance createInstance(string name,ofMatrix4x4 mat=ofMatrix4x4(),float alpha = 1.0f,ofVec2f transformationPoint=ofVec2f());
+    ofxSymbolInstance createInstance(string name,ofMatrix4x4 mat=ofMatrix4x4(),float alphaMultiplier = 1.0f,ofVec2f transformationPoint=ofVec2f());
     
     
     string href;
@@ -154,7 +154,7 @@ public:
     void draw();
     vector<ofxSymbolInstance> hitTest(ofVec2f pos);
     vector<ofxSymbolInstance> hitLayer(layer *lyr,ofVec2f pos);
-    void update(float alpha);
+    void update();
     
     ofRectangle getBoundingBox();
     
@@ -174,6 +174,7 @@ public:
     ofMatrix4x4 mat;
     vector<ofVec2f> transformationPoint;
     float alphaMultiplier;
+    float alpha;
     
     ofxSymbolItem *symbolItem;
     ofxBitmapItem *bitmapItem;
