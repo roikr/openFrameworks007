@@ -45,7 +45,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch){
-
+    nat.touchMoved(touch);
 }
 
 //--------------------------------------------------------------

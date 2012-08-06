@@ -74,6 +74,32 @@ void ofxBitmapItem::draw() {
     //                    } else 
 }
 
+void ofxBitmapItem::bind() {
+    if (image.bAllocated()) {
+        image.bind();
+    }
+    
+#ifdef TARGET_OPENGLES
+    if (!image.bAllocated()) {
+        glBindTexture(GL_TEXTURE_2D, texture._name);
+        glEnable(GL_TEXTURE_2D);
+    }
+#endif
+}
+
+void ofxBitmapItem::unbind() {
+    if (image.bAllocated()) {
+        image.unbind();
+    }
+    
+#ifdef TARGET_OPENGLES
+    if (!image.bAllocated()) {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+    }
+#endif
+}
+
 void ofxBitmapItem::release() {
     image.clear();
 #ifdef TARGET_OPENGLES

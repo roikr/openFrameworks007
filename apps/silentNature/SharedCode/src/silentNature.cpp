@@ -24,10 +24,14 @@ void silentNature::setup(){
     doc.load();
     
     ofMatrix4x4 mat;
-    mat.scale(0.5, 0.5, 1.0);
+    float scale = (float)ofGetHeight()/1920.0;
+    mat.scale(scale, scale, 1.0);
+    mat.translate(0.5*(ofGetWidth()-scale*1080.0), 0, 0);
     layout = doc.getSymbolItem("Layout")->createInstance("layout",mat);
     setTool(BRUSH_TOOL);
     layout.update();
+    
+    canvas = layout.getChild("canvas");
     
     
     //    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
@@ -42,6 +46,49 @@ void silentNature::setup(){
 }
 
 
+void silentNature::drawTexture(float u,float v) {
+	
+	
+	
+	glPushMatrix();
+	
+	GLfloat spriteTexcoords[] = {
+		u,v,   
+		u,0.0f,
+		0,v,   
+		0.0f,0,};
+	
+	float w = canvas->bitmapItem->getWidth()*u;//ofGetWidth()/2;
+	float h = canvas->bitmapItem->getHeight()*v;//(float)ofGetWidth()/(float)width*(float)height/2;
+	
+	GLfloat spriteVertices[] =  {
+		w,h,0,   
+		w,0,0,   
+		0,h,0, 
+		0,0,0};
+	
+	
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
+	
+    canvas->bitmapItem->bind();
+	
+	
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	canvas->bitmapItem->unbind();
+	
+	
+	glPopMatrix();
+	
+	
+	
+}
+
 
 //--------------------------------------------------------------
 void silentNature::draw(){
@@ -55,8 +102,10 @@ void silentNature::draw(){
         glMultMatrixf(iter->mat.getPtr());
         switch (iter->tool) {
             case BRUSH_TOOL:
-            case ERASER_TOOL:
                 ofCircle(ofVec2f(0,0), 30);
+                break;
+            case ERASER_TOOL: 
+                drawTexture(1.0,1.0);
                 break;
             case CRAYON_TOOL:
             case CUTOUT_TOOL: {
@@ -205,7 +254,6 @@ void silentNature::applyTool(ofVec2f pos) {
             break;
             
         case ERASER_TOOL:
-            mat.scale(0.3, 0.3, 1.0);
             color = 0xffffff;
             break;
         case CRAYON_TOOL:

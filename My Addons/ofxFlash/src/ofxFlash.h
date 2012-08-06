@@ -84,10 +84,14 @@ public:
     ofxBitmapItem(string name,string href):name(name),href(href) {};
     void load(float u=1.0,float v=1.0);
     void draw();
+    void bind();
+    void unbind();
     void release();
     
     int getWidth();
     int getHeight();
+    
+    
     
     string name;
     string href;

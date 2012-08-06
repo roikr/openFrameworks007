@@ -40,9 +40,11 @@ public:
     
     void setTool(int tool);
     void applyTool(ofVec2f pos);
+    void drawTexture(float u,float v);
     
     ofxDocument doc;
     ofxSymbolInstance layout;
+    ofxSymbolInstance *canvas;
     
      
     int tool;
