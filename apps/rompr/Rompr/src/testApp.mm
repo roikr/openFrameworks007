@@ -42,39 +42,28 @@ enum {
 //--------------------------------------------------------------
 void testApp::setup(){	
  
-    [ofxiPhoneGetGLParentView() removeFromSuperview];
-    [ofxiPhoneGetGLView() removeFromSuperview];
-    
-    UIWindow *oldWindow = ofxiPhoneGetUIWindow();
-    [oldWindow resignKeyWindow];
-    [oldWindow release];
-    
-    
-    
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
 	EventRouteWindow *window = [[EventRouteWindow alloc] initWithFrame:screenBounds];
-	[window addSubview:ofxiPhoneGetGLView()];
     [window setView:ofxiPhoneGetGLView()];
-    //[self.window setOverlayListener:[self.viewController view]];
-	[window makeKeyAndVisible];
-     
-    
-        
-	// register touch events
-//    ofSetLogLevel(OF_LOG_VERBOSE); // roikr: verbose for details
-//	ofRegisterTouchEvents(this);
-    ofxRegisterURLNotification(this);
-
-	//ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
-	
-	ofEnableSmoothing();
-    
+    window.rootViewController = ofxiPhoneGetViewController(); 
     ofxiPhoneSetGLViewTransparent(true);
     ofxiPhoneSetGLViewUserInteraction(false);
+    
+    ofxiPhoneGetAppDelegate().window = window;
+    [window makeKeyAndVisible];
+    
+	//    ofSetLogLevel(OF_LOG_VERBOSE); // roikr: verbose for details
+    //	ofRegisterTouchEvents(this); // no need to register touch events in 071 dev
+
+    ofxRegisterURLNotification(this);	
+	ofEnableSmoothing();
+    
+    
     
     cout << "of: " << ofGetWidth() <<"\t" << ofGetHeight() << endl;
     
     mapKit.open();
+    ofxiPhoneSendGLViewToFront();
     
     coreLocation.startLocation();
     // set initial position to specified coordinates, and cover 1000 Km x 1000 Km area
@@ -107,9 +96,7 @@ void testApp::setup(){
     //	mapKit.setAllowScroll(false);
     //	mapKit.setAllowUserInteraction(false);
 
-//    [ofxiPhoneGetUIWindow() addSubview:[[MKMapView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
-//    [ofxiPhoneGetUIWindow() bringSubviewToFront:ofxiPhoneGetGLView()];
-    ofxiPhoneSendGLViewToFront();
+    
     
     bUpdatingRegion = false;
     bQueryLocation = false;
@@ -126,7 +113,7 @@ void testApp::setup(){
     bStartCamera = false;
     bStopCamera = false;
     cameraXform.setup(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,0.01,0);
-
+    
 }
 
 
@@ -686,6 +673,7 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){	
+    
     
 	glClearColor(0,0,0,0);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
