@@ -10,7 +10,11 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface RBVolumeButtons()
+@interface RBVolumeButtons() {
+    id resignActiveObserver;
+    id becomeActiveObserver;
+    id enterForegroundObserver;
+}
 -(void)initializeVolumeButtonStealer;
 -(void)volumeDown;
 -(void)volumeUp;
@@ -113,13 +117,13 @@ void volumeListenerCallback (
       
       [self initializeVolumeButtonStealer];
       
-      
-      [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification){
+       
+      resignActiveObserver=[[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification){
          [self applicationWentAway];
       }];
       
       
-      [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification){
+      becomeActiveObserver=[[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification){
          if( ! justEnteredForeground )
          {
             [self applicationCameBack];
@@ -128,7 +132,7 @@ void volumeListenerCallback (
       }];
       
       
-      [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification){
+      enterForegroundObserver=[[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification){
          AudioSessionInitialize(NULL, NULL, NULL, NULL);
          AudioSessionSetActive(YES);
          justEnteredForeground = YES;
@@ -177,6 +181,11 @@ void volumeListenerCallback (
 
 -(void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:resignActiveObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:becomeActiveObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:enterForegroundObserver];
+    
+    
    AudioSessionRemovePropertyListenerWithUserData(kAudioSessionProperty_CurrentHardwareOutputVolume, volumeListenerCallback, self);
     AudioSessionSetActive(NO);
     
@@ -189,6 +198,12 @@ void volumeListenerCallback (
    {
       [[MPMusicPlayerController applicationMusicPlayer] setVolume:0.0];
    }
+    
+    
+    
+    
+    
+    
    [super dealloc];
 }
 
