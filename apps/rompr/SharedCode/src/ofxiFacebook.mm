@@ -49,6 +49,7 @@ void ofxiFacebook::gotFocus() {
 }
 
 void ofxiFacebook::launchedWithURL(string url) {
+//    cout << "ofxiFacebook::launchedWithURL: " << url << endl;
     [session handleOpenURL:[NSURL URLWithString:ofxStringToNSString(url)]];
 }
 

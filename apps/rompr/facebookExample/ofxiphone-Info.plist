@@ -7,8 +7,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleIdentifier</key>
-    <string>com.facebook.sdk.samples.justlogin</string>
-    <!--string>${PRODUCT_NAME:identifier}</string-->
+	<string>com.rompr.Rompr</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -22,7 +21,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
+	<string>Rompr</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
@@ -32,13 +31,13 @@
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationPortrait</string>
 	<key>FacebookAppID</key>
-	<string>380615018626574</string>
+	<string>190673301047799</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb380615018626574</string>
+				<string>fb190673301047799</string>
 			</array>
 		</dict>
 	</array>

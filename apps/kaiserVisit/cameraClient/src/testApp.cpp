@@ -11,7 +11,7 @@ void testApp::setup(){
         url = xml.getAttribute("settings", "url", "",0);
         xml.pushTag("settings");
         sender.setup(xml.getAttribute("sender", "host", ""),xml.getAttribute("sender", "port", 10000));
-        int port = xml.getAttribute("receiver", "port", 10002);
+        int port = xml.getAttribute("receiver", "port", 10002 );
         receiver.setup(port);
         
         ofxOscMessage m;

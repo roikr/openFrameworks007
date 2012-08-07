@@ -15,7 +15,7 @@
 
 const string HOST_NAME = "107.21.224.181";
 const string USER_ID = "549453367";
-const string FB_ACCESS_TOKEN = "AAACtapZAgifcBAG1nd96WupL2vU103yrSCsmUA9KX0ElPYISwqhYcAco7W3BSh8NSha0qkDvMjp3xfUE2W1AHA3apk2rmlIYHstZAMwQZDZD";
+//const string FB_ACCESS_TOKEN = "AAACtapZAgifcBAG1nd96WupL2vU103yrSCsmUA9KX0ElPYISwqhYcAco7W3BSh8NSha0qkDvMjp3xfUE2W1AHA3apk2rmlIYHstZAMwQZDZD";
 
 enum  {
     REQUEST_TYPE_LOGIN,
@@ -103,9 +103,6 @@ void testApp::setup(){
     
     logo.loadImage("logo.png");
     
-    string url = "http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+FB_ACCESS_TOKEN;
-    queue[ofxLoadURLAsync(ofxHttpRequest(url,url))] = REQUEST_TYPE_LOGIN;
-    
     bSelected = false;
     bRecommendation = false;
     
@@ -113,6 +110,11 @@ void testApp::setup(){
     bStartCamera = false;
     bStopCamera = false;
     cameraXform.setup(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,0.01,0);
+    
+    fb.setup();
+    bLogin = false;
+    fb.login();
+    
     
 }
 
@@ -587,6 +589,13 @@ ofxMapKitLocation testApp::getUserLocation() {
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    if (!bLogin && fb.getIsLoggedIn()) {
+        bLogin = true;
+        cout << fb.getAccessToken() << endl;
+        queue[ofxLoadURLAsync("http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+fb.getAccessToken())] = REQUEST_TYPE_LOGIN;
+    }
+    
 	if (bUpdatingRegion) {
 //        cout << mapKit.getScreenCoordinatesForLocation(HOME_LATITUDE, HOME_LONGITUDE) << endl;
                 
@@ -646,9 +655,9 @@ void testApp::update(){
     
     
     cam.update();
+    cameraXform.update();
     
     if (bStartCamera) {
-        cameraXform.update();
         if (!cameraXform.getIsEasing()) {
             bStartCamera = false;
             cam.preview();
@@ -658,7 +667,6 @@ void testApp::update(){
     }
     
     if (bStopCamera) {
-        cameraXform.update();
         if (!cameraXform.getIsEasing()) {
             cam.stop();
             bStopCamera = false;
@@ -953,5 +961,32 @@ void testApp::pictureTaken(ofImage &image) {
 //--------------------------------------------------------------
 void testApp::touchCancelled(ofTouchEventArgs& args){
 //    cout << "touchCancelled" << endl;
+}
+
+//--------------------------------------------------------------
+void testApp::lostFocus(){
+    
+}
+
+//--------------------------------------------------------------
+void testApp::gotFocus(){
+    fb.gotFocus();
+}
+
+//--------------------------------------------------------------
+void testApp::gotMemoryWarning(){
+    
+}
+
+//--------------------------------------------------------------
+void testApp::deviceOrientationChanged(int newOrientation){
+    
+}
+
+
+
+void testApp::launchedWithURL(string url) {
+    fb.launchedWithURL(url);
+    
 }
 

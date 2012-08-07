@@ -26,11 +26,20 @@
 	<string>1.0.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>UIApplicationExitsOnSuspend</key>
-	<true/>
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationPortrait</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
+    <key>FacebookAppID</key>
+	<string>190673301047799</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb190673301047799</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

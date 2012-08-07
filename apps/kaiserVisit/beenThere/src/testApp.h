@@ -5,7 +5,6 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxScrollCollection.h"
 #include "ofxDraggable.h"
-#include "ofxiStillCamera.h"
 #include "ofxFlash.h"
 
 struct item {
@@ -42,7 +41,6 @@ public:
     
     ofImage photo;
     
-    ofxiStillCamera cam;
     
     ofxDocument doc;
     ofxSymbolInstance layout;

@@ -8,6 +8,7 @@
 #include "ofxTransform.h"
 #include "ofxiStillCamera.h"
 #include "ofxiVolumeButtons.h"
+#include "ofxiFacebook.h"
 
 
 
@@ -47,6 +48,12 @@ public:
     list<item>::iterator findItem(int itemID);
     void updateItems(vector<item> newItems);
     void calcItems();
+    
+    void lostFocus();
+	void gotFocus();
+	void gotMemoryWarning();
+	void deviceOrientationChanged(int newOrientation);
+    void launchedWithURL(string url);
     
     
     void showRecommendation(string html);
@@ -114,5 +121,7 @@ public:
     
     
     ofxPenner penner;
+    ofxiFacebook fb; 
+    bool bLogin;
     
 };

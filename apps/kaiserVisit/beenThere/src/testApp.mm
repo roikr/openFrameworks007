@@ -5,7 +5,6 @@
 
 
 enum {
-    STATE_CAMERA,
     STATE_IMAGES,
     STATE_OBJECTS,
     STATE_SHARE
@@ -20,8 +19,7 @@ void testApp::setup(){
 
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
     
-    ofxRegisterStillCameraNotification(this);
-    
+        
     doc.setup("DOMDocument.xml");
     doc.load();
     
@@ -43,7 +41,7 @@ void testApp::setup(){
     scratch = layout.getLayer("scratch");
     
     ofxBitmapItem *scratchItem = doc.getBitmapItem("SCRATCHES OVERLAY.png");
-    imageRect = ofRectangle(0,0,scratchItem->width,scratchItem->height);
+    imageRect = ofRectangle(0,0,scratchItem->getWidth(),scratchItem->getHeight());
     camMat = mat;
     camMat.preMult(layout.getChild("scratch")->mat);
     
@@ -55,8 +53,8 @@ void testApp::setup(){
 //    cout << pos << endl;
 //    
 //    ofRectangle menuRect(pos.x,pos.y,menuItem.width,menuItem.height);
-    images.setup(scrollCollectionPrefs(true,menuMat,menuItem->width,menuItem->height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
-    objects.setup(scrollCollectionPrefs(true,menuMat,menuItem->width,menuItem->height,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    images.setup(scrollCollectionPrefs(true,menuMat,menuItem->getWidth(),menuItem->getHeight(),MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    objects.setup(scrollCollectionPrefs(true,menuMat,menuItem->getWidth(),menuItem->getHeight(),MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
     
     ofDirectory dir;
     dir.allowExt("jpg");
@@ -82,8 +80,8 @@ void testApp::setup(){
     
     
     bTouchObject = false;
-    state = STATE_CAMERA;
-    cam.preview();
+    state = STATE_IMAGES;
+  
     
 }
 
@@ -93,27 +91,26 @@ void testApp::update(){
    
     images.update();
     objects.update();
-    cam.update();
+   
     
     
   
 }
+
+/*
+if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
+    float tw = imageRect.width/imageRect.height*cam.getHeight()/cam.getWidth();
+    cam.draw(imageRect, ofRectangle((1-tw)/2,0,tw,1));
+} 
+*/
 
 //--------------------------------------------------------------
 void testApp::draw(){	
     ofSetHexColor(0xFFFFFF);
     
     switch (state) {
-        case STATE_CAMERA: {
-            layout.drawLayer(background);
-            ofPushMatrix();
-            glMultMatrixf(camMat.getPtr());
-            if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
-                float tw = imageRect.width/imageRect.height*cam.getHeight()/cam.getWidth();
-                cam.draw(imageRect, ofRectangle((1-tw)/2,0,tw,1));
-            } 
-            ofPopMatrix();
-        } break;
+  
+          
         case STATE_IMAGES:
             layout.drawLayer(background);
             images.draw();
@@ -210,26 +207,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         
     vector<ofxSymbolInstance> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
     switch (state) {
-        case STATE_CAMERA: {
-            
-            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if (iter->type==SYMBOL_INSTANCE && iter->name=="snap") {
-                    cam.snap();
-                    break;
-                }
-            }
-                
-            
-//            for (vector<ofxSymbolInstance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-//                cout << iter->itemID << "\t";
-//                if (iter->type == SYMBOL_INSTANCE) {
-//                    cout << iter->name << "\t";
-//                }
-//            }
-//            
-//            cout << endl;
-
-        } break;
+        
         case STATE_IMAGES: {
            
             images.touchDown(touch);
@@ -283,14 +261,13 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         }   break;
             
         case STATE_SHARE: {
-            state = STATE_CAMERA;
+            state = STATE_OBJECTS;
             layout.getChild("snap")->bVisible = true;
             layout.getChild("pimp")->bVisible = false;
             layout.getChild("share")->bVisible = false;
             layout.getChild("back")->bVisible = false;
             
             items.clear();
-            cam.preview();
         } break;
             
         default:
@@ -425,5 +402,5 @@ void testApp::pictureTaken(ofImage &image) {
     
     
     state = STATE_IMAGES;
-    cam.stop();
+    
 }

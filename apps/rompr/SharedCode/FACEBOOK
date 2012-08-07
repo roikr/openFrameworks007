@@ -17,7 +17,8 @@
 			</array>
 		</dict>
 	</array>
-6. remove 
+6. the url scheme should be fb<appID>
+7. remove 
     <key>UIApplicationExitsOnSuspend</key>
 	<true/>
 	

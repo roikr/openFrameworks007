@@ -16,7 +16,7 @@ public:
     void setup();
     void gotFocus();
     void launchedWithURL(string url);
-    
+       
     void login();
     void logout();
     
@@ -24,8 +24,9 @@ public:
     string getAccessToken();
     
     void exit();
+    
+    
       
 private:
     FBSession *session;
-    
 };
