@@ -17,6 +17,7 @@
 
 #include "ofxFlash.h"
 #include "ofxFloatingCaption.h"
+#include "ofxiVideoPlayer.h"
 
 class kaiserNav  {
 	
@@ -36,6 +37,7 @@ public:
     void setImage(string name);
     void updateOverlays();
     void setCaption(string name);
+    void setState(int state);
    
 	ofxPanZoom	cam;
     ofxBigImage image;
@@ -49,13 +51,15 @@ public:
     ofxFloatingCaption floating;
     
     
-    vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
+    vector<pair<ofxSymbolInstance *,pair<ofxSymbolInstance,ofxSymbolInstance> > > markers;
     
     
     string lang;
     string imageName;
     string captionName;
     
+    int state;
     
+    ofxiVideoPlayer player;
         
 };

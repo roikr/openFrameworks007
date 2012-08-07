@@ -29,8 +29,11 @@
 		E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147315B59B6B005347AE /* tinyxmlparser.cpp */; };
 		E430147B15B59B6B005347AE /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147515B59B6B005347AE /* ofxXmlSettings.cpp */; };
 		E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
+		E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
+		E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
 		E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */; };
 		E4C0054E15C9730200210411 /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
+		E4D7573915D16C61007DAD05 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D7573815D16C61007DAD05 /* ofxiTexture.mm */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 		E4D9893E15C14E9E00465293 /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
@@ -87,16 +90,24 @@
 		E430147615B59B6B005347AE /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFloatingCaption.cpp; sourceTree = "<group>"; };
 		E431347315B6BA9300864C97 /* ofxFloatingCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFloatingCaption.h; sourceTree = "<group>"; };
+		E49BC2C615D180EC0030291D /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
+		E49BC2C715D180EC0030291D /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
+		E49BC2CC15D180EC0030291D /* ofxiVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoPlayer.h; sourceTree = "<group>"; };
+		E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVideoPlayer.mm; sourceTree = "<group>"; };
+		E49BC2CE15D180EC0030291D /* VideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayer.h; sourceTree = "<group>"; };
+		E49BC2CF15D180EC0030291D /* VideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayer.m; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
 		E4B7D9FF15A3900600DA6DA8 /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
 		E4C0054C15C9730200210411 /* ofxBigImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBigImage.cpp; sourceTree = "<group>"; };
 		E4C0054D15C9730200210411 /* ofxBigImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBigImage.h; sourceTree = "<group>"; };
+		E4D7573715D16C61007DAD05 /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
+		E4D7573815D16C61007DAD05 /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
-		E4D9893C15C14DFF00465293 /* kaiserNav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kaiserNav.h; sourceTree = "<group>"; };
-		E4D9893D15C14E9E00465293 /* kaiserNav.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = kaiserNav.mm; sourceTree = "<group>"; };
+		E4D9893C15C14DFF00465293 /* kaiserNav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = kaiserNav.h; path = ../../SharedCode/src/kaiserNav.h; sourceTree = "<group>"; };
+		E4D9893D15C14E9E00465293 /* kaiserNav.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = kaiserNav.mm; path = ../../SharedCode/src/kaiserNav.mm; sourceTree = "<group>"; };
 		E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiExternalView.mm; sourceTree = "<group>"; };
 		E4FB3AAD15C689B40002E5C3 /* ofxiExternalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiExternalView.h; sourceTree = "<group>"; };
 		E4FB3AAE15C689B40002E5C3 /* ExternalGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalGLView.h; sourceTree = "<group>"; };
@@ -179,6 +190,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E49BC29715D180EC0030291D /* ofxiVideoPlayer */,
+				E4D7573515D16C61007DAD05 /* ofxiTexture */,
 				E430146D15B59B6B005347AE /* ofxXmlSettings */,
 				E430125815B598F3005347AE /* ofxFlash */,
 				E4B7D98E15A3900500DA6DA8 /* ofxPanZoom */,
@@ -274,6 +287,44 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E49BC29715D180EC0030291D /* ofxiVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				E49BC29815D180EC0030291D /* example */,
+				E49BC2CB15D180EC0030291D /* src */,
+			);
+			name = ofxiVideoPlayer;
+			path = "../../../My Addons/ofxiVideoPlayer";
+			sourceTree = "<group>";
+		};
+		E49BC29815D180EC0030291D /* example */ = {
+			isa = PBXGroup;
+			children = (
+				E49BC2C415D180EC0030291D /* src */,
+			);
+			path = example;
+			sourceTree = "<group>";
+		};
+		E49BC2C415D180EC0030291D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E49BC2C615D180EC0030291D /* testApp.h */,
+				E49BC2C715D180EC0030291D /* testApp.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E49BC2CB15D180EC0030291D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E49BC2CC15D180EC0030291D /* ofxiVideoPlayer.h */,
+				E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */,
+				E49BC2CE15D180EC0030291D /* VideoPlayer.h */,
+				E49BC2CF15D180EC0030291D /* VideoPlayer.m */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4A2753C15A389EF009F7B62 /* SharedCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,8 +345,6 @@
 				E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */,
 				E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */,
 				E431347315B6BA9300864C97 /* ofxFloatingCaption.h */,
-				E4D9893C15C14DFF00465293 /* kaiserNav.h */,
-				E4D9893D15C14E9E00465293 /* kaiserNav.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -318,12 +367,32 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E4D7573515D16C61007DAD05 /* ofxiTexture */ = {
+			isa = PBXGroup;
+			children = (
+				E4D7573615D16C61007DAD05 /* src */,
+			);
+			name = ofxiTexture;
+			path = "../../../My Addons/ofxiTexture";
+			sourceTree = "<group>";
+		};
+		E4D7573615D16C61007DAD05 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4D7573715D16C61007DAD05 /* ofxiTexture.h */,
+				E4D7573815D16C61007DAD05 /* ofxiTexture.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E4D8936A11527B74007E1F53 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				E4D8936B11527B74007E1F53 /* main.mm */,
 				E4D8936D11527B74007E1F53 /* testApp.mm */,
 				E4D8936C11527B74007E1F53 /* testApp.h */,
+				E4D9893C15C14DFF00465293 /* kaiserNav.h */,
+				E4D9893D15C14E9E00465293 /* kaiserNav.mm */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -440,6 +509,9 @@
 				E4FB3AB015C689B40002E5C3 /* ofxiExternalView.mm in Sources */,
 				E4FB3AB115C689B40002E5C3 /* ExternalGLView.mm in Sources */,
 				E4C0054E15C9730200210411 /* ofxBigImage.cpp in Sources */,
+				E4D7573915D16C61007DAD05 /* ofxiTexture.mm in Sources */,
+				E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */,
+				E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

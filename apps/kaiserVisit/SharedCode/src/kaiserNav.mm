@@ -9,12 +9,18 @@
 #include "kaiserNav.h"
 #include "ofxXmlSettings.h"
 
+enum {
+    STATE_IDLE,
+    STATE_TUTORIAL,
+    STATE_NAVIGATION
+};
 
 
 void kaiserNav::updateOverlays() {
-    for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
+    for (vector<pair<ofxSymbolInstance *,pair<ofxSymbolInstance,ofxSymbolInstance> > >::iterator iter=markers.begin();iter!=markers.end();iter++) {
 //        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height)));
-        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))+cam.topLeftConstrain));
+        iter->second.first.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))+cam.topLeftConstrain));
+        iter->second.second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))+cam.topLeftConstrain));
     }
     
     ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
@@ -34,8 +40,8 @@ void kaiserNav::updateOverlays() {
 //        cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
 
         caption.mat.makeTranslationMatrix(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
-        
-        caption.update(floating.getFade());
+        caption.alphaMultiplier = floating.getFade();
+        caption.update();
         if (floating.getFade()<=0) {
             bCaptionActive = false;
         }
@@ -73,6 +79,8 @@ void kaiserNav::setup(){
 	
 	ofSetCircleResolution(32);
 
+    state = STATE_IDLE;
+    setState(STATE_IDLE);
     
 }
 
@@ -100,7 +108,8 @@ void kaiserNav::setImage(string name) {
         if (iter->type==SYMBOL_INSTANCE) {
             ofMatrix4x4 mat;
             ofxSymbolInstance marker = doc.getSymbolItem("MARKER_IMAGE")->createInstance(iter->name,mat);
-            markers.push_back(make_pair(&*iter,marker));
+            ofxSymbolInstance screenMarker = doc.getSymbolItem("MARKER_SCREEN")->createInstance(iter->name,mat);
+            markers.push_back(make_pair(&*iter,make_pair(marker,screenMarker)));
             cout << iter->name << endl;
         }
     }
@@ -133,10 +142,41 @@ void kaiserNav::setImage(string name) {
     updateOverlays();
 }
 
+void kaiserNav::setState(int state) {
+    
+    interfaceLayout.getChild("idle")->bVisible = false;
+    interfaceLayout.getChild("tutorial")->bVisible = false;
+    
+    switch (this->state) {
+        case STATE_IDLE:
+            
+            break;
+            
+        default:
+            break;
+    }
+    
+    this->state = state;
+    
+    switch (this->state) {
+        case STATE_IDLE:
+            player.play(ofToDataPath("Idle_test.mov"));
+            interfaceLayout.getChild("idle")->bVisible = true;
+            break;
+            
+        case STATE_TUTORIAL:
+            interfaceLayout.getChild("tutorial")->bVisible = true;
+            break;
+            
+        default:
+            break;
+    }
+}
+
 
 void kaiserNav::update() {
     cam.update();
-    
+    player.update();
     if (cam.getIsAnimating()) {
         updateOverlays();
     }
@@ -167,12 +207,23 @@ void kaiserNav::draw2nd() {
     glColor4f(1, 1, 1, 1);
 	
 	cam.reset();	//back to normal ofSetupScreen() projection
+    
+    if (state==STATE_NAVIGATION) {
+        for (vector<pair<ofxSymbolInstance *,pair<ofxSymbolInstance,ofxSymbolInstance> > >::iterator iter=markers.begin();iter!=markers.end();iter++) {
+            iter->second.second.draw();
+        }
+    }
 	
     if (bCaptionActive) {
         floating.draw();
         caption.draw();
     }
     ofPopMatrix();
+    
+    if (state==STATE_IDLE) {
+        float offset = 0.5*(ofGetWidth()-player.getWidth());
+        player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
+    }
     
 }
 
@@ -210,8 +261,10 @@ void kaiserNav::draw() {
 	
 	cam.reset();	//back to normal ofSetupScreen() projection
 	
-    for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
-        iter->second.draw();
+    if (state==STATE_NAVIGATION) {
+        for (vector<pair<ofxSymbolInstance *,pair<ofxSymbolInstance,ofxSymbolInstance> > >::iterator iter=markers.begin();iter!=markers.end();iter++) {
+            iter->second.first.draw();
+        }
     }
     
     
@@ -221,6 +274,10 @@ void kaiserNav::draw() {
         caption.draw();
     }
     
+    if (state==STATE_IDLE) {
+        float offset = 0.5*(ofGetWidth()-player.getWidth());
+        player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
+    }
     
     interfaceLayout.draw();
     
@@ -233,46 +290,61 @@ void kaiserNav::exit() {
 
 void kaiserNav::touchDown(ofTouchEventArgs &touch){
     
-	cam.touchDown(touch); //fw event to cam
-	
-//	ofVec2f p =  cam.screenToWorld( ofVec3f( touch.x, touch.y) ) + 0.5*ofVec2f(width,height);	//convert touch (in screen units) to world units
-	
-    ofVec2f p(touch.x,touch.y);
-    
-//    cout << p.x << "\t" << p.y << endl;
-    for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance> >::iterator iter=markers.begin();iter!=markers.end();iter++) {
-        
-        if (!iter->second.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
-            cout << iter->first->name << endl;
-            setCaption(iter->first->name);
-        }
-    }
-    
-    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
-    titles->bVisible = false;
-    
-    vector<ofxSymbolInstance> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
-    for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-        if (iter->type==SYMBOL_INSTANCE) {
-            cout << iter->name << endl;
-            setImage(iter->name);
-        }
-    }
-    
-    hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("language"),ofVec2f(touch.x,touch.y));
-    for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-        if (iter->type==SYMBOL_INSTANCE) {
-            cout << iter->name << endl;
-            lang = iter->name;
-            if (bCaptionActive) {
-                setCaption(captionName);
+    switch (state) {
+        case STATE_IDLE:
+            
+            setState(STATE_TUTORIAL);
+            break;
+        case STATE_TUTORIAL:
+            setState(STATE_NAVIGATION);
+            break;
+        case STATE_NAVIGATION: {
+            cam.touchDown(touch); //fw event to cam
+            
+            //	ofVec2f p =  cam.screenToWorld( ofVec3f( touch.x, touch.y) ) + 0.5*ofVec2f(width,height);	//convert touch (in screen units) to world units
+            
+            ofVec2f p(touch.x,touch.y);
+            
+            //    cout << p.x << "\t" << p.y << endl;
+            for (vector<pair<ofxSymbolInstance *,pair<ofxSymbolInstance,ofxSymbolInstance> > >::iterator iter=markers.begin();iter!=markers.end();iter++) {
+                
+                if (!iter->second.first.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
+                    cout << iter->first->name << endl;
+                    setCaption(iter->first->name);
+                }
             }
-        }
+            
+            ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+            titles->bVisible = false;
+            
+            vector<ofxSymbolInstance> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
+            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if (iter->type==SYMBOL_INSTANCE) {
+                    cout << iter->name << endl;
+                    setImage(iter->name);
+                }
+            }
+            
+            hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("language"),ofVec2f(touch.x,touch.y));
+            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if (iter->type==SYMBOL_INSTANCE) {
+                    cout << iter->name << endl;
+                    lang = iter->name;
+                    if (bCaptionActive) {
+                        setCaption(captionName);
+                    }
+                }
+            }
+            
+            if (!caption.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
+                bCaptionActive =false;
+            }
+
+        } break;
+        default:
+            break;
     }
     
-    if (!caption.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
-        bCaptionActive =false;
-    }
 
 }
 
