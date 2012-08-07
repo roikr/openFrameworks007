@@ -1,11 +1,11 @@
 #include "testApp.h"
-#include "ofxXmlSettings.h"
 
 #define MENU_INSET 20.0
 #define MENU_SEPERATOR 20.0
 
 
 enum {
+    STATE_CAMERA,
     STATE_IMAGES,
     STATE_OBJECTS,
     STATE_SHARE
@@ -20,27 +20,8 @@ void testApp::setup(){
 
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
     
-    ofRegisterURLNotification(this);
-	
-    ofxXmlSettings xml;
-    if (xml.loadFile("settings.xml")) {
-        url = xml.getAttribute("settings", "url", "",0);
-        xml.pushTag("settings");
-        sender.setup(xml.getAttribute("sender", "host", ""),xml.getAttribute("sender", "port", 10000));
-        port = xml.getAttribute("receiver", "port", 10001);
-        receiver.setup(port);
-        
-        ofxOscMessage m;
-        m.setAddress("/list");
-        m.addIntArg(port);
-        sender.sendMessage(m);
-        
-        cout << url << endl;
-    }
+    ofxRegisterStillCameraNotification(this);
     
-	
-    
-        
     doc.setup("DOMDocument.xml");
     doc.load();
     
@@ -53,8 +34,8 @@ void testApp::setup(){
     
     layout = doc.getSymbolItem("Layout")->createInstance("layout", mat);
     
-    layout.getChild("snap")->bVisible = false;
-    layout.getChild("pimp")->bVisible = true;
+    
+    layout.getChild("pimp")->bVisible = false;
     layout.getChild("share")->bVisible = false;
     layout.getChild("back")->bVisible = false;
     
@@ -74,24 +55,21 @@ void testApp::setup(){
 //    cout << pos << endl;
 //    
 //    ofRectangle menuRect(pos.x,pos.y,menuItem.width,menuItem.height);
-    thumbs.setup(scrollCollectionPrefs(true,menuMat,menuItem->getWidth(),menuItem->getHeight(),MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    images.setup(scrollCollectionPrefs(true,menuMat,menuItem->getWidth(),menuItem->getHeight(),MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
     objects.setup(scrollCollectionPrefs(true,menuMat,menuItem->getWidth(),menuItem->getHeight(),MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
     
-//    ofDirectory dir;
-//    dir.allowExt("jpg");
-//    dir.listDir(ofxiPhoneGetDocumentsDirectory());
-//    for (int i=0; i<dir.numFiles(); i++) {
-//        thumbs.addItem(dir.getPath(i));
-//    }
-    
-//    dir.reset();
     ofDirectory dir;
+    dir.allowExt("jpg");
+    dir.listDir(ofxiPhoneGetDocumentsDirectory());
+    for (int i=0; i<dir.numFiles(); i++) {
+        images.addItem(dir.getPath(i));
+    }
+    
+    dir.reset();
     dir.allowExt("png");
     dir.listDir("objects");
     for (int i=0; i<dir.numFiles(); i++) {
-        ofImage img;
-        img.loadImage(dir.getPath(i));
-        objects.addItem(img);
+        objects.addItem(dir.getPath(i));
     }
     
     
@@ -104,64 +82,48 @@ void testApp::setup(){
     
     
     bTouchObject = false;
-    state = STATE_IMAGES;
-  
+    state = STATE_CAMERA;
+    cam.preview();
     
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	ofBackground(255,255,255);	
-    
-    // check for waiting messages
-	while( receiver.hasWaitingMessages() )
-	{
-		// get the next message
-		ofxOscMessage m;
-		receiver.getNextMessage( &m );
-        
-		// check for mouse moved message
-		if ( m.getAddress() == "/add" ) {
-        
-            ofLoadURLAsync(url+'/'+m.getArgAsString(0));
-            images.push_back(m.getArgAsString(0));
-            cout << images.back() << endl;
-            
-		} 			
-    }
    
-    thumbs.update();
+    images.update();
     objects.update();
-   
+    cam.update();
     
     
   
 }
-
-/*
-if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
-    float tw = imageRect.width/imageRect.height*cam.getHeight()/cam.getWidth();
-    cam.draw(imageRect, ofRectangle((1-tw)/2,0,tw,1));
-} 
-*/
 
 //--------------------------------------------------------------
 void testApp::draw(){	
     ofSetHexColor(0xFFFFFF);
     
     switch (state) {
-  
-          
+        case STATE_CAMERA: {
+            layout.drawLayer(background);
+            ofPushMatrix();
+            glMultMatrixf(camMat.getPtr());
+            if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
+                float tw = imageRect.width/imageRect.height*cam.getHeight()/cam.getWidth();
+                cam.draw(imageRect, ofRectangle((1-tw)/2,0,tw,1));
+            } 
+            ofPopMatrix();
+        } break;
         case STATE_IMAGES:
             layout.drawLayer(background);
-            thumbs.draw();
+            images.draw();
             
-            if (thumbs.getIsSelected()) {
+            if (images.getIsSelected()) {
                 ofPushMatrix();
                 glMultMatrixf(camMat.getPtr());
-                thumbs.getImage(thumbs.getSelectedNum()).draw(imageRect);
+                images.getImage(images.getSelectedNum()).draw(imageRect);
                 ofPopMatrix();
-//                ofImage &image = thumbs.getImage(thumbs.getSelectedNum());
+//                ofImage &image = images.getImage(images.getSelectedNum());
 //                float inset = 20; 
 //                float dw = ofGetWidth() - 100 - 2*inset;
 //                float dh = ofGetHeight() - 2 * inset;
@@ -180,10 +142,10 @@ void testApp::draw(){
             break;
         case STATE_OBJECTS:
             layout.drawLayer(background);
-            if (thumbs.getIsSelected()) {
+            if (images.getIsSelected()) {
                 ofPushMatrix();
                 glMultMatrixf(camMat.getPtr());
-                thumbs.getImage(thumbs.getSelectedNum()).draw(imageRect);
+                images.getImage(images.getSelectedNum()).draw(imageRect);
                 ofPopMatrix();
             }
             
@@ -212,9 +174,9 @@ void testApp::draw(){
             ofPushMatrix();
             glMultMatrixf(shareMat.getPtr());
             
-            if (thumbs.getIsSelected()) {
+            if (images.getIsSelected()) {
                 
-                thumbs.getImage(thumbs.getSelectedNum()).draw(imageRect);
+                images.getImage(images.getSelectedNum()).draw(imageRect);
                
             }
             
@@ -248,10 +210,29 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         
     vector<ofxSymbolInstance> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
     switch (state) {
-        
+        case STATE_CAMERA: {
+            
+            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if (iter->type==SYMBOL_INSTANCE && iter->name=="snap") {
+                    cam.snap();
+                    break;
+                }
+            }
+                
+            
+//            for (vector<ofxSymbolInstance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+//                cout << iter->itemID << "\t";
+//                if (iter->type == SYMBOL_INSTANCE) {
+//                    cout << iter->name << "\t";
+//                }
+//            }
+//            
+//            cout << endl;
+
+        } break;
         case STATE_IMAGES: {
            
-            thumbs.touchDown(touch);
+            images.touchDown(touch);
             
             for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
                 if (iter->type==SYMBOL_INSTANCE && iter->name=="pimp") {
@@ -302,33 +283,14 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         }   break;
             
         case STATE_SHARE: {
-            state = STATE_IMAGES;
-            
-            layout.getChild("pimp")->bVisible = true;
+            state = STATE_CAMERA;
+            layout.getChild("snap")->bVisible = true;
+            layout.getChild("pimp")->bVisible = false;
             layout.getChild("share")->bVisible = false;
             layout.getChild("back")->bVisible = false;
             
             items.clear();
-            thumbs.clear();
-            
-            
-            
-            ofxOscMessage m;
-            
-            
-            if (!images.empty()) {
-                m.setAddress("/remove");
-                m.addStringArg(images[0]);
-                sender.sendMessage(m);
-                images.clear();
-                m.clear();
-            }
-            
-            m.setAddress("/list");
-            m.addIntArg(port);
-            sender.sendMessage(m);
-            
-            cout << url << endl;
+            cam.preview();
         } break;
             
         default:
@@ -344,7 +306,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
     
     switch (state) {
         case STATE_IMAGES:
-            thumbs.touchMoved(touch);
+            images.touchMoved(touch);
             break;
         case STATE_OBJECTS:
             objects.touchMoved(touch);
@@ -389,7 +351,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 void testApp::touchUp(ofTouchEventArgs &touch){
     switch (state) {
         case STATE_IMAGES:
-            thumbs.touchUp(touch);
+            images.touchUp(touch);
             break;
         case STATE_OBJECTS:
             objects.touchUp(touch);
@@ -417,60 +379,51 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 
 }
 
-//void testApp::pictureTaken(ofImage &image) {
-//    cout << "pictureTaken: " << image.getWidth() << "\t" << image.getHeight() << endl;
-//    ofDirectory dir;
-//    
-//    dir.allowExt("jpg");
-//    dir.listDir(ofxiPhoneGetDocumentsDirectory());
-//    string filename = ofxiPhoneGetDocumentsDirectory()+"IMAGE_"+ofToString(dir.numFiles())+".jpg";
-//    cout<<filename << endl;
-//    float width = imageRect.width/imageRect.height*image.getHeight();
-//    image.crop((image.width-width)/2, 0, width, image.height);
-//    
-//       
-//    UInt8 *data = image.getPixels(); // unsigned char
-//    
-//    
-//    NSInteger myDataLength = image.getWidth() * image.getHeight() * 3;
-//    
-//    for (int i = 0; i < myDataLength; i+=3)
-//    {
-//        UInt8 r_pixel = data[i];
-//        UInt8 g_pixel = data[i+1];
-//        UInt8 b_pixel = data[i+2];
-//        
-//        int outputRed = (r_pixel * .393) + (g_pixel *.769) + (b_pixel * .189);
-//        int outputGreen = (r_pixel * .349) + (g_pixel *.686) + (b_pixel * .168);
-//        int outputBlue = (r_pixel * .272) + (g_pixel *.534) + (b_pixel * .131);
-//        
-//        if(outputRed>255)outputRed=255;
-//        if(outputGreen>255)outputGreen=255;
-//        if(outputBlue>255)outputBlue=255;
-//        
-//        
-//        data[i] = outputRed;
-//        data[i+1] = outputGreen;
-//        data[i+2] = outputBlue;
-//    }
-//    
-//        
-//    image.saveImage(filename);
-//    thumbs.addItem(filename);
-//    
-//    layout.getChild("snap")->bVisible = false;
-//    layout.getChild("pimp")->bVisible = true;
-//    
-//    
-//    state = STATE_IMAGES;
-//    
-//}
-
-void testApp::urlResponse(ofHttpResponse &response) {
-    if (response.status == 200) {
-        ofImage image;
-        image.loadImage(response.data);
-        thumbs.addItem(image);
+void testApp::pictureTaken(ofImage &image) {
+    cout << "pictureTaken: " << image.getWidth() << "\t" << image.getHeight() << endl;
+    ofDirectory dir;
+    
+    dir.allowExt("jpg");
+    dir.listDir(ofxiPhoneGetDocumentsDirectory());
+    string filename = ofxiPhoneGetDocumentsDirectory()+"IMAGE_"+ofToString(dir.numFiles())+".jpg";
+    cout<<filename << endl;
+    float width = imageRect.width/imageRect.height*image.getHeight();
+    image.crop((image.width-width)/2, 0, width, image.height);
+    
+       
+    UInt8 *data = image.getPixels(); // unsigned char
+    
+    
+    NSInteger myDataLength = image.getWidth() * image.getHeight() * 3;
+    
+    for (int i = 0; i < myDataLength; i+=3)
+    {
+        UInt8 r_pixel = data[i];
+        UInt8 g_pixel = data[i+1];
+        UInt8 b_pixel = data[i+2];
         
+        int outputRed = (r_pixel * .393) + (g_pixel *.769) + (b_pixel * .189);
+        int outputGreen = (r_pixel * .349) + (g_pixel *.686) + (b_pixel * .168);
+        int outputBlue = (r_pixel * .272) + (g_pixel *.534) + (b_pixel * .131);
+        
+        if(outputRed>255)outputRed=255;
+        if(outputGreen>255)outputGreen=255;
+        if(outputBlue>255)outputBlue=255;
+        
+        
+        data[i] = outputRed;
+        data[i+1] = outputGreen;
+        data[i+2] = outputBlue;
     }
+    
+        
+    image.saveImage(filename);
+    images.addItem(filename);
+    
+    layout.getChild("snap")->bVisible = false;
+    layout.getChild("pimp")->bVisible = true;
+    
+    
+    state = STATE_IMAGES;
+    cam.stop();
 }

@@ -5,8 +5,8 @@
 #include "ofxiPhoneExtras.h"
 #include "ofxScrollCollection.h"
 #include "ofxDraggable.h"
+#include "ofxiStillCamera.h"
 #include "ofxFlash.h"
-#include "ofxOsc.h"
 
 struct item {
     int objectNum;
@@ -27,9 +27,9 @@ public:
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
     
-    void urlResponse(ofHttpResponse &response);
+    void pictureTaken(ofImage &image);
     
-    ofxScrollCollection thumbs;
+    ofxScrollCollection images;
     ofxScrollCollection objects;
     
     int state;
@@ -42,6 +42,7 @@ public:
     
     ofImage photo;
     
+    ofxiStillCamera cam;
     
     ofxDocument doc;
     ofxSymbolInstance layout;
@@ -59,11 +60,7 @@ public:
     ofMatrix4x4 shareMat;
     
     
-    ofxOscSender sender;
-    ofxOscReceiver receiver;
-    int port; // receiver port;
-    string url;
-    vector<string> images;
+    
     
     
 };

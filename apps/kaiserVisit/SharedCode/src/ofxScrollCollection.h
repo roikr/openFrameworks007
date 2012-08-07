@@ -31,9 +31,11 @@ struct scrollCollectionPrefs {
 class ofxScrollCollection {
 public:
     void setup(scrollCollectionPrefs prefs);
-    void addItem(string filename);
+    void addItem(ofImage &image);
     void update();
     void draw();
+    
+    void clear();
     
     void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);

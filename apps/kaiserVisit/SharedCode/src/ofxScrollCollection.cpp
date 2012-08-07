@@ -41,9 +41,8 @@ void ofxScrollCollection::setup(scrollCollectionPrefs prefs) {
     state = SLIDER_STATE_IDLE;
 }
 
-void ofxScrollCollection::addItem(string filename) {
-    ofImage img;
-    img.loadImage(filename);
+void ofxScrollCollection::addItem(ofImage &img) {
+    
     if (img.getWidth()>0) {
         images.push_back(img);      // roikr: careful - involve with copy ?
         selected = images.rbegin();
@@ -142,6 +141,11 @@ void ofxScrollCollection::draw() {
     }
     
     ofPopMatrix();
+}
+
+void ofxScrollCollection::clear() {
+    images.clear();      // roikr: careful - involve with copy ?
+    selected = images.rbegin();
 }
 
 bool ofxScrollCollection::getIsSelected() {
