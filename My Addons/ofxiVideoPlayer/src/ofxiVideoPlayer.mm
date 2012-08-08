@@ -14,8 +14,12 @@
 #define PRE_SAMPLES 4096
 
 void ofxiVideoPlayer::play(string filename) {
-   
+    if (bAllocated) {
+        return;
+    }
+    
     if (ofFile(filename).exists()) {
+        bAllocated = true;
         videoPlayer = [[VideoPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:filename.c_str()]] context:[ofxiPhoneGetGLView() context]]; 
         
         
@@ -54,6 +58,7 @@ void ofxiVideoPlayer::update() {
             bPlaying = false;
             [videoPlayer release];
             videoPlayer = NULL;
+            bAllocated = false;
             
         }
         

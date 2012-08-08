@@ -23,6 +23,17 @@ void kaiserNav::updateOverlays() {
         iter->second.second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))+cam.topLeftConstrain));
     }
     
+    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+    string titleName = imageName+"_C_"+lang;
+    
+    for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
+            if (iter->type==SYMBOL_INSTANCE) {
+                iter->bVisible = iter->name == titleName;
+            }
+        }
+    }
+    
     ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
         
     if (bCaptionActive) {
@@ -58,7 +69,7 @@ void kaiserNav::setCaption(string name) {
     caption = doc.getSymbolItem(captionName+'_'+lang)->createInstance(name);
     ofRectangle rect = caption.getBoundingBox();
     floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), rect, 150);
-    updateOverlays();
+    
 }
 
 void kaiserNav::setup(){	
@@ -69,8 +80,8 @@ void kaiserNav::setup(){
     
    
     
-    interfaceLayout = doc.getSymbolItem("LAYOUT")->createInstance("layout");
-    
+    interfaceLayout = doc.getSymbolItem("Layout")->createInstance("layout");
+    interfaceLayout.getChildMat(interfaceLayout.getChild("idle")->getChild("video"), videoMat);    
    
 	lang = "HE";
     setImage("I1");	
@@ -79,8 +90,8 @@ void kaiserNav::setup(){
 	
 	ofSetCircleResolution(32);
 
-    state = STATE_IDLE;
     setState(STATE_IDLE);
+    timer = ofGetElapsedTimeMillis();
     
 }
 
@@ -115,17 +126,19 @@ void kaiserNav::setImage(string name) {
     }
     
     
-    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
-    titles->bVisible = true;
-    string titleName = imageName+"_C_"+lang;
+
     
-    for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
-            if (iter->type==SYMBOL_INSTANCE) {
-                iter->bVisible = iter->name == titleName;
-            }
+    layer *selected = interfaceLayout.getLayer("selected");
+    string selectedName = imageName+"_OV";
+    
+   
+    for (vector<ofxSymbolInstance>::iterator iter=selected->instances.begin(); iter!=selected->instances.end();iter++) {
+        if (iter->type==SYMBOL_INSTANCE) {
+            iter->bVisible = iter->name == selectedName;
         }
     }
+    
+    
     
     float minZoom = 1024.0/(float)image.getWidth();
     //	cam.setZoom(0.125f);
@@ -139,28 +152,22 @@ void kaiserNav::setImage(string name) {
     
     bCaptionActive = false;
     
-    updateOverlays();
+   
 }
 
 void kaiserNav::setState(int state) {
     
     interfaceLayout.getChild("idle")->bVisible = false;
     interfaceLayout.getChild("tutorial")->bVisible = false;
-    
-    switch (this->state) {
-        case STATE_IDLE:
-            
-            break;
-            
-        default:
-            break;
-    }
-    
+
     this->state = state;
     
+    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+    titles->bVisible = state!=STATE_IDLE;
+    
     switch (this->state) {
         case STATE_IDLE:
-            player.play(ofToDataPath("Idle_test.mov"));
+            
             interfaceLayout.getChild("idle")->bVisible = true;
             break;
             
@@ -181,6 +188,17 @@ void kaiserNav::update() {
         updateOverlays();
     }
 
+    if (state!=STATE_IDLE && ofGetElapsedTimeMillis()>timer) {
+        setState(STATE_IDLE);
+    }
+    
+    if (state==STATE_IDLE && !player.getIsPlaying()) {
+        player.play(ofToDataPath("video.mov"));
+    }
+    
+    if (state!=STATE_IDLE && player.getIsPlaying()) {
+        player.stop();
+    }
 }
 
 
@@ -275,8 +293,12 @@ void kaiserNav::draw() {
     }
     
     if (state==STATE_IDLE) {
-        float offset = 0.5*(ofGetWidth()-player.getWidth());
-        player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
+//        float offset = 0.5*(ofGetWidth()-player.getWidth());
+//        player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
+        ofPushMatrix();
+        glMultMatrixf(videoMat.getPtr());
+        player.draw(ofRectangle(0,0,player.getWidth(),player.getHeight()));
+        ofPopMatrix();
     }
     
     interfaceLayout.draw();
@@ -289,6 +311,8 @@ void kaiserNav::exit() {
 }
 
 void kaiserNav::touchDown(ofTouchEventArgs &touch){
+    
+    timer = ofGetElapsedTimeMillis()+30000;
     
     switch (state) {
         case STATE_IDLE:
@@ -314,8 +338,8 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
                 }
             }
             
-            ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
-            titles->bVisible = false;
+//            ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+//            titles->bVisible = false;
             
             vector<ofxSymbolInstance> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
             for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
@@ -345,7 +369,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             break;
     }
     
-
+     updateOverlays();
 }
 
 

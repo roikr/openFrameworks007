@@ -44,12 +44,16 @@ void testApp::setup(){
     doc.setup("DOMDocument.xml");
     doc.load();
     
+        
     ofMatrix4x4 mat;
+    float scale = (float)ofGetHeight()/768;
+    mat.scale(scale, scale, 1.0);
+    mat.translate(0.5*(ofGetWidth()-scale*1024), 0, 0);
     
-    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
-        mat.translate(64, 0, 0);
-        mat.scale(5.0/6.0, 5.0/6.0, 1.0);
-    }
+//    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
+//        mat.translate(64, 0, 0);
+//        mat.scale(5.0/6.0, 5.0/6.0, 1.0);
+//    }
     
     layout = doc.getSymbolItem("Layout")->createInstance("layout", mat);
     

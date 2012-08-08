@@ -979,6 +979,25 @@ ofxSymbolInstance *ofxSymbolInstance::getChild(string name) {
     return NULL;
 }
 
+
+bool ofxSymbolInstance::getChildMat(ofxSymbolInstance *child,ofMatrix4x4 &mat) {
+    if (this==child) {
+        mat = this->mat;
+        return true;
+    }
+    
+    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
+            if (iter->getChildMat(child, mat)) {
+                mat.postMult(this->mat);
+                return  true;
+            }
+        }
+    }
+    
+    return false;
+}
+
 layer *ofxSymbolInstance::getLayer(string name) {
     for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
         if (iter->name == name) {

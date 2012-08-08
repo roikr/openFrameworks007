@@ -27,6 +27,7 @@ class ofxSymbolInstance;
 class ofxSymbolItem;
 class ofxBitmapItem;
 
+
 struct curvePath {
     ofVec2f p0;
     vector<vector<ofVec2f> > segments;
@@ -116,7 +117,7 @@ private:
 
 
 
-class ofxSymbolInstance;
+
 
 
 struct layer {
@@ -163,6 +164,7 @@ public:
     ofRectangle getBoundingBox();
     
     ofxSymbolInstance *getChild(string name);
+    bool getChildMat(ofxSymbolInstance *child,ofMatrix4x4 &mat);
     layer *getLayer(string name);
     vector<string> listLayers();
     vector<string> listChilds(string name);

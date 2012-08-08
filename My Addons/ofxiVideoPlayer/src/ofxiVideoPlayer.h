@@ -21,7 +21,7 @@ using namespace std;
 class ofxiVideoPlayer {
 	
 public:
-	
+	ofxiVideoPlayer():bAllocated(false) {};
 	void play(string filename);
 	void update();
 	void draw(ofRectangle rect,ofRectangle tex=ofRectangle(0,0,1,1));
@@ -43,6 +43,7 @@ public:
 	
 	
 protected:
+    bool bAllocated;
 	
 	VideoPlayer *	videoPlayer;
 	

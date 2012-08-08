@@ -59,7 +59,9 @@ public:
     string captionName;
     
     int state;
+    int timer;
     
     ofxiVideoPlayer player;
+    ofMatrix4x4 videoMat;
         
 };
