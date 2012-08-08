@@ -73,7 +73,23 @@ void kaiserNav::setCaption(string name) {
 }
 
 void kaiserNav::setup(){	
-	
+    
+    
+	ofxXmlSettings xml;
+    if (xml.loadFile("settings.xml")) {
+        xml.pushTag("settings");
+        for (int i=0;i<xml.getNumTags("panZoom");i++) {
+            panZoom p;
+            p.name = xml.getAttribute("panZoom", "name", "",i);
+            p.zoom = xml.getAttribute("panZoom", "zoom", 1.0,i);
+            p.minZoom = xml.getAttribute("panZoom", "minZoom", 0.1,i);
+            p.maxZoom = xml.getAttribute("panZoom", "maxZoom", 2.0,i);
+            p.offset = ofVec2f(xml.getAttribute("panZoom", "x", 0.0,i),xml.getAttribute("panZoom", "y", 0.0,i));
+            settings.push_back(p);
+        }
+    }
+    
+    
     
     doc.setup("DOMDocument.xml");
     doc.load();
@@ -138,17 +154,41 @@ void kaiserNav::setImage(string name) {
         }
     }
     
+    vector<panZoom>::iterator iter;
+    for (iter=settings.begin(); iter!=settings.end(); iter++) {
+        if (iter->name == name) {
+            break;
+        }
+    }
+    
+    if (iter!=settings.end()) {
+        cam.setZoom(iter->zoom);
+        cam.setMinZoom(iter->minZoom);
+        cam.setMaxZoom(iter->maxZoom);
+        cam.offset = iter->offset;
+    } else {
+        float minZoom = 1024.0/(float)image.getWidth();
+        //	cam.setZoom(0.125f);
+        cam.setZoom(minZoom*2);
+        cam.setMinZoom(minZoom);
+        cam.setMaxZoom(2.0f);
+    }
     
     
-    float minZoom = 1024.0/(float)image.getWidth();
-    //	cam.setZoom(0.125f);
-    cam.setZoom(minZoom*2);
-	cam.setMinZoom(minZoom);
-	cam.setMaxZoom(2.0f);
-	cam.setScreenSize( ofGetWidth(), ofGetHeight() );
+//    ofVec2f p1 = videoMat.preMult(ofVec3f());
+//    ofVec2f p2 = videoMat.preMult(ofVec3f(960,540));
+//    ofVec2f size = p2-p1;
+//    ofRectangle rect;
+//    rect.set(p1, size.x, size.y);
+//	cam.setScreenSize(ofGetWidth(),ofGetHeight() );
+//    float scale = max(image.getWidth()/960,image.getHeight()/540);
+//    ofVec2f limit = 0.5*scale*1.5*ofVec2f(960,540);
+//    cam.setViewportConstrain( -limit, limit); //limit browseable area, in world units
+	
+	cam.setScreenSize(ofGetWidth(),ofGetHeight() );
     ofVec2f limit = 0.5*ofVec2f(image.getWidth(),image.getHeight());
     cam.setViewportConstrain( -limit, limit); //limit browseable area, in world units
-	
+
     
     bCaptionActive = false;
     
@@ -304,7 +344,9 @@ void kaiserNav::draw() {
     interfaceLayout.draw();
     
     ofPopMatrix();
-//	cam.drawDebug(); //see info on ofxPanZoom status
+    ofPushStyle();
+	cam.drawDebug(); //see info on ofxPanZoom status
+    ofPopStyle();
 }
 
 void kaiserNav::exit() {

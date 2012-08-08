@@ -19,6 +19,14 @@
 #include "ofxFloatingCaption.h"
 #include "ofxiVideoPlayer.h"
 
+struct panZoom {
+    string name;
+    float zoom;
+    float minZoom;
+    float maxZoom;
+    ofVec2f offset;
+};
+
 class kaiserNav  {
 	
 public:
@@ -63,5 +71,7 @@ public:
     
     ofxiVideoPlayer player;
     ofMatrix4x4 videoMat;
+    
+    vector<panZoom> settings;
         
 };
