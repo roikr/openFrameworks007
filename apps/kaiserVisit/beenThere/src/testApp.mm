@@ -3,7 +3,7 @@
 
 #define MENU_INSET 20.0
 #define MENU_SEPERATOR 20.0
-
+#define EXTENNSION "jpg"
 
 enum {
     STATE_IMAGES,
@@ -117,6 +117,8 @@ void testApp::setup(){
 void testApp::update(){
 	ofBackground(255,255,255);	
     
+    
+    
     // check for waiting messages
 	while( receiver.hasWaitingMessages() )
 	{
@@ -127,14 +129,39 @@ void testApp::update(){
 		// check for mouse moved message
 		if ( m.getAddress() == "/add" ) {
         
-            ofLoadURLAsync(url+'/'+m.getArgAsString(0));
-            images.push_back(m.getArgAsString(0));
+            ofLoadURLAsync(url+"/thumbs/"+m.getArgAsString(0)+"_THUMB."+EXTENNSION);
+            if (find(images.begin(), images.end(), m.getArgAsString(0)) == images.end()) {
+                images.push_back(m.getArgAsString(0));
+            } 
+            
             cout << images.back() << endl;
             
-		} 			
+		} else if ( m.getAddress() == "/remove" ) {
+            
+            vector<string>::iterator iter = find(images.begin(),images.end(), m.getArgAsString(0));
+            if (iter!=images.end()) {
+                cout << "remove: " << m.getArgAsString(0) << endl;
+                int pos = distance(images.begin(),iter);
+                images.erase(iter);
+                thumbs.removeItem(pos);
+                
+            }
+            
+            
+        }		
     }
-   
+    
+    
+    bool bSelected =thumbs.getIsSelected();
+    int numSelected = thumbs.getSelectedNum();
     thumbs.update();
+    if ( thumbs.getIsSelected() && (!bSelected || numSelected!=thumbs.getSelectedNum())) {
+        if (thumbs.getSelectedNum()<images.size()) {
+            ofLoadURLAsync(url+"/photos/"+images[thumbs.getSelectedNum()]+"."+EXTENNSION);
+        }
+    }
+
+           
     objects.update();
    
     
@@ -160,10 +187,10 @@ void testApp::draw(){
             layout.drawLayer(background);
             thumbs.draw();
             
-            if (thumbs.getIsSelected()) {
+            if (image.isAllocated()) {
                 ofPushMatrix();
                 glMultMatrixf(camMat.getPtr());
-                thumbs.getImage(thumbs.getSelectedNum()).draw(imageRect);
+                image.draw(imageRect);
                 ofPopMatrix();
 //                ofImage &image = thumbs.getImage(thumbs.getSelectedNum());
 //                float inset = 20; 
@@ -187,7 +214,7 @@ void testApp::draw(){
             if (thumbs.getIsSelected()) {
                 ofPushMatrix();
                 glMultMatrixf(camMat.getPtr());
-                thumbs.getImage(thumbs.getSelectedNum()).draw(imageRect);
+                image.draw(imageRect);
                 ofPopMatrix();
             }
             
@@ -218,7 +245,7 @@ void testApp::draw(){
             
             if (thumbs.getIsSelected()) {
                 
-                thumbs.getImage(thumbs.getSelectedNum()).draw(imageRect);
+                image.draw(imageRect);
                
             }
             
@@ -321,18 +348,19 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             
             
             if (!images.empty()) {
-                m.setAddress("/remove");
+                m.setAddress("/delete");
                 m.addStringArg(images[0]);
                 sender.sendMessage(m);
                 images.clear();
                 m.clear();
+                image.clear();
             }
             
             m.setAddress("/list");
             m.addIntArg(port);
             sender.sendMessage(m);
             
-            cout << url << endl;
+            cout << "list: " << url << endl;
         } break;
             
         default:
@@ -472,9 +500,17 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 
 void testApp::urlResponse(ofHttpResponse &response) {
     if (response.status == 200) {
-        ofImage image;
-        image.loadImage(response.data);
-        thumbs.addItem(image);
+        string url = response.request.url;
+        vector<string> split = ofSplitString(url, "/");
+        if (split.size()>1) {
+            if (*(split.end()-2)=="thumbs") {
+                ofImage thumb;
+                thumb.loadImage(response.data);
+                thumbs.addItem(thumb);
+            } else {
+                image.loadImage(response.data);
+            }
+        }
         
     }
 }

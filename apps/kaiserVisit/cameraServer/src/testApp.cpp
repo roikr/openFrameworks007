@@ -1,19 +1,23 @@
 #include "testApp.h"
 #include "ofxXmlSettings.h"
 
+#define EXTENSION "jpg"
+
+
 
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-	camWidth 		= 320;	// try to grab at this size. 
-	camHeight 		= 240;
 	
-	vidGrabber.setVerbose(true);
-	vidGrabber.initGrabber(camWidth,camHeight);
+	
+	
     
     ofxXmlSettings xml;
     if (xml.loadFile("settings.xml")) {
-        
+        camWidth = xml.getAttribute("settings", "width", 1280);
+        camHeight = xml.getAttribute("settings", "width", 720);
+        vidGrabber.setVerbose(true);
+        vidGrabber.initGrabber(camWidth,camHeight);
         //xml.getAttribute("settings", "root", "");
         xml.pushTag("settings");
         receiver.setup(xml.getAttribute("receiver", "port", 10000));
@@ -21,7 +25,7 @@ void testApp::setup(){
         delay = xml.getAttribute("trigger", "delay", 3000);
         
         server = ofxHTTPServer::getServer(); // get the instance of the server
-        server->setServerRoot("photos");		 // folder with files to be served
+        server->setServerRoot("");		 // folder with files to be served
         server->start(xml.getAttribute("server", "port", 8888));
     }
     
@@ -47,10 +51,23 @@ void testApp::update(){
     if (bTrigger && ofGetElapsedTimeMillis()>delayTimer ) {
         bTrigger = false;
         image.setFromPixels(vidGrabber.getPixelsRef());
+        
+        float width = 1024.0;
+        float height = 768.0;
+        float scale = min((float)vidGrabber.getWidth()/width,(float)vidGrabber.getHeight()/height);
+        int newWidth = floor(width*scale);
+        int newHeight = floor(height*scale);
+        cout << newWidth << "\t" << newHeight << endl;
+        
         stringstream ss;
-        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds() << ".png";
+        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds();
         cout << ss.str() << endl;
-        image.saveImage("photos/"+ss.str());
+        
+        image.crop(0.5*(image.getWidth()-newWidth), 0.5*(image.getHeight()-newHeight), newWidth, newHeight);
+        image.saveImage("photos/"+ss.str()+"."+EXTENSION);
+        image.resize(120, 90);
+        image.saveImage("thumbs/"+ss.str()+"_THUMB."+EXTENSION);
+        image.update();
         
         ofxOscMessage m;
         m.setAddress("/add");
@@ -78,10 +95,23 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
         
 		// check for mouse moved message
-		if ( m.getAddress() == "/remove" ) {
-			ofFile file(ofToDataPath("photos/"+m.getArgAsString(0)));
+		if ( m.getAddress() == "/delete" ) {
+            string name = m.getArgAsString(0);
+			ofFile file(ofToDataPath("photos/"+name+"."+EXTENSION));
             if (file.exists()) {
                 file.remove();
+            }
+            
+            file = ofFile(ofToDataPath("thumbs/"+name+"_THUMB."+EXTENSION));
+            if (file.exists()) {
+                file.remove();
+            }
+            
+            m.clear();
+            m.setAddress("/remove");
+            m.addStringArg(name);
+            for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+                iter->second->sendMessage(m);
             }
             
 		}  else if ( m.getAddress() == "/list" ) {
@@ -111,7 +141,7 @@ void testApp::update(){
             for (int i=0;i<dir.size();i++) {
                 ofxOscMessage m;
                 m.setAddress("/add");
-                m.addStringArg(dir.getName(i));
+                m.addStringArg(ofSplitString(dir.getName(i), ".").front());
                 sender->sendMessage(m);
             }
             
@@ -125,9 +155,9 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofSetHexColor(0xffffff);
-	vidGrabber.draw(20,20);
+	vidGrabber.draw(0,0);
     if (image.getTextureReference().bAllocated()) {
-        image.draw(40,40,camWidth/3,camHeight/3);
+        image.draw(40,40);
     }
 //	videoTexture.draw(20+camWidth,20,camWidth,camHeight);
 }

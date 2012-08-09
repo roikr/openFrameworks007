@@ -32,6 +32,7 @@ class ofxScrollCollection {
 public:
     void setup(scrollCollectionPrefs prefs);
     void addItem(ofImage &image);
+    void removeItem(int pos);
     void update();
     void draw();
     

@@ -44,12 +44,18 @@ void ofxScrollCollection::setup(scrollCollectionPrefs prefs) {
 void ofxScrollCollection::addItem(ofImage &img) {
     
     if (img.getWidth()>0) {
-        images.push_back(img);      // roikr: careful - involve with copy ?
-        selected = images.rbegin();
+        bool bSelected = !images.empty() && selected != images.rend();
+        images.push_back(img); 
+        selected = images.rend();
     }
 }
 
-
+void ofxScrollCollection::removeItem(int pos) {
+    if (pos<images.size()) {
+        images.erase(images.begin()+pos);
+        selected = images.rend();
+    }
+}
 
 void ofxScrollCollection::update() {
     switch (state) {
@@ -153,7 +159,7 @@ bool ofxScrollCollection::getIsSelected() {
 }
 
 int ofxScrollCollection::getSelectedNum() {
-    return distance(images.rbegin(), selected);
+    return images.size()-distance(images.rbegin(), selected)-1;
 }
 
 ofImage &ofxScrollCollection::getImage(int num) {

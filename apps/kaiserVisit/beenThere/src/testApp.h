@@ -31,6 +31,7 @@ public:
     
     ofxScrollCollection thumbs;
     ofxScrollCollection objects;
+    ofImage image;
     
     int state;
     
@@ -40,9 +41,7 @@ public:
     bool bTouchObject;
     int objectNum;
     
-    ofImage photo;
-    
-    
+
     ofxDocument doc;
     ofxSymbolInstance layout;
     layer *background;
