@@ -14,41 +14,39 @@
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		BB16EBD20F2B2A9500518274 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
 		BB16EBD90F2B2AB500518274 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
-		BB24DD8F10DA77E000E9C588 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8C10DA77E000E9C588 /* Default.png */; };
-		BB24DD9010DA77E000E9C588 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8D10DA77E000E9C588 /* Icon.png */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
-		E40ED5F215D12D6100556B9C /* ofxiFacebook.mm in Sources */ = {isa = PBXBuildFile; fileRef = E40ED5F015D12D6100556B9C /* ofxiFacebook.mm */; };
 		E40ED87615D12DC100556B9C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E40ED87515D12DC100556B9C /* FacebookSDK.framework */; };
 		E41D400B13B39D2100A75A5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
 		E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
-		E44BC52F15B2C54000CD7BBD /* ofxiStillCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC4F515B2C54000CD7BBD /* ofxiStillCamera.mm */; };
-		E44BC53015B2C54000CD7BBD /* StillCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = E44BC4F715B2C54000CD7BBD /* StillCamera.m */; };
-		E456A49415C6C28200CE662B /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E456A49115C6BEAA00CE662B /* libofxiPhone_iphoneos_Debug.a */; };
-		E46817E8158F6D62002E93E7 /* ofxURLFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46817E6158F6D62002E93E7 /* ofxURLFileLoader.cpp */; };
-		E4690AAE15ADF4D200705252 /* ofxTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4690AAD15ADF4D200705252 /* ofxTransform.cpp */; };
-		E491DD9715AA2F0A00492026 /* ofxiVolumeButtons.mm in Sources */ = {isa = PBXBuildFile; fileRef = E491DD9415AA2F0A00492026 /* ofxiVolumeButtons.mm */; };
-		E491DD9815AA2F0A00492026 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = E491DD9615AA2F0A00492026 /* RBVolumeButtons.m */; };
 		E491DD9A15AA33BC00492026 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E491DD9915AA33BC00492026 /* MediaPlayer.framework */; };
-		E4C9C4E71593945B0040BCA4 /* EventRouteWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C9C4E61593945B0040BCA4 /* EventRouteWindow.m */; };
-		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
-		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
-		E4F6E7C615A0C57800E78890 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = E4F6E7C415A0C57800E78890 /* cJSON.c */; };
-		E4FEE95F159AFECB0092EFF9 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4FEE95E159AFECB0092EFF9 /* ofxPenner.cpp */; };
+		E4CE224615D3DF7D00921844 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = E4F6E7C415A0C57800E78890 /* cJSON.c */; };
+		E4CE224715D3DF7D00921844 /* ofxURLFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46817E6158F6D62002E93E7 /* ofxURLFileLoader.cpp */; };
+		E4CE224815D3DF7D00921844 /* EventRouteWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C9C4E61593945B0040BCA4 /* EventRouteWindow.m */; };
+		E4CE224915D3DF8700921844 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
+		E4CE224A15D3DF8A00921844 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
+		E4CE224B15D3E03400921844 /* ofxTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CE112615D3DDE800921844 /* ofxTransform.cpp */; };
+		E4CE224C15D3E03900921844 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CE112A15D3DDE800921844 /* ofxPenner.cpp */; };
+		E4CE224D15D3E03F00921844 /* ofxiVolumeButtons.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4CE112F15D3DDE800921844 /* ofxiVolumeButtons.mm */; };
+		E4CE224E15D3E03F00921844 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = E4CE113115D3DDE800921844 /* RBVolumeButtons.m */; };
+		E4CE224F15D3E04900921844 /* ofxiFacebook.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4CE113615D3DDE800921844 /* ofxiFacebook.mm */; };
+		E4CE225015D3E04900921844 /* ofxiStillCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC4F515B2C54000CD7BBD /* ofxiStillCamera.mm */; };
+		E4CE225115D3E04900921844 /* StillCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = E44BC4F715B2C54000CD7BBD /* StillCamera.m */; };
+		E4CE225D15D3E09D00921844 /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4CE225A15D3E06300921844 /* libofxiPhone_iphoneos_Debug.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E456A49015C6BEAA00CE662B /* PBXContainerItemProxy */ = {
+		E4CE225915D3E06300921844 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = E456A48915C6BEAA00CE662B /* iOS+OFLib.xcodeproj */;
+			containerPortal = E4CE225215D3E06300921844 /* iOS+OFLib.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = BB24DED610DA7A3F00E9C588;
 			remoteInfo = "iPhone+OF Static Library";
 		};
-		E456A49215C6BFC600CE662B /* PBXContainerItemProxy */ = {
+		E4CE225B15D3E09200921844 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = E456A48915C6BEAA00CE662B /* iOS+OFLib.xcodeproj */;
+			containerPortal = E4CE225215D3E06300921844 /* iOS+OFLib.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = BB24DE5C10DA7A3F00E9C588;
 			remoteInfo = "iPhone+OF Static Library";
@@ -69,8 +67,6 @@
 		BB24DD8D10DA77E000E9C588 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		E40ED5F015D12D6100556B9C /* ofxiFacebook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFacebook.mm; sourceTree = "<group>"; };
-		E40ED5F115D12D6100556B9C /* ofxiFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFacebook.h; sourceTree = "<group>"; };
 		E40ED87515D12DC100556B9C /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		E41D3ED613B38FB500A75A5D /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E41D400613B39D2100A75A5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -81,26 +77,29 @@
 		E44BC4F515B2C54000CD7BBD /* ofxiStillCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiStillCamera.mm; sourceTree = "<group>"; };
 		E44BC4F615B2C54000CD7BBD /* StillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillCamera.h; sourceTree = "<group>"; };
 		E44BC4F715B2C54000CD7BBD /* StillCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
-		E456A48915C6BEAA00CE662B /* iOS+OFLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iOS+OFLib.xcodeproj"; path = "../openFrameworks/libs/openFrameworksCompiled/project/ios/iOS+OFLib.xcodeproj"; sourceTree = "<group>"; };
 		E46817E6158F6D62002E93E7 /* ofxURLFileLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxURLFileLoader.cpp; sourceTree = "<group>"; };
 		E46817E7158F6D62002E93E7 /* ofxURLFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxURLFileLoader.h; sourceTree = "<group>"; };
-		E4690AAC15ADF4BB00705252 /* ofxTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTransform.h; sourceTree = "<group>"; };
-		E4690AAD15ADF4D200705252 /* ofxTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTransform.cpp; sourceTree = "<group>"; };
-		E491DD9315AA2F0A00492026 /* ofxiVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVolumeButtons.h; sourceTree = "<group>"; };
-		E491DD9415AA2F0A00492026 /* ofxiVolumeButtons.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVolumeButtons.mm; sourceTree = "<group>"; };
-		E491DD9515AA2F0A00492026 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
-		E491DD9615AA2F0A00492026 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		E491DD9915AA33BC00492026 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4C9C4E51593945B0040BCA4 /* EventRouteWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventRouteWindow.h; sourceTree = "<group>"; };
 		E4C9C4E61593945B0040BCA4 /* EventRouteWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventRouteWindow.m; sourceTree = "<group>"; };
+		E4CE112615D3DDE800921844 /* ofxTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTransform.cpp; sourceTree = "<group>"; };
+		E4CE112715D3DDE800921844 /* ofxTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTransform.h; sourceTree = "<group>"; };
+		E4CE112A15D3DDE800921844 /* ofxPenner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPenner.cpp; sourceTree = "<group>"; };
+		E4CE112B15D3DDE800921844 /* ofxPenner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPenner.h; sourceTree = "<group>"; };
+		E4CE112E15D3DDE800921844 /* ofxiVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVolumeButtons.h; sourceTree = "<group>"; };
+		E4CE112F15D3DDE800921844 /* ofxiVolumeButtons.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVolumeButtons.mm; sourceTree = "<group>"; };
+		E4CE113015D3DDE800921844 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
+		E4CE113115D3DDE800921844 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
+		E4CE113315D3DDE800921844 /* FACEBOOK */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FACEBOOK; sourceTree = "<group>"; };
+		E4CE113515D3DDE800921844 /* ofxiFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFacebook.h; sourceTree = "<group>"; };
+		E4CE113615D3DDE800921844 /* ofxiFacebook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFacebook.mm; sourceTree = "<group>"; };
+		E4CE225215D3E06300921844 /* iOS+OFLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iOS+OFLib.xcodeproj"; path = "../../openFrameworks/libs/openFrameworksCompiled/project/ios/iOS+OFLib.xcodeproj"; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
 		E4F6E7C415A0C57800E78890 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
 		E4F6E7C515A0C57800E78890 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
-		E4FEE95D159AFEAC0092EFF9 /* ofxPenner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxPenner.h; sourceTree = "<group>"; };
-		E4FEE95E159AFECB0092EFF9 /* ofxPenner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPenner.cpp; sourceTree = "<group>"; };
 		E4FEE960159B326E0092EFF9 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,7 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E456A49415C6C28200CE662B /* libofxiPhone_iphoneos_Debug.a in Frameworks */,
+				E4CE225D15D3E09D00921844 /* libofxiPhone_iphoneos_Debug.a in Frameworks */,
 				E491DD9A15AA33BC00492026 /* MediaPlayer.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -184,6 +183,10 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4CE112415D3DDE800921844 /* ofxTransform */,
+				E4CE112815D3DDE800921844 /* ofxPenner */,
+				E4CE112C15D3DDE800921844 /* ofxiVolumeButtons */,
+				E4CE113215D3DDE800921844 /* ofxiFacebook */,
 				E44BC4AA15B2C54000CD7BBD /* ofxiStillCamera */,
 				E46817E4158F6D62002E93E7 /* SharedCode */,
 			);
@@ -204,7 +207,7 @@
 		BB24E1F710DAA51900E9C588 /* openFrameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E456A48915C6BEAA00CE662B /* iOS+OFLib.xcodeproj */,
+				E4CE225215D3E06300921844 /* iOS+OFLib.xcodeproj */,
 				32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */,
 				BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */,
 				E41D3ED613B38FB500A75A5D /* Project.xcconfig */,
@@ -240,14 +243,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		E456A48A15C6BEAA00CE662B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E456A49115C6BEAA00CE662B /* libofxiPhone_iphoneos_Debug.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		E46817E4158F6D62002E93E7 /* SharedCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -266,18 +261,91 @@
 				E46817E7158F6D62002E93E7 /* ofxURLFileLoader.h */,
 				E4C9C4E51593945B0040BCA4 /* EventRouteWindow.h */,
 				E4C9C4E61593945B0040BCA4 /* EventRouteWindow.m */,
-				E4FEE95D159AFEAC0092EFF9 /* ofxPenner.h */,
-				E4FEE95E159AFECB0092EFF9 /* ofxPenner.cpp */,
-				E4690AAC15ADF4BB00705252 /* ofxTransform.h */,
-				E4690AAD15ADF4D200705252 /* ofxTransform.cpp */,
-				E491DD9315AA2F0A00492026 /* ofxiVolumeButtons.h */,
-				E491DD9415AA2F0A00492026 /* ofxiVolumeButtons.mm */,
-				E491DD9515AA2F0A00492026 /* RBVolumeButtons.h */,
-				E491DD9615AA2F0A00492026 /* RBVolumeButtons.m */,
-				E40ED5F015D12D6100556B9C /* ofxiFacebook.mm */,
-				E40ED5F115D12D6100556B9C /* ofxiFacebook.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		E4CE112415D3DDE800921844 /* ofxTransform */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE112515D3DDE800921844 /* src */,
+			);
+			name = ofxTransform;
+			path = "../../../My Addons/ofxTransform";
+			sourceTree = "<group>";
+		};
+		E4CE112515D3DDE800921844 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE112615D3DDE800921844 /* ofxTransform.cpp */,
+				E4CE112715D3DDE800921844 /* ofxTransform.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4CE112815D3DDE800921844 /* ofxPenner */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE112915D3DDE800921844 /* src */,
+			);
+			name = ofxPenner;
+			path = "../../../My Addons/ofxPenner";
+			sourceTree = "<group>";
+		};
+		E4CE112915D3DDE800921844 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE112A15D3DDE800921844 /* ofxPenner.cpp */,
+				E4CE112B15D3DDE800921844 /* ofxPenner.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4CE112C15D3DDE800921844 /* ofxiVolumeButtons */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE112D15D3DDE800921844 /* src */,
+			);
+			name = ofxiVolumeButtons;
+			path = "../../../My Addons/ofxiVolumeButtons";
+			sourceTree = "<group>";
+		};
+		E4CE112D15D3DDE800921844 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE112E15D3DDE800921844 /* ofxiVolumeButtons.h */,
+				E4CE112F15D3DDE800921844 /* ofxiVolumeButtons.mm */,
+				E4CE113015D3DDE800921844 /* RBVolumeButtons.h */,
+				E4CE113115D3DDE800921844 /* RBVolumeButtons.m */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4CE113215D3DDE800921844 /* ofxiFacebook */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE113315D3DDE800921844 /* FACEBOOK */,
+				E4CE113415D3DDE800921844 /* src */,
+			);
+			name = ofxiFacebook;
+			path = "../../../My Addons/ofxiFacebook";
+			sourceTree = "<group>";
+		};
+		E4CE113415D3DDE800921844 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE113515D3DDE800921844 /* ofxiFacebook.h */,
+				E4CE113615D3DDE800921844 /* ofxiFacebook.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4CE225315D3E06300921844 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E4CE225A15D3E06300921844 /* libofxiPhone_iphoneos_Debug.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		E4D8936A11527B74007E1F53 /* src */ = {
@@ -305,7 +373,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				E456A49315C6BFC600CE662B /* PBXTargetDependency */,
+				E4CE225C15D3E09200921844 /* PBXTargetDependency */,
 			);
 			name = Rompr;
 			productName = iPhone;
@@ -335,8 +403,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = E456A48A15C6BEAA00CE662B /* Products */;
-					ProjectRef = E456A48915C6BEAA00CE662B /* iOS+OFLib.xcodeproj */;
+					ProductGroup = E4CE225315D3E06300921844 /* Products */;
+					ProjectRef = E4CE225215D3E06300921844 /* iOS+OFLib.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -347,11 +415,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		E456A49115C6BEAA00CE662B /* libofxiPhone_iphoneos_Debug.a */ = {
+		E4CE225A15D3E06300921844 /* libofxiPhone_iphoneos_Debug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libofxiPhone_iphoneos_Debug.a;
-			remoteRef = E456A49015C6BEAA00CE662B /* PBXContainerItemProxy */;
+			remoteRef = E4CE225915D3E06300921844 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -361,8 +429,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB24DD8F10DA77E000E9C588 /* Default.png in Resources */,
-				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,28 +455,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
-				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E46817E8158F6D62002E93E7 /* ofxURLFileLoader.cpp in Sources */,
-				E4C9C4E71593945B0040BCA4 /* EventRouteWindow.m in Sources */,
-				E4FEE95F159AFECB0092EFF9 /* ofxPenner.cpp in Sources */,
-				E4F6E7C615A0C57800E78890 /* cJSON.c in Sources */,
-				E491DD9715AA2F0A00492026 /* ofxiVolumeButtons.mm in Sources */,
-				E491DD9815AA2F0A00492026 /* RBVolumeButtons.m in Sources */,
-				E4690AAE15ADF4D200705252 /* ofxTransform.cpp in Sources */,
-				E44BC52F15B2C54000CD7BBD /* ofxiStillCamera.mm in Sources */,
-				E44BC53015B2C54000CD7BBD /* StillCamera.m in Sources */,
-				E40ED5F215D12D6100556B9C /* ofxiFacebook.mm in Sources */,
+				E4CE224615D3DF7D00921844 /* cJSON.c in Sources */,
+				E4CE224715D3DF7D00921844 /* ofxURLFileLoader.cpp in Sources */,
+				E4CE224815D3DF7D00921844 /* EventRouteWindow.m in Sources */,
+				E4CE224915D3DF8700921844 /* main.mm in Sources */,
+				E4CE224A15D3DF8A00921844 /* testApp.mm in Sources */,
+				E4CE224B15D3E03400921844 /* ofxTransform.cpp in Sources */,
+				E4CE224C15D3E03900921844 /* ofxPenner.cpp in Sources */,
+				E4CE224D15D3E03F00921844 /* ofxiVolumeButtons.mm in Sources */,
+				E4CE224E15D3E03F00921844 /* RBVolumeButtons.m in Sources */,
+				E4CE224F15D3E04900921844 /* ofxiFacebook.mm in Sources */,
+				E4CE225015D3E04900921844 /* ofxiStillCamera.mm in Sources */,
+				E4CE225115D3E04900921844 /* StillCamera.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E456A49315C6BFC600CE662B /* PBXTargetDependency */ = {
+		E4CE225C15D3E09200921844 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "iPhone+OF Static Library";
-			targetProxy = E456A49215C6BFC600CE662B /* PBXContainerItemProxy */;
+			targetProxy = E4CE225B15D3E09200921844 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -422,11 +488,41 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../addons/ofxLua/lib/boost/ios\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../addons/ofxAssimpModelLoader/libs/assimp/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/aubioLibrary/aubioFullOSXUni/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/aubioLibrary/fftw\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/portaudio/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxFft/libs/fftw/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/linux\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/linux64\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/macosx\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/win32\"",
+					"\"$(SRCROOT)/../../../addons/ofxKinect/libs/libfreenect/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxKinect/libs/libusb/osx/libs\"",
+					"\"$(SRCROOT)/../../../addons/ofxLibsndfileRecorder/libs/libsndfile/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxLibsndfileRecorder/libs/libsndfile/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxLua/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenNI/win/copy_to_data_openni_path/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxRemoteCamera/libs/turbo-jpeg/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxRemoteCamera/libs/turbo-jpeg/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxSndFile/libs/sndfile/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/iphone42/ios\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/iphone42/sim\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/osx\"",
+				);
 				PRODUCT_NAME = Rompr;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -438,11 +534,41 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../addons/ofxLua/lib/boost/ios\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../addons/ofxAssimpModelLoader/libs/assimp/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/aubioLibrary/aubioFullOSXUni/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/aubioLibrary/fftw\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/portaudio/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxFft/libs/fftw/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/linux\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/linux64\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/macosx\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/win32\"",
+					"\"$(SRCROOT)/../../../addons/ofxKinect/libs/libfreenect/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxKinect/libs/libusb/osx/libs\"",
+					"\"$(SRCROOT)/../../../addons/ofxLibsndfileRecorder/libs/libsndfile/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxLibsndfileRecorder/libs/libsndfile/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxLua/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenNI/win/copy_to_data_openni_path/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxRemoteCamera/libs/turbo-jpeg/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxRemoteCamera/libs/turbo-jpeg/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxSndFile/libs/sndfile/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/iphone42/ios\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/iphone42/sim\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/osx\"",
+				);
 				PRODUCT_NAME = Rompr;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -533,11 +659,41 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../addons/ofxLua/lib/boost/ios\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../addons/ofxAssimpModelLoader/libs/assimp/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/aubioLibrary/aubioFullOSXUni/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/aubioLibrary/fftw\"",
+					"\"$(SRCROOT)/../../../addons/ofxBTrackAnalyser/addToLibs/portaudio/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxFft/libs/fftw/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/linux\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/linux64\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/macosx\"",
+					"\"$(SRCROOT)/../../../addons/ofxHttpServer/libs/microhttpd/lib/win32\"",
+					"\"$(SRCROOT)/../../../addons/ofxKinect/libs/libfreenect/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxKinect/libs/libusb/osx/libs\"",
+					"\"$(SRCROOT)/../../../addons/ofxLibsndfileRecorder/libs/libsndfile/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxLibsndfileRecorder/libs/libsndfile/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxLua/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxOpenNI/win/copy_to_data_openni_path/lib\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/iphone\"",
+					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxRemoteCamera/libs/turbo-jpeg/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxRemoteCamera/libs/turbo-jpeg/lib/vs2010\"",
+					"\"$(SRCROOT)/../../../addons/ofxSndFile/libs/sndfile/lib/osx\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/iphone42/ios\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/iphone42/sim\"",
+					"\"$(SRCROOT)/../../../addons/ofxZxing/libs/zxing/osx\"",
+				);
 				PRODUCT_NAME = Rompr;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

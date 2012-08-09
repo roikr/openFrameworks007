@@ -934,10 +934,11 @@ void testApp::volumeButtonPressed(int &button) {
     cam.snap();
 }
 
-void testApp::pictureTaken(ofImage &image) {
+void testApp::pictureTaken(ofPixels &pixels) {
     ofxUnregisterStillCameraNotification(this);
 //    cout << image.getWidth() << "\t" << image.getHeight() << endl;
-    
+    ofImage image;
+    image.setFromPixels(pixels);
     image.saveImage(ofxNSStringToString([NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"output.jpg"]));
     imageLocation = getUserLocation();
     this->image = image;

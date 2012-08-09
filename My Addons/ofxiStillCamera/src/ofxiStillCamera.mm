@@ -13,7 +13,7 @@
 
 float angleOffsetFromPortraitOrientation(AVCaptureVideoOrientation orientation);
 
-ofEvent<ofImage> ofxiStillCameraEvent;
+ofEvent<ofPixels> ofxiStillCameraEvent;
 
 void ofxiStillCamera::preview() {
     
@@ -152,6 +152,7 @@ void ofxiStillCamera::update() {
             int bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
             int bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
             unsigned char *pixel = (unsigned char *)CVPixelBufferGetBaseAddress(pixelBuffer);
+              
             
             ofImage image;
             image.setUseTexture(false);
@@ -162,8 +163,8 @@ void ofxiStillCamera::update() {
             
             image.setImageType(OF_IMAGE_COLOR);
             image.getPixelsRef().swapRgb();
-            image.setUseTexture(true);
-            image.reloadTexture();
+//            image.setUseTexture(true);
+//            image.reloadTexture();
             
             
             int nRotations = (angleOffsetFromPortraitOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT)-angleOffsetFromPortraitOrientation([stillCamera avOrientationForDeviceOrientation:[[UIDevice currentDevice] orientation]])) / -90.0;
@@ -176,7 +177,7 @@ void ofxiStillCamera::update() {
 //            image.saveImage(ofxNSStringToString(filePath));
             
             
-            ofNotifyEvent(ofxiStillCameraEvent , image);
+            ofNotifyEvent(ofxiStillCameraEvent , image.getPixelsRef());
             
             
         }

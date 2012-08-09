@@ -76,7 +76,7 @@ public:
     void errorLoadingMap(string errorDescription);
     
     void volumeButtonPressed(int &button);
-    void pictureTaken(ofImage &image);
+    void pictureTaken(ofPixels &pixels);
     
     bool bUpdatingRegion;
     bool bQueryLocation;

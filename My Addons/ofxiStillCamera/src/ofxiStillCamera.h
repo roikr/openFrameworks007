@@ -12,7 +12,7 @@
 #include "ofMain.h"
 #import <CoreVideo/CVOpenGLESTextureCache.h>
 
-extern ofEvent<ofImage> ofxiStillCameraEvent;
+extern ofEvent<ofPixels> ofxiStillCameraEvent;
 
 template<class T>
 void ofxRegisterStillCameraNotification(T * obj){

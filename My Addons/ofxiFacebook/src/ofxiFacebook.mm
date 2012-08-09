@@ -10,10 +10,26 @@
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
 
-void ofxiFacebook::setup() {
+ofEvent<ofxFBEventArgs> ofxFacebookEvent;
+
+void ofxiFacebook::setup(vector<string> permissions) {
     
     // create a fresh session object
-    session = [[[FBSession alloc] init] retain];
+    if (permissions.empty()) {
+        session = [[FBSession alloc] init];
+    } else {
+        // @"publish_actions", @"user_photos"
+        
+        NSMutableArray *perms = [NSMutableArray arrayWithCapacity:permissions.size()];
+        for (vector<string>::iterator iter=permissions.begin();iter!=permissions.end();iter++) {
+            [perms addObject:ofxStringToNSString(*iter)];
+            cout << *iter << endl;
+        }
+        
+        session = [[[FBSession alloc] initWithPermissions:perms] retain];
+    }
+        
+
     
     // if we don't have a cached token, a call to open here would cause UX for login to
     // occur; we don't want that to happen unless the user clicks the login button, and so
@@ -25,7 +41,9 @@ void ofxiFacebook::setup() {
                                                          FBSessionState status, 
                                                          NSError *error) {
             // we recurse here, in order to update buttons and labels
-            cout << "token already created, make session usable" << endl;
+            ofxFBEventArgs args;
+            args.message = "token already created, make session usable";
+            ofNotifyEvent(ofxFacebookEvent, args);
         }];
     }
     
@@ -67,7 +85,10 @@ void ofxiFacebook::login() {
                                                          FBSessionState status, 
                                                          NSError *error) {
             // and here we make sure to update our UX according to the new session state
-            cout << "logged in" << endl;
+            ofxFBEventArgs args;
+            args.message = "logged in";
+            ofNotifyEvent(ofxFacebookEvent, args);
+
         }];
     }
 
@@ -82,6 +103,62 @@ void ofxiFacebook::logout() {
         [session closeAndClearTokenInformation];
     }
 }
+
+void ofxiFacebook::postImage(ofImage &image) {
+    
+       
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
+//    image.resize(200, 100);
+    
+    image.saveImage(ofxNSStringToString(path));
+    
+    UIImage *img = [UIImage imageWithContentsOfFile:path];
+//     UIImage *img = [UIImage imageNamed:@"Icon.png"];
+    
+    cout << img.size.width << " " << img.size.height << endl;
+    
+    NSString *graphPath = @"me/photos";
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:img forKey:@"picture"];
+    
+    FBRequest *photoUploadRequest = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:graphPath
+                                                  parameters:parameters
+                                                  HTTPMethod:@"POST"]
+                          autorelease];
+    
+    [parameters release];
+    
+    
+   
+//    // Build the request for uploading the photo
+//    FBRequest *photoUploadRequest = [FBRequest requestForUploadPhoto:img];
+//    
+//   
+    [photoUploadRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) { 
+//        NSLog(@"%@",[connection.urlResponse.allHeaderFields description]);
+        
+        NSString *alertMsg;
+        NSString *alertTitle;
+        if (error) {
+            alertMsg = error.description;
+            alertTitle = @"Error";
+        } else {
+            NSDictionary *resultDict = (NSDictionary *)result;
+            alertMsg = [NSString stringWithFormat:@"Successfully posted.\nPost ID: %@", 
+                       [resultDict valueForKey:@"id"]];
+            alertTitle = @"Success";
+        }
+        
+        ofxFBEventArgs args;
+        args.message = ofxNSStringToString(alertTitle)+"\n"+ofxNSStringToString(alertMsg);
+        ofNotifyEvent(ofxFacebookEvent, args);
+        
+    }];
+    
+}
+
+
 
 bool ofxiFacebook::getIsLoggedIn() {
     return session.isOpen;
