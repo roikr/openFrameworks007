@@ -147,7 +147,8 @@ void testApp::updateLayout() {
             ofVec2f topLeft = iter->mat.preMult(ofVec3f(0,0));
             ofVec2f bottomRight = iter->mat.preMult(ofVec3f(iter->bitmapItem->getWidth(),iter->bitmapItem->getHeight()));
             ofRectangle rect = ofRectangle(topLeft.x, topLeft.y, bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
-            iter->update(fadeFactor(rect));
+            iter->alphaMultiplier = fadeFactor(rect);
+            
             
 //            cout << iter->bitmapItem->name << "\t" << fade << "\t" << rect.x << "\t" << rect.y << "\t"<< rect.width << "\t"<< rect.height << "\t" <<endl;
             
@@ -162,10 +163,13 @@ void testApp::updateLayout() {
             ofRectangle rect = ofRectangle(topLeft.x, topLeft.y, bottomRight.x-topLeft.x, bottomRight.y-topLeft.y);
             
             if (current==videos.end() || !player.getIsFrameVisible() || current->rect != rect) {
-                iter->update(fadeFactor(rect));
+                iter->alphaMultiplier = fadeFactor(rect);
+                
             }
         }
     } 
+    
+    layout.update();
     
     ofVec2f offset(STAGE_WIDTH/2, STAGE_HEIGHT/2);
     ofVec2f p1 = cam.screenToWorld(ofVec2f(0,0))+offset;
