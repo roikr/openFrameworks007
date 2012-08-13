@@ -52,13 +52,22 @@ void kaiserNav::updateOverlays() {
 
         caption.mat.makeTranslationMatrix(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
         caption.alphaMultiplier = floating.getFade();
-        caption.update();
+//        caption.update();
         if (floating.getFade()<=0) {
             bCaptionActive = false;
         }
         
         
     }
+    
+    
+    layer *langLayer = interfaceLayout.getLayer("language");
+    for (vector<ofxSymbolInstance>::iterator iter=langLayer->instances.begin(); iter!=langLayer->instances.end(); iter++) {
+        if (iter->type==SYMBOL_INSTANCE) {
+            iter->alphaMultiplier = lang == iter->name ? 1.0 : 0.6;
+        }
+    }
+//    interfaceLayout.update();
 }
 
 void kaiserNav::setCaption(string name) {
@@ -68,7 +77,12 @@ void kaiserNav::setCaption(string name) {
     
     caption = doc.getSymbolItem(captionName+'_'+lang)->createInstance(name);
     ofRectangle rect = caption.getBoundingBox();
-    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), rect, 150);
+    
+    ofxSymbolInstance *child = imageLayout.getChild(caption.name);
+    ofMatrix4x4 mat; // should initialized to general transform if any exist
+    mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
+    
+    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))+cam.topLeftConstrain));
     
 }
 
@@ -109,6 +123,7 @@ void kaiserNav::setup(){
     setState(STATE_IDLE);
     timer = ofGetElapsedTimeMillis();
     
+        
 }
 
 
@@ -223,11 +238,15 @@ void kaiserNav::setState(int state) {
 
 void kaiserNav::update() {
     cam.update();
-    player.update();
+    
     if (cam.getIsAnimating()) {
         updateOverlays();
     }
 
+#ifdef TARGET_OF_IPHONE
+    player.update();
+
+    
     if (state!=STATE_IDLE && ofGetElapsedTimeMillis()>timer) {
         setState(STATE_IDLE);
     }
@@ -239,6 +258,7 @@ void kaiserNav::update() {
     if (state!=STATE_IDLE && player.getIsPlaying()) {
         player.stop();
     }
+#endif
 }
 
 
@@ -278,10 +298,12 @@ void kaiserNav::draw2nd() {
     }
     ofPopMatrix();
     
+#ifdef TARGET_OF_IPHONE
     if (state==STATE_IDLE) {
         float offset = 0.5*(ofGetWidth()-player.getWidth());
         player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
     }
+#endif
     
 }
 
@@ -331,7 +353,8 @@ void kaiserNav::draw() {
         floating.draw();
         caption.draw();
     }
-    
+
+#ifdef TARGET_OF_IPHONE
     if (state==STATE_IDLE) {
 //        float offset = 0.5*(ofGetWidth()-player.getWidth());
 //        player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
@@ -340,6 +363,7 @@ void kaiserNav::draw() {
         player.draw(ofRectangle(0,0,player.getWidth(),player.getHeight()));
         ofPopMatrix();
     }
+#endif
     
     interfaceLayout.draw();
     
@@ -372,6 +396,11 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             ofVec2f p(touch.x,touch.y);
             
             //    cout << p.x << "\t" << p.y << endl;
+            
+            if (bCaptionActive && !caption.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
+                bCaptionActive =false;
+            }
+            
             for (vector<pair<ofxSymbolInstance *,pair<ofxSymbolInstance,ofxSymbolInstance> > >::iterator iter=markers.begin();iter!=markers.end();iter++) {
                 
                 if (!iter->second.first.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
@@ -402,9 +431,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
                 }
             }
             
-            if (!caption.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
-                bCaptionActive =false;
-            }
+            
 
         } break;
         default:

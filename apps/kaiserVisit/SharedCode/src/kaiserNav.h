@@ -17,7 +17,10 @@
 
 #include "ofxFlash.h"
 #include "ofxFloatingCaption.h"
+
+#ifdef TARGET_OF_IPHONE
 #include "ofxiVideoPlayer.h"
+#endif
 
 struct panZoom {
     string name;
@@ -68,9 +71,12 @@ public:
     
     int state;
     int timer;
-    
+ 
+#ifdef TARGET_OF_IPHONE
     ofxiVideoPlayer player;
+#endif
     ofMatrix4x4 videoMat;
+
     
     vector<panZoom> settings;
         

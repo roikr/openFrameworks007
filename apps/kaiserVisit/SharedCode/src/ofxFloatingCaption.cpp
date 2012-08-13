@@ -8,12 +8,17 @@
 
 #include "ofxFloatingCaption.h"
 
-void ofxFloatingCaption::setup(ofRectangle screenRect,ofRectangle captionRect,float radius) {
+void ofxFloatingCaption::setup(ofRectangle screenRect,ofRectangle captionRect,float radius,ofVec2f anchor) {
     this->screenRect = screenRect;
     this->captionRect = captionRect;
     this->radius = radius;
     
-    dir = ofVec2f(0,-1);
+   
+    
+    this->anchor = anchor;
+    dir = (screenRect.getCenter()-anchor).normalized(); // this vector point from anchor to center
+        
+//     dir = ofVec2f(0,-1);
     
 }
 

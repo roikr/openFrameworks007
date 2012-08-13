@@ -155,11 +155,11 @@ public:
 class ofxSymbolInstance {
 public:
     ofxSymbolInstance():bVisible(true) {};
-    void drawLayer(layer *ly);
-    void draw();
+    void drawLayer(layer *ly,float alpha=1.0);
+    void draw(float alpha=1.0);
     vector<ofxSymbolInstance> hitTest(ofVec2f pos);
     vector<ofxSymbolInstance> hitLayer(layer *lyr,ofVec2f pos);
-    void update();
+//    void update();
     
     ofRectangle getBoundingBox();
     
@@ -180,7 +180,6 @@ public:
     ofMatrix4x4 mat;
     vector<ofVec2f> transformationPoint;
     float alphaMultiplier;
-    float alpha;
     
     ofxSymbolItem *symbolItem;
     ofxBitmapItem *bitmapItem;
