@@ -52,10 +52,12 @@ void ofxDragScale::debugDraw() {
     begin();
     ofRect(rect);   
     end();
+    
+    ofPopStyle();
 }
 
 void ofxDragScale::draw() {
-    
+    ofPushStyle();
     
 //    for (int i = 0; i < MAX_TOUCHES; i++){
 //		if (touching[i]) glColor4f(0, 1, 0, 1);

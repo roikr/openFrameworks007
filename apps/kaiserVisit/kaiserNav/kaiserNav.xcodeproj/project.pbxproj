@@ -36,8 +36,8 @@
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 		E4D9893E15C14E9E00465293 /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
-		E4DB625315DA14E300419506 /* ofxDragScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DB625115DA14E300419506 /* ofxDragScale.cpp */; };
 		E4DB625815DA151900419506 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DB625615DA151900419506 /* ofxPenner.cpp */; };
+		E4F8555115DA53BD00C98739 /* ofxDragScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4F8554315DA53BD00C98739 /* ofxDragScale.cpp */; };
 		E4FB3AB015C689B40002E5C3 /* ofxiExternalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */; };
 		E4FB3AB115C689B40002E5C3 /* ExternalGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */; };
 /* End PBXBuildFile section */
@@ -107,10 +107,10 @@
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
 		E4D9893C15C14DFF00465293 /* kaiserNav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = kaiserNav.h; path = ../../SharedCode/src/kaiserNav.h; sourceTree = "<group>"; };
 		E4D9893D15C14E9E00465293 /* kaiserNav.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = kaiserNav.mm; path = ../../SharedCode/src/kaiserNav.mm; sourceTree = "<group>"; };
-		E4DB625115DA14E300419506 /* ofxDragScale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDragScale.cpp; sourceTree = "<group>"; };
-		E4DB625215DA14E300419506 /* ofxDragScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDragScale.h; sourceTree = "<group>"; };
 		E4DB625615DA151900419506 /* ofxPenner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPenner.cpp; sourceTree = "<group>"; };
 		E4DB625715DA151900419506 /* ofxPenner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPenner.h; sourceTree = "<group>"; };
+		E4F8554315DA53BD00C98739 /* ofxDragScale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDragScale.cpp; sourceTree = "<group>"; };
+		E4F8554415DA53BD00C98739 /* ofxDragScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDragScale.h; sourceTree = "<group>"; };
 		E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiExternalView.mm; sourceTree = "<group>"; };
 		E4FB3AAD15C689B40002E5C3 /* ofxiExternalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiExternalView.h; sourceTree = "<group>"; };
 		E4FB3AAE15C689B40002E5C3 /* ExternalGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalGLView.h; sourceTree = "<group>"; };
@@ -193,6 +193,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4F8552F15DA53BD00C98739 /* ofxDragScale */,
 				E4DB625415DA151900419506 /* ofxPenner */,
 				E49BC29715D180EC0030291D /* ofxiVideoPlayer */,
 				E4D7573515D16C61007DAD05 /* ofxiTexture */,
@@ -340,8 +341,6 @@
 		E4A2753D15A389EF009F7B62 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4DB625115DA14E300419506 /* ofxDragScale.cpp */,
-				E4DB625215DA14E300419506 /* ofxDragScale.h */,
 				E4C0054C15C9730200210411 /* ofxBigImage.cpp */,
 				E4C0054D15C9730200210411 /* ofxBigImage.h */,
 				E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */,
@@ -398,6 +397,24 @@
 			children = (
 				E4DB625615DA151900419506 /* ofxPenner.cpp */,
 				E4DB625715DA151900419506 /* ofxPenner.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4F8552F15DA53BD00C98739 /* ofxDragScale */ = {
+			isa = PBXGroup;
+			children = (
+				E4F8554215DA53BD00C98739 /* src */,
+			);
+			name = ofxDragScale;
+			path = "../../../My Addons/ofxDragScale";
+			sourceTree = "<group>";
+		};
+		E4F8554215DA53BD00C98739 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4F8554315DA53BD00C98739 /* ofxDragScale.cpp */,
+				E4F8554415DA53BD00C98739 /* ofxDragScale.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -516,8 +533,8 @@
 				E4D7573915D16C61007DAD05 /* ofxiTexture.mm in Sources */,
 				E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */,
 				E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */,
-				E4DB625315DA14E300419506 /* ofxDragScale.cpp in Sources */,
 				E4DB625815DA151900419506 /* ofxPenner.cpp in Sources */,
+				E4F8555115DA53BD00C98739 /* ofxDragScale.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

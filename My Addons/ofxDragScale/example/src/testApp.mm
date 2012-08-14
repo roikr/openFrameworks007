@@ -37,14 +37,14 @@ void testApp::update(){
 void testApp::draw(){	
     ofSetHexColor(0xFFFFFF);
     
-    drag.draw();
     
     
     drag.begin();
     image.draw(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
     drag.end();
 	
-    
+    drag.debugDraw();
+    drag.draw();
     
 	
 }
