@@ -29,14 +29,17 @@ void kaiserNav::updateOverlays() {
     
     ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
     string titleName = imageName+"_C_"+lang;
+    string subTitleName = imageName+"_SC_"+lang;
     
     for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
         for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
             if (iter->type==SYMBOL_INSTANCE) {
-                iter->bVisible = iter->name == titleName;
+                iter->bVisible = iter->name == titleName || (bSubTitle && iter->name == subTitleName);
             }
         }
     }
+    
+    
     
 //    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
         
@@ -127,6 +130,8 @@ void kaiserNav::setup(){
     interfaceLayout = doc.getSymbolItem("Layout")->createInstance("layout");
     interfaceLayout.getChildMat(interfaceLayout.getChild("idle")->getChild("video"), videoMat);    
    
+    screenOverlay = doc.getSymbolItem("SCREEN_OVERLY")->createInstance("screen");
+    
 	lang = "HE";
     setImage("I1");	
     
@@ -136,6 +141,8 @@ void kaiserNav::setup(){
 
     setState(STATE_IDLE);
     timer = ofGetElapsedTimeMillis();
+    
+    ofBackground(0);
     
         
 }
@@ -215,7 +222,7 @@ void kaiserNav::setImage(string name) {
     
     	
     bCaptionActive = false;
-    
+    bSubTitle = false;
    
 }
 
@@ -231,7 +238,7 @@ void kaiserNav::setState(int state) {
     
     switch (this->state) {
         case STATE_IDLE:
-            
+            bCaptionActive = false;
             interfaceLayout.getChild("idle")->bVisible = true;
             break;
             
@@ -273,45 +280,45 @@ void kaiserNav::update() {
 
 void kaiserNav::draw2nd() {
     ofPushMatrix();
- 	cam.begin(); //put all our drawing under the ofxPanZoom effect
-    ofPushMatrix();
     
-    ofVec2f imagePos(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
-    ofTranslate(imagePos);
-    image.draw();
-    
-    imageLayout.draw();
-    
-    ofPopMatrix();
-
-    int s = 25;
-    glColor4f(1, 0, 0, 1);
-    float limitX = imagePos.x;
-    float limitY = imagePos.y;
-    ofRect(-limitX , -limitY , 2 * limitX, s);
-    ofRect(limitX - s , -limitY , s, 2 * limitY);
-    ofRect(-limitX , limitY - s , s, -2 * limitY);	
-    ofRect(limitX , limitY - s, -2 * limitX, s);		
-    glColor4f(1, 1, 1, 1);
-	
-	cam.end();	//back to normal ofSetupScreen() projection
-    
-    if (state==STATE_NAVIGATION && bCaptionActive) {
-        screenMarker.draw();
+    switch (state) {
+        case STATE_NAVIGATION:
+        case STATE_TUTORIAL:
+            
+            cam.begin(); //put all our drawing under the ofxPanZoom effect
+            ofTranslate(ofVec2f(-0.5*ofVec2f(image.getWidth(),image.getHeight())));
+            image.draw();
+            cam.end();	//back to normal ofSetupScreen() projection
+            break;
+            
+        case STATE_IDLE:
+#ifdef TARGET_OF_IPHONE
+            ofPushMatrix();
+            glMultMatrixf(videoMat.getPtr());
+            player.draw(ofRectangle(0,0,player.getWidth(),player.getHeight()));
+            ofPopMatrix();
+#endif           
+            break;
+        default:
+            break;
     }
-	
+    
+    
+    
+
+    
+    ofEnableAlphaBlending();
+    screenOverlay.draw();
+    
     if (bCaptionActive) {
+        screenMarker.draw();
         floating.draw();
         caption.draw();
+        
     }
-    ofPopMatrix();
     
-#ifdef TARGET_OF_IPHONE
-    if (state==STATE_IDLE) {
-        float offset = 0.5*(ofGetWidth()-player.getWidth());
-        player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
-    }
-#endif
+    
+    ofPopMatrix();
     
 }
 
@@ -337,16 +344,16 @@ void kaiserNav::draw() {
     
     ofPopMatrix();
     
-    //draw space constrains	
-	float limitX = imagePos.x;
-    float limitY = imagePos.y;
-    int s = 25;
-    glColor4f(1, 0, 0, 1);
-    ofRect(-limitX , -limitY , 2 * limitX, s);
-    ofRect(limitX - s , -limitY , s, 2 * limitY);
-    ofRect(-limitX , limitY - s , s, -2 * limitY);	
-    ofRect(limitX , limitY - s, -2 * limitX, s);		
-    glColor4f(1, 1, 1, 1);
+//    //draw space constrains	
+//	float limitX = imagePos.x;
+//    float limitY = imagePos.y;
+//    int s = 25;
+//    glColor4f(1, 0, 0, 1);
+//    ofRect(-limitX , -limitY , 2 * limitX, s);
+//    ofRect(limitX - s , -limitY , s, 2 * limitY);
+//    ofRect(-limitX , limitY - s , s, -2 * limitY);	
+//    ofRect(limitX , limitY - s, -2 * limitX, s);		
+//    glColor4f(1, 1, 1, 1);
 	
 	cam.end();	//back to normal ofSetupScreen() projection
 	
@@ -439,6 +446,18 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
                     }
                 }
             }
+            
+            
+            hits = interfaceLayout.getChild("titles")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)));
+            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if (iter->type==SYMBOL_INSTANCE) {
+                    if (iter->name == imageName+"_C_"+lang) {
+                        bSubTitle = !bSubTitle;
+                    }
+                    
+                }
+            }
+
             
             
 

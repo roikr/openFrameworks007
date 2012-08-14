@@ -66,10 +66,12 @@ public:
     
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
     ofxSymbolInstance screenMarker;
+    ofxSymbolInstance screenOverlay;
     
     string lang;
     string imageName;
     string captionName;
+    bool bSubTitle;
     
     int state;
     int timer;
