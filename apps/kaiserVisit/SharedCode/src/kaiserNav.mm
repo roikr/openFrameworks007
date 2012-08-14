@@ -83,7 +83,7 @@ void kaiserNav::updateOverlays() {
 
 void kaiserNav::setCaption(string name) {
     bCaptionActive = true;
-    
+    bSubTitle = false;
     captionName = name;
     
     screenMarker = doc.getSymbolItem("MARKER_SCREEN")->createInstance(name);
@@ -133,7 +133,7 @@ void kaiserNav::setup(){
     screenOverlay = doc.getSymbolItem("SCREEN_OVERLY")->createInstance("screen");
     
 	lang = "HE";
-    setImage("I1");	
+    setImage("I2");	
     
     
 	
@@ -428,19 +428,19 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
 //            ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
 //            titles->bVisible = false;
             
-            vector<ofxSymbolInstance> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
-            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if (iter->type==SYMBOL_INSTANCE) {
-                    cout << iter->name << endl;
-                    setImage(iter->name);
+            vector<ofxSymbolInstance*> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
+            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if ((*iter)->type==SYMBOL_INSTANCE) {
+                    cout << (*iter)->name << endl;
+                    setImage((*iter)->name);
                 }
             }
             
             hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("language"),ofVec2f(touch.x,touch.y));
-            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if (iter->type==SYMBOL_INSTANCE) {
-                    cout << iter->name << endl;
-                    lang = iter->name;
+            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if ((*iter)->type==SYMBOL_INSTANCE) {
+                    cout << (*iter)->name << endl;
+                    lang = (*iter)->name;
                     if (bCaptionActive) {
                         setCaption(captionName);
                     }
@@ -449,12 +449,21 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             
             
             hits = interfaceLayout.getChild("titles")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)));
-            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if (iter->type==SYMBOL_INSTANCE) {
-                    if (iter->name == imageName+"_C_"+lang) {
-                        bSubTitle = !bSubTitle;
+            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name == imageName+"_C_"+lang) {
+                    
+                    bSubTitle = !bSubTitle;
+                    
+                    ofxSymbolInstance *sym = (*iter)->getChild("open");
+                    if (sym) {
+                        sym->bVisible = !bSubTitle;
                     }
                     
+                    sym = (*iter)->getChild("close");
+                    if (sym) {
+                        sym->bVisible = bSubTitle;
+                    }
+
                 }
             }
 

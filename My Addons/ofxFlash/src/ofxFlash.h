@@ -157,8 +157,8 @@ public:
     ofxSymbolInstance():bVisible(true) {};
     void drawLayer(layer *ly,float alpha=1.0);
     void draw(float alpha=1.0);
-    vector<ofxSymbolInstance> hitTest(ofVec2f pos);
-    vector<ofxSymbolInstance> hitLayer(layer *lyr,ofVec2f pos);
+    vector<ofxSymbolInstance*> hitTest(ofVec2f pos);
+    vector<ofxSymbolInstance*> hitLayer(layer *lyr,ofVec2f pos);
 //    void update();
     
     ofRectangle getBoundingBox();

@@ -69,9 +69,9 @@ void ofxDragScale::draw() {
 	char msg[1000];
     float scale = mat.getScale().x/screenMat.getScale().x;
     ofVec2f offset((mat.getTranslation()-screenMat.preMult(ofVec3f(window.getCenter())))/screenMat.getScale().x);
-	sprintf(msg, " zoom: %.1f \n offset: %.1f, %.1f \n ", scale, offset.x, offset.y);
-	glColor4f(0, 0, 0, 1);
-	ofDrawBitmapString(msg, 3.0f, 25.0f);
+	sprintf(msg, " zoom: %.2f \n offset: %.1f, %.1f \n ", scale, offset.x, offset.y);
+	glColor4f(1, 0, 0, 1);
+	ofDrawBitmapString(msg, 50.0f, 50.0f);
     
     ofPopStyle();
 };
