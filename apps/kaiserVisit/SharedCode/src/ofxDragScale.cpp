@@ -18,11 +18,14 @@ enum {
     SCALE
 };
 
-void ofxDragScale::setup(ofRectangle window,float width,float height) {
-   
+void ofxDragScale::setup(ofRectangle window,float width,float height,ofMatrix4x4 mat,ofMatrix4x4 screenMat) {
+    this->mat = this->screenMat = screenMat;
     
-    mat.makeIdentityMatrix();
-    mat.translate(window.getCenter());
+    this->mat.preMult(ofMatrix4x4::newTranslationMatrix(window.getCenter()));
+    this->mat.preMult(mat);
+  
+    //this->mat.preMult(mat);
+    imat = this->mat.getInverse();
    
     this->window = window;
     this->rect.setFromCenter(ofVec2f(0,0), width, height);
@@ -33,12 +36,15 @@ void ofxDragScale::setup(ofRectangle window,float width,float height) {
     state = STATE_IDLE;
 };
 
-void ofxDragScale::draw() {
+void ofxDragScale::debugDraw() {
     
     ofPushStyle();
     ofNoFill();
     ofSetHexColor(0xFF0000);
+    ofPushMatrix();
+    glMultMatrixf(screenMat.getPtr());
     ofRect(window);
+    ofPopMatrix();
     
     ofFill();
     ofSetColor(0,0,255,100);
@@ -46,6 +52,9 @@ void ofxDragScale::draw() {
     begin();
     ofRect(rect);   
     end();
+}
+
+void ofxDragScale::draw() {
     
     
 //    for (int i = 0; i < MAX_TOUCHES; i++){
@@ -56,7 +65,9 @@ void ofxDragScale::draw() {
 //	}
 	
 	char msg[1000];
-	sprintf(msg, " zoom: %.1f \n offset: %.1f, %.1f \n ", mat.getScale().x, mat.getTranslation().x-window.getCenter().x, mat.getTranslation().y-window.getCenter().y);
+    float scale = mat.getScale().x/screenMat.getScale().x;
+    ofVec2f offset((mat.getTranslation()-screenMat.preMult(ofVec3f(window.getCenter())))/screenMat.getScale().x);
+	sprintf(msg, " zoom: %.1f \n offset: %.1f, %.1f \n ", scale, offset.x, offset.y);
 	glColor4f(0, 0, 0, 1);
 	ofDrawBitmapString(msg, 3.0f, 25.0f);
     
@@ -72,15 +83,17 @@ void ofxDragScale::end() {
     ofPopMatrix();
 };
 
-//bool ofxDragScale::inside(ofVec2f pos) {
-//    
+bool ofxDragScale::inside(ofVec2f pos) {
+    return window.inside(screenMat.getInverse().preMult(ofVec3f(pos)));
+   
 //    ofMatrix4x4 imat = mat.getInverse();
 //    return rect.inside(imat.preMult(ofVec3f(pos)));
-//}
+}
 
 void ofxDragScale::touchDown(ofTouchEventArgs &touch) {
-    ofVec2f pos(touch.x,touch.y);
-    if (state!=STATE_ANIMATING_SCALE &&  window.inside(pos)) {
+ 
+        
+    if (state!=STATE_ANIMATING_SCALE &&  inside(ofVec2f(touch.x,touch.y))) {
         
 //        cout << (inside(pos) ? "" : "not ") << "inside" << endl;
         
@@ -141,7 +154,7 @@ void ofxDragScale::touchMoved(ofTouchEventArgs &touch) {
                     ofVec2f qp1 = q-p1;
                     ofVec2f qp2 = q-p2;
                     
-                    ofMatrix4x4 imat = mat.getInverse();
+                    
                     ofVec2f anchor = imat.preMult(ofVec3f(0.5*(p1+q)));
                     
                     float scl = qp2.length()/qp1.length();
@@ -206,7 +219,6 @@ void ofxDragScale::update() {
     
     if (state == STATE_ANIMATING_SCALE) {
         penner.update();
-        ofMatrix4x4 imat = mat.getInverse();
         ofVec2f anchor = imat.preMult(ofVec3f(downPos));
         
         if (!transform(anchor, ofVec2f(0,0), penner.getParam(SCALE)/mat.getScale().x) || !penner.getIsEasing(SCALE)) {
@@ -225,10 +237,7 @@ bool ofxDragScale::getIsAnimating() {
 bool ofxDragScale::transform(ofVec2f anchor,ofVec2f trans,float scl) {
     
     ofMatrix4x4 temp(mat);
-    
-    ofMatrix4x4 scale;
-    scale.makeScaleMatrix(scl, scl, 1.0);
-    temp.preMult(scale);  
+    temp.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));  
     
     ofVec2f vec = temp.preMult(ofVec3f(anchor))-mat.preMult(ofVec3f(anchor));
 //    cout << anchor <<"\t" << vec << "\t" << scl << endl;
@@ -242,10 +251,11 @@ bool ofxDragScale::transform(ofVec2f anchor,ofVec2f trans,float scl) {
 //        
 //    if (temp.getScale().x >= minZoom && temp.getScale().x <= maxZoom && tl.x<window.x && tl.y<window.y && br.x>window.x+window.width && br.y>window.y+window.height) {
     
-    ofMatrix4x4 imat = temp.getInverse();
-    
-    if (temp.getScale().x >= minZoom && temp.getScale().x <= maxZoom && rect.inside(imat.preMult(ofVec3f(window.getCenter())))) {
+    ofMatrix4x4 itemp = temp.getInverse();
+       
+    if (temp.getScale().x >= minZoom && temp.getScale().x <= maxZoom && rect.inside(itemp.preMult(screenMat.preMult(ofVec3f(window.getCenter()))))) {
         mat = temp;
+        imat = itemp;
         return true;
     }
     
@@ -259,4 +269,13 @@ void ofxDragScale::animateScale(ofVec2f pos,float scale) {
     downPos = pos;
     
 }
+
+ofVec3f ofxDragScale::screenToWorld( ofVec3f p ){
+	return imat.preMult(p);
+}
+
+ofVec3f ofxDragScale::worldToScreen(ofVec3f p) {
+    return mat.preMult(p);
+}
+
 

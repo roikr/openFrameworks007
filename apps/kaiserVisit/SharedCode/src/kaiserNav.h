@@ -10,7 +10,7 @@
 
 #include "ofMain.h"
 
-#include "ofxPanZoom.h"
+#include "ofxDragScale.h"
 
 #include "ofxBigImage.h"
 
@@ -22,11 +22,13 @@
 #include "ofxiVideoPlayer.h"
 #endif
 
-struct panZoom {
+struct dragScale {
     string name;
-    float zoom;
     float minZoom;
+    float zoomOut;
     float maxZoom;
+    float zoomIn;
+    float zoom;
     ofVec2f offset;
 };
 
@@ -50,7 +52,7 @@ public:
     void setCaption(string name);
     void setState(int state);
    
-	ofxPanZoom	cam;
+	ofxDragScale cam;
     ofxBigImage image;
     	
     ofxDocument doc;
@@ -62,8 +64,8 @@ public:
     ofxFloatingCaption floating;
     
     
-    vector<pair<ofxSymbolInstance *,pair<ofxSymbolInstance,ofxSymbolInstance> > > markers;
-    
+    vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
+    ofxSymbolInstance screenMarker;
     
     string lang;
     string imageName;
@@ -78,6 +80,6 @@ public:
     ofMatrix4x4 videoMat;
 
     
-    vector<panZoom> settings;
+    vector<dragScale> settings;
         
 };

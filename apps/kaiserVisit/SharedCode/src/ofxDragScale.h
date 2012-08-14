@@ -13,10 +13,12 @@
 
 class ofxDragScale {
 public:
-    void setup(ofRectangle window,float width,float height);
+    void setup(ofRectangle window,float width,float height,ofMatrix4x4 mat=ofMatrix4x4(),ofMatrix4x4 screenMat=ofMatrix4x4());
     void draw();
     void begin();
     void end();
+    
+    void debugDraw();
     
     
     void touchDown(ofTouchEventArgs &touch);
@@ -29,12 +31,16 @@ public:
     
     void setMinZoom(float min){ minZoom = min;}
 	void setMaxZoom(float max){ maxZoom = max;}
-	void setTransform(ofMatrix4x4 mat) {this->mat = mat;}
+	
     
     void update(); // update loop for animation
     bool getIsAnimating();
     
     void animateScale(ofVec2f pos,float scale);
+    
+    ofVec3f screenToWorld(ofVec3f p);
+    ofVec3f worldToScreen(ofVec3f p);
+    float getScale() {return mat.getScale().x/screenMat.getScale().x;}
 	
 private:
 	
@@ -43,6 +49,9 @@ private:
     vector<ofTouchEventArgs> touches;
     
     ofMatrix4x4 mat;
+    ofMatrix4x4 imat;
+    
+    ofMatrix4x4 screenMat;
     
     
     ofRectangle rect;

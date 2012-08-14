@@ -14,7 +14,8 @@
 #define EASE_DURATION 0.5f
 
 enum {
-    EASE_OUT_QUAD,
+    EASE_OUT_BACK,
+    EASE_OUT_QUAD
 };
 
 struct parameter {

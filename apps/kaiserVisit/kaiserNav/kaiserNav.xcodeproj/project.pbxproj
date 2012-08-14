@@ -31,12 +31,13 @@
 		E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
 		E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
 		E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
-		E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */; };
 		E4C0054E15C9730200210411 /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
 		E4D7573915D16C61007DAD05 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D7573815D16C61007DAD05 /* ofxiTexture.mm */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 		E4D9893E15C14E9E00465293 /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
+		E4DB625315DA14E300419506 /* ofxDragScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DB625115DA14E300419506 /* ofxDragScale.cpp */; };
+		E4DB625815DA151900419506 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DB625615DA151900419506 /* ofxPenner.cpp */; };
 		E4FB3AB015C689B40002E5C3 /* ofxiExternalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */; };
 		E4FB3AB115C689B40002E5C3 /* ExternalGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */; };
 /* End PBXBuildFile section */
@@ -97,8 +98,6 @@
 		E49BC2CE15D180EC0030291D /* VideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayer.h; sourceTree = "<group>"; };
 		E49BC2CF15D180EC0030291D /* VideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayer.m; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
-		E4B7D9FF15A3900600DA6DA8 /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
 		E4C0054C15C9730200210411 /* ofxBigImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBigImage.cpp; sourceTree = "<group>"; };
 		E4C0054D15C9730200210411 /* ofxBigImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBigImage.h; sourceTree = "<group>"; };
 		E4D7573715D16C61007DAD05 /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
@@ -108,6 +107,10 @@
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
 		E4D9893C15C14DFF00465293 /* kaiserNav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = kaiserNav.h; path = ../../SharedCode/src/kaiserNav.h; sourceTree = "<group>"; };
 		E4D9893D15C14E9E00465293 /* kaiserNav.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = kaiserNav.mm; path = ../../SharedCode/src/kaiserNav.mm; sourceTree = "<group>"; };
+		E4DB625115DA14E300419506 /* ofxDragScale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDragScale.cpp; sourceTree = "<group>"; };
+		E4DB625215DA14E300419506 /* ofxDragScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDragScale.h; sourceTree = "<group>"; };
+		E4DB625615DA151900419506 /* ofxPenner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPenner.cpp; sourceTree = "<group>"; };
+		E4DB625715DA151900419506 /* ofxPenner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPenner.h; sourceTree = "<group>"; };
 		E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiExternalView.mm; sourceTree = "<group>"; };
 		E4FB3AAD15C689B40002E5C3 /* ofxiExternalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiExternalView.h; sourceTree = "<group>"; };
 		E4FB3AAE15C689B40002E5C3 /* ExternalGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalGLView.h; sourceTree = "<group>"; };
@@ -190,11 +193,11 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4DB625415DA151900419506 /* ofxPenner */,
 				E49BC29715D180EC0030291D /* ofxiVideoPlayer */,
 				E4D7573515D16C61007DAD05 /* ofxiTexture */,
 				E430146D15B59B6B005347AE /* ofxXmlSettings */,
 				E430125815B598F3005347AE /* ofxFlash */,
-				E4B7D98E15A3900500DA6DA8 /* ofxPanZoom */,
 				E4A2753C15A389EF009F7B62 /* SharedCode */,
 			);
 			name = addons;
@@ -337,6 +340,8 @@
 		E4A2753D15A389EF009F7B62 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E4DB625115DA14E300419506 /* ofxDragScale.cpp */,
+				E4DB625215DA14E300419506 /* ofxDragScale.h */,
 				E4C0054C15C9730200210411 /* ofxBigImage.cpp */,
 				E4C0054D15C9730200210411 /* ofxBigImage.h */,
 				E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */,
@@ -345,24 +350,6 @@
 				E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */,
 				E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */,
 				E431347315B6BA9300864C97 /* ofxFloatingCaption.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4B7D98E15A3900500DA6DA8 /* ofxPanZoom */ = {
-			isa = PBXGroup;
-			children = (
-				E4B7D9FD15A3900600DA6DA8 /* src */,
-			);
-			name = ofxPanZoom;
-			path = "../../../My Addons/ofxPanZoom";
-			sourceTree = "<group>";
-		};
-		E4B7D9FD15A3900600DA6DA8 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */,
-				E4B7D9FF15A3900600DA6DA8 /* ofxPanZoom.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -396,6 +383,24 @@
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
+		};
+		E4DB625415DA151900419506 /* ofxPenner */ = {
+			isa = PBXGroup;
+			children = (
+				E4DB625515DA151900419506 /* src */,
+			);
+			name = ofxPenner;
+			path = "../../../My Addons/ofxPenner";
+			sourceTree = "<group>";
+		};
+		E4DB625515DA151900419506 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4DB625615DA151900419506 /* ofxPenner.cpp */,
+				E4DB625715DA151900419506 /* ofxPenner.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -498,7 +503,6 @@
 			files = (
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */,
 				E430146015B598F5005347AE /* ofxFlash.cpp in Sources */,
 				E430147815B59B6B005347AE /* tinyxml.cpp in Sources */,
 				E430147915B59B6B005347AE /* tinyxmlerror.cpp in Sources */,
@@ -512,6 +516,8 @@
 				E4D7573915D16C61007DAD05 /* ofxiTexture.mm in Sources */,
 				E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */,
 				E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */,
+				E4DB625315DA14E300419506 /* ofxDragScale.cpp in Sources */,
+				E4DB625815DA151900419506 /* ofxPenner.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

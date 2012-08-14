@@ -65,9 +65,11 @@ void ofxPenner::update() {
             float delta = t-p.time;
             if (delta<p.duration) {
                 switch (p.ease_function) {
-                    case EASE_OUT_QUAD:
+                    case EASE_OUT_BACK:
                         p.v = easeOutBack(delta, p.b, p.c, p.duration);
                         break;
+                    case EASE_OUT_QUAD:
+                        p.v = easeOutQuad(delta, p.b, p.c, p.duration);
                         
                     default:
                         break;

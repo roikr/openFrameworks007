@@ -6,17 +6,22 @@ void testApp::setup(){
 	ofRegisterTouchEvents(this);
     ofEnableAlphaBlending();
 
-	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
 	
 	image.loadImage("images/bikers.jpg");
         
-    ofRectangle window(50,50,ofGetWidth()-100,ofGetHeight()-100);
+    ofRectangle window(50,50,1024-100,768-100);
+    
+    ofMatrix4x4 mat;
+    float scale = (float)ofGetHeight()/768;
+    mat.scale(scale, scale, 1.0);
+    mat.translate(0.5*(ofGetWidth()-scale*1024), 0, 0);
     
        
     
 //    drag.setup(ofRectangle(200,200,bikers.getWidth(),bikers.getHeight()),ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
     
-    drag.setup(window,image.getWidth(),image.getHeight());
+    drag.setup(window,image.getWidth(),image.getHeight(),ofMatrix4x4::newScaleMatrix(0.5, 0.5, 1.0),mat);
     
     drag.setMaxZoom(10);
 	
