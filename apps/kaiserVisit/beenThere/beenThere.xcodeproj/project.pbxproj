@@ -38,7 +38,6 @@
 		E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
-		E4DF99D8159A08CE003F8AB3 /* ofxDraggable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DF99D6159A08CD003F8AB3 /* ofxDraggable.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,8 +122,6 @@
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
-		E4DF99D6159A08CD003F8AB3 /* ofxDraggable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDraggable.cpp; sourceTree = "<group>"; };
-		E4DF99D7159A08CD003F8AB3 /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,8 +252,6 @@
 		E40A07AF1589DED10033811A /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4DF99D6159A08CD003F8AB3 /* ofxDraggable.cpp */,
-				E4DF99D7159A08CD003F8AB3 /* ofxDraggable.h */,
 				E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */,
 				E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */,
 			);
@@ -566,7 +561,6 @@
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
 				E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */,
-				E4DF99D8159A08CE003F8AB3 /* ofxDraggable.cpp in Sources */,
 				E44BC7D415B2D6B900CD7BBD /* ofxFlash.cpp in Sources */,
 				E44BC7E015B2D70400CD7BBD /* ofxiTexture.mm in Sources */,
 				E44BC7EC15B2D84F00CD7BBD /* tinyxml.cpp in Sources */,
