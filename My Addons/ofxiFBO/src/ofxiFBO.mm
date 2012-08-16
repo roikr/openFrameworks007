@@ -49,11 +49,12 @@ void ofxiFBO::begin(GLuint texture) {
 		}
 	}
 	
+
 	glViewport(0, 0, width, height);
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity ();
-	gluOrtho2D (0, width, 0, height);
+	gluOrtho2D (0, width, height , 0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	

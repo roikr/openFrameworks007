@@ -75,7 +75,7 @@ void ofxStroke::addPatch(vector<ofVec2f> ctrl) {
 void ofxStroke::draw() {
     ofPushStyle();
     ofSetColor(color);
-    ofNoFill();
+//    ofNoFill();
     
     for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
         ofCircle(*iter, thickness/2);

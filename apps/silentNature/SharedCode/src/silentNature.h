@@ -10,6 +10,8 @@
 
 #include "ofMain.h"
 #include "ofxFlash.h"
+#include "ofxiFBO.h"
+#include "ofxStroke.h"
 
 enum {
     BRUSH_TOOL,
@@ -18,12 +20,12 @@ enum {
     ERASER_TOOL
 };
 
-struct stroke {
-    stroke(int tool,ofMatrix4x4 mat, int color):tool(tool),mat(mat),color(color) {};
-    int tool;
-    int color;
-    ofMatrix4x4 mat;
-};
+//struct stroke {
+//    stroke(int tool,ofMatrix4x4 mat, int color):tool(tool),mat(mat),color(color) {};
+//    int tool;
+//    int color;
+//    ofMatrix4x4 mat;
+//};
 
 class silentNature {
 public:   
@@ -39,8 +41,7 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
     void setTool(int tool);
-    void applyTool(ofVec2f pos);
-    void drawTexture(float u,float v);
+    
     
     ofxDocument doc;
     ofxSymbolInstance layout;
@@ -48,6 +49,14 @@ public:
     
      
     int tool;
-    vector<stroke> strokes;
-
+    
+    
+    ofxiFBO fbo;
+    ofTexture canvasTex;
+    ofMatrix4x4 cmat;
+    
+    deque<ofVec2f> touches;
+    ofxStroke stroke;
+    bool bDown;
+   
 };

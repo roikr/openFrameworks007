@@ -28,10 +28,30 @@ void silentNature::setup(){
     mat.scale(scale, scale, 1.0);
     mat.translate(0.5*(ofGetWidth()-scale*1080.0), 0, 0);
     layout = doc.getSymbolItem("Layout")->createInstance("layout",mat);
+    
     setTool(BRUSH_TOOL);
-    layout.update();
+    
     
     canvas = layout.getChild("canvas");
+    
+    layout.getChildMat(canvas, cmat);
+  
+    //cmat.translate(canvas->mat.getTranslation());
+        
+    
+    ofRectangle rect = canvas->getBoundingBox();
+    rect.width = 1024;
+    rect.height = 1024;
+    cout << rect.width << "\t" << rect.height << endl;
+    canvasTex.allocate(rect.width, rect.height, GL_RGBA);
+    //canvasTex.texData.bFlipTexture = true;
+    fbo.setup(rect.width, rect.height);
+    
+    fbo.begin(canvasTex.getTextureData().textureID);
+    glClearColor(0,0,0, 0);
+    glClear( GL_COLOR_BUFFER_BIT);
+    fbo.end();
+    
     
     
     //    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
@@ -39,86 +59,47 @@ void silentNature::setup(){
     //        layout.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
     //    }
     
-    cout << ofGetWidth() << "\t" << ofGetHeight() << endl;
+//    cout << ofGetWidth() << "\t" << ofGetHeight() << endl;
     
    
-    
+    bDown = false;
 }
 
 
-void silentNature::drawTexture(float u,float v) {
-	
-	
-	
-	glPushMatrix();
-	
-	GLfloat spriteTexcoords[] = {
-		u,v,   
-		u,0.0f,
-		0,v,   
-		0.0f,0,};
-	
-	float w = canvas->bitmapItem->getWidth()*u;//ofGetWidth()/2;
-	float h = canvas->bitmapItem->getHeight()*v;//(float)ofGetWidth()/(float)width*(float)height/2;
-	
-	GLfloat spriteVertices[] =  {
-		w,h,0,   
-		w,0,0,   
-		0,h,0, 
-		0,0,0};
-	
-	
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, spriteVertices);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, spriteTexcoords);	
-	
-    canvas->bitmapItem->bind();
-	
-	
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	canvas->bitmapItem->unbind();
-	
-	
-	glPopMatrix();
-	
-	
-	
-}
 
 
 //--------------------------------------------------------------
-void silentNature::draw(){
+void silentNature::update(){
+    
+    
+}
+
+void silentNature::draw(){    
 	ofSetColor(255);
     
-    layout.draw();
     
-    for (vector<stroke>::iterator iter=strokes.begin();iter!=strokes.end();iter++) {
-        ofSetHexColor(iter->color);
-        ofPushMatrix();
-        glMultMatrixf(iter->mat.getPtr());
-        switch (iter->tool) {
+    ofPushMatrix();
+    layout.draw();
+    ofPopMatrix();
+    
+    
+    ofPushMatrix();
+    glMultMatrixf(cmat.getPtr())    ;
+    ofSetColor(255);
+    canvasTex.draw(0, 0);
+    if (bDown) {
+        switch (tool) {
             case BRUSH_TOOL:
-                ofCircle(ofVec2f(0,0), 30);
+                stroke.draw();
                 break;
-            case ERASER_TOOL: 
-                drawTexture(1.0,1.0);
-                break;
-            case CRAYON_TOOL:
-            case CUTOUT_TOOL: {
-                ofRectangle rect;
-                rect.setFromCenter(ofVec2f(0,0),60,60);
-                ofRect(rect);
-            }
-            break;
-            default:
-                break;
+                
         }
-        ofPopMatrix();
     }
+    ofPopMatrix();
+    
+    
+    
+   
     
 }
 
@@ -133,62 +114,101 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
     
     ofVec2f pos = ofVec2f(touch.x,touch.y);
     
-    vector<ofxSymbolInstance> items = layout.hitTest(pos);
+    vector<ofxSymbolInstance*> items = layout.hitTest(pos);
     
-    for (vector<ofxSymbolInstance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+    for (vector<ofxSymbolInstance*>::iterator iter=items.begin(); iter!=items.end(); iter++) {
         
-        if (iter->type == SYMBOL_INSTANCE && iter->bVisible == true) {
+        if ((*iter)->type == SYMBOL_INSTANCE && (*iter)->bVisible == true) {
 //            cout << iter->name << "\t";
-            if (iter->name == "palette") {
+            if ((*iter)->name == "palette") {
                 setTool(BRUSH_TOOL);
                 break;
             }
             
-            if (iter->name == "crayons") {
+            if ((*iter)->name == "crayons") {
                 setTool(CRAYON_TOOL);
                 break;
             }
             
-            if (iter->name == "paper") {
+            if ((*iter)->name == "paper") {
                 setTool(CUTOUT_TOOL);
                 break;
             }
             
-            if (iter->name == "eraser") {
+            if ((*iter)->name == "eraser") {
                 setTool(ERASER_TOOL);
                 break;
             }
             
-            if (iter->name == "canvas") {
-                applyTool(pos);
+            if ((*iter)->name == "canvas") {
+                bDown = true;
+                ofVec2f cpos = cmat.getInverse().preMult(ofVec3f(pos));
+                
+                switch (tool) {
+                    case BRUSH_TOOL:
+                        
+                        stroke.setup(30, ofColor(0));
+                        touches.push_back(cpos);
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
             }
             
-            if (iter->name == "clear") {
-                strokes.clear();
-            }
+            if ((*iter)->name == "clear") {
+                fbo.begin(canvasTex.getTextureData().textureID);
+                glClearColor(0,0,0, 0);
+                glClear( GL_COLOR_BUFFER_BIT);
+                fbo.end();
+                            }
 
             
         }
     }
     
-    layout.update();
     
-    cout << endl;
 }
 
 //--------------------------------------------------------------
 void silentNature::touchMoved(ofTouchEventArgs &touch){
     ofVec2f pos = ofVec2f(touch.x,touch.y);
     
-    vector<ofxSymbolInstance> items = layout.hitTest(pos);
+    vector<ofxSymbolInstance*> items = layout.hitTest(pos);
     
-    for (vector<ofxSymbolInstance>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+    for (vector<ofxSymbolInstance*>::iterator iter=items.begin(); iter!=items.end(); iter++) {
         
-        if (iter->type == SYMBOL_INSTANCE && iter->bVisible == true) {
+        if ((*iter)->type == SYMBOL_INSTANCE && (*iter)->bVisible == true) {
             
                         
-            if (iter->name == "canvas") {
-                applyTool(pos);
+            if ((*iter)->name == "canvas") {
+                ofVec2f cpos = cmat.getInverse().preMult(ofVec3f(pos));
+                
+                switch (tool) {
+                    case BRUSH_TOOL:
+                        touches.push_back(cpos);
+                        if (touches.size()==4) {
+                            stroke.addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
+                            touches.pop_front();
+                        }
+                        
+                        break;
+                    case ERASER_TOOL:
+                        fbo.begin(canvasTex.getTextureData().textureID);
+                        
+                        ofDisableAlphaBlending();
+                        ofSetColor(0 , 0, 0, 0);
+                        
+                        ofEllipse(cpos, ofRandom(50, 70), ofRandom(50, 70));
+                        ofEnableAlphaBlending();
+                        fbo.end();
+                        
+                        break;
+                        
+                    default:
+                        break;
+                }
             }
             
             
@@ -199,6 +219,21 @@ void silentNature::touchMoved(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void silentNature::touchUp(ofTouchEventArgs &touch){
+    if (bDown) {
+        switch (tool) {
+            case BRUSH_TOOL:
+                touches.clear();
+                fbo.begin(canvasTex.getTextureData().textureID);
+                stroke.draw();
+                fbo.end();
+                
+                break;
+                
+            default:
+                break;
+        }
+        bDown = false;
+    }
     
 }
 
@@ -242,6 +277,7 @@ void silentNature::setTool(int tool) {
     
 }
 
+/*
 void silentNature::applyTool(ofVec2f pos) {
     ofMatrix4x4 mat;
     
@@ -271,7 +307,40 @@ void silentNature::applyTool(ofVec2f pos) {
             break;
     }             
     
+    
     mat.translate(pos);
     
-    strokes.push_back(stroke(tool, mat, color));
+    
+    
+    
+    fbo.begin(canvasTex.getTextureData().textureID);
+    
+    ofSetHexColor(color);
+    
+    
+    ofPushMatrix();
+    glMultMatrixf(mat.getPtr());
+    switch (tool) {
+        case BRUSH_TOOL:
+           
+            ofCircle(ofVec2f(0,0), 30);
+            break;
+        case ERASER_TOOL: 
+            //drawTexture(1.0,1.0);
+            break;
+        case CRAYON_TOOL:
+        case CUTOUT_TOOL: {
+            ofRectangle rect;
+            rect.setFromCenter(ofVec2f(0,0),60,60);
+            ofRect(rect);
+        }
+            break;
+        default:
+            break;
+    }
+    ofPopMatrix();
+    
+    fbo.end();
+    
 }
+*/

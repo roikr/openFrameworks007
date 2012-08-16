@@ -22,7 +22,7 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+    nat.update();
 }
 
 //--------------------------------------------------------------
@@ -50,7 +50,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){
-
+    nat.touchUp(touch);
 }
 
 //--------------------------------------------------------------
