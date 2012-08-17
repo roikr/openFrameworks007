@@ -36,6 +36,7 @@
 		E44BC7EE15B2D84F00CD7BBD /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */; };
 		E44BC7EF15B2D84F00CD7BBD /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */; };
 		E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */; };
+		E4A39D9215DE1AE8008ACE7E /* ofxDraggable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -118,6 +119,8 @@
 		E44BC7EA15B2D84F00CD7BBD /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxScrollCollection.h; sourceTree = "<group>"; };
 		E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxScrollCollection.cpp; sourceTree = "<group>"; };
+		E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDraggable.cpp; sourceTree = "<group>"; };
+		E4A39D9115DE1AE8008ACE7E /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -252,6 +255,8 @@
 		E40A07AF1589DED10033811A /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */,
+				E4A39D9115DE1AE8008ACE7E /* ofxDraggable.h */,
 				E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */,
 				E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */,
 			);
@@ -571,6 +576,7 @@
 				E40ED8B115D15E6300556B9C /* ofxOscMessage.cpp in Sources */,
 				E40ED8B215D15E6300556B9C /* ofxOscReceiver.cpp in Sources */,
 				E40ED8B315D15E6300556B9C /* ofxOscSender.cpp in Sources */,
+				E4A39D9215DE1AE8008ACE7E /* ofxDraggable.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

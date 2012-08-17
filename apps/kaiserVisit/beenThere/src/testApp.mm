@@ -277,15 +277,15 @@ void testApp::draw(){
 void testApp::touchDown(ofTouchEventArgs &touch){
     
         
-    vector<ofxSymbolInstance> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
+    vector<ofxSymbolInstance*> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
     switch (state) {
         
         case STATE_IMAGES: {
            
             thumbs.touchDown(touch);
             
-            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if (iter->type==SYMBOL_INSTANCE && iter->name=="pimp") {
+            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="pimp") {
                     state=STATE_OBJECTS;
                     layout.getChild("pimp")->bVisible = false;
                     layout.getChild("share")->bVisible = true;
@@ -311,14 +311,14 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 }
             }
             
-            for (vector<ofxSymbolInstance>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if (iter->type==SYMBOL_INSTANCE && iter->name=="share") {
+            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="share") {
                     state=STATE_SHARE;
                     
                     
                     break;
                 }
-                if (iter->type==SYMBOL_INSTANCE && iter->name=="back") {
+                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="back") {
                     state=STATE_IMAGES;
                     
                     layout.getChild("pimp")->bVisible = true;
