@@ -52,6 +52,34 @@ void testApp::update(){
         bTrigger = false;
         image.setFromPixels(vidGrabber.getPixelsRef());
         
+        
+        
+        UInt8 *data = image.getPixels(); // unsigned char
+        
+        
+        int myDataLength = image.getWidth() * image.getHeight() * 3;
+        
+        for (int i = 0; i < myDataLength; i+=3)
+        {
+            UInt8 r_pixel = data[i];
+            UInt8 g_pixel = data[i+1];
+            UInt8 b_pixel = data[i+2];
+            
+            int outputRed = (r_pixel * .393) + (g_pixel *.769) + (b_pixel * .189);
+            int outputGreen = (r_pixel * .349) + (g_pixel *.686) + (b_pixel * .168);
+            int outputBlue = (r_pixel * .272) + (g_pixel *.534) + (b_pixel * .131);
+            
+            if(outputRed>255)outputRed=255;
+            if(outputGreen>255)outputGreen=255;
+            if(outputBlue>255)outputBlue=255;
+            
+            
+            data[i] = outputRed;
+            data[i+1] = outputGreen;
+            data[i+2] = outputBlue;
+        }
+        
+            
         float width = 1024.0;
         float height = 768.0;
         float scale = min((float)vidGrabber.getWidth()/width,(float)vidGrabber.getHeight()/height);

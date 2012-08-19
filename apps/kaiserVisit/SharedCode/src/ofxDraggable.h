@@ -12,7 +12,7 @@
 
 class ofxDraggable {
   public:
-    void setup(ofRectangle rect);
+    void setup(int width,int height,ofMatrix4x4 mat);
     void draw();
     void begin();
     void end();
@@ -28,9 +28,8 @@ class ofxDraggable {
     
     vector<ofTouchEventArgs> touches;
     
-    ofVec2f trans;
-    float scale;
-    float rotation;
+    
+    ofMatrix4x4 mat;
     
     ofRectangle rect;
     

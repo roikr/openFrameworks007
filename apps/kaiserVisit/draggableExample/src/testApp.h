@@ -19,11 +19,7 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
 	
 	ofImage bikers;
-	ofImage gears;
-	ofImage tdf;
-	ofImage tdfSmall;
-	ofImage transparency;
-	ofImage bikeIcon;	
+	
     
     ofxDraggable drag;
 };

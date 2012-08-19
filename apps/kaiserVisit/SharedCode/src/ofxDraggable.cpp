@@ -8,11 +8,10 @@
 
 #include "ofxDraggable.h"
 
-void ofxDraggable::setup(ofRectangle rect) {
-    trans = ofVec2f(rect.x+rect.width/2,rect.y+rect.height/2);
-    scale = 1;
-    rotation = 0;
-    this->rect = ofRectangle(-rect.width/2,-rect.height/2,rect.width,rect.height);
+void ofxDraggable::setup(int width,int height,ofMatrix4x4 mat) {
+    
+    this->rect.setFromCenter(ofVec2f(0,0), width, height);
+    this->mat = mat;
     
 };
 
@@ -26,10 +25,7 @@ void ofxDraggable::draw() {
 
 void ofxDraggable::begin() {
     ofPushMatrix();
-    ofTranslate(trans);
-    ofScale(scale, scale);
-    ofRotate(rotation);
-    ofTranslate(-rect.width/2, -rect.height/2);
+    glMultMatrixf(mat.getPtr());
 };
 
 void ofxDraggable::end() {
@@ -37,9 +33,8 @@ void ofxDraggable::end() {
 };
 
 bool ofxDraggable::inside(ofTouchEventArgs &touch) {
-    ofVec2f pos = ((ofVec2f(touch.x,touch.y)-trans)/scale).rotated(-rotation);
     
-    return rect.inside(pos);
+    return rect.inside(mat.getInverse().preMult(ofVec3f(touch.x,touch.y)));
 }
 
 void ofxDraggable::touchDown(ofTouchEventArgs &touch) {
@@ -65,9 +60,9 @@ void ofxDraggable::touchMoved(ofTouchEventArgs &touch) {
         } else {
             switch (touches.size()) {
                 case 1:
-                    trans+=ofVec2f(touch.x,touch.y)-ofVec2f(iter->x,iter->y);
-//                    rect.x = trans.x-rect.width/2;
-//                    rect.y = trans.y-rect.height/2;
+                    mat.postMult(ofMatrix4x4::newTranslationMatrix(ofVec2f(touch.x,touch.y)-ofVec2f(iter->x,iter->y)));
+                    
+
                     *iter = touch;
                     break;
                 case 2: {
@@ -78,15 +73,27 @@ void ofxDraggable::touchMoved(ofTouchEventArgs &touch) {
                     ofVec2f q(second.x,second.y);
                     ofVec2f qp1 = q-p1;
                     ofVec2f qp2 = q-p2;
-                    float ds = qp2.length()/qp1.length();
-                    scale *= ds;
-                    float dr = (atan2(qp2.y, qp2.x)-atan2(qp1.y, qp1.x))*180.0f/PI;
-                    rotation += dr;
-                    ofVec2f tq = trans-q;
                     
-                    tq.rotate(dr);
-                    tq.scale(ds*tq.length());
-                    trans = tq + q;
+                                        
+                    ofVec2f trans(0.5*(qp1-qp2));
+                    float scl = qp2.length()/qp1.length();
+                    float rot = (atan2(qp2.y, qp2.x)-atan2(qp1.y, qp1.x))*180.0f/PI;
+                    
+                    ofVec2f anchor = mat.getInverse().preMult(ofVec3f(0.5*(p1+q)));
+                    
+                    ofMatrix4x4 temp(mat);
+                    temp.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));  
+                    temp.preMult(ofMatrix4x4::newRotationMatrix(rot, ofVec3f(0,0,1.0)));
+                    
+                    ofVec2f vec = temp.preMult(ofVec3f(anchor))-mat.preMult(ofVec3f(anchor));
+                    //    cout << anchor <<"\t" << vec << "\t" << scl << endl;
+                    
+                    temp.postMult(ofMatrix4x4::newTranslationMatrix(trans-vec));
+                    mat=temp;
+                    
+                    
+                    
+                    
                     
                 } break;
                 default:

@@ -222,10 +222,12 @@ void testApp::draw(){
             ofEnableAlphaBlending();
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
                 iter->drag.begin();
-                ofPushMatrix();
-                ofScale(iter->scale, iter->scale);
-                objects.getImage(iter->objectNum).draw(0,0);
-                ofPopMatrix();
+                
+                //ofScale(iter->scale, iter->scale);
+                ofImage &image(objects.getImage(iter->objectNum));
+                ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
+                image.draw(0,0);
+                
 //                iter->drag.draw();
                 iter->drag.end();
             }
@@ -252,13 +254,14 @@ void testApp::draw(){
             
             ofEnableAlphaBlending();
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+               
+               
                 iter->drag.begin();
-                ofPushMatrix();
-                ofScale(iter->scale, iter->scale);
-                objects.getImage(iter->objectNum).draw(0,0);
-                ofPopMatrix();
-                //                iter->drag.draw();
+                ofImage &image(objects.getImage(iter->objectNum));
+                ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
+                image.draw(0,0);
                 iter->drag.end();
+               
             }
             ofPopMatrix();
             shareLayout.drawLayer(shareScratch);
@@ -390,7 +393,10 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
                     ofRectangle rect = objects.getRectangle(objectNum);
                     item x;
 //                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-                    x.drag.setup(rect);
+                    ofImage &image = objects.getImage(objectNum);
+                    ofMatrix4x4 mat(ofMatrix4x4::newTranslationMatrix(touch.x,touch.y,0));
+                   
+                    x.drag.setup(image.width,image.height,mat);
                     x.drag.touchDown(lastTouch);
                     x.drag.touchMoved(touch);
                     x.objectNum = objectNum;
@@ -449,54 +455,7 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 
 }
 
-//void testApp::pictureTaken(ofImage &image) {
-//    cout << "pictureTaken: " << image.getWidth() << "\t" << image.getHeight() << endl;
-//    ofDirectory dir;
-//    
-//    dir.allowExt("jpg");
-//    dir.listDir(ofxiPhoneGetDocumentsDirectory());
-//    string filename = ofxiPhoneGetDocumentsDirectory()+"IMAGE_"+ofToString(dir.numFiles())+".jpg";
-//    cout<<filename << endl;
-//    float width = imageRect.width/imageRect.height*image.getHeight();
-//    image.crop((image.width-width)/2, 0, width, image.height);
-//    
-//       
-//    UInt8 *data = image.getPixels(); // unsigned char
-//    
-//    
-//    NSInteger myDataLength = image.getWidth() * image.getHeight() * 3;
-//    
-//    for (int i = 0; i < myDataLength; i+=3)
-//    {
-//        UInt8 r_pixel = data[i];
-//        UInt8 g_pixel = data[i+1];
-//        UInt8 b_pixel = data[i+2];
-//        
-//        int outputRed = (r_pixel * .393) + (g_pixel *.769) + (b_pixel * .189);
-//        int outputGreen = (r_pixel * .349) + (g_pixel *.686) + (b_pixel * .168);
-//        int outputBlue = (r_pixel * .272) + (g_pixel *.534) + (b_pixel * .131);
-//        
-//        if(outputRed>255)outputRed=255;
-//        if(outputGreen>255)outputGreen=255;
-//        if(outputBlue>255)outputBlue=255;
-//        
-//        
-//        data[i] = outputRed;
-//        data[i+1] = outputGreen;
-//        data[i+2] = outputBlue;
-//    }
-//    
-//        
-//    image.saveImage(filename);
-//    thumbs.addItem(filename);
-//    
-//    layout.getChild("snap")->bVisible = false;
-//    layout.getChild("pimp")->bVisible = true;
-//    
-//    
-//    state = STATE_IMAGES;
-//    
-//}
+
 
 void testApp::urlResponse(ofHttpResponse &response) {
     if (response.status == 200) {

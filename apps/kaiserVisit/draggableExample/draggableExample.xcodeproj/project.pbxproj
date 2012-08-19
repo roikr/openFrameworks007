@@ -70,6 +70,8 @@
 		E41D400813B39D2100A75A5D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		E41D400913B39D2100A75A5D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iPhone+OF Lib.xcodeproj"; path = "../../../libs/openFrameworksCompiled/project/iphone/iPhone+OF Lib.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		E4487D9615E0BF2B00C3AA16 /* ofxDragScale.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDragScale.cpp; sourceTree = "<group>"; };
+		E4487D9715E0BF2B00C3AA16 /* ofxDragScale.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxDragScale.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -152,6 +154,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4487D6115E0BF2B00C3AA16 /* ofxDragScale */,
 				E40A07AE1589DED10033811A /* SharedCode */,
 			);
 			name = addons;
@@ -220,6 +223,24 @@
 				E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E4487D6115E0BF2B00C3AA16 /* ofxDragScale */ = {
+			isa = PBXGroup;
+			children = (
+				E4487D9515E0BF2B00C3AA16 /* src */,
+			);
+			name = ofxDragScale;
+			path = "../../../My Addons/ofxDragScale";
+			sourceTree = "<group>";
+		};
+		E4487D9515E0BF2B00C3AA16 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4487D9715E0BF2B00C3AA16 /* ofxDragScale.h */,
+				E4487D9615E0BF2B00C3AA16 /* ofxDragScale.cpp */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		E4D8936A11527B74007E1F53 /* src */ = {
