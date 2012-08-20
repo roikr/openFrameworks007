@@ -91,14 +91,30 @@ void testApp::setup(){
 //    }
     
 //    dir.reset();
-    ofDirectory dir;
-    dir.allowExt("png");
-    dir.listDir("objects");
-    for (int i=0; i<dir.numFiles(); i++) {
-        ofImage img;
-        img.loadImage(dir.getPath(i));
-        objects.addItem(img);
+    xml.clear();
+    if (xml.loadFile("objects.xml")) {
+        
+        xml.pushTag("objects");
+        for (int i=0;i<xml.getNumTags("object");i++) {
+            ofImage img;
+            img.loadImage(xml.getAttribute("object", "name", "",i));
+            scales.insert(scales.begin(),xml.getAttribute("object", "scale", 0.5,i) ); // 
+            objects.addItem(img);
+
+        }
+                
+        
+        xml.popTag();
     }
+    
+//    ofDirectory dir;
+//    dir.allowExt("png");
+//    dir.listDir("objects");
+//    for (int i=0; i<dir.numFiles(); i++) {
+//        ofImage img;
+//        img.loadImage(dir.getPath(i));
+//        objects.addItem(img);
+//    }
     
     
     shareLayout = doc.getSymbolItem("ShareLayout")->createInstance("shareLayout", mat);
@@ -473,7 +489,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 //                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
                     ofImage &image = objects.getImage(objectNum);
                     ofMatrix4x4 mat(ofMatrix4x4::newTranslationMatrix(camTouch.x,camTouch.y,0));
-                   
+                    mat.preMultScale(ofVec3f(scales[objectNum],scales[objectNum],1.0));
                     x.drag.setup(image.width,image.height,mat);
                     x.drag.touchDown(lastTouch);
                     x.drag.touchMoved(camTouch);

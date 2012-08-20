@@ -16,6 +16,7 @@ struct item {
     float scale;
 };
 
+
 class testApp : public ofxiPhoneApp{
 	
 public:
@@ -39,10 +40,12 @@ public:
     ofxScrollCollection thumbs;
     ofxScrollCollection objects;
     ofImage image;
+    vector<float> scales;
     
     int state;
     
     vector<item> items;
+    
    
     ofTouchEventArgs lastTouch;
     bool bTouchObject;
