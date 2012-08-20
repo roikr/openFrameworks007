@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include <map>
 
 #ifdef TARGET_OPENGLES
 #include "ofxiTexture.h"

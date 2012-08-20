@@ -1,6 +1,9 @@
 #include "testApp.h"
 #include "ofxXmlSettings.h"
 
+#import <OpenGLES/ES1/gl.h>
+#import <OpenGLES/ES1/glext.h>
+
 #define MENU_INSET 20.0
 #define MENU_SEPERATOR 20.0
 #define EXTENNSION "jpg"
@@ -110,7 +113,12 @@ void testApp::setup(){
     bTouchObject = false;
     state = STATE_IMAGES;
   
-    
+    tex.allocate(800, 600, GL_RGBA);
+    fbo.setup(tex.getWidth(), tex.getHeight());
+    shareImage.allocate(800, 600, OF_IMAGE_COLOR_ALPHA);
+    bShare = false;
+    mail.setup();
+    ofxRegisterMailNotification(this);
 }
 
 //--------------------------------------------------------------
@@ -165,7 +173,11 @@ void testApp::update(){
     objects.update();
    
     
-    
+    if (bShare) {
+        share();
+        state=STATE_SHARE;
+        bShare = false;
+    }
   
 }
 
@@ -192,33 +204,20 @@ void testApp::draw(){
                 glMultMatrixf(camMat.getPtr());
                 image.draw(imageRect);
                 ofPopMatrix();
-//                ofImage &image = thumbs.getImage(thumbs.getSelectedNum());
-//                float inset = 20; 
-//                float dw = ofGetWidth() - 100 - 2*inset;
-//                float dh = ofGetHeight() - 2 * inset;
-//                float sw = dw/image.getWidth();
-//                float sh = dh/image.getHeight();
-//                float scale = MIN(sh,sw);
-//                float w = scale*image.getWidth();
-//                float h = scale*image.getHeight();
-//                rect = ofRectangle(inset+(dw-w)/2, inset+(dh-h)/2,w, h);
-//                image.draw(rect);
                 
             }
-            ofEnableAlphaBlending();
-            layout.drawLayer(scratch);
-            ofDisableAlphaBlending();
             break;
         case STATE_OBJECTS:
             layout.drawLayer(background);
+            ofPushMatrix();
+            glMultMatrixf(camMat.getPtr());
             if (thumbs.getIsSelected()) {
-                ofPushMatrix();
-                glMultMatrixf(camMat.getPtr());
+               
                 image.draw(imageRect);
-                ofPopMatrix();
+                
             }
             
-            objects.draw();
+            
             ofEnableAlphaBlending();
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
                 iter->drag.begin();
@@ -231,38 +230,28 @@ void testApp::draw(){
 //                iter->drag.draw();
                 iter->drag.end();
             }
-            layout.drawLayer(scratch);
+//            layout.drawLayer(scratch);
             ofDisableAlphaBlending();
+            ofPopMatrix();
+            
+            objects.draw();
 
             break;
             
         
         case STATE_SHARE:
            
-            
+            ofEnableAlphaBlending();
+
             shareLayout.drawLayer(shareBackground);
             
             ofPushMatrix();
             glMultMatrixf(shareMat.getPtr());
             
-            if (thumbs.getIsSelected()) {
-                
-                image.draw(imageRect);
-               
+            if( shareImage.bAllocated()) {
+                shareImage.draw(0, 0);
             }
             
-            
-            ofEnableAlphaBlending();
-            for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-               
-               
-                iter->drag.begin();
-                ofImage &image(objects.getImage(iter->objectNum));
-                ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
-                image.draw(0,0);
-                iter->drag.end();
-               
-            }
             ofPopMatrix();
             shareLayout.drawLayer(shareScratch);
             ofDisableAlphaBlending();
@@ -276,6 +265,66 @@ void testApp::draw(){
     
 }
 
+void testApp::share() {
+    
+    GLint defaultFramebuffer;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING_OES, &defaultFramebuffer);
+    
+    fbo.begin(tex.getTextureData().textureID);
+    
+    ofSetColor(255);
+    ofEnableAlphaBlending();
+    
+    if (thumbs.getIsSelected()) {
+        
+        image.draw(imageRect);
+        
+    }
+    
+    
+    for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+        
+        
+        iter->drag.begin();
+        ofImage &image(objects.getImage(iter->objectNum));
+        ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
+        image.draw(0,0);
+        iter->drag.end();
+        
+    }
+    
+    ofDisableAlphaBlending();
+    
+    glReadPixels(0, 0, shareImage.getWidth(), shareImage.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, shareImage.getPixels());
+    
+    fbo.end();
+    
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFramebuffer);
+    
+    shareImage.update();
+
+}
+
+void testApp::sendMail() {
+    if (mail.getCanSendMail()) {
+        mailStruct m;
+        m.subject = "test";
+        m.body = "now with attachment";
+        m.toRecipients.push_back("roikr75@gmail.com");
+        ofBuffer buffer;
+        ofSaveImage(shareImage.getPixelsRef(), buffer,OF_IMAGE_FORMAT_PNG);
+       
+//        ofBuffer buffer =ofBufferFromFile(ofxiPhoneGetDocumentsDirectory()+"kaiser.jpg");
+        cout << "sendMail: " << shareImage.getPixelsRef().size() << "\t" <<  buffer.size() << endl;
+        m.attachments.push_back(attachmentStruct(buffer,"image/png","kaiser"));
+        mail.sendMail(m);
+    }
+}
+
+
+void testApp::exit() {
+    mail.exit();
+}
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
     
@@ -301,22 +350,30 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         case STATE_OBJECTS: {
             
             objects.touchDown(touch);
-            if (objects.getIsInside(ofVec2f(touch.x,touch.y)) && objects.getIsDown()) {
-                lastTouch = touch;
+            
+            ofVec2f pos = camMat.getInverse().preMult(ofVec3f(touch.x,touch.y));
+            ofTouchEventArgs camTouch(touch);
+            camTouch.x = pos.x;
+            camTouch.y = pos.y;
+            
+            
+            if (objects.getIsInside(ofVec2f(camTouch.x,camTouch.y)) && objects.getIsDown()) {
+                lastTouch = camTouch;
                 objectNum = objects.getDownNum(); // getDownNum valid only at down stage
                 bTouchObject = true;
             }
                         
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-                if (iter->drag.inside(touch)) {
-                    iter->drag.touchDown(touch);
+                if (iter->drag.inside(camTouch)) {
+                    iter->drag.touchDown(camTouch);
                     break;
                 }
             }
             
             for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
                 if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="share") {
-                    state=STATE_SHARE;
+                    bShare = true;
+                    
                     
                     
                     break;
@@ -336,34 +393,35 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         }   break;
             
         case STATE_SHARE: {
-            state = STATE_IMAGES;
-            
-            layout.getChild("pimp")->bVisible = true;
-            layout.getChild("share")->bVisible = false;
-            layout.getChild("back")->bVisible = false;
-            
-            items.clear();
-            thumbs.clear();
-            
-            
-            
-            ofxOscMessage m;
-            
-            
-            if (!images.empty()) {
-                m.setAddress("/delete");
-                m.addStringArg(images[0]);
-                sender.sendMessage(m);
-                images.clear();
-                m.clear();
-                image.clear();
-            }
-            
-            m.setAddress("/list");
-            m.addIntArg(port);
-            sender.sendMessage(m);
-            
-            cout << "list: " << url << endl;
+            sendMail();
+//            state = STATE_IMAGES;
+//            
+//            layout.getChild("pimp")->bVisible = true;
+//            layout.getChild("share")->bVisible = false;
+//            layout.getChild("back")->bVisible = false;
+//            
+//            items.clear();
+//            thumbs.clear();
+//            
+//            
+//            
+//            ofxOscMessage m;
+//            
+//            
+//            if (!images.empty()) {
+//                m.setAddress("/delete");
+//                m.addStringArg(images[0]);
+//                sender.sendMessage(m);
+//                images.clear();
+//                m.clear();
+//                image.clear();
+//            }
+//            
+//            m.setAddress("/list");
+//            m.addIntArg(port);
+//            sender.sendMessage(m);
+//            
+//            cout << "list: " << url << endl;
         } break;
             
         default:
@@ -381,11 +439,17 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
         case STATE_IMAGES:
             thumbs.touchMoved(touch);
             break;
-        case STATE_OBJECTS:
+        case STATE_OBJECTS: {
             objects.touchMoved(touch);
             
+            ofVec2f pos = camMat.getInverse().preMult(ofVec3f(touch.x,touch.y));
+            ofTouchEventArgs camTouch(touch);
+            camTouch.x = pos.x;
+            camTouch.y = pos.y;
+
+            
             if (bTouchObject) {
-                float angle = (ofVec2f(touch.x,touch.y)-ofVec2f(lastTouch.x,lastTouch.y)).angle(ofVec2f(-1.0,0.0));
+                float angle = (ofVec2f(camTouch.x,camTouch.y)-ofVec2f(lastTouch.x,lastTouch.y)).angle(ofVec2f(-1.0,0.0));
                 //cout << angle << endl;
                 
                 if (angle == 0) {
@@ -394,11 +458,11 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
                     item x;
 //                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
                     ofImage &image = objects.getImage(objectNum);
-                    ofMatrix4x4 mat(ofMatrix4x4::newTranslationMatrix(touch.x,touch.y,0));
+                    ofMatrix4x4 mat(ofMatrix4x4::newTranslationMatrix(camTouch.x,camTouch.y,0));
                    
                     x.drag.setup(image.width,image.height,mat);
                     x.drag.touchDown(lastTouch);
-                    x.drag.touchMoved(touch);
+                    x.drag.touchMoved(camTouch);
                     x.objectNum = objectNum;
 //                    x.scale = (100-40)/objects.getImage(x.objectNum).getWidth();
                     x.scale = rect.width/objects.getImage(x.objectNum).getWidth();
@@ -406,15 +470,15 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
                     objects.touchUp(touch);
                 } 
                 
-                lastTouch = touch;
+                lastTouch = camTouch;
             } else {
                 for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-                    iter->drag.touchMoved(touch);
+                    iter->drag.touchMoved(camTouch);
                 }
             }
             
             
-            break;
+        }   break;
             
         default:
             break;
@@ -429,13 +493,18 @@ void testApp::touchUp(ofTouchEventArgs &touch){
         case STATE_IMAGES:
             thumbs.touchUp(touch);
             break;
-        case STATE_OBJECTS:
+        case STATE_OBJECTS: {
             objects.touchUp(touch);
+            
+            ofVec2f pos = camMat.getInverse().preMult(ofVec3f(touch.x,touch.y));
+            ofTouchEventArgs camTouch(touch);
+            camTouch.x = pos.x;
+            camTouch.y = pos.y;
             for (vector<item >::iterator iter=items.begin(); iter!=items.end(); iter++) {
-                iter->drag.touchUp(touch);
+                iter->drag.touchUp(camTouch);
             }
             
-            break;
+        }   break;
             
         default:
             break;
@@ -472,4 +541,8 @@ void testApp::urlResponse(ofHttpResponse &response) {
         }
         
     }
+}
+
+void testApp::mailComposer(int &result) {
+    cout << "mailComposer: " << result << endl;
 }

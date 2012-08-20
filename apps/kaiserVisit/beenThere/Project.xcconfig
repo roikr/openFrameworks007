@@ -1,11 +1,11 @@
 //THE PATH TO THE ROOT OF OUR OF PATH RELATIVE TO THIS PROJECT.
 //THIS NEEDS TO BE DEFINED BEFORE CoreOF.xcconfig IS INCLUDED
-OF_PATH = ../../..
+OF_PATH = ../../openFrameworks
 
 //THIS HAS ALL THE HEADER AND LIBS FOR OF CORE
-#include "../../../libs/openFrameworksCompiled/project/iphone/CoreOF.xcconfig"
+#include "../../openFrameworks/libs/openFrameworksCompiled/project/ios/CoreOF.xcconfig"
 
-OTHER_LDFLAGS = $(OF_CORE_LIBS) 
+OTHER_LDFLAGS = $(OF_CORE_LIBS) -lsqlite3.0
 HEADER_SEARCH_PATHS = $(OF_CORE_HEADERS)
 
 COMPRESS_PNG_FILES = NO

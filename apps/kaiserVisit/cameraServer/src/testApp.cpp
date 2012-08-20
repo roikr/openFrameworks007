@@ -52,8 +52,19 @@ void testApp::update(){
         bTrigger = false;
         image.setFromPixels(vidGrabber.getPixelsRef());
         
+        float width = 800.0;
+        float height = 600.0;
+        float scale = min((float)vidGrabber.getWidth()/width,(float)vidGrabber.getHeight()/height);
+        int newWidth = floor(width*scale);
+        int newHeight = floor(height*scale);
+        cout << newWidth << "\t" << newHeight << endl;
         
+        stringstream ss;
+        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds();
+        cout << ss.str() << endl;
         
+        image.crop(0.5*(image.getWidth()-newWidth), 0.5*(image.getHeight()-newHeight), newWidth, newHeight);
+        image.resize(width, height);
         UInt8 *data = image.getPixels(); // unsigned char
         
         
@@ -78,20 +89,8 @@ void testApp::update(){
             data[i+1] = outputGreen;
             data[i+2] = outputBlue;
         }
+
         
-            
-        float width = 1024.0;
-        float height = 768.0;
-        float scale = min((float)vidGrabber.getWidth()/width,(float)vidGrabber.getHeight()/height);
-        int newWidth = floor(width*scale);
-        int newHeight = floor(height*scale);
-        cout << newWidth << "\t" << newHeight << endl;
-        
-        stringstream ss;
-        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds();
-        cout << ss.str() << endl;
-        
-        image.crop(0.5*(image.getWidth()-newWidth), 0.5*(image.getHeight()-newHeight), newWidth, newHeight);
         image.saveImage("photos/"+ss.str()+"."+EXTENSION);
         image.resize(120, 90);
         image.saveImage("thumbs/"+ss.str()+"_THUMB."+EXTENSION);

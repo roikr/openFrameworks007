@@ -1,5 +1,5 @@
 /*
- *  ofxiFBO.h
+ *  ofxiFbo.h
  *  iPhoneCameraExample
  *
  *  Created by Roee Kremer on 12/30/10.
@@ -13,7 +13,7 @@
 #import <OpenGLES/ES1/glext.h>
 
 
-class ofxiFBO {
+class ofxiFbo {
 public:
 	
 	void setup(int width,int height);

@@ -1,5 +1,5 @@
 /*
- *  ofxiFBO.cpp
+ *  ofxiFbo.cpp
  *  iPhoneCameraExample
  *
  *  Created by Roee Kremer on 12/30/10.
@@ -7,20 +7,20 @@
  *
  */
 
-#include "ofxiFBO.h"
+#include "ofxiFbo.h"
 #include "glu.h"
 #include "ofxiPhoneExtras.h"
 
 
-void ofxiFBO::setup(int width,int height) {
+void ofxiFbo::setup(int width,int height) {
 	this->width = width;
 	this->height = height;
 	glGenFramebuffersOES(1, &fbo);
-	NSLog(@"ofxiFBO::setup - glGenFramebuffersOES: %i", fbo);
+	NSLog(@"ofxiFbo::setup - glGenFramebuffersOES: %i", fbo);
 	
 }
 
-void ofxiFBO::begin(GLuint texture) {
+void ofxiFbo::begin(GLuint texture) {
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, texture, 0); // probably for init and alloc mem
@@ -30,7 +30,7 @@ void ofxiFBO::begin(GLuint texture) {
 	GLuint status = glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES);
 	if (status != GL_FRAMEBUFFER_COMPLETE_OES)
 	{
-		NSLog(@"ofxiFBO::begin - failed to make complete framebuffer object %x, for texture: %i", status,texture);
+		NSLog(@"ofxiFbo::begin - failed to make complete framebuffer object %x, for texture: %i", status,texture);
 		switch (status) {
 			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES:
 				NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_OES");
@@ -67,17 +67,17 @@ void ofxiFBO::begin(GLuint texture) {
 
 
 
-void ofxiFBO::end() {
+void ofxiFbo::end() {
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
 	
 }
 
 
-void ofxiFBO::exit() {
+void ofxiFbo::exit() {
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
 	glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, 0, 0); 
 	glDeleteFramebuffersOES(1, &fbo);
-	NSLog(@"ofxiFBO::exit - glDeleteFramebuffersOES: %i", fbo);
+	NSLog(@"ofxiFbo::exit - glDeleteFramebuffersOES: %i", fbo);
 	fbo = 0;
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
 	
