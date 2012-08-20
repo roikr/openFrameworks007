@@ -52,14 +52,13 @@ public:
     ofxDocument doc;
     ofxSymbolInstance layout;
     layer *background;
-    layer *scratch;
+    
     
     ofRectangle imageRect;
     ofMatrix4x4 camMat;
     
     ofxSymbolInstance shareLayout;
-    layer *shareBackground;
-    layer *shareScratch;
+   
     
     ofRectangle shareRect;
     ofMatrix4x4 shareMat;

@@ -66,12 +66,11 @@ void testApp::setup(){
     layout.getChild("back")->bVisible = false;
     
     background = layout.getLayer("background");
-    scratch = layout.getLayer("scratch");
-    
-    ofxBitmapItem *scratchItem = doc.getBitmapItem("SCRATCHES OVERLAY.png");
-    imageRect = ofRectangle(0,0,scratchItem->getWidth(),scratchItem->getHeight());
+       
+    ofxBitmapItem *overlayItem = doc.getBitmapItem("MIGDAL_OVERLAY.png");
+    imageRect = ofRectangle(0,0,overlayItem->getWidth(),overlayItem->getHeight());
     camMat = mat;
-    camMat.preMult(layout.getChild("scratch")->mat);
+    camMat.preMult(layout.getChild("photo")->mat);
     
     ofxBitmapItem *menuItem = doc.getBitmapItem("MENU_BACKGROUND.png");
     ofMatrix4x4 menuMat = mat;
@@ -103,11 +102,9 @@ void testApp::setup(){
     
     
     shareLayout = doc.getSymbolItem("ShareLayout")->createInstance("shareLayout", mat);
-
-    shareBackground = shareLayout.getLayer("background");
-    shareScratch = shareLayout.getLayer("scratch");
-    shareMat = mat;
-    shareMat.preMult(shareLayout.getChild("scratch")->mat);
+    shareLayout.getChildMat(shareLayout.getChild("overlay"), shareMat);
+//    shareMat = mat;
+//    shareMat.preMult(shareLayout.getChild("overlay")->mat);
     
     
     bTouchObject = false;
@@ -243,7 +240,7 @@ void testApp::draw(){
            
             ofEnableAlphaBlending();
 
-            shareLayout.drawLayer(shareBackground);
+            shareLayout.draw();
             
             ofPushMatrix();
             glMultMatrixf(shareMat.getPtr());
@@ -253,7 +250,6 @@ void testApp::draw(){
             }
             
             ofPopMatrix();
-            shareLayout.drawLayer(shareScratch);
             ofDisableAlphaBlending();
             
             break;
@@ -293,6 +289,8 @@ void testApp::share() {
         
     }
     
+    doc.getBitmapItem("MIGDAL_OVERLAY.png")->draw();
+    
     ofDisableAlphaBlending();
     
     glReadPixels(0, 0, shareImage.getWidth(), shareImage.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, shareImage.getPixels());
@@ -329,13 +327,14 @@ void testApp::exit() {
 void testApp::touchDown(ofTouchEventArgs &touch){
     
         
-    vector<ofxSymbolInstance*> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
+    
     switch (state) {
         
         case STATE_IMAGES: {
            
             thumbs.touchDown(touch);
             
+            vector<ofxSymbolInstance*> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
             for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
                 if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="pimp") {
                     state=STATE_OBJECTS;
@@ -370,8 +369,10 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 }
             }
             
+            vector<ofxSymbolInstance*> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
             for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
                 if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="share") {
+                    shareLayout.getChild("sent")->bVisible = false;
                     bShare = true;
                     
                     
@@ -393,35 +394,48 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         }   break;
             
         case STATE_SHARE: {
-            sendMail();
-//            state = STATE_IMAGES;
-//            
-//            layout.getChild("pimp")->bVisible = true;
-//            layout.getChild("share")->bVisible = false;
-//            layout.getChild("back")->bVisible = false;
-//            
-//            items.clear();
-//            thumbs.clear();
-//            
-//            
-//            
-//            ofxOscMessage m;
-//            
-//            
-//            if (!images.empty()) {
-//                m.setAddress("/delete");
-//                m.addStringArg(images[0]);
-//                sender.sendMessage(m);
-//                images.clear();
-//                m.clear();
-//                image.clear();
-//            }
-//            
-//            m.setAddress("/list");
-//            m.addIntArg(port);
-//            sender.sendMessage(m);
-//            
-//            cout << "list: " << url << endl;
+            
+            vector<ofxSymbolInstance*> hits = shareLayout.hitTest(ofVec2f(touch.x,touch.y));
+            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="mail") {
+                    shareLayout.getChild("sent")->bVisible = false;
+                    sendMail();
+                    break;
+                }
+                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="finish") {
+                    state = STATE_IMAGES;
+                    
+                    layout.getChild("pimp")->bVisible = true;
+                    layout.getChild("share")->bVisible = false;
+                    layout.getChild("back")->bVisible = false;
+                    
+                    items.clear();
+                    thumbs.clear();
+                    
+                    
+                    
+                    ofxOscMessage m;
+                    
+                    
+                    if (!images.empty()) {
+                        m.setAddress("/delete");
+                        m.addStringArg(images[0]);
+                        sender.sendMessage(m);
+                        images.clear();
+                        m.clear();
+                        image.clear();
+                    }
+                    
+                    m.setAddress("/list");
+                    m.addIntArg(port);
+                    sender.sendMessage(m);
+                    
+                    cout << "list: " << url << endl;
+                    break;
+                }
+            }
+            
+            
         } break;
             
         default:
@@ -545,4 +559,7 @@ void testApp::urlResponse(ofHttpResponse &response) {
 
 void testApp::mailComposer(int &result) {
     cout << "mailComposer: " << result << endl;
+    if (result == OFXIMAIL_SEND) {
+        shareLayout.getChild("sent")->bVisible = true;
+    }
 }
