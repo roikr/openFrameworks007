@@ -24,22 +24,41 @@ void testApp::setup(){
 	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);
     
     ofRegisterURLNotification(this);
+    
+   
 	
-    ofxXmlSettings xml;
-    if (xml.loadFile("settings.xml")) {
-        url = xml.getAttribute("settings", "url", "",0);
-        xml.pushTag("settings");
-        sender.setup(xml.getAttribute("sender", "host", ""),xml.getAttribute("sender", "port", 10000));
-        port = xml.getAttribute("receiver", "port", 10001);
-        receiver.setup(port);
+    if (Settings::getBool("reset")) {
+        ofxXmlSettings xml;
+        if (xml.loadFile("settings.xml")) {
+            Settings::setString(xml.getAttribute("settings", "host", "192.168.10.97"),"host");
+            
+            xml.pushTag("settings");
+            Settings::setInt(xml.getAttribute("http", "port", 8888),"http");
+            Settings::setInt(xml.getAttribute("sender", "port", 10000),"sender");
+            Settings::setInt(xml.getAttribute("receiver", "port", 10001),"receiver");
+            xml.popTag();
+        }
+            
+            
+         
         
-        ofxOscMessage m;
-        m.setAddress("/list");
-        m.addIntArg(port);
-        sender.sendMessage(m);
-        
-        cout << url << endl;
-    }
+    } 
+    
+    string host = Settings::getString("host");
+    int httpPort = Settings::getInt("http");
+    int senderPort = Settings::getInt("sender");
+    receiverPort = Settings::getInt("receiver");
+    url = "http://"+host+":"+ofToString(httpPort);
+    cout << url << "\tsender: " << senderPort << "\treceiver: " << receiverPort << endl;
+    
+    sender.setup(host,senderPort);
+    receiver.setup(receiverPort);
+    
+    ofxOscMessage m;
+    m.setAddress("/list");
+    m.addIntArg(receiverPort);
+    sender.sendMessage(m);
+    
     
 	
     
@@ -48,17 +67,17 @@ void testApp::setup(){
     doc.load();
     
         
-    ofMatrix4x4 mat;
-    float scale = (float)ofGetHeight()/768;
-    mat.scale(scale, scale, 1.0);
-    mat.translate(0.5*(ofGetWidth()-scale*1024), 0, 0);
     
+    float scale = (float)ofGetHeight()/768;
+    screenMat.scale(scale, scale, 1.0);
+    screenMat.translate(0.5*(ofGetWidth()-scale*1024), 0, 0);
+//    
 //    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
 //        mat.translate(64, 0, 0);
 //        mat.scale(5.0/6.0, 5.0/6.0, 1.0);
 //    }
     
-    layout = doc.getSymbolItem("Layout")->createInstance("layout", mat);
+    layout = doc.getSymbolItem("Layout")->createInstance("layout", screenMat);
     
     layout.getChild("snap")->bVisible = false;
     layout.getChild("pimp")->bVisible = true;
@@ -69,11 +88,11 @@ void testApp::setup(){
        
     ofxBitmapItem *overlayItem = doc.getBitmapItem("MIGDAL_OVERLAY.png");
     imageRect = ofRectangle(0,0,overlayItem->getWidth(),overlayItem->getHeight());
-    camMat = mat;
+    camMat = screenMat;
     camMat.preMult(layout.getChild("photo")->mat);
     
     ofxBitmapItem *menuItem = doc.getBitmapItem("MENU_BACKGROUND.png");
-    ofMatrix4x4 menuMat = mat;
+    ofMatrix4x4 menuMat = screenMat;
     menuMat.preMult(layout.getChild("menu")->mat);
 //    cout << menuMat << endl;
 //    ofVec2f pos = menuMat.preMult(ofVec3f(0,0,0));
@@ -91,7 +110,8 @@ void testApp::setup(){
 //    }
     
 //    dir.reset();
-    xml.clear();
+    ofxXmlSettings xml;
+    
     if (xml.loadFile("objects.xml")) {
         
         xml.pushTag("objects");
@@ -117,7 +137,7 @@ void testApp::setup(){
 //    }
     
     
-    shareLayout = doc.getSymbolItem("ShareLayout")->createInstance("shareLayout", mat);
+    shareLayout = doc.getSymbolItem("ShareLayout")->createInstance("shareLayout", screenMat);
     shareLayout.getChildMat(shareLayout.getChild("overlay"), shareMat);
 //    shareMat = mat;
 //    shareMat.preMult(shareLayout.getChild("overlay")->mat);
@@ -372,7 +392,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             camTouch.y = pos.y;
             
             
-            if (objects.getIsInside(ofVec2f(camTouch.x,camTouch.y)) && objects.getIsDown()) {
+            if (objects.getIsInside(ofVec2f(touch.x,touch.y)) && objects.getIsDown()) {
                 lastTouch = camTouch;
                 objectNum = objects.getDownNum(); // getDownNum valid only at down stage
                 bTouchObject = true;
@@ -443,7 +463,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                     }
                     
                     m.setAddress("/list");
-                    m.addIntArg(port);
+                    m.addIntArg(receiverPort);
                     sender.sendMessage(m);
                     
                     cout << "list: " << url << endl;

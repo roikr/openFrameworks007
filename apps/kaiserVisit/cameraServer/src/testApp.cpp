@@ -29,8 +29,10 @@ void testApp::setup(){
         server->setServerRoot("");		 // folder with files to be served
         server->start(xml.getAttribute("server", "port", 8888));
         
-        serial.setup(xml.getAttribute("trigger", "portname", "/dev/tty.usbmodemfd121"), xml.getAttribute("trigger", "baudrate", 9600));
-        serial.writeByte('r');
+        bSerial = serial.setup(xml.getAttribute("trigger", "portname", "/dev/tty.usbmodemfd121"), xml.getAttribute("trigger", "baudrate", 9600));
+        if (bSerial) {
+            serial.writeByte('r');
+        }
     }
     
 	
@@ -52,24 +54,30 @@ void testApp::update(){
 	
 	vidGrabber.grabFrame();
     
-    switch (serial.readByte()) {
-        case OF_SERIAL_ERROR:
-            cout << "serial error" << endl;
-            break;
-        case OF_SERIAL_NO_DATA:
-            break;
-        default: 
-            trigger();
-            break;
-    }
+    if (bSerial) {
+    
+        if (serial.available()) {
+            switch (serial.readByte()) {
+                case OF_SERIAL_ERROR:
+                    cout << "serial error" << endl;
+                    break;
+                case OF_SERIAL_NO_DATA:
+                    break;
+                default: 
+                    trigger();
+                    break;
+            }
+        }
     
        
-    if (blinkCounter && ofGetElapsedTimeMillis()>blinkTimer) {
-        serial.writeByte('l');
-        blinkCounter--;
-        blinkTimer = ofGetElapsedTimeMillis()+1000;
-        if (!blinkCounter) {
-            serial.writeByte('r');
+        if (blinkCounter && ofGetElapsedTimeMillis()>blinkTimer) {
+            
+            serial.writeByte('l');
+            blinkCounter--;
+            blinkTimer = ofGetElapsedTimeMillis()+1000;
+            if (!blinkCounter) {
+                serial.writeByte('r');
+            }
         }
     }
     

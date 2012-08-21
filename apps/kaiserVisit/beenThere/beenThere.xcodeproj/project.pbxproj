@@ -19,6 +19,9 @@
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E403782B15E1600200789BC6 /* ofxiMail.mm in Sources */ = {isa = PBXBuildFile; fileRef = E403782A15E1600200789BC6 /* ofxiMail.mm */; };
 		E403784B15E170A800789BC6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E403784A15E170A800789BC6 /* MessageUI.framework */; };
+		E409645215E36AE600A30BF8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E409644E15E36AE600A30BF8 /* README.md */; };
+		E409645315E36AE600A30BF8 /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = E409645115E36AE600A30BF8 /* Settings.mm */; };
+		E409645515E36B6200A30BF8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E409645415E36B6200A30BF8 /* Settings.bundle */; };
 		E40ED8AD15D15E6300556B9C /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E40ED88A15D15E6300556B9C /* install.xml */; };
 		E40ED8AE15D15E6300556B9C /* osc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E40ED89F15D15E6300556B9C /* osc.a */; };
 		E40ED8B015D15E6300556B9C /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E40ED8A515D15E6300556B9C /* ofxOscBundle.cpp */; };
@@ -84,6 +87,10 @@
 		E403782A15E1600200789BC6 /* ofxiMail.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiMail.mm; sourceTree = "<group>"; };
 		E403784615E16F8000789BC6 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E403784A15E170A800789BC6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		E409644E15E36AE600A30BF8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		E409645015E36AE600A30BF8 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		E409645115E36AE600A30BF8 /* Settings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Settings.mm; sourceTree = "<group>"; };
+		E409645415E36B6200A30BF8 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E40ED88A15D15E6300556B9C /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E40ED88F15D15E6300556B9C /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpEndpointName.h; sourceTree = "<group>"; };
 		E40ED89015D15E6300556B9C /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingUtils.h; sourceTree = "<group>"; };
@@ -218,6 +225,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E409644D15E36AE600A30BF8 /* ofxSettings */,
 				E468E3D415E23141001A0F14 /* ofxiFbo */,
 				E40377D415E15FC900789BC6 /* ofxiStillCamera */,
 				E40ED88915D15E6300556B9C /* ofxOsc */,
@@ -234,6 +242,7 @@
 			children = (
 				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
+				E409645415E36B6200A30BF8 /* Settings.bundle */,
 			);
 			name = data;
 			path = bin/data;
@@ -291,6 +300,25 @@
 				E403781F15E15FCA00789BC6 /* ofxiStillCamera.mm */,
 				E403782015E15FCA00789BC6 /* StillCamera.h */,
 				E403782115E15FCA00789BC6 /* StillCamera.m */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E409644D15E36AE600A30BF8 /* ofxSettings */ = {
+			isa = PBXGroup;
+			children = (
+				E409644E15E36AE600A30BF8 /* README.md */,
+				E409644F15E36AE600A30BF8 /* src */,
+			);
+			name = ofxSettings;
+			path = ../../../addons/ofxSettings;
+			sourceTree = "<group>";
+		};
+		E409644F15E36AE600A30BF8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E409645015E36AE600A30BF8 /* Settings.h */,
+				E409645115E36AE600A30BF8 /* Settings.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -609,6 +637,8 @@
 				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				E44BC7EB15B2D84F00CD7BBD /* install.xml in Resources */,
 				E40ED8AD15D15E6300556B9C /* install.xml in Resources */,
+				E409645215E36AE600A30BF8 /* README.md in Resources */,
+				E409645515E36B6200A30BF8 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,6 +681,7 @@
 				E4A39D9215DE1AE8008ACE7E /* ofxDraggable.cpp in Sources */,
 				E403782B15E1600200789BC6 /* ofxiMail.mm in Sources */,
 				E468E3D815E23141001A0F14 /* ofxiFbo.mm in Sources */,
+				E409645315E36AE600A30BF8 /* Settings.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

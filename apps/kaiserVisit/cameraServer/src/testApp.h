@@ -43,6 +43,7 @@ class testApp : public ofBaseApp{
     ofxHTTPServer *server;
     
     ofSerial serial;
+    bool bSerial;
     int blinkCounter;
     int blinkTimer;
 };

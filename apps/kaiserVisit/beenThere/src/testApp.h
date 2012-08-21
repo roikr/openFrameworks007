@@ -9,6 +9,7 @@
 #include "ofxOsc.h"
 #include "ofxiFbo.h"
 #include "ofxiMail.h"
+#include "Settings.h"
 
 struct item {
     int objectNum;
@@ -69,7 +70,7 @@ public:
     
     ofxOscSender sender;
     ofxOscReceiver receiver;
-    int port; // receiver port;
+    int receiverPort; // receiver port;
     string url;
     vector<string> images;
     
@@ -78,5 +79,7 @@ public:
     ofImage shareImage;
     bool bShare;
     ofxiMail mail;
+    
+    ofMatrix4x4 screenMat;
     
 };
