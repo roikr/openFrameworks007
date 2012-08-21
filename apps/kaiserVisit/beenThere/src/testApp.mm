@@ -193,17 +193,11 @@ void testApp::update(){
     }
     
     
-    bool bSelected =thumbs.getIsSelected();
-    int numSelected = thumbs.getSelectedNum();
-    thumbs.update();
-    if ( thumbs.getIsSelected() && (!bSelected || numSelected!=thumbs.getSelectedNum())) {
-        if (thumbs.getSelectedNum()<images.size()) {
-            ofLoadURLAsync(url+"/photos/"+images[thumbs.getSelectedNum()]+"."+EXTENNSION);
-        }
-    }
+
 
            
     objects.update();
+    thumbs.update();
    
     
     if (bShare) {
@@ -344,7 +338,7 @@ void testApp::sendMail() {
         mailStruct m;
         m.subject = "test";
         m.body = "now with attachment";
-        m.toRecipients.push_back("roikr75@gmail.com");
+        m.toRecipients.push_back("lofipeople@gmail.com");
         ofBuffer buffer;
         ofSaveImage(shareImage.getPixelsRef(), buffer,OF_IMAGE_FORMAT_PNG);
        
@@ -540,9 +534,20 @@ void testApp::touchMoved(ofTouchEventArgs &touch){
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){
     switch (state) {
-        case STATE_IMAGES:
+        case STATE_IMAGES: {
+            bool bSelected =thumbs.getIsSelected();
+            int numSelected = thumbs.getSelectedNum();
+            
             thumbs.touchUp(touch);
-            break;
+            
+            if ( thumbs.getIsSelected() && (!bSelected || numSelected!=thumbs.getSelectedNum())) {
+                if (thumbs.getSelectedNum()<images.size()) {
+                    ofLoadURLAsync(url+"/photos/"+images[thumbs.getSelectedNum()]+"."+EXTENNSION);
+                }
+            }
+            
+            
+        } break;
         case STATE_OBJECTS: {
             objects.touchUp(touch);
             

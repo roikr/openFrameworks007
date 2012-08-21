@@ -81,13 +81,13 @@ void ofxScrollCollection::update() {
             
         } break;
             
-            case SLIDER_STATE_DOWN:    // select only if down for several ms and before moving
-//            case SLIDER_STATE_PANNING: 
-            if (downIter!=images.rend() && (ofGetElapsedTimef()-downTime)*1000 > prefs.selectionDelay) {
-                selected = downIter;
-                downIter = images.rend();
-//                cout << selected->getWidth() << "\t" << selected->getHeight() << endl;
-            }
+//            case SLIDER_STATE_DOWN:    // select only if down for several ms and before moving
+//
+//            if (downIter!=images.rend() && (ofGetElapsedTimef()-downTime)*1000 > prefs.selectionDelay) {
+//                selected = downIter;
+//                downIter = images.rend();
+//
+//            }
             
         default:
             break;
@@ -252,6 +252,13 @@ void ofxScrollCollection::touchMoved(ofTouchEventArgs &touch){
 
 void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
     if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id) {
+        
+        
+        if (downIter!=images.rend() && state == SLIDER_STATE_DOWN) {
+            selected = downIter;
+        }
+
+        
         downIter = images.rend();
         float v0=velocity.length();
         if (v0>STOP_VELOCITY) {

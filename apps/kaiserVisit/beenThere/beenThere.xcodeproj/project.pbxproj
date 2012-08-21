@@ -22,6 +22,7 @@
 		E409645215E36AE600A30BF8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E409644E15E36AE600A30BF8 /* README.md */; };
 		E409645315E36AE600A30BF8 /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = E409645115E36AE600A30BF8 /* Settings.mm */; };
 		E409645515E36B6200A30BF8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E409645415E36B6200A30BF8 /* Settings.bundle */; };
+		E409646115E389DB00A30BF8 /* ofxiphone-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E409646015E389DB00A30BF8 /* ofxiphone-Info.plist */; };
 		E40ED8AD15D15E6300556B9C /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E40ED88A15D15E6300556B9C /* install.xml */; };
 		E40ED8AE15D15E6300556B9C /* osc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E40ED89F15D15E6300556B9C /* osc.a */; };
 		E40ED8B015D15E6300556B9C /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E40ED8A515D15E6300556B9C /* ofxOscBundle.cpp */; };
@@ -91,6 +92,8 @@
 		E409645015E36AE600A30BF8 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		E409645115E36AE600A30BF8 /* Settings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Settings.mm; sourceTree = "<group>"; };
 		E409645415E36B6200A30BF8 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		E409645F15E389DB00A30BF8 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
+		E409646015E389DB00A30BF8 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		E40ED88A15D15E6300556B9C /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E40ED88F15D15E6300556B9C /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpEndpointName.h; sourceTree = "<group>"; };
 		E40ED89015D15E6300556B9C /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingUtils.h; sourceTree = "<group>"; };
@@ -251,6 +254,8 @@
 		BB24E1F710DAA51900E9C588 /* openFrameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E409645F15E389DB00A30BF8 /* iPhone_Prefix.pch */,
+				E409646015E389DB00A30BF8 /* ofxiphone-Info.plist */,
 				E468E3BA15E20E5D001A0F14 /* iOS+OFLib.xcodeproj */,
 				E403784615E16F8000789BC6 /* Project.xcconfig */,
 			);
@@ -639,6 +644,7 @@
 				E40ED8AD15D15E6300556B9C /* install.xml in Resources */,
 				E409645215E36AE600A30BF8 /* README.md in Resources */,
 				E409645515E36B6200A30BF8 /* Settings.bundle in Resources */,
+				E409646115E389DB00A30BF8 /* ofxiphone-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
