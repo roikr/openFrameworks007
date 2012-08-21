@@ -27,7 +27,7 @@ public:
 
     ofxiExternalView extView;
     ofxBigImage image;
-    stringstream ss;
+    int selected;
 };
 
 
