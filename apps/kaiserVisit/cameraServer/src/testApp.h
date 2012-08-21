@@ -12,6 +12,8 @@ class testApp : public ofBaseApp{
 		void update();
 		void draw();
         void exit();
+    
+        void trigger();
 		
 		void keyPressed(int key);
         void keyReleased(int key) {};
@@ -40,4 +42,7 @@ class testApp : public ofBaseApp{
     
     ofxHTTPServer *server;
     
+    ofSerial serial;
+    int blinkCounter;
+    int blinkTimer;
 };
