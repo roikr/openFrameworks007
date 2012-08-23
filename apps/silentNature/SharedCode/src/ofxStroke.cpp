@@ -60,28 +60,21 @@ vector<ofVec2f> catmullRomPatch(vector<ofVec2f> &curveVertices,int curveResoluti
 
 
 
-void ofxStroke::setup(float thickness,ofColor color) {
+void ofxStroke::setup(float spacing) {
     curve.clear();
-    this->thickness = thickness;
-    this->color = color;
+    this->spacing = spacing;
 }
 
 void ofxStroke::addPatch(vector<ofVec2f> ctrl) {
     float dist = (ctrl[2]-ctrl[1]).length();
-    vector<ofVec2f> pnts = catmullRomPatch(ctrl,dist/(thickness/4));
+    vector<ofVec2f> pnts = catmullRomPatch(ctrl,dist/spacing);
     curve.insert(curve.end(), pnts.begin(), pnts.end());
 }
 
-void ofxStroke::draw() {
-    ofPushStyle();
-    ofSetColor(color);
-//    ofNoFill();
-    
-    for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
-        ofCircle(*iter, thickness/2);
-    }
-    
-    ofPopStyle();
+vector<ofVec2f> &ofxStroke::getCurve() {
+    return curve;
 }
+
+
 
 

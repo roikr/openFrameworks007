@@ -9,6 +9,9 @@
 #include "silentNature.h"
 
 
+#define BRUSH_THICKNESS 30.0
+#define CRAYON_THICKNESS 15.0
+#define ERASER_THICKNESS 60.0
 
 //--------------------------------------------------------------
 void silentNature::setup(){	
@@ -39,15 +42,24 @@ void silentNature::setup(){
     //cmat.translate(canvas->mat.getTranslation());
         
     
-    ofRectangle rect = canvas->getBoundingBox();
-    rect.width = 1024;
-    rect.height = 1024;
-    cout << rect.width << "\t" << rect.height << endl;
-    canvasTex.allocate(rect.width, rect.height, GL_RGBA);
-    //canvasTex.texData.bFlipTexture = true;
-    fbo.setup(rect.width, rect.height);
     
+#ifdef TARGET_OPENGLES
+    canvasTex.allocate(1024, 1024, GL_RGBA);
+    //canvasTex.texData.bFlipTexture = true;
+    fbo.setup(1024, 1024);
+#else
+    ofRectangle rect = canvas->getBoundingBox();
+    cout << rect.width << "\t" << rect.height << endl;
+    fbo.allocate(rect.width, rect.height);
+#endif
+
+    
+    
+#ifdef TARGET_OPENGLES
     fbo.begin(canvasTex.getTextureData().textureID);
+#else
+    fbo.begin();
+#endif
     glClearColor(0,0,0, 0);
     glClear( GL_COLOR_BUFFER_BIT);
     fbo.end();
@@ -74,6 +86,55 @@ void silentNature::update(){
     
 }
 
+void silentNature::drawTool() {
+    switch (tool) {
+        case BRUSH_TOOL: {
+            
+            ofSetColor(255,0,0);
+            
+            
+            vector<ofVec2f> &curve = stroke.getCurve();
+            for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
+                ofCircle(*iter, BRUSH_THICKNESS/2);
+            }
+                    
+            
+
+            
+        } break;
+        case CRAYON_TOOL: {
+           
+            ofSetColor(0,0,255);
+            
+            
+            vector<ofVec2f> &curve = stroke.getCurve();
+            for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
+                ofCircle(*iter, CRAYON_THICKNESS/2);
+            }
+            
+            
+        } break;
+            
+        case ERASER_TOOL: {
+            
+            ofSetColor(0,0,0,0);
+           
+            ofDisableAlphaBlending();
+            vector<ofVec2f> &curve = stroke.getCurve();
+            for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
+                ofCircle(*iter, ERASER_THICKNESS/2);
+            }
+            ofEnableAlphaBlending();
+           
+        } break;
+            
+            
+            
+            
+            
+    }
+}
+
 void silentNature::draw(){    
 	ofSetColor(255);
     
@@ -86,11 +147,16 @@ void silentNature::draw(){
     ofPushMatrix();
     glMultMatrixf(cmat.getPtr())    ;
     ofSetColor(255);
+#ifdef TARGET_OPENGLES
     canvasTex.draw(0, 0);
+#else
+    fbo.draw(0, 0);
+#endif
     if (bDown) {
         switch (tool) {
             case BRUSH_TOOL:
-                stroke.draw();
+            case CRAYON_TOOL:
+                drawTool();
                 break;
                 
         }
@@ -147,7 +213,17 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                 switch (tool) {
                     case BRUSH_TOOL:
                         
-                        stroke.setup(30, ofColor(0));
+                        stroke.setup(1);
+                        touches.push_back(cpos);
+                        break;
+                    case CRAYON_TOOL:
+                        stroke.setup(1);
+                        touches.push_back(cpos);
+                        break;
+                        
+                    case ERASER_TOOL:
+                        
+                        stroke.setup(1);
                         touches.push_back(cpos);
                         break;
                         
@@ -158,11 +234,15 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
             }
             
             if ((*iter)->name == "clear") {
+#ifdef TARGET_OPENGLES
                 fbo.begin(canvasTex.getTextureData().textureID);
+#else
+                fbo.begin();
+#endif
                 glClearColor(0,0,0, 0);
                 glClear( GL_COLOR_BUFFER_BIT);
                 fbo.end();
-                            }
+            }
 
             
         }
@@ -187,6 +267,7 @@ void silentNature::touchMoved(ofTouchEventArgs &touch){
                 
                 switch (tool) {
                     case BRUSH_TOOL:
+                    case CRAYON_TOOL:
                         touches.push_back(cpos);
                         if (touches.size()==4) {
                             stroke.addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
@@ -195,15 +276,21 @@ void silentNature::touchMoved(ofTouchEventArgs &touch){
                         
                         break;
                     case ERASER_TOOL:
-                        fbo.begin(canvasTex.getTextureData().textureID);
-                        
-                        ofDisableAlphaBlending();
-                        ofSetColor(0 , 0, 0, 0);
-                        
-                        ofEllipse(cpos, ofRandom(50, 70), ofRandom(50, 70));
-                        ofEnableAlphaBlending();
-                        fbo.end();
-                        
+                        touches.push_back(cpos);
+                        if (touches.size()==4) {
+                            stroke.addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
+                            touches.pop_front();
+                            
+#ifdef TARGET_OPENGLES
+                            fbo.begin(canvasTex.getTextureData().textureID);
+#else
+                            fbo.begin();
+#endif
+                            drawTool();  
+                            fbo.end();
+
+                        }
+                                                
                         break;
                         
                     default:
@@ -222,11 +309,20 @@ void silentNature::touchUp(ofTouchEventArgs &touch){
     if (bDown) {
         switch (tool) {
             case BRUSH_TOOL:
+            case CRAYON_TOOL:
                 touches.clear();
+#ifdef TARGET_OPENGLES
                 fbo.begin(canvasTex.getTextureData().textureID);
-                stroke.draw();
+#else
+                fbo.begin();
+#endif
+                drawTool();
                 fbo.end();
                 
+                break;
+                
+            case ERASER_TOOL:
+                touches.clear();
                 break;
                 
             default:

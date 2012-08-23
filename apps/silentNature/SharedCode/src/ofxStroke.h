@@ -14,14 +14,13 @@
 class ofxStroke {
 	
 public:
-	void setup(float thickness,ofColor color);
+	void setup(float spacing);
 	void addPatch(vector<ofVec2f> ctrl);
-	void draw();
+	vector<ofVec2f> &getCurve();
 	
     
 
 private:
     vector<ofVec2f> curve;
-    float thickness;
-    ofColor color;
+    float spacing;
 };

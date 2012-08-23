@@ -17,7 +17,6 @@
 		BB24DD9010DA77E000E9C588 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8D10DA77E000E9C588 /* Icon.png */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E4167D0D15DD25960002B904 /* ofxStroke.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4167D0915DD25960002B904 /* ofxStroke.cpp */; };
-		E4167D1A15DD28170002B904 /* ofxiFBO.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4167D1915DD28170002B904 /* ofxiFBO.mm */; };
 		E41D400B13B39D2100A75A5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
 		E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
@@ -32,6 +31,7 @@
 		E479530F15BD4A6300940FC2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E479530E15BD4A6300940FC2 /* Default@2x.png */; };
 		E479551C15BD4A9400940FC2 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E479542A15BD4A9300940FC2 /* ofxFlash.cpp */; };
 		E479551D15BD4A9400940FC2 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E479542F15BD4A9300940FC2 /* ofxiTexture.mm */; };
+		E47B1C1715E5F7C500986025 /* ofxiFbo.mm in Sources */ = {isa = PBXBuildFile; fileRef = E47B1C1615E5F7C500986025 /* ofxiFbo.mm */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -68,8 +68,6 @@
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E4167D0915DD25960002B904 /* ofxStroke.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxStroke.cpp; sourceTree = "<group>"; };
 		E4167D0A15DD25960002B904 /* ofxStroke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxStroke.h; sourceTree = "<group>"; };
-		E4167D1815DD28170002B904 /* ofxiFBO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFBO.h; sourceTree = "<group>"; };
-		E4167D1915DD28170002B904 /* ofxiFBO.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFBO.mm; sourceTree = "<group>"; };
 		E41D3ED613B38FB500A75A5D /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E41D3EE513B3906D00A75A5D /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/iphone/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E41D400613B39D2100A75A5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -91,6 +89,8 @@
 		E479542B15BD4A9300940FC2 /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
 		E479542E15BD4A9300940FC2 /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
 		E479542F15BD4A9300940FC2 /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
+		E47B1C1515E5F7C500986025 /* ofxiFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFbo.h; sourceTree = "<group>"; };
+		E47B1C1615E5F7C500986025 /* ofxiFbo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFbo.mm; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -173,7 +173,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E4167D1615DD28170002B904 /* ofxiFBO */,
+				E47B1C1315E5F7C500986025 /* ofxiFbo */,
 				E4167D0715DD25960002B904 /* SharedCode */,
 				E479531015BD4A9200940FC2 /* ofxFlash */,
 				E479542C15BD4A9300940FC2 /* ofxiTexture */,
@@ -226,24 +226,6 @@
 			children = (
 				E4167D0915DD25960002B904 /* ofxStroke.cpp */,
 				E4167D0A15DD25960002B904 /* ofxStroke.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4167D1615DD28170002B904 /* ofxiFBO */ = {
-			isa = PBXGroup;
-			children = (
-				E4167D1715DD28170002B904 /* src */,
-			);
-			name = ofxiFBO;
-			path = "../../../My Addons/ofxiFBO";
-			sourceTree = "<group>";
-		};
-		E4167D1715DD28170002B904 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4167D1815DD28170002B904 /* ofxiFBO.h */,
-				E4167D1915DD28170002B904 /* ofxiFBO.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -319,6 +301,24 @@
 			children = (
 				E479542E15BD4A9300940FC2 /* ofxiTexture.h */,
 				E479542F15BD4A9300940FC2 /* ofxiTexture.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E47B1C1315E5F7C500986025 /* ofxiFbo */ = {
+			isa = PBXGroup;
+			children = (
+				E47B1C1415E5F7C500986025 /* src */,
+			);
+			name = ofxiFbo;
+			path = "../../../My Addons/ofxiFbo";
+			sourceTree = "<group>";
+		};
+		E47B1C1415E5F7C500986025 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E47B1C1515E5F7C500986025 /* ofxiFbo.h */,
+				E47B1C1615E5F7C500986025 /* ofxiFbo.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -444,7 +444,7 @@
 				E479551D15BD4A9400940FC2 /* ofxiTexture.mm in Sources */,
 				E47132D215C7028400D837E4 /* silentNature.cpp in Sources */,
 				E4167D0D15DD25960002B904 /* ofxStroke.cpp in Sources */,
-				E4167D1A15DD28170002B904 /* ofxiFBO.mm in Sources */,
+				E47B1C1715E5F7C500986025 /* ofxiFbo.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,6 +537,44 @@
 			};
 			name = Release;
 		};
+		E47B1C1815E611A400986025 /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E41D3ED613B38FB500A75A5D /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roee Kremer";
+				COMPRESS_PNG_FILES = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				ONLY_ACTIVE_ARCH = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "77771FA6-16DB-4357-A210-226AEC4E33D3";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_LDFLAGS = "-no_arch_warnings";
+			};
+			name = "Ad Hoc";
+		};
+		E47B1C1915E611A400986025 /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PRODUCT_NAME = iosSilentNature;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Ad Hoc";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -545,6 +583,7 @@
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				E47B1C1915E611A400986025 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -554,6 +593,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				E47B1C1815E611A400986025 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

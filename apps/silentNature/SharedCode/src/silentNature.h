@@ -10,7 +10,9 @@
 
 #include "ofMain.h"
 #include "ofxFlash.h"
-#include "ofxiFBO.h"
+#ifdef TARGET_OPENGLES
+#include "ofxiFbo.h"
+#endif
 #include "ofxStroke.h"
 
 enum {
@@ -41,6 +43,7 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
     void setTool(int tool);
+    void drawTool();
     
     
     ofxDocument doc;
@@ -50,9 +53,14 @@ public:
      
     int tool;
     
-    
-    ofxiFBO fbo;
+#ifdef TARGET_OPENGLES
+    ofxiFbo fbo;
     ofTexture canvasTex;
+#else
+    ofFbo fbo;
+#endif   
+    
+    
     ofMatrix4x4 cmat;
     
     deque<ofVec2f> touches;
