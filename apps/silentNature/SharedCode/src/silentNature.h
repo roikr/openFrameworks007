@@ -44,7 +44,7 @@ public:
 	void touchDoubleTap(ofTouchEventArgs &touch);
 	void touchCancelled(ofTouchEventArgs &touch);
     
-    void setTool(int tool);
+    void updateTool();
     void drawTool();
     
     
@@ -57,6 +57,8 @@ public:
     
      
     int tool;
+    ofColor color;
+    ofImage *paper;
     
 #ifdef TARGET_OPENGLES
     ofxiFbo fbo;

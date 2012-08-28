@@ -125,6 +125,11 @@ int ofxBitmapItem::getHeight() {
 #endif
 }
 
+ofImage &ofxBitmapItem::getImage() {
+    return image;
+    
+}
+
 void ofxDocument::setup(string name) {
    
     
@@ -197,6 +202,8 @@ ofxBitmapItem* ofxDocument::getBitmapItem(string name) {
     
     return NULL;
 }
+
+
 
 
 void ofxDocument::load() {

@@ -13,6 +13,11 @@
 #define CRAYON_THICKNESS 15.0
 #define ERASER_THICKNESS 60.0
 
+#ifdef TARGET_OPENGLES
+#import <OpenGLES/ES1/gl.h>
+#import <OpenGLES/ES1/glext.h>
+#endif
+
 //--------------------------------------------------------------
 void silentNature::setup(){	
 	
@@ -20,6 +25,7 @@ void silentNature::setup(){
 	
     ofEnableAlphaBlending();
     ofEnableSmoothing();
+    ofSetLineWidth(5);
     
 	ofBackground(127,127,127);
     
@@ -32,16 +38,17 @@ void silentNature::setup(){
     mat.translate(0.5*(ofGetWidth()-scale*1080.0), 0, 0);
     layout = doc.getSymbolItem("Layout")->createInstance("layout",mat);
     
-    setTool(BRUSH_TOOL);
-    
-    
+    ofImage &image = doc.getBitmapItem("images/magenta")->getImage();
+   
+    tool = BRUSH_TOOL;
+    color = image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2);
+    paper = NULL;
+            
     canvas = layout.getChild("canvas");
     
     layout.getChildMat(canvas, cmat);
   
     //cmat.translate(canvas->mat.getTranslation());
-        
-    
     
 #ifdef TARGET_OPENGLES
     canvasTex.allocate(1024, 1024, GL_RGBA);
@@ -53,8 +60,6 @@ void silentNature::setup(){
     fbo.allocate(rect.width, rect.height);
 #endif
 
-    
-    
 #ifdef TARGET_OPENGLES
     fbo.begin(canvasTex.getTextureData().textureID);
 #else
@@ -64,8 +69,6 @@ void silentNature::setup(){
     glClear( GL_COLOR_BUFFER_BIT);
     fbo.end();
     
-    
-    
     //    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
     //        layout.mat.translate(64, 0, 0);
     //        layout.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
@@ -73,7 +76,6 @@ void silentNature::setup(){
     
 //    cout << ofGetWidth() << "\t" << ofGetHeight() << endl;
     
-   
     bDown = false;
     
     //action_url = "http://localhost:8888/postImage.of";
@@ -93,38 +95,29 @@ void silentNature::update(){
 }
 
 void silentNature::drawTool() {
+    
+   
+    
     switch (tool) {
         case BRUSH_TOOL: {
-            
-            ofSetColor(255,0,0);
-            
-            
+            ofSetColor(color);
             vector<ofVec2f> &curve = stroke.getCurve();
             for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
                 ofCircle(*iter, BRUSH_THICKNESS/2);
             }
                     
-            
-
-            
         } break;
         case CRAYON_TOOL: {
-           
-            ofSetColor(0,0,255);
-            
-            
+            ofSetColor(color);
             vector<ofVec2f> &curve = stroke.getCurve();
             for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
                 ofCircle(*iter, CRAYON_THICKNESS/2);
             }
             
-            
         } break;
             
         case ERASER_TOOL: {
-            
             ofSetColor(0,0,0,0);
-           
             ofDisableAlphaBlending();
             vector<ofVec2f> &curve = stroke.getCurve();
             for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
@@ -184,7 +177,15 @@ void silentNature::exit(){
 //--------------------------------------------------------------
 void silentNature::publish(){
     ofPixels pixels;
+    
+#ifdef TARGET_OPENGLES
+    fbo.begin(canvasTex.getTextureData().textureID);
+   glReadPixels(0, 0, 1024, 1024, GL_RGBA, GL_UNSIGNED_BYTE, pixels.getPixels());
+    fbo.end();
+#else
     fbo.readToPixels(pixels);
+#endif
+    
     
     string filename = "PHOTO_A_"+ofToString(counter)+".png";
     
@@ -215,23 +216,45 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
         
         if ((*iter)->type == SYMBOL_INSTANCE && (*iter)->bVisible == true) {
 //            cout << iter->name << "\t";
-            if ((*iter)->name == "palette") {
-                setTool(BRUSH_TOOL);
-                break;
+            if ((*iter)->name.length() == 2) {
+                if ((*iter)->name[0] == 'b' || (*iter)->name[0] == 'c') {
+                    
+                    this->tool = (*iter)->name[0] == 'b'  ? BRUSH_TOOL : CRAYON_TOOL;
+                    
+                    ofxSymbolInstance &sym = (*iter)->layers.front().instances.front();
+                    if (sym.type == BITMAP_INSTANCE) {
+                        cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
+                        ofImage &image = sym.bitmapItem->getImage();
+                        this->color= image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2);
+                         
+                    } else {
+                        this->color = ofColor(255);
+                    }
+                    
+                    
+                }
+                
+                
+                
+                if ((*iter)->name[0] == 'p') {
+                    this->tool = CUTOUT_TOOL;
+                    ofxSymbolInstance &sym = (*iter)->layers.front().instances.front();
+                    if (sym.type == BITMAP_INSTANCE) {
+                        cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
+                        paper = &sym.bitmapItem->getImage();
+                    } else {
+                        paper = NULL;
+                    }
+                    
+                }
             }
             
-            if ((*iter)->name == "crayons") {
-                setTool(CRAYON_TOOL);
-                break;
-            }
             
-            if ((*iter)->name == "paper") {
-                setTool(CUTOUT_TOOL);
-                break;
-            }
+            
             
             if ((*iter)->name == "eraser") {
-                setTool(ERASER_TOOL);
+                this->tool = ERASER_TOOL;
+                
                 break;
             }
             
@@ -250,6 +273,32 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                         touches.push_back(cpos);
                         break;
                         
+                    case CUTOUT_TOOL:
+                                               
+#ifdef TARGET_OPENGLES
+                        fbo.begin(canvasTex.getTextureData().textureID);
+#else
+                        fbo.begin();
+#endif
+                        if (paper!=NULL) {
+                            ofPushMatrix();
+                            ofTranslate(cpos);
+                            
+                            ofRotate(ofRandom(-180, 180));
+                            float scale = ofRandom(0.7, 1.5);
+                            ofScale(scale, scale);
+
+                            ofTranslate(-0.5*ofVec2f(paper->getWidth(),paper->getHeight()));
+                                
+                                     
+                            paper->draw(0,0);
+                            ofPopMatrix();
+                        }
+                        fbo.end();
+                            
+                                                
+                        break;
+                        
                     case ERASER_TOOL:
                         
                         stroke.setup(1);
@@ -262,7 +311,7 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                 
             }
             
-            if ((*iter)->name == "clear") {
+            if ((*iter)->name == "clean") {
 #ifdef TARGET_OPENGLES
                 fbo.begin(canvasTex.getTextureData().textureID);
 #else
@@ -373,13 +422,16 @@ void silentNature::touchDoubleTap(ofTouchEventArgs &touch){
 
 
 
-void silentNature::setTool(int tool) {
+void silentNature::updateTool() {
+   
+    
+    
     layout.getChild("palette")->alphaMultiplier = 0.5;
     layout.getChild("crayons")->alphaMultiplier = 0.5;
     layout.getChild("paper")->alphaMultiplier = 0.5;
     layout.getChild("eraser")->alphaMultiplier = 0.5;
 
-    this->tool = tool;
+    
     
     switch (tool) {
         case BRUSH_TOOL:

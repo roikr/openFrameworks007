@@ -27,6 +27,11 @@
 		E44BC3DE15B2A22A00CD7BBD /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3D715B2A22A00CD7BBD /* tinyxmlerror.cpp */; };
 		E44BC3DF15B2A22A00CD7BBD /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3D815B2A22A00CD7BBD /* tinyxmlparser.cpp */; };
 		E44BC3E015B2A22A00CD7BBD /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC3DA15B2A22A00CD7BBD /* ofxXmlSettings.cpp */; };
+		E44BDF8C15ECC72900A97E84 /* .cproject in Resources */ = {isa = PBXBuildFile; fileRef = E44BDF8415ECC72900A97E84 /* .cproject */; };
+		E44BDF8D15ECC72900A97E84 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E44BDF8515ECC72900A97E84 /* .gitignore */; };
+		E44BDF8E15ECC72900A97E84 /* .project in Resources */ = {isa = PBXBuildFile; fileRef = E44BDF8615ECC72900A97E84 /* .project */; };
+		E44BDF8F15ECC72900A97E84 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = E44BDF8715ECC72900A97E84 /* index.html */; };
+		E44BDF9015ECC72900A97E84 /* ofxHttpUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BDF8A15ECC72900A97E84 /* ofxHttpUtils.cpp */; };
 		E47132D215C7028400D837E4 /* silentNature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E47132D115C7028400D837E4 /* silentNature.cpp */; };
 		E479530F15BD4A6300940FC2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E479530E15BD4A6300940FC2 /* Default@2x.png */; };
 		E479551C15BD4A9400940FC2 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E479542A15BD4A9300940FC2 /* ofxFlash.cpp */; };
@@ -82,6 +87,14 @@
 		E44BC3D815B2A22A00CD7BBD /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E44BC3DA15B2A22A00CD7BBD /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E44BC3DB15B2A22A00CD7BBD /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		E44BDF8415ECC72900A97E84 /* .cproject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .cproject; sourceTree = "<group>"; };
+		E44BDF8515ECC72900A97E84 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		E44BDF8615ECC72900A97E84 /* .project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .project; sourceTree = "<group>"; };
+		E44BDF8715ECC72900A97E84 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		E44BDF8915ECC72900A97E84 /* ofxHttpTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHttpTypes.h; sourceTree = "<group>"; };
+		E44BDF8A15ECC72900A97E84 /* ofxHttpUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxHttpUtils.cpp; sourceTree = "<group>"; };
+		E44BDF8B15ECC72900A97E84 /* ofxHttpUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHttpUtils.h; sourceTree = "<group>"; };
+		E44BDF9315ECC73D00A97E84 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxThread.h; sourceTree = "<group>"; };
 		E47132D015C7025F00D837E4 /* silentNature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = silentNature.h; path = ../../SharedCode/src/silentNature.h; sourceTree = "<group>"; };
 		E47132D115C7028400D837E4 /* silentNature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = silentNature.cpp; path = ../../SharedCode/src/silentNature.cpp; sourceTree = "<group>"; };
 		E479530E15BD4A6300940FC2 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -173,6 +186,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E44BDF9115ECC73D00A97E84 /* ofxThread */,
+				E44BDF8315ECC72900A97E84 /* ofxHttpUtils */,
 				E47B1C1315E5F7C500986025 /* ofxiFbo */,
 				E4167D0715DD25960002B904 /* SharedCode */,
 				E479531015BD4A9200940FC2 /* ofxFlash */,
@@ -265,6 +280,46 @@
 			children = (
 				E44BC3DA15B2A22A00CD7BBD /* ofxXmlSettings.cpp */,
 				E44BC3DB15B2A22A00CD7BBD /* ofxXmlSettings.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E44BDF8315ECC72900A97E84 /* ofxHttpUtils */ = {
+			isa = PBXGroup;
+			children = (
+				E44BDF8415ECC72900A97E84 /* .cproject */,
+				E44BDF8515ECC72900A97E84 /* .gitignore */,
+				E44BDF8615ECC72900A97E84 /* .project */,
+				E44BDF8715ECC72900A97E84 /* index.html */,
+				E44BDF8815ECC72900A97E84 /* src */,
+			);
+			name = ofxHttpUtils;
+			path = ../../../addons/ofxHttpUtils;
+			sourceTree = "<group>";
+		};
+		E44BDF8815ECC72900A97E84 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E44BDF8915ECC72900A97E84 /* ofxHttpTypes.h */,
+				E44BDF8A15ECC72900A97E84 /* ofxHttpUtils.cpp */,
+				E44BDF8B15ECC72900A97E84 /* ofxHttpUtils.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E44BDF9115ECC73D00A97E84 /* ofxThread */ = {
+			isa = PBXGroup;
+			children = (
+				E44BDF9215ECC73D00A97E84 /* src */,
+			);
+			name = ofxThread;
+			path = ../../../addons/ofxThread;
+			sourceTree = "<group>";
+		};
+		E44BDF9215ECC73D00A97E84 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E44BDF9315ECC73D00A97E84 /* ofxThread.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -408,6 +463,10 @@
 				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				E44BC3DC15B2A22A00CD7BBD /* install.xml in Resources */,
 				E479530F15BD4A6300940FC2 /* Default@2x.png in Resources */,
+				E44BDF8C15ECC72900A97E84 /* .cproject in Resources */,
+				E44BDF8D15ECC72900A97E84 /* .gitignore in Resources */,
+				E44BDF8E15ECC72900A97E84 /* .project in Resources */,
+				E44BDF8F15ECC72900A97E84 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,6 +504,7 @@
 				E47132D215C7028400D837E4 /* silentNature.cpp in Sources */,
 				E4167D0D15DD25960002B904 /* ofxStroke.cpp in Sources */,
 				E47B1C1715E5F7C500986025 /* ofxiFbo.mm in Sources */,
+				E44BDF9015ECC72900A97E84 /* ofxHttpUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

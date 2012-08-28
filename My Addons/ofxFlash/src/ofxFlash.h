@@ -92,6 +92,7 @@ public:
     
     int getWidth();
     int getHeight();
+    ofImage &getImage();
     
     
     
