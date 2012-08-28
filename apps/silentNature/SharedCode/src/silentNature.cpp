@@ -91,7 +91,7 @@ void silentNature::setup(){
 //--------------------------------------------------------------
 void silentNature::update(){
     
-    
+    layout.update();
 }
 
 void silentNature::drawTool() {
@@ -217,11 +217,12 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
         if ((*iter)->type == SYMBOL_INSTANCE && (*iter)->bVisible == true) {
 //            cout << iter->name << "\t";
             if ((*iter)->name.length() == 2) {
+                layout.getChild("cb")->gotoAndStop(0);
                 if ((*iter)->name[0] == 'b' || (*iter)->name[0] == 'c') {
-                    
+                    (*iter)->play();
                     this->tool = (*iter)->name[0] == 'b'  ? BRUSH_TOOL : CRAYON_TOOL;
                     
-                    ofxSymbolInstance &sym = (*iter)->layers.front().instances.front();
+                    ofxSymbolInstance &sym = (*iter)->layers.front().frames.front().instances.front();
                     if (sym.type == BITMAP_INSTANCE) {
                         cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
                         ofImage &image = sym.bitmapItem->getImage();
@@ -230,15 +231,12 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                     } else {
                         this->color = ofColor(255);
                     }
-                    
-                    
+
                 }
-                
-                
                 
                 if ((*iter)->name[0] == 'p') {
                     this->tool = CUTOUT_TOOL;
-                    ofxSymbolInstance &sym = (*iter)->layers.front().instances.front();
+                    ofxSymbolInstance &sym = (*iter)->layers.front().frames.front().instances.front();
                     if (sym.type == BITMAP_INSTANCE) {
                         cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
                         paper = &sym.bitmapItem->getImage();

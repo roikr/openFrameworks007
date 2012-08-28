@@ -118,16 +118,25 @@ private:
 };
 
 
-
-
-
-
-struct layer {
+struct frame {
+    int index;
+    int duration;
     vector<ofxSymbolInstance> instances;
     vector<tlfText> texts;
     
+};
+
+
+struct layer {
+    vector<frame> frames;  
+    int currentFrame;
+    int endTime;
+    
     string name;
 };
+
+
+
 
 
 
@@ -160,7 +169,7 @@ public:
     void drawLayer(layer *ly,float alpha=1.0);
     void draw(float alpha=1.0);
     vector<ofxSymbolInstance*> hitTest(ofVec2f pos);
-    vector<ofxSymbolInstance*> hitLayer(layer *lyr,ofVec2f pos);
+    vector<ofxSymbolInstance*> hitLayer(layer *ly,ofVec2f pos);
 //    void update();
     
     ofRectangle getBoundingBox();
@@ -170,6 +179,14 @@ public:
     layer *getLayer(string name);
     vector<string> listLayers();
     vector<string> listChilds(string name);
+    
+    void play();
+    void stop();
+    void gotoAndStop(int frameNum);
+    void update();
+    
+    
+    
     string name;
     
     bool bVisible;
@@ -186,6 +203,10 @@ public:
     ofxSymbolItem *symbolItem;
     ofxBitmapItem *bitmapItem;
     int shapeIndex;
+    
+private:
+    int getDuration(layer *ly);
+    void setFrame(layer *ly,int frameNum);
 };
 
 

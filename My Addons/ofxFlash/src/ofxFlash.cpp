@@ -12,6 +12,7 @@
 
 #define PIXEL_SCALE 20.0
 #define MAX_TEXTURE_SIZE 1024
+#define FRAMES_PER_SECOND 24
 
 
 void ofxBitmapItem::load(float u,float v) {
@@ -470,124 +471,132 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
         xml.pushTag("timeline");
         xml.pushTag("DOMTimeline");
         xml.pushTag("layers");
-        for (int j=0; j<xml.getNumTags("DOMLayer");j++ ) {
+        for (int k=0; k<xml.getNumTags("DOMLayer");k++ ) {
             layer l;
-            l.name = xml.getAttribute("DOMLayer", "name", "",j);
-            xml.pushTag("DOMLayer",j);
+            l.name = xml.getAttribute("DOMLayer", "name", "",k);
+            l.currentFrame = 0;
+            l.endTime = 0;
+            xml.pushTag("DOMLayer",k);
             xml.pushTag("frames");
-            xml.pushTag("DOMFrame");
-            xml.pushTag("elements");
-            for (int i=0; i<xml.getNumTags("DOMBitmapInstance"); i++) {
-                string libraryItemName = xml.getAttribute("DOMBitmapInstance", "libraryItemName", "",i);
-                xml.pushTag("DOMBitmapInstance",i);
-                ofxSymbolInstance si = parseInstance(xml);
-                si.bitmapItem = doc->getBitmapItem(libraryItemName);
-//                if (bi.transformationPoint.empty()) {
-//                    bi.transformationPoint.push_back(ofVec2f(bi.bitmapItem->width/2,bi.bitmapItem->height/2));
-//                }
-                xml.popTag();
-                
-                si.type = BITMAP_INSTANCE;
-                l.instances.push_back(si);
-            }
-            
-            for (int i=0; i<xml.getNumTags("DOMSymbolInstance"); i++) {
-                xml.pushTag("DOMSymbolInstance",i);
-                ofxSymbolInstance si = parseInstance(xml);
-                xml.popTag();
-//                si.itemID = doc->itemsMap[];
-                si.name = xml.getAttribute("DOMSymbolInstance", "name", "",i);
-                si.type = SYMBOL_INSTANCE;
-                si.symbolItem = doc->getSymbolItem(xml.getAttribute("DOMSymbolInstance", "libraryItemName", "",i));
-                l.instances.push_back(si);
-            }
-
-            
-            
-            for (int i=0; i<xml.getNumTags("DOMShape"); i++) {
-
-                xml.pushTag("DOMShape",i);
-                ofxSymbolInstance si;
-                si.shapeIndex = shapes.size();
-                shapes.push_back(parseShape(xml));
-               
-                if (!shapes.back().bitmapFill.empty()) {
-                    ofxBitmapFill &bf = shapes.back().bitmapFill.front();
-                    bf.bitmapItem = doc->getBitmapItem(bf.bitmapPath);
+            for (int j=0; j<xml.getNumTags("DOMFrame"); j++) {
+                frame f;
+                f.index = xml.getAttribute("DOMFrame","index",0,j);
+                f.duration = xml.getAttribute("DOMFrame","duration",0,j);
+                xml.pushTag("DOMFrame",j);
+                xml.pushTag("elements");
+                for (int i=0; i<xml.getNumTags("DOMBitmapInstance"); i++) {
+                    string libraryItemName = xml.getAttribute("DOMBitmapInstance", "libraryItemName", "",i);
+                    xml.pushTag("DOMBitmapInstance",i);
+                    ofxSymbolInstance si = parseInstance(xml);
+                    si.bitmapItem = doc->getBitmapItem(libraryItemName);
+                    //                if (bi.transformationPoint.empty()) {
+                    //                    bi.transformationPoint.push_back(ofVec2f(bi.bitmapItem->width/2,bi.bitmapItem->height/2));
+                    //                }
+                    xml.popTag();
+                    
+                    si.type = BITMAP_INSTANCE;
+                    f.instances.push_back(si);
                 }
-                xml.popTag();
-                si.type = SHAPE;
-                l.instances.push_back(si);
-            }
-           
-            for (int i=0; i<xml.getNumTags("DOMTLFText"); i++) {
-                tlfText tlf;
-                
-                tlf.width = xml.getAttribute("DOMTLFText", "right", 0,i)/PIXEL_SCALE;
-                tlf.height = xml.getAttribute("DOMTLFText", "bottom", 0,i)/PIXEL_SCALE;
-                                
-                xml.pushTag("DOMTLFText",i);
-                
-                xml.pushTag("matrix");
-                float a = xml.getAttribute("Matrix", "a", 1.0);
-                float b = xml.getAttribute("Matrix", "b", 0.0);
-                float c = xml.getAttribute("Matrix", "c", 0.0);
-                float d = xml.getAttribute("Matrix", "d", 1.0);
-                float tx = xml.getAttribute("Matrix", "tx", 0.0);
-                float ty = xml.getAttribute("Matrix", "ty", 0.0);
-                
-                //bi.mat = ofMatrix4x4(a, c, 0, tx, b, d, 0, ty, 0, 0, 1, 0, 0, 0, 0, 1);
-                //bi.mat = ofMatrix4x4(sqrt(a*a+b*b)/20, 0, 0, 0, 0,sqrt(c*c+d*d)/20, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1);
-                
-//                bi.width = (float)doc.items[bi.path].frameRight/PIXEL_SCALE;
-//                bi.height = (float)doc.items[bi.path].frameBottom/PIXEL_SCALE;
-//                bi.href = doc.items[bi.path].href;
-                                    
-                tlf.translation = ofVec2f(tx,ty);
-                tlf.sx = sqrt(a*a+b*b)/PIXEL_SCALE;
-                tlf.sy = sqrt(c*c+d*d)/PIXEL_SCALE;
-                tlf.r = atan2( b, a );
-                xml.popTag();
-                
-                xml.pushTag("markup");
-                xml.pushTag("tlfTextObject");
-                xml.pushTag("TextFlow");
-                
-                for (int j=0; j<xml.getNumTags("p"); j++) {
-                    xml.pushTag("p",j);
-                    for (int k=0; k<xml.getNumTags("span"); k++) {
-                        string l = xml.getValue("span", "",k);
-                        if (!l.empty()) {
-                            span s;
-                            s.text = l;
-                            s.fontSize = xml.getAttribute("span", "fontSize", 12,k);
-                            s.color = ofHexToInt(xml.getAttribute("span", "color", "",k).substr(1)); // eliminate the hex #
-                            tlf.spans.push_back(s);
-                            tlf.text.append(l+"\n");
+                for (int i=0; i<xml.getNumTags("DOMSymbolInstance"); i++) {
+                    xml.pushTag("DOMSymbolInstance",i);
+                    ofxSymbolInstance si = parseInstance(xml);
+                    xml.popTag();
+                    //                si.itemID = doc->itemsMap[];
+                    si.name = xml.getAttribute("DOMSymbolInstance", "name", "",i);
+                    si.type = SYMBOL_INSTANCE;
+                    si.symbolItem = doc->getSymbolItem(xml.getAttribute("DOMSymbolInstance", "libraryItemName", "",i));
+                    f.instances.push_back(si);
+                }
+                for (int i=0; i<xml.getNumTags("DOMShape"); i++) {
+                    
+                    xml.pushTag("DOMShape",i);
+                    ofxSymbolInstance si;
+                    si.shapeIndex = shapes.size();
+                    shapes.push_back(parseShape(xml));
+                    
+                    if (!shapes.back().bitmapFill.empty()) {
+                        ofxBitmapFill &bf = shapes.back().bitmapFill.front();
+                        bf.bitmapItem = doc->getBitmapItem(bf.bitmapPath);
+                    }
+                    xml.popTag();
+                    si.type = SHAPE;
+                    f.instances.push_back(si);
+                }
+                for (int i=0; i<xml.getNumTags("DOMTLFText"); i++) {
+                    tlfText tlf;
+                    
+                    tlf.width = xml.getAttribute("DOMTLFText", "right", 0,i)/PIXEL_SCALE;
+                    tlf.height = xml.getAttribute("DOMTLFText", "bottom", 0,i)/PIXEL_SCALE;
+                    
+                    xml.pushTag("DOMTLFText",i);
+                    
+                    xml.pushTag("matrix");
+                    float a = xml.getAttribute("Matrix", "a", 1.0);
+                    float b = xml.getAttribute("Matrix", "b", 0.0);
+                    float c = xml.getAttribute("Matrix", "c", 0.0);
+                    float d = xml.getAttribute("Matrix", "d", 1.0);
+                    float tx = xml.getAttribute("Matrix", "tx", 0.0);
+                    float ty = xml.getAttribute("Matrix", "ty", 0.0);
+                    
+                    //bi.mat = ofMatrix4x4(a, c, 0, tx, b, d, 0, ty, 0, 0, 1, 0, 0, 0, 0, 1);
+                    //bi.mat = ofMatrix4x4(sqrt(a*a+b*b)/20, 0, 0, 0, 0,sqrt(c*c+d*d)/20, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1);
+                    
+                    //                bi.width = (float)doc.items[bi.path].frameRight/PIXEL_SCALE;
+                    //                bi.height = (float)doc.items[bi.path].frameBottom/PIXEL_SCALE;
+                    //                bi.href = doc.items[bi.path].href;
+                    
+                    tlf.translation = ofVec2f(tx,ty);
+                    tlf.sx = sqrt(a*a+b*b)/PIXEL_SCALE;
+                    tlf.sy = sqrt(c*c+d*d)/PIXEL_SCALE;
+                    tlf.r = atan2( b, a );
+                    xml.popTag();
+                    
+                    xml.pushTag("markup");
+                    xml.pushTag("tlfTextObject");
+                    xml.pushTag("TextFlow");
+                    
+                    for (int j=0; j<xml.getNumTags("p"); j++) {
+                        xml.pushTag("p",j);
+                        for (int k=0; k<xml.getNumTags("span"); k++) {
+                            string l = xml.getValue("span", "",k);
+                            if (!l.empty()) {
+                                span s;
+                                s.text = l;
+                                s.fontSize = xml.getAttribute("span", "fontSize", 12,k);
+                                s.color = ofHexToInt(xml.getAttribute("span", "color", "",k).substr(1)); // eliminate the hex #
+                                tlf.spans.push_back(s);
+                                tlf.text.append(l+"\n");
+                            }
+                            
+                            
+                            
                         }
                         
-                        
-                        
+                        xml.popTag();
                     }
                     
-                    xml.popTag();
-                }
                     
+                    xml.popTag(); // TextFlow
+                    xml.popTag();
+                    xml.popTag();
+                    
+                    
+                    xml.popTag(); // DOMTLFText
+                    
+                    //                cout << tlf.text << endl;
+                    f.texts.push_back(tlf);
+                }
                 
-                xml.popTag(); // TextFlow
+                
                 xml.popTag();
                 xml.popTag();
+                l.frames.push_back(f);
                 
-                
-                xml.popTag(); // DOMTLFText
-                
-//                cout << tlf.text << endl;
-                l.texts.push_back(tlf);
             }
-
             
-            xml.popTag();
-            xml.popTag();
+            
+            
+            
             xml.popTag();
             xml.popTag();
             layers.push_back(l);
@@ -618,40 +627,50 @@ ofxSymbolInstance ofxSymbolItem::createInstance(string name,ofMatrix4x4 mat,floa
     for (vector<layer>::iterator liter = layers.begin();liter!=layers.end();liter++) {
         layer l;
         l.name = liter->name;
-        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin();iter!=liter->instances.end();iter++) {
-            switch (iter->type) {
-                case BITMAP_INSTANCE: {
-                    ofxSymbolInstance i;
-                    i.type = iter->type;
-                    i.mat = iter->mat;
-                    i.transformationPoint = iter->transformationPoint;
-                    i.alphaMultiplier = 1.0;
-                    i.bitmapItem = iter->bitmapItem;
-                    l.instances.push_back(i);
-                    
-                }   break;
-                    
-                case SHAPE: {
-                    ofxSymbolInstance si;
-                    si.type = iter->type;
-                    si.mat = iter->mat;
-                    si.transformationPoint = iter->transformationPoint;
-                    si.alphaMultiplier = 1.0;
-                    si.shapeIndex = iter->shapeIndex;
-//                    dumpShape(si.shape);
-                    l.instances.push_back(si);
-                    
-                }   break;
-                    
-                case SYMBOL_INSTANCE:
-                    l.instances.push_back(iter->symbolItem->createInstance(iter->name, iter->mat,iter->alphaMultiplier,iter->transformationPoint.front()));
-                    break;
+        l.currentFrame = liter->currentFrame;
+        l.endTime = liter->endTime;
+        for (vector<frame>::iterator fiter=liter->frames.begin();fiter!=liter->frames.end();fiter++) {
+            frame f;
+            f.index = fiter->index;
+            f.duration = fiter->duration;
+            for (vector<ofxSymbolInstance>::iterator iter=fiter->instances.begin();iter!=fiter->instances.end();iter++) {
+                switch (iter->type) {
+                    case BITMAP_INSTANCE: {
+                        ofxSymbolInstance i;
+                        i.type = iter->type;
+                        i.mat = iter->mat;
+                        i.transformationPoint = iter->transformationPoint;
+                        i.alphaMultiplier = 1.0;
+                        i.bitmapItem = iter->bitmapItem;
+                        f.instances.push_back(i);
+                        
+                    }   break;
+                        
+                    case SHAPE: {
+                        ofxSymbolInstance si;
+                        si.type = iter->type;
+                        si.mat = iter->mat;
+                        si.transformationPoint = iter->transformationPoint;
+                        si.alphaMultiplier = 1.0;
+                        si.shapeIndex = iter->shapeIndex;
+                        //                    dumpShape(si.shape);
+                        f.instances.push_back(si);
+                        
+                    }   break;
+                        
+                    case SYMBOL_INSTANCE:
+                        f.instances.push_back(iter->symbolItem->createInstance(iter->name, iter->mat,iter->alphaMultiplier,iter->transformationPoint.front()));
+                        break;
+                        
+                    default:
+                        break;
+                }
                 
-                default:
-                    break;
             }
-            
+            l.frames.push_back(f);
         }
+        
+        
         newInstance.layers.push_back(l);
     }
     
@@ -704,7 +723,8 @@ void ofxSymbolInstance::drawLayer(layer *ly,float alpha) {
     
     ofPushMatrix();
     glMultMatrixf(mat.getPtr());
-    for (vector<ofxSymbolInstance>::iterator iter=ly->instances.begin(); iter!=ly->instances.end(); iter++) {
+    frame &f = ly->frames[ly->currentFrame];
+    for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
         if (iter->bVisible) {
             switch (iter->type) {
                 case BITMAP_INSTANCE: {
@@ -887,8 +907,9 @@ ofRectangle ofxSymbolInstance::getBoundingBox() {
             
         case SYMBOL_INSTANCE: {
             
-            for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-                for (vector<ofxSymbolInstance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
+            for (vector<layer>::iterator liter=layers.begin();liter!=layers.end();liter++) {
+                frame &f = liter->frames[liter->currentFrame];
+                for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
                     
                     ofRectangle iterect = iter->getBoundingBox();
                     if (iterect.width!=0 || iterect.height!=0) {
@@ -919,13 +940,13 @@ ofRectangle ofxSymbolInstance::getBoundingBox() {
     return rect;
 }
 
-vector<ofxSymbolInstance*> ofxSymbolInstance::hitLayer(layer *lyr,ofVec2f pos)  {
+vector<ofxSymbolInstance*> ofxSymbolInstance::hitLayer(layer *ly,ofVec2f pos)  {
     vector<ofxSymbolInstance*> instances;
     
     pos = mat.getInverse().preMult(ofVec3f(pos));
-    
-    for (vector<ofxSymbolInstance>::iterator iter=lyr->instances.begin(); iter!=lyr->instances.end(); iter++) {
-        
+    frame &f = ly->frames[ly->currentFrame];
+    for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
+         
         //            cout << wpos << "\t" << endl;
         
         switch (iter->type) {
@@ -973,8 +994,9 @@ vector<ofxSymbolInstance*> ofxSymbolInstance::hitTest(ofVec2f pos) {
 }
 
 ofxSymbolInstance *ofxSymbolInstance::getChild(string name) {
-    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
+    for (vector<layer>::iterator liter=layers.begin();liter!=layers.end();liter++) {
+        frame &f = liter->frames[liter->currentFrame];
+        for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
             if (iter->type==SYMBOL_INSTANCE && iter->name == name) {
                 return &(*iter);
             }
@@ -992,8 +1014,9 @@ bool ofxSymbolInstance::getChildMat(ofxSymbolInstance *child,ofMatrix4x4 &mat) {
         return true;
     }
     
-    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=riter->instances.begin(); iter!=riter->instances.end(); iter++) {
+    for (vector<layer>::iterator liter=layers.begin();liter!=layers.end();liter++) {
+        frame &f = liter->frames[liter->currentFrame];
+        for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
             if (iter->getChildMat(child, mat)) {
                 mat.postMult(this->mat);
                 return  true;
@@ -1028,7 +1051,8 @@ vector<string> ofxSymbolInstance::listChilds(string name) {
     vector<string> res;
     layer *l = getLayer(name);
     if (l!=NULL) {
-        for (vector<ofxSymbolInstance>::iterator iter=l->instances.begin(); iter!=l->instances.end(); iter++) {
+        frame &f=l->frames[l->currentFrame];
+        for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
             if (iter->type==SYMBOL_INSTANCE) {
                 res.push_back(iter->name);
             }
@@ -1036,3 +1060,80 @@ vector<string> ofxSymbolInstance::listChilds(string name) {
     }
     return res;
 }
+
+
+void ofxSymbolInstance::play() {
+    
+    for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
+        if (iter->frames.size()>1) {
+            iter->endTime = ofGetElapsedTimeMillis()+1000*getDuration(&*iter)/FRAMES_PER_SECOND;
+//             cout << "instance: " << name << "\tlayer: " << distance(layers.begin(), iter) << "\tduration: " << iter->endTime-ofGetElapsedTimeMillis() << endl;
+        }
+    }
+   
+}
+
+
+
+void ofxSymbolInstance::stop() {
+    for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
+        if (iter->frames.size()>1) {
+            iter->endTime = ofGetElapsedTimeMillis();
+        }
+    }
+}
+
+void ofxSymbolInstance::gotoAndStop(int frameNum) {
+    for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
+        if (iter->frames.size()>1) {
+            setFrame(&*iter, frameNum);
+            iter->endTime = ofGetElapsedTimeMillis();
+        }
+    }
+}
+
+void ofxSymbolInstance::update() {
+    
+    if (type==SYMBOL_INSTANCE) {
+        
+        for (vector<layer>::iterator liter=layers.begin();liter!=layers.end();liter++) {
+            if (liter->frames.size()>1 && liter->endTime>ofGetElapsedTimeMillis()) {
+                setFrame(&*liter,getDuration(&*liter)-floor((float)(liter->endTime-ofGetElapsedTimeMillis())*FRAMES_PER_SECOND/1000.0));
+            }
+            
+            frame &f = liter->frames[liter->currentFrame];
+            for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
+                iter->update();
+            }
+        }        
+    }
+}
+
+
+int ofxSymbolInstance::getDuration(layer *ly) {
+    int duration = 0;
+    for (vector<frame>::iterator iter=ly->frames.begin();iter!=ly->frames.end();iter++) {
+        duration+=iter->duration;
+    }
+    return duration;
+}
+
+
+void ofxSymbolInstance::setFrame(layer *ly,int frameNum) {
+    
+    
+    int duration = 0;
+    vector<frame>::iterator iter=ly->frames.begin();
+    
+    while (frameNum>=duration && iter!=ly->frames.end()) {
+        
+        duration+=iter->duration;
+        iter++;
+        
+    }
+    
+    ly->currentFrame = distance(ly->frames.begin(), iter)-1;
+//    cout << name << "\t" << ly->name << "\t" << frameNum << "\t" << ly->currentFrame << endl;
+}
+
+
