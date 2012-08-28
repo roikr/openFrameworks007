@@ -75,6 +75,12 @@ void silentNature::setup(){
     
    
     bDown = false;
+    
+    //action_url = "http://localhost:8888/postImage.of";
+	ofAddListener(httpUtils.newResponseEvent,this,&silentNature::newResponse);
+	httpUtils.start();
+    counter = 0;
+
 }
 
 
@@ -176,6 +182,29 @@ void silentNature::exit(){
 }
 
 //--------------------------------------------------------------
+void silentNature::publish(){
+    ofPixels pixels;
+    fbo.readToPixels(pixels);
+    
+    string filename = "PHOTO_A_"+ofToString(counter)+".png";
+    
+    ofImage image;
+    image.setFromPixels(pixels);
+    image.saveImage(filename);
+    
+    ofxHttpForm form;
+//	form.action = "http://localhost:8888/postImage.of";
+	form.action = "http://192.168.10.6:8888/postImage.of";    
+//    form.action = "http://192.168.10.5/upload/";
+	form.method = OFX_HTTP_POST;
+	form.addFormField("name", "fileupload1");
+	form.addFile("file",filename);
+	httpUtils.addForm(form);
+    counter++;
+    
+}
+
+//--------------------------------------------------------------
 void silentNature::touchDown(ofTouchEventArgs &touch){
     
     ofVec2f pos = ofVec2f(touch.x,touch.y);
@@ -242,6 +271,10 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                 glClearColor(0,0,0, 0);
                 glClear( GL_COLOR_BUFFER_BIT);
                 fbo.end();
+            }
+            
+            if ((*iter)->name == "publish") {
+                publish();
             }
 
             
@@ -371,6 +404,10 @@ void silentNature::setTool(int tool) {
             break;
     }
     
+}
+
+void silentNature::newResponse(ofxHttpResponse & response){
+    cout << ofToString(response.status) + ": " + (string)response.responseBody << endl;
 }
 
 /*

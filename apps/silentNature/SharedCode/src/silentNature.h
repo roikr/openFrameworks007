@@ -14,6 +14,7 @@
 #include "ofxiFbo.h"
 #endif
 #include "ofxStroke.h"
+#include "ofxHttpUtils.h"
 
 enum {
     BRUSH_TOOL,
@@ -35,6 +36,7 @@ public:
 	void update();
 	void draw();
 	void exit();
+    void publish();
 	
 	void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
@@ -44,6 +46,9 @@ public:
     
     void setTool(int tool);
     void drawTool();
+    
+    
+    void newResponse(ofxHttpResponse & response);
     
     
     ofxDocument doc;
@@ -66,5 +71,8 @@ public:
     deque<ofVec2f> touches;
     ofxStroke stroke;
     bool bDown;
+    
+    ofxHttpUtils httpUtils;
+    int counter;
    
 };
