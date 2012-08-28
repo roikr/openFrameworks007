@@ -7,7 +7,7 @@
 
 
 
-class testApp : public ofBaseApp{
+class testApp : public ofBaseApp,public ofxHTTPServerListener{
 
 	public:
 
@@ -21,17 +21,15 @@ class testApp : public ofBaseApp{
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
+    
+    
 
 		void getRequest(ofxHTTPServerResponse & response);
 		void postRequest(ofxHTTPServerResponse & response);
+        void fileNotFound(ofxHTTPServerResponse & response);
 
         ofxHTTPServer * server;
 
-        // for drawing
-        ofPoint radius[20];
-        ofImage image;
-        bool imageServed;
-        bool imageSaved;
 
         string postedImgName;
         string postedImgFile;

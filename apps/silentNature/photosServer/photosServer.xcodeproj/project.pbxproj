@@ -23,9 +23,9 @@
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
-		E4D98B9E15C1BF8E00465293 /* libmicrohttpd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D98B9515C1BF8E00465293 /* libmicrohttpd.a */; };
 		E4D98BA115C1BF8F00465293 /* ofxHTTPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B9A15C1BF8E00465293 /* ofxHTTPServer.cpp */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		E4EBCE6615EBB181007EA29A /* libmicrohttpd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4EBCE6515EBB181007EA29A /* libmicrohttpd.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,11 +85,11 @@
 		E4D98B8C15C1BF8E00465293 /* microhttpd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = microhttpd.h; sourceTree = "<group>"; };
 		E4D98B8D15C1BF8E00465293 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
 		E4D98B8E15C1BF8E00465293 /* plibc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plibc.h; sourceTree = "<group>"; };
-		E4D98B9515C1BF8E00465293 /* libmicrohttpd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmicrohttpd.a; sourceTree = "<group>"; };
 		E4D98B9A15C1BF8E00465293 /* ofxHTTPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxHTTPServer.cpp; sourceTree = "<group>"; };
 		E4D98B9B15C1BF8E00465293 /* ofxHTTPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHTTPServer.h; sourceTree = "<group>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E4EBCE6515EBB181007EA29A /* libmicrohttpd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmicrohttpd.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +111,7 @@
 				E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */,
 				E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */,
 				E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */,
-				E4D98B9E15C1BF8E00465293 /* libmicrohttpd.a in Frameworks */,
+				E4EBCE6615EBB181007EA29A /* libmicrohttpd.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,17 +237,9 @@
 		E4D98B8F15C1BF8E00465293 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				E4D98B9415C1BF8E00465293 /* macosx */,
+				E4EBCE6415EBB181007EA29A /* macosx */,
 			);
 			path = lib;
-			sourceTree = "<group>";
-		};
-		E4D98B9415C1BF8E00465293 /* macosx */ = {
-			isa = PBXGroup;
-			children = (
-				E4D98B9515C1BF8E00465293 /* libmicrohttpd.a */,
-			);
-			path = macosx;
 			sourceTree = "<group>";
 		};
 		E4D98B9915C1BF8E00465293 /* src */ = {
@@ -257,6 +249,14 @@
 				E4D98B9B15C1BF8E00465293 /* ofxHTTPServer.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		E4EBCE6415EBB181007EA29A /* macosx */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBCE6515EBB181007EA29A /* libmicrohttpd.a */,
+			);
+			path = macosx;
 			sourceTree = "<group>";
 		};
 		E4EEC9E9138DF44700A80321 /* openFrameworks */ = {

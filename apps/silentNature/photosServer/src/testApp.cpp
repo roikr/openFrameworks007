@@ -3,34 +3,34 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    ofSetWindowPosition(500, 0);
     ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
-	ofBackground(255,255,255);
-	image.allocate(400,400,OF_IMAGE_COLOR);
-	imageSaved  = false;
+	ofBackground(100);
+	
+    ofEnableAlphaBlending();
 
 	server = ofxHTTPServer::getServer(); // get the instance of the server
-	server->setServerRoot("www");		 // folder with files to be served
+//	server->setServerRoot("www");		 // folder with files to be served
 	server->setUploadDir("upload");		 // folder to save uploaded files
 	server->setCallbackExtension("of");	 // extension of urls that aren't files but will generate a post or get event
-	ofAddListener(server->getEvent,this,&testApp::getRequest);
-	ofAddListener(server->postEvent,this,&testApp::postRequest);
+	server->setListener(*this);
 	server->start(8888);
 }
 
 void testApp::getRequest(ofxHTTPServerResponse & response){
-	if(response.url=="/showScreen.of"){
-		response.response="<html> <head> <title>oF http server</title> \
-				<script> \
-				function beginrefresh(){ \
-					setTimeout(\"window.location.reload();\",30); \
-				}\
-		window.onload=beginrefresh; \
-		</script>\
-				</head> <body> <img src=\"screen.jpg\"/> </body> </html>";
-
-		imageSaved  = false;
-	}
+//	if(response.url=="/showScreen.of"){
+//		response.response="<html> <head> <title>oF http server</title> \
+//				<script> \
+//				function beginrefresh(){ \
+//					setTimeout(\"window.location.reload();\",30); \
+//				}\
+//		window.onload=beginrefresh; \
+//		</script>\
+//				</head> <body> <img src=\"screen.jpg\"/> </body> </html>";
+//
+//		imageSaved  = false;
+//	}
 }
 
 void testApp::postRequest(ofxHTTPServerResponse & response){
@@ -41,22 +41,17 @@ void testApp::postRequest(ofxHTTPServerResponse & response){
         }
 		postedImgFile = response.uploadedFiles.begin()->second ;//response.uploadedFiles[0];
 //		response.response = "<html> <head> oF http server </head> <body> image " + response.uploadedFiles[0]  " received correctly <body> </html>";
-        		response.response = "<html> <head> oF http server </head> <body> image " + postedImgFile +" received correctly <body> </html>";
+//        		response.response = "<html> <head> oF http server </head> <body> image " + postedImgFile +" received correctly <body> </html>";
 	}
+}
+
+void testApp::fileNotFound(ofxHTTPServerResponse & response) {
+    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-	for(int i=0; i<20; i++){
-		radius[i].x = sin(ofGetElapsedTimef()+(float)(i*i))*100;
-		radius[i].y = cos(ofGetElapsedTimef()-(float)(i*i))*100;
-	}
-
-	if(!imageSaved){
-		image.grabScreen(150,150,300,300);
-		image.saveImage("www/screen.jpg");
-		imageSaved = true;
-	}
+	
 
 	if(postedImgFile!=prevPostedImg){
 		postedImg.loadImage("upload/" + postedImgFile);
@@ -66,20 +61,13 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	ofSetColor(200,190,0);
-	ofFill();
-	//ofSetPolyMode(OF_POLY_WINDING_ODD);
-	ofBeginShape();
-	for(int i=0; i<20; i++){
-		ofCurveVertex(300+radius[i].x,300+radius[i].y);//,10,10);
-	}
-	ofEndShape(true);
+	
 
 	if(postedImgFile!=""){
 		ofSetColor(0,0,0);
-		ofDrawBitmapString(postedImgName,550,200);
+		ofDrawBitmapString(postedImgName,0,0);
 		ofSetColor(255,255,255);
-		postedImg.draw(550,220);
+		postedImg.draw(0,0);
 	}
 
 
