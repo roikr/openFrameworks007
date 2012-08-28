@@ -21,6 +21,8 @@ void ofxiFbo::setup(int width,int height) {
 }
 
 void ofxiFbo::begin(GLuint texture) {
+    
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING_OES, &defaultFramebuffer);
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, texture, 0); // probably for init and alloc mem
@@ -68,7 +70,7 @@ void ofxiFbo::begin(GLuint texture) {
 
 
 void ofxiFbo::end() {
-	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFramebuffer);
 	
 }
 

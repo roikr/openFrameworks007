@@ -25,4 +25,6 @@ public:
 	GLuint fbo;
 	int width;
 	int height;
+    
+    GLint defaultFramebuffer;
 };
