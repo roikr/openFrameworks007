@@ -24,6 +24,7 @@ public:
 	void setup();
 	void update();
 	void draw();
+    void refresh();
     void share();
     void sendMail();
     void exit();
@@ -46,6 +47,7 @@ public:
     int state;
     
     vector<item> items;
+    vector<item> newItem;
     
    
     ofTouchEventArgs lastTouch;
@@ -55,8 +57,7 @@ public:
 
     ofxDocument doc;
     ofxSymbolInstance layout;
-    layer *background;
-    
+    ofxSymbolInstance defaultImage;
     
     ofRectangle imageRect;
     ofMatrix4x4 camMat;
@@ -81,5 +82,10 @@ public:
     ofxiMail mail;
     
     ofMatrix4x4 screenMat;
+    
+    int idleTimer;
+    bool bNewImage;
+    ofxBitmapItem *selectedFrame;
+    ofMatrix4x4 menuMat;
     
 };

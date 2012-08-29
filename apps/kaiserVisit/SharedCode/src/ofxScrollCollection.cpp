@@ -37,23 +37,23 @@ enum  {
 void ofxScrollCollection::setup(scrollCollectionPrefs prefs) {
     this->prefs = prefs;
 //    pos = prefs.mat.preMult(ofVec3f(0,0,0));
-    imat = prefs.mat.getInverse();
+//    imat = prefs.mat.getInverse();
     state = SLIDER_STATE_IDLE;
 }
 
 void ofxScrollCollection::addItem(ofImage &img) {
     
     if (img.getWidth()>0) {
-        bool bSelected = !images.empty() && selected != images.rend();
+        //bool bSelected = !images.empty() && selected != images.rend();
         images.push_back(img); 
-        selected = images.rend();
+        deselect();
     }
 }
 
 void ofxScrollCollection::removeItem(int pos) {
     if (pos<images.size()) {
         images.erase(images.begin()+pos);
-        selected = images.rend();
+        deselect();
     }
 }
 
@@ -103,8 +103,7 @@ void ofxScrollCollection::update() {
 
 void ofxScrollCollection::draw() {
     
-    ofPushMatrix();
-    glMultMatrixf(prefs.mat.getPtr());
+    
     
     ofVec2f border(prefs.borderSize,prefs.borderSize);
     
@@ -126,32 +125,40 @@ void ofxScrollCollection::draw() {
             w = iter->getWidth()/iter->getHeight()*h;
         }
         
-        if (iter == selected) {
-            ofSetHexColor(prefs.hexBorderColor);
-            ofRect(pos-border, w+2*prefs.borderSize, h+2*prefs.borderSize);
-        }
+//        if (iter == selected) {
+//            ofSetHexColor(prefs.hexBorderColor);
+//            ofRect(pos-border, w+2*prefs.borderSize, h+2*prefs.borderSize);
+//        }
         
         ofSetHexColor(0xFFFFFF);
        
-        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
-            ofEnableAlphaBlending();
-        }
+//        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
+//            ofEnableAlphaBlending();
+//        }
         iter->draw(pos, w, h);
-        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
-            ofDisableAlphaBlending();
-        }
+//        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
+//            ofDisableAlphaBlending();
+//        }
        
         pos+=degenerate(ofVec2f(w,h)+prefs.seperator*ofVec2f(1,1));
             
         
     }
     
-    ofPopMatrix();
 }
 
 void ofxScrollCollection::clear() {
     images.clear();      // roikr: careful - involve with copy ?
-    selected = images.rbegin();
+    deselect();
+}
+
+void ofxScrollCollection::select(int num) {
+    selected = images.rbegin()+num;
+}
+
+void ofxScrollCollection::deselect() {
+    selected = images.rend();
+    //selected = images.rbegin();
 }
 
 bool ofxScrollCollection::getIsSelected() {
@@ -196,9 +203,10 @@ ofRectangle ofxScrollCollection::getRectangle(int num) {
         }
         
         if (distance(images.rbegin(),iter) == num) {
-            ofVec2f rectPos = prefs.mat.preMult(ofVec3f(pos.x,pos.y));
-            ofVec2f rectMax = prefs.mat.preMult(ofVec3f(pos.x+w,pos.y+h));
-            rect.set(rectPos, rectMax.x-rectPos.x, rectMax.y-rectPos.y);
+//            ofVec2f rectPos = prefs.mat.preMult(ofVec3f(pos.x,pos.y));
+//            ofVec2f rectMax = prefs.mat.preMult(ofVec3f(pos.x+w,pos.y+h));
+//            rect.set(rectPos, rectMax.x-rectPos.x, rectMax.y-rectPos.y);
+            rect.set(pos, w, h);
             break;
         }
         
@@ -212,14 +220,14 @@ ofRectangle ofxScrollCollection::getRectangle(int num) {
     return rect;
 }
 
-ofVec2f ofxScrollCollection::screenToWorld(ofVec2f pos) {
-    return imat.preMult(ofVec3f(pos.x,pos.y,0));
-}
+//ofVec2f ofxScrollCollection::screenToWorld(ofVec2f pos) {
+//    return imat.preMult(ofVec3f(pos.x,pos.y,0));
+//}
 
 void ofxScrollCollection::touchDown(ofTouchEventArgs &touch) {
     
     
-    ofVec2f downPos = screenToWorld(ofVec2f(touch.x,touch.y));
+    ofVec2f downPos(touch.x,touch.y);
     downIter = images.rend();
     if (ofRectangle(0,0,prefs.width,prefs.height).inside(downPos) && state !=SLIDER_STATE_PANNING) {
         state = SLIDER_STATE_DOWN;
@@ -318,7 +326,7 @@ void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
 }
 
 void ofxScrollCollection::touchDoubleTap(ofTouchEventArgs &touch){
-    ofVec2f pos = screenToWorld(ofVec2f(touch.x,touch.y));
+    ofVec2f pos(touch.x,touch.y);
    
     if (ofRectangle(0,0,prefs.width,prefs.height).inside(pos)) {
         vector<ofImage>::reverse_iterator iter = find(pos);
@@ -356,7 +364,7 @@ float ofxScrollCollection::getContentLength() {
 
 
 bool ofxScrollCollection::getIsInside(ofVec2f pos) {
-    return ofRectangle(0,0,prefs.width,prefs.height).inside(screenToWorld(pos));
+    return ofRectangle(0,0,prefs.width,prefs.height).inside(pos);
 }
 
 vector<ofImage>::reverse_iterator ofxScrollCollection::find(ofVec2f wpos) {

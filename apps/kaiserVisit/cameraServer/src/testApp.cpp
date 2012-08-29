@@ -130,7 +130,7 @@ void testApp::update(){
         image.update();
         
         ofxOscMessage m;
-        m.setAddress("/add");
+        m.setAddress("/new");
         m.addStringArg(ss.str());
         for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
             iter->second->sendMessage(m);

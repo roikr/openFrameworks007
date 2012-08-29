@@ -11,8 +11,8 @@
 
 struct scrollCollectionPrefs {
     scrollCollectionPrefs() {}; // default constructor
-    scrollCollectionPrefs(bool bVertical,ofMatrix4x4 mat,float width,float height,float seperator = 10,float inset = 10, float borderSize = 2,int hexBorderColor=0x000000,int selectionDelay=500) :
-    bVertical(bVertical),mat(mat),width(width),height(height),seperator(seperator),inset(inset),borderSize(borderSize),hexBorderColor(hexBorderColor),selectionDelay(selectionDelay)
+    scrollCollectionPrefs(bool bVertical,float width,float height,float seperator = 10,float inset = 10, float borderSize = 2,int hexBorderColor=0x000000,int selectionDelay=500) :
+    bVertical(bVertical),width(width),height(height),seperator(seperator),inset(inset),borderSize(borderSize),hexBorderColor(hexBorderColor),selectionDelay(selectionDelay)
     {};
     
     float seperator;
@@ -23,7 +23,7 @@ struct scrollCollectionPrefs {
     bool bVertical;
     float width;
     float height;
-    ofMatrix4x4 mat;
+    
     
     
 };
@@ -37,6 +37,8 @@ public:
     void draw();
     
     void clear();
+    void select(int num);
+    void deselect();
     
     void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
@@ -55,7 +57,7 @@ public:
     bool getIsInside(ofVec2f pos);
     scrollCollectionPrefs& getPrefs();
     
-    ofVec2f screenToWorld(ofVec2f pos);
+//    ofVec2f screenToWorld(ofVec2f pos);
     
     
 private:
@@ -87,6 +89,6 @@ private:
     float easeStart;
     float easeTarget;
     
-    ofMatrix4x4 imat;
+//    ofMatrix4x4 imat;
     
 };
