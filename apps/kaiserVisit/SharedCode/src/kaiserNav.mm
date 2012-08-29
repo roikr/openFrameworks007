@@ -32,14 +32,33 @@ void kaiserNav::updateOverlays() {
     string subTitleName = imageName+"_SC_"+lang;
     
     for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=liter->instances.begin(); iter!=liter->instances.end();iter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
             if (iter->type==SYMBOL_INSTANCE) {
-                iter->bVisible = iter->name == titleName || (bSubTitle && iter->name == subTitleName);
+                if (iter->name == titleName) {
+                    iter->bVisible = true;
+                    
+                    ofxSymbolInstance *sym = iter->getChild("open");
+                    if (sym) {
+                        sym->bVisible = !bSubTitle;
+                    }
+                    
+                    sym = iter->getChild("close");
+                    if (sym) {
+                        sym->bVisible = bSubTitle;
+                    }
+                    
+                } else if (iter->name == subTitleName){
+                    iter->bVisible = bSubTitle;
+                } else {
+                    iter->bVisible = false;
+                }
+                
+                
+                
             }
         }
     }
-    
-    
+        
     
 //    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
         
@@ -73,7 +92,7 @@ void kaiserNav::updateOverlays() {
     
     
     layer *langLayer = interfaceLayout.getLayer("language");
-    for (vector<ofxSymbolInstance>::iterator iter=langLayer->instances.begin(); iter!=langLayer->instances.end(); iter++) {
+    for (vector<ofxSymbolInstance>::iterator iter=langLayer->frames.front().instances.begin(); iter!=langLayer->frames.front().instances.end(); iter++) {
         if (iter->type==SYMBOL_INSTANCE) {
             iter->alphaMultiplier = lang == iter->name ? 1.0 : 0.6;
         }
@@ -167,7 +186,7 @@ void kaiserNav::setImage(string name) {
     layer *markersLayer = imageLayout.getLayer("markers");
     
     markers.clear();
-    for (vector<ofxSymbolInstance>::iterator iter=markersLayer->instances.begin(); iter!=markersLayer->instances.end();iter++) {
+    for (vector<ofxSymbolInstance>::iterator iter=markersLayer->frames.front().instances.begin(); iter!=markersLayer->frames.front().instances.end();iter++) {
         if (iter->type==SYMBOL_INSTANCE) {
             ofxSymbolInstance marker = doc.getSymbolItem("MARKER_IMAGE")->createInstance(iter->name,ofMatrix4x4());
             markers.push_back(make_pair(&*iter,marker));
@@ -182,7 +201,7 @@ void kaiserNav::setImage(string name) {
     string selectedName = imageName+"_OV";
     
    
-    for (vector<ofxSymbolInstance>::iterator iter=selected->instances.begin(); iter!=selected->instances.end();iter++) {
+    for (vector<ofxSymbolInstance>::iterator iter=selected->frames.front().instances.begin(); iter!=selected->frames.front().instances.end();iter++) {
         if (iter->type==SYMBOL_INSTANCE) {
             iter->bVisible = iter->name == selectedName;
         }
@@ -330,19 +349,14 @@ void kaiserNav::draw() {
     ofPushMatrix();
     
 	cam.begin(); //put all our drawing under the ofxPanZoom effect
-    ofPushMatrix();
-    
-    ofVec2f imagePos(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
-    ofTranslate(imagePos);
+       
+    ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
 
     ofDisableAlphaBlending();
     image.draw();
     ofEnableAlphaBlending();
     
     imageLayout.draw();
-    
-    
-    ofPopMatrix();
     
 //    //draw space constrains	
 //	float limitX = imagePos.x;
@@ -363,13 +377,6 @@ void kaiserNav::draw() {
         }
     }
     
-    
-    
-    if (bCaptionActive) {
-        floating.draw();
-        caption.draw();
-    }
-
 #ifdef TARGET_OF_IPHONE
     if (state==STATE_IDLE) {
 //        float offset = 0.5*(ofGetWidth()-player.getWidth());
@@ -382,6 +389,11 @@ void kaiserNav::draw() {
 #endif
     
     interfaceLayout.draw();
+    
+    if (bCaptionActive) {
+        floating.draw();
+        caption.draw();
+    }
     
     ofPopMatrix();
     ofPushStyle();
@@ -453,16 +465,9 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
                 if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name == imageName+"_C_"+lang) {
                     
                     bSubTitle = !bSubTitle;
+                    bCaptionActive = false;
                     
-                    ofxSymbolInstance *sym = (*iter)->getChild("open");
-                    if (sym) {
-                        sym->bVisible = !bSubTitle;
-                    }
                     
-                    sym = (*iter)->getChild("close");
-                    if (sym) {
-                        sym->bVisible = bSubTitle;
-                    }
 
                 }
             }
