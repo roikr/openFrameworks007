@@ -983,11 +983,17 @@ vector<ofxSymbolInstance*> ofxSymbolInstance::hitLayer(layer *ly,ofVec2f pos)  {
 vector<ofxSymbolInstance*> ofxSymbolInstance::hitTest(ofVec2f pos) {
 //    cout << "testing" << endl;
     
+    
+
+    
     vector<ofxSymbolInstance*> instances;
     
-    for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-        vector<ofxSymbolInstance*> ins = hitLayer(&*riter, pos);
-        instances.insert(instances.end(), ins.begin(), ins.end());
+    if (bVisible) {
+           
+        for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
+            vector<ofxSymbolInstance*> ins = hitLayer(&*riter, pos);
+            instances.insert(instances.end(), ins.begin(), ins.end());
+        }
     }
     
     return instances;
