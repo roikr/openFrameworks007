@@ -7,6 +7,7 @@
 #define MENU_INSET 15.0
 #define MENU_SEPERATOR 15.0
 #define EXTENNSION "jpg"
+#define IDLE_DELAY 60000
 
 enum {
     STATE_IMAGES,
@@ -143,6 +144,7 @@ void testApp::setup(){
     bShare = false;
     mail.setup();
     ofxRegisterMailNotification(this);
+    bIdle = true;
     refresh();
 }
 
@@ -202,9 +204,12 @@ void testApp::update(){
         bShare = false;
     }
     
-    if (ofGetElapsedTimeMillis()>idleTimer) {
+    if (!bIdle && ofGetElapsedTimeMillis()>idleTimer) {
         state = STATE_IMAGES;
         thumbs.deselect();
+        image.clear();
+        items.clear();
+        bIdle = true;
         refresh();
     }
   
@@ -417,7 +422,8 @@ void testApp::exit() {
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
     
-    idleTimer = ofGetElapsedTimeMillis()+60000;
+    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
+    bIdle = false;
     
     ofVec2f menuPos = menuMat.getInverse().preMult(ofVec3f(touch.x,touch.y,0));
     ofTouchEventArgs menuTouch(touch);
@@ -491,12 +497,9 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="finish") {
                     state = STATE_IMAGES;
                     
-                    
-                    
                     items.clear();
                     thumbs.clear();
-                    
-                    
+                    image.clear();
                     
                     ofxOscMessage m;
                     
@@ -507,7 +510,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                         sender.sendMessage(m);
                         images.clear();
                         m.clear();
-                        image.clear();
+                        
                     }
                     
                     m.setAddress("/list");
@@ -667,9 +670,11 @@ void testApp::urlResponse(ofHttpResponse &response) {
                 ofImage thumb;
                 thumb.loadImage(response.data);
                 thumbs.addItem(thumb);
-                if (bNewImage) {
+                if (bIdle && bNewImage) {
                     thumbs.select(0);
                     bNewImage = false;
+                    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
+                    bIdle = false;
                 }
                 refresh();
             } else {

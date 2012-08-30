@@ -84,6 +84,7 @@ public:
     ofMatrix4x4 screenMat;
     
     int idleTimer;
+    bool bIdle;
     bool bNewImage;
     ofxBitmapItem *selectedFrame;
     ofMatrix4x4 menuMat;
