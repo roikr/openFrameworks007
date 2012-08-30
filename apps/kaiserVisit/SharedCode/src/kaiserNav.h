@@ -67,6 +67,7 @@ public:
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
     ofxSymbolInstance screenMarker;
     ofxSymbolInstance screenOverlay;
+    layer *titlesLayer;
     
     string lang;
     string imageName;

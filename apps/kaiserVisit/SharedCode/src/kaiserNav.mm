@@ -147,9 +147,11 @@ void kaiserNav::setup(){
    
     
     interfaceLayout = doc.getSymbolItem("Layout")->createInstance("layout");
-    interfaceLayout.getChildMat(interfaceLayout.getChild("idle")->getChild("video"), videoMat);    
+    interfaceLayout.getChildMat(interfaceLayout.getChild("idle")->getChild("video"), videoMat); 
+    titlesLayer = interfaceLayout.getLayer("titles");
    
     screenOverlay = doc.getSymbolItem("SCREEN_OVERLY")->createInstance("screen");
+    
     
 	lang = "HE";
     setImage("I2");	
@@ -302,6 +304,11 @@ void kaiserNav::draw2nd() {
     
     switch (state) {
         case STATE_NAVIGATION:
+            cam.begin(); //put all our drawing under the ofxPanZoom effect
+            ofTranslate(ofVec2f(-0.5*ofVec2f(image.getWidth(),image.getHeight())));
+            image.draw();
+            cam.end();	//back to normal ofSetupScreen() projection
+            break;
         case STATE_TUTORIAL:
             
             cam.begin(); //put all our drawing under the ofxPanZoom effect
@@ -328,6 +335,7 @@ void kaiserNav::draw2nd() {
     
     ofEnableAlphaBlending();
     screenOverlay.draw();
+    interfaceLayout.drawLayer(titlesLayer);
     
     if (bCaptionActive) {
         screenMarker.draw();
