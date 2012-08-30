@@ -11,9 +11,17 @@
 #include "ofMain.h"
 #import <FacebookSDK/FacebookSDK.h>
 
+enum {
+    FACEBOOK_ERROR,
+    FACEBOOK_TOKEN_EXIST,
+    FACEBOOK_LOGGED_IN,
+    FACEBOOK_IMAGE_POSTED
+};
+
 class ofxFBEventArgs {
 public:    
     string message; 
+    int status;
 };
 
 
@@ -33,7 +41,7 @@ void ofxUnregisterFacebookNotification(T * obj){
 
 class ofxiFacebook {
 public:
-    void setup(vector<string> permissions=vector<string>());
+    void setup(bool bSSO,vector<string> permissions=vector<string>());
     void gotFocus();
     void launchedWithURL(string url);
        
@@ -50,4 +58,6 @@ public:
       
 private:
     FBSession *session;
+    vector<string> permissions;
+    bool bSSO;
 };

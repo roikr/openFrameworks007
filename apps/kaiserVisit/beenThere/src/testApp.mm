@@ -144,6 +144,11 @@ void testApp::setup(){
     bShare = false;
     mail.setup();
     ofxRegisterMailNotification(this);
+    
+    ofxRegisterFacebookNotification(this);
+    string strs[] = {"publish_actions", "user_photos"};
+    fb.setup(false,vector<string>(strs,strs+2));
+    
     bIdle = true;
     refresh();
 }
@@ -418,6 +423,7 @@ void testApp::sendMail() {
 
 void testApp::exit() {
     mail.exit();
+    fb.exit();
 }
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
@@ -518,6 +524,14 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                     sender.sendMessage(m);
                     
                     cout << "list: " << url << endl;
+                    break;
+                }
+                
+                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="facebook") {
+                    shareLayout.getChild("label_sent")->bVisible = false;
+                    
+                    fb.login();
+                    
                     break;
                 }
             }
@@ -659,6 +673,20 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 
 }
 
+//--------------------------------------------------------------
+void testApp::lostFocus(){
+    
+}
+
+//--------------------------------------------------------------
+void testApp::gotFocus(){
+    fb.gotFocus();
+}
+
+void testApp::launchedWithURL(string url) {
+    fb.launchedWithURL(url);
+    
+}
 
 
 void testApp::urlResponse(ofHttpResponse &response) {
@@ -692,4 +720,21 @@ void testApp::mailComposer(int &result) {
     if (result == OFXIMAIL_SEND) {
         shareLayout.getChild("label_sent")->bVisible = true;
     }
+}
+
+void testApp::facebookEvent(ofxFBEventArgs &args) {
+    cout << "facebookEvent: " << args.message << "\tstatus: " << args.status << endl;
+    if (args.status==FACEBOOK_LOGGED_IN) {
+        //    ofBuffer buffer;
+        //    ofSaveImage(shareImage.getPixelsRef(), buffer,OF_IMAGE_FORMAT_PNG);
+        fb.postImage(shareImage);
+    }
+    
+    if (args.status==FACEBOOK_IMAGE_POSTED) {
+        shareLayout.getChild("label_sent")->bVisible = true;
+        fb.logout();
+    }
+    
+    
+    
 }

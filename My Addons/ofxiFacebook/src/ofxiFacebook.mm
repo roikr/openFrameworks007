@@ -9,44 +9,56 @@
 #include "ofxiFacebook.h"
 #include "ofxiPhone.h"
 #include "ofxiPhoneExtras.h"
+#import <FacebookSDK/FBSessionTokenCachingStrategy.h>
 
 ofEvent<ofxFBEventArgs> ofxFacebookEvent;
 
-void ofxiFacebook::setup(vector<string> permissions) {
-    
-    // create a fresh session object
-    if (permissions.empty()) {
-        session = [[FBSession alloc] init];
-    } else {
-        // @"publish_actions", @"user_photos"
-        
-        NSMutableArray *perms = [NSMutableArray arrayWithCapacity:permissions.size()];
-        for (vector<string>::iterator iter=permissions.begin();iter!=permissions.end();iter++) {
-            [perms addObject:ofxStringToNSString(*iter)];
-            cout << *iter << endl;
-        }
-        
-        session = [[[FBSession alloc] initWithPermissions:perms] retain];
+NSMutableArray *convertPermissions(vector<string> permissions) {
+    NSMutableArray *perms = [NSMutableArray arrayWithCapacity:permissions.size()];
+    for (vector<string>::iterator iter=permissions.begin();iter!=permissions.end();iter++) {
+        [perms addObject:ofxStringToNSString(*iter)];
+        cout << *iter << endl;
     }
-        
+    return perms;
+}
 
+void ofxiFacebook::setup(bool bSSO,vector<string> permissions) {
     
-    // if we don't have a cached token, a call to open here would cause UX for login to
-    // occur; we don't want that to happen unless the user clicks the login button, and so
-    // we check here to make sure we have a token before calling open
+    this->bSSO = bSSO;
+    this->permissions = permissions;
+    session = nil;
     
-    if (session.state == FBSessionStateCreatedTokenLoaded) {
-        // even though we had a cached token, we need to login to make the session usable
-        [session openWithCompletionHandler:^(FBSession *session, 
-                                                         FBSessionState status, 
-                                                         NSError *error) {
-            // we recurse here, in order to update buttons and labels
-            ofxFBEventArgs args;
-            args.message = "token already created, make session usable";
-            ofNotifyEvent(ofxFacebookEvent, args);
-        }];
-    }
     
+    if (bSSO) {
+        // create a fresh session object
+        if (permissions.empty()) {
+            session = [[[FBSession alloc] init] retain];
+        } else {
+            // @"publish_actions", @"user_photos"
+            session = [[[FBSession alloc] initWithPermissions:convertPermissions(permissions)] retain];
+        }
+    
+        // if we don't have a cached token, a call to open here would cause UX for login to
+        // occur; we don't want that to happen unless the user clicks the login button, and so
+        // we check here to make sure we have a token before calling open
+        
+        if (session.state == FBSessionStateCreatedTokenLoaded) {
+            // even though we had a cached token, we need to login to make the session usable
+            [session openWithCompletionHandler:^(FBSession *session, 
+                                                             FBSessionState status, 
+                                                             NSError *error) {
+                // we recurse here, in order to update buttons and labels
+                ofxFBEventArgs args;
+                args.message = "token already created, make session usable";
+                args.status = FACEBOOK_TOKEN_EXIST;
+                ofNotifyEvent(ofxFacebookEvent, args);
+            }];
+        }
+    } else {
+         
+//        session = [[[FBSession alloc] initWithAppID:nil permissions:nil urlSchemeSuffix:nil tokenCacheStrategy:[[FBSessionTokenCachingStrategy alloc]  initWithUserDefaultTokenInformationKeyName:@"UserTokenInfo"]] retain];
+    }    
+
 }
 
 
@@ -57,7 +69,7 @@ void ofxiFacebook::gotFocus() {
     
     // FBSample logic
     // this means the user switched back to this app without completing a login in Safari/Facebook App
-    if (session.state == FBSessionStateCreatedOpening) {
+    if (bSSO && session.state == FBSessionStateCreatedOpening) {
         // BUG: for the iOS 6 preview we comment this line out to compensate for a race-condition in our
         // state transition handling for integrated Facebook Login; production code should close a
         // session in the opening state on transition back to the application; this line will again be
@@ -74,22 +86,35 @@ void ofxiFacebook::launchedWithURL(string url) {
 
 void ofxiFacebook::login() {
     if (!getIsLoggedIn()) {
-        if (session.state != FBSessionStateCreated) {
-            // Create a new, logged out session.
-            [session release];
-            session = [[[FBSession alloc] init] retain];
-        }
-        
-        // if the session isn't open, let's open it now and present the login UX to the user
-        [session openWithCompletionHandler:^(FBSession *session, 
-                                                         FBSessionState status, 
-                                                         NSError *error) {
-            // and here we make sure to update our UX according to the new session state
-            ofxFBEventArgs args;
-            args.message = "logged in";
-            ofNotifyEvent(ofxFacebookEvent, args);
+        if (bSSO) {
+            if (session.state != FBSessionStateCreated) {
+                // Create a new, logged out session.
+                [session release];
+                session = [[[FBSession alloc] init] retain];
+            }
+            
+            // if the session isn't open, let's open it now and present the login UX to the user
+            [session openWithCompletionHandler:^(FBSession *session, 
+                                                             FBSessionState status, 
+                                                             NSError *error) {
+                // and here we make sure to update our UX according to the new session state
+                ofxFBEventArgs args;
+                args.message = "logged in";
+                args.status = FACEBOOK_LOGGED_IN;
+                ofNotifyEvent(ofxFacebookEvent, args);
 
-        }];
+            }];
+        } else {
+            session = [[[FBSession alloc] initWithPermissions:convertPermissions(permissions)] retain];
+            [session openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, 
+                                                                                                        FBSessionState status, 
+                                                                                                        NSError *error) {
+                ofxFBEventArgs args;
+                args.message = "logged in";
+                args.status = FACEBOOK_LOGGED_IN;
+                ofNotifyEvent(ofxFacebookEvent, args);
+            }];
+        }
     }
 
 }
@@ -101,6 +126,8 @@ void ofxiFacebook::logout() {
         // users will simply close the app or switch away, without logging out; this will
         // cause the implicit cached-token login to occur on next launch of the application
         [session closeAndClearTokenInformation];
+        [session release];
+        session = nil;
     }
 }
 
@@ -140,17 +167,22 @@ void ofxiFacebook::postImage(ofImage &image) {
         
         NSString *alertMsg;
         NSString *alertTitle;
+        ofxFBEventArgs args;
+        
         if (error) {
             alertMsg = error.description;
             alertTitle = @"Error";
+            args.status = FACEBOOK_ERROR;
+            
         } else {
             NSDictionary *resultDict = (NSDictionary *)result;
             alertMsg = [NSString stringWithFormat:@"Successfully posted.\nPost ID: %@", 
                        [resultDict valueForKey:@"id"]];
             alertTitle = @"Success";
+            args.status = FACEBOOK_IMAGE_POSTED;
         }
         
-        ofxFBEventArgs args;
+        
         args.message = ofxNSStringToString(alertTitle)+"\n"+ofxNSStringToString(alertMsg);
         ofNotifyEvent(ofxFacebookEvent, args);
         
@@ -161,7 +193,7 @@ void ofxiFacebook::postImage(ofImage &image) {
 
 
 bool ofxiFacebook::getIsLoggedIn() {
-    return session.isOpen;
+    return session ? session.isOpen : false;
 }
 
 string ofxiFacebook::getAccessToken() {

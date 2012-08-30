@@ -34,5 +34,16 @@
 	<true/>
 	<key>UIPrerenderedIcon</key>
 	<true/>
+    <key>FacebookAppID</key>
+	<string>509542072405669</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb509542072405669</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

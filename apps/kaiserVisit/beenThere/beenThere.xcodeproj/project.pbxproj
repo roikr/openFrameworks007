@@ -40,6 +40,9 @@
 		E44BC7ED15B2D84F00CD7BBD /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E615B2D84F00CD7BBD /* tinyxmlerror.cpp */; };
 		E44BC7EE15B2D84F00CD7BBD /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */; };
 		E44BC7EF15B2D84F00CD7BBD /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */; };
+		E450930E15EF543400FD0F4C /* FACEBOOK in Resources */ = {isa = PBXBuildFile; fileRef = E450930A15EF543400FD0F4C /* FACEBOOK */; };
+		E450930F15EF543400FD0F4C /* ofxiFacebook.mm in Sources */ = {isa = PBXBuildFile; fileRef = E450930D15EF543400FD0F4C /* ofxiFacebook.mm */; };
+		E450931115EF545100FD0F4C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E450931015EF545100FD0F4C /* FacebookSDK.framework */; };
 		E468E3C515E20EF7001A0F14 /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E468E3C215E20E5D001A0F14 /* libofxiPhone_iphoneos_Debug.a */; };
 		E468E3D815E23141001A0F14 /* ofxiFbo.mm in Sources */ = {isa = PBXBuildFile; fileRef = E468E3D715E23141001A0F14 /* ofxiFbo.mm */; };
 		E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */; };
@@ -134,6 +137,10 @@
 		E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E44BC7EA15B2D84F00CD7BBD /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		E450930A15EF543400FD0F4C /* FACEBOOK */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FACEBOOK; sourceTree = "<group>"; };
+		E450930C15EF543400FD0F4C /* ofxiFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFacebook.h; sourceTree = "<group>"; };
+		E450930D15EF543400FD0F4C /* ofxiFacebook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFacebook.mm; sourceTree = "<group>"; };
+		E450931015EF545100FD0F4C /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		E468E3BA15E20E5D001A0F14 /* iOS+OFLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iOS+OFLib.xcodeproj"; path = "../../openFrameworks/libs/openFrameworksCompiled/project/ios/iOS+OFLib.xcodeproj"; sourceTree = "<group>"; };
 		E468E3D615E23141001A0F14 /* ofxiFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFbo.h; sourceTree = "<group>"; };
 		E468E3D715E23141001A0F14 /* ofxiFbo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFbo.mm; sourceTree = "<group>"; };
@@ -167,6 +174,7 @@
 				E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */,
 				E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */,
 				E40ED8AE15D15E6300556B9C /* osc.a in Frameworks */,
+				E450931115EF545100FD0F4C /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +226,7 @@
 		BB16E9930F2B1E5900518274 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				E450931015EF545100FD0F4C /* FacebookSDK.framework */,
 				BBE5E94E0F497BD800F28951 /* core */,
 			);
 			name = libs;
@@ -226,6 +235,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E450930915EF543400FD0F4C /* ofxiFacebook */,
 				E409644D15E36AE600A30BF8 /* ofxSettings */,
 				E468E3D415E23141001A0F14 /* ofxiFbo */,
 				E40377D415E15FC900789BC6 /* ofxiStillCamera */,
@@ -512,6 +522,25 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E450930915EF543400FD0F4C /* ofxiFacebook */ = {
+			isa = PBXGroup;
+			children = (
+				E450930A15EF543400FD0F4C /* FACEBOOK */,
+				E450930B15EF543400FD0F4C /* src */,
+			);
+			name = ofxiFacebook;
+			path = "../../../My Addons/ofxiFacebook";
+			sourceTree = "<group>";
+		};
+		E450930B15EF543400FD0F4C /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E450930C15EF543400FD0F4C /* ofxiFacebook.h */,
+				E450930D15EF543400FD0F4C /* ofxiFacebook.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E468E3BB15E20E5D001A0F14 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -625,6 +654,7 @@
 				E409645215E36AE600A30BF8 /* README.md in Resources */,
 				E409645515E36B6200A30BF8 /* Settings.bundle in Resources */,
 				E409646115E389DB00A30BF8 /* ofxiphone-Info.plist in Resources */,
+				E450930E15EF543400FD0F4C /* FACEBOOK in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,6 +698,7 @@
 				E403782B15E1600200789BC6 /* ofxiMail.mm in Sources */,
 				E468E3D815E23141001A0F14 /* ofxiFbo.mm in Sources */,
 				E409645315E36AE600A30BF8 /* Settings.mm in Sources */,
+				E450930F15EF543400FD0F4C /* ofxiFacebook.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,6 +717,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
@@ -701,6 +736,10 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
@@ -795,6 +834,10 @@
 		E434643015A1BAA800534614 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";

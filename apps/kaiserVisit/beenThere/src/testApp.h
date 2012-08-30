@@ -10,6 +10,7 @@
 #include "ofxiFbo.h"
 #include "ofxiMail.h"
 #include "Settings.h"
+#include "ofxiFacebook.h"
 
 struct item {
     int objectNum;
@@ -37,6 +38,11 @@ public:
     
     void urlResponse(ofHttpResponse &response);
     void mailComposer(int &result);
+    void facebookEvent(ofxFBEventArgs &args);
+    
+    void lostFocus();
+	void gotFocus();
+    void launchedWithURL(string url);
     
     
     ofxScrollCollection thumbs;
@@ -80,6 +86,7 @@ public:
     ofImage shareImage;
     bool bShare;
     ofxiMail mail;
+    ofxiFacebook fb;
     
     ofMatrix4x4 screenMat;
     
