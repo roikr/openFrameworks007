@@ -205,129 +205,171 @@ void silentNature::publish(){
     
 }
 
+void silentNature::resetTools() {
+    layer *ly = layout.getLayer("palette");
+    for (vector<ofxSymbolInstance>::iterator iter = ly->frames[ly->currentFrame].instances.begin();iter!=ly->frames[ly->currentFrame].instances.end();iter++) {
+        iter->gotoAndStop(0);
+    }
+    
+    ly = layout.getLayer("crayons");
+    for (vector<ofxSymbolInstance>::iterator iter = ly->frames[ly->currentFrame].instances.begin();iter!=ly->frames[ly->currentFrame].instances.end();iter++) {
+        iter->gotoAndStop(0);
+    }
+    
+    ly = layout.getLayer("papers");
+    for (vector<ofxSymbolInstance>::iterator iter = ly->frames[ly->currentFrame].instances.begin();iter!=ly->frames[ly->currentFrame].instances.end();iter++) {
+        iter->gotoAndStop(0);
+    }
+    
+}
+
 //--------------------------------------------------------------
 void silentNature::touchDown(ofTouchEventArgs &touch){
     
     ofVec2f pos = ofVec2f(touch.x,touch.y);
     
-    vector<ofxSymbolInstance*> items = layout.hitTest(pos);
+    vector<ofxSymbolInstance*> items;
     
-    for (vector<ofxSymbolInstance*>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+    if (layout.hitLayer(layout.getLayer("palette"), pos, items)) {
+        resetTools();
+        items.front()->play();
+        this->tool = BRUSH_TOOL ;
         
-        if ((*iter)->type == SYMBOL_INSTANCE && (*iter)->bVisible == true) {
-//            cout << iter->name << "\t";
-            if ((*iter)->name.length() == 2) {
-                layout.getChild("cb")->gotoAndStop(0);
-                if ((*iter)->name[0] == 'b' || (*iter)->name[0] == 'c') {
-                    (*iter)->play();
-                    this->tool = (*iter)->name[0] == 'b'  ? BRUSH_TOOL : CRAYON_TOOL;
-                    
-                    ofxSymbolInstance &sym = (*iter)->layers.front().frames.front().instances.front();
-                    if (sym.type == BITMAP_INSTANCE) {
-                        cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
-                        ofImage &image = sym.bitmapItem->getImage();
-                        this->color= image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2);
-                         
-                    } else {
-                        this->color = ofColor(255);
-                    }
+        ofxSymbolInstance &sym = items.front()->layers.front().frames.front().instances.front();
+        if (sym.type == BITMAP_INSTANCE) {
+            cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
+            ofImage &image = sym.bitmapItem->getImage();
+            this->color= image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2);
+            
+        } else {
+            this->color = ofColor(255);
+        }
+    }
+    
+    items.clear();
+    if (layout.hitLayer(layout.getLayer("crayons"), pos, items)) {
+        resetTools();
+        items.front()->play();
+        this->tool = CRAYON_TOOL ;
+        
+        ofxSymbolInstance &sym = items.front()->layers.front().frames.front().instances.front();
+        if (sym.type == BITMAP_INSTANCE) {
+            cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
+            ofImage &image = sym.bitmapItem->getImage();
+            this->color= image.getPixelsRef().getColor(image.getWidth()/2, 5); // get the crayon tip color
+            
+        } else {
+            this->color = ofColor(255);
+        }
+    }
+    
+    items.clear();
+    layer *papers = layout.getLayer("papers");
+    if (layout.hitLayer(papers, pos, items)) {
+        resetTools();
+//        for (vector<ofxSymbolInstance *>::iterator iter = items.begin();iter!=items.end();iter++) {
+//            cout << (*iter)->name << "\t";
+//        }
+//        cout << endl;
+        
 
-                }
+        ofxSymbolInstance &si = papers->frames.front().instances.front();
+        si.gotoAndStop(items.front()->name[1]-48);
+        this->tool = CUTOUT_TOOL ;
+        
+        ofxSymbolInstance &sym = items.front()->layers.front().frames.front().instances.front();
+        if (sym.type == BITMAP_INSTANCE) {
+            cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
+            paper = &sym.bitmapItem->getImage();
+        } else {
+            paper = NULL;
+        }
+    }
+    
+    items.clear();
+    if (layout.hitLayer(layout.getLayer("eraser"), pos, items)) {
+        this->tool = ERASER_TOOL;
+    }
+    
+    items.clear();
+    if (layout.hitLayer(layout.getLayer("canvas"), pos, items)) {
+        
+        bDown = true;
+        ofVec2f cpos = cmat.getInverse().preMult(ofVec3f(pos));
+        
+        switch (tool) {
+            case BRUSH_TOOL:
                 
-                if ((*iter)->name[0] == 'p') {
-                    this->tool = CUTOUT_TOOL;
-                    ofxSymbolInstance &sym = (*iter)->layers.front().frames.front().instances.front();
-                    if (sym.type == BITMAP_INSTANCE) {
-                        cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
-                        paper = &sym.bitmapItem->getImage();
-                    } else {
-                        paper = NULL;
-                    }
-                    
-                }
-            }
-            
-            
-            
-            
-            if ((*iter)->name == "eraser") {
-                this->tool = ERASER_TOOL;
-                
+                stroke.setup(1);
+                touches.push_back(cpos);
                 break;
-            }
-            
-            if ((*iter)->name == "canvas") {
-                bDown = true;
-                ofVec2f cpos = cmat.getInverse().preMult(ofVec3f(pos));
+            case CRAYON_TOOL:
+                stroke.setup(1);
+                touches.push_back(cpos);
+                break;
                 
-                switch (tool) {
-                    case BRUSH_TOOL:
-                        
-                        stroke.setup(1);
-                        touches.push_back(cpos);
-                        break;
-                    case CRAYON_TOOL:
-                        stroke.setup(1);
-                        touches.push_back(cpos);
-                        break;
-                        
-                    case CUTOUT_TOOL:
-                                               
-#ifdef TARGET_OPENGLES
-                        fbo.begin(canvasTex.getTextureData().textureID);
-#else
-                        fbo.begin();
-#endif
-                        if (paper!=NULL) {
-                            ofPushMatrix();
-                            ofTranslate(cpos);
-                            
-                            ofRotate(ofRandom(-180, 180));
-                            float scale = ofRandom(0.7, 1.5);
-                            ofScale(scale, scale);
-
-                            ofTranslate(-0.5*ofVec2f(paper->getWidth(),paper->getHeight()));
-                                
-                                     
-                            paper->draw(0,0);
-                            ofPopMatrix();
-                        }
-                        fbo.end();
-                            
-                                                
-                        break;
-                        
-                    case ERASER_TOOL:
-                        
-                        stroke.setup(1);
-                        touches.push_back(cpos);
-                        break;
-                        
-                    default:
-                        break;
-                }
+            case CUTOUT_TOOL:
                 
-            }
-            
-            if ((*iter)->name == "clean") {
 #ifdef TARGET_OPENGLES
                 fbo.begin(canvasTex.getTextureData().textureID);
 #else
                 fbo.begin();
 #endif
-                glClearColor(0,0,0, 0);
-                glClear( GL_COLOR_BUFFER_BIT);
+                if (paper!=NULL) {
+                    ofPushMatrix();
+                    ofTranslate(cpos);
+                    
+                    ofRotate(ofRandom(-180, 180));
+                    float scale = ofRandom(0.7, 1.5);
+                    ofScale(scale, scale);
+                    
+                    ofTranslate(-0.5*ofVec2f(paper->getWidth(),paper->getHeight()));
+                    
+                    
+                    paper->draw(0,0);
+                    ofPopMatrix();
+                }
                 fbo.end();
-            }
+                
+                
+                break;
+                
+            case ERASER_TOOL:
+                
+                stroke.setup(1);
+                touches.push_back(cpos);
+                break;
+                
+            default:
+                break;
+        }
             
-            if ((*iter)->name == "publish") {
-                publish();
-            }
+    }
+                    
+            
+    items.clear();
+    if (layout.hitLayer(layout.getLayer("clean"), pos, items)) {
+#ifdef TARGET_OPENGLES
+        fbo.begin(canvasTex.getTextureData().textureID);
+#else
+        fbo.begin();
+#endif
+        glClearColor(0,0,0, 0);
+        glClear( GL_COLOR_BUFFER_BIT);
+        fbo.end();
+
+    }       
+            
+            
+    items.clear();
+    if (layout.hitLayer(layout.getLayer("publish"), pos, items)) {       
+        publish();
+    }
 
             
-        }
-    }
     
+    
+    cout << endl;
     
 }
 
@@ -335,52 +377,47 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
 void silentNature::touchMoved(ofTouchEventArgs &touch){
     ofVec2f pos = ofVec2f(touch.x,touch.y);
     
-    vector<ofxSymbolInstance*> items = layout.hitTest(pos);
+    vector<ofxSymbolInstance*> items;
     
-    for (vector<ofxSymbolInstance*>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-        
-        if ((*iter)->type == SYMBOL_INSTANCE && (*iter)->bVisible == true) {
-            
-                        
-            if ((*iter)->name == "canvas") {
-                ofVec2f cpos = cmat.getInverse().preMult(ofVec3f(pos));
-                
-                switch (tool) {
-                    case BRUSH_TOOL:
-                    case CRAYON_TOOL:
-                        touches.push_back(cpos);
-                        if (touches.size()==4) {
-                            stroke.addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
-                            touches.pop_front();
-                        }
-                        
-                        break;
-                    case ERASER_TOOL:
-                        touches.push_back(cpos);
-                        if (touches.size()==4) {
-                            stroke.addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
-                            touches.pop_front();
-                            
+     if (layout.hitLayer(layout.getLayer("canvas"), pos, items)) {
+         ofVec2f cpos = cmat.getInverse().preMult(ofVec3f(pos));
+         
+         switch (tool) {
+             case BRUSH_TOOL:
+             case CRAYON_TOOL:
+                 touches.push_back(cpos);
+                 if (touches.size()==4) {
+                     stroke.addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
+                     touches.pop_front();
+                 }
+                 
+                 break;
+             case ERASER_TOOL:
+                 touches.push_back(cpos);
+                 if (touches.size()==4) {
+                     stroke.addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
+                     touches.pop_front();
+                     
 #ifdef TARGET_OPENGLES
-                            fbo.begin(canvasTex.getTextureData().textureID);
+                     fbo.begin(canvasTex.getTextureData().textureID);
 #else
-                            fbo.begin();
+                     fbo.begin();
 #endif
-                            drawTool();  
-                            fbo.end();
+                     drawTool();  
+                     fbo.end();
+                     
+                 }
+                 
+                 break;
+                 
+             default:
+                 break;
+         }
 
-                        }
-                                                
-                        break;
-                        
-                    default:
-                        break;
-                }
-            }
-            
-            
-        }
-    }
+     }
+
+    
+    
 
 }
 

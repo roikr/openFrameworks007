@@ -46,6 +46,7 @@ public:
     
     void updateTool();
     void drawTool();
+    void resetTools();
     
     
     void newResponse(ofxHttpResponse & response);
