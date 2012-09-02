@@ -425,6 +425,21 @@ ofxShape parseShape(ofxXmlSettings &xml) {
     return s;
 }
     
+
+ofMatrix4x4 parseMatrix(ofxXmlSettings &xml) {
+    float a = xml.getAttribute("Matrix", "a", 1.0);
+    float b = xml.getAttribute("Matrix", "b", 0.0);
+    float c = xml.getAttribute("Matrix", "c", 0.0);
+    float d = xml.getAttribute("Matrix", "d", 1.0);
+    float tx = xml.getAttribute("Matrix", "tx", 0.0);
+    float ty = xml.getAttribute("Matrix", "ty", 0.0);
+    
+    ofMatrix4x4 mat;
+    mat.preMult(ofMatrix4x4::newTranslationMatrix(tx, ty, 0.0));
+    mat.preMult(ofMatrix4x4::newRotationMatrix(atan2(b,a)*180/PI, 0.0, 0.0, 1.0));
+    mat.preMult(ofMatrix4x4::newScaleMatrix(sqrt(a*a+b*b), sqrt(c*c+d*d), 1.0));
+    return mat;
+}
     
 
 ofxSymbolInstance parseInstance(ofxXmlSettings &xml) {
@@ -434,14 +449,17 @@ ofxSymbolInstance parseInstance(ofxXmlSettings &xml) {
     
     
     if (xml.tagExists("matrix")) {
+//        xml.pushTag("matrix");
+//        ofVec2f translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
+//        float scale = xml.getAttribute("Matrix", "a", 1.0);
+//        float rotation = xml.getAttribute("Matrix", "c", 0.0);
+//        xml.popTag();
+//        
+//        i.mat.scale(scale, scale, 1.0);
+//        i.mat.translate(translation);
         xml.pushTag("matrix");
-        ofVec2f translation = ofVec2f(xml.getAttribute("Matrix", "tx", 0.0),xml.getAttribute("Matrix", "ty", 0.0));
-        float scale = xml.getAttribute("Matrix", "a", 1.0);
-        float rotation = xml.getAttribute("Matrix", "c", 0.0);
+        i.mat = parseMatrix(xml);
         xml.popTag();
-        
-        i.mat.scale(scale, scale, 1.0);
-        i.mat.translate(translation);
     } 
     
     if (xml.tagExists("transformationPoint")) {
@@ -480,8 +498,10 @@ void ofxSymbolItem::setup(ofxDocument *doc) {
             xml.pushTag("frames");
             for (int j=0; j<xml.getNumTags("DOMFrame"); j++) {
                 frame f;
-                f.index = xml.getAttribute("DOMFrame","index",0,j);
-                f.duration = xml.getAttribute("DOMFrame","duration",0,j);
+                f.index = xml.getAttribute("DOMFrame","index",1,j)-1; // flash frame start at 1
+                f.duration = xml.getAttribute("DOMFrame","duration",1,j);
+                
+                
                 xml.pushTag("DOMFrame",j);
                 xml.pushTag("elements");
                 for (int i=0; i<xml.getNumTags("DOMBitmapInstance"); i++) {
@@ -940,9 +960,11 @@ ofRectangle ofxSymbolInstance::getBoundingBox() {
     return rect;
 }
 
-vector<ofxSymbolInstance*> ofxSymbolInstance::hitLayer(layer *ly,ofVec2f pos)  {
-    vector<ofxSymbolInstance*> instances;
-    
+
+bool ofxSymbolInstance::hitLayer(layer *ly,ofVec2f pos,vector<ofxSymbolInstance*> &instances) {
+
+    bool hit = false;
+        
     pos = mat.getInverse().preMult(ofVec3f(pos));
     frame &f = ly->frames[ly->currentFrame];
     for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
@@ -956,14 +978,13 @@ vector<ofxSymbolInstance*> ofxSymbolInstance::hitLayer(layer *ly,ofVec2f pos)  {
                 
                 if (ofRectangle(0,0,iter->bitmapItem->getWidth(),iter->bitmapItem->getHeight()).inside(wpos)) {
                     
-                    instances.push_back(&*iter);
+                    hit = true;
                 }
             }   break;
             case SYMBOL_INSTANCE: {
-                vector<ofxSymbolInstance*> tempInstances = iter->hitTest(pos);
-                if (!tempInstances.empty()) {
-                    instances.push_back(&*iter);
-                    instances.insert(instances.end(), tempInstances.begin(), tempInstances.end());
+                if (iter->hitTest(pos, instances)) {
+                    hit = true;
+                    
                 }
                 
             }   break;
@@ -976,27 +997,30 @@ vector<ofxSymbolInstance*> ofxSymbolInstance::hitLayer(layer *ly,ofVec2f pos)  {
         
     }
     
-    return instances;
+    if (hit) {
+        instances.push_back(this);
+    }
+    
+    return hit;
 }
 
+bool ofxSymbolInstance::hitTest(ofVec2f pos,vector<ofxSymbolInstance*> &instances) {
 
-vector<ofxSymbolInstance*> ofxSymbolInstance::hitTest(ofVec2f pos) {
 //    cout << "testing" << endl;
     
     
-
-    
-    vector<ofxSymbolInstance*> instances;
+    bool hit = false;
     
     if (bVisible) {
            
         for (vector<layer>::reverse_iterator riter=layers.rbegin();riter!=layers.rend();riter++) {
-            vector<ofxSymbolInstance*> ins = hitLayer(&*riter, pos);
-            instances.insert(instances.end(), ins.begin(), ins.end());
+            if (hitLayer(&*riter, pos,instances)) {
+                hit = true;
+            }
         }
     }
     
-    return instances;
+    return hit;
 }
 
 ofxSymbolInstance *ofxSymbolInstance::getChild(string name) {
@@ -1090,10 +1114,13 @@ void ofxSymbolInstance::stop() {
 }
 
 void ofxSymbolInstance::gotoAndStop(int frameNum) {
+//    cout << "gotoAndStop numLayers: " << layers.size() << endl;
     for (vector<layer>::iterator iter=layers.begin();iter!=layers.end();iter++) {
         if (iter->frames.size()>1) {
+//            cout << "gotoAndStop: " << frameNum << endl;
             setFrame(&*iter, frameNum);
             iter->endTime = ofGetElapsedTimeMillis();
+            
         }
     }
 }
@@ -1130,6 +1157,7 @@ void ofxSymbolInstance::setFrame(layer *ly,int frameNum) {
     
     int duration = 0;
     vector<frame>::iterator iter=ly->frames.begin();
+//    cout << "setFrame, numFrames: " << ly->frames.size() << endl;
     
     while (frameNum>=duration && iter!=ly->frames.end()) {
         
