@@ -32,6 +32,7 @@ struct dragScale {
     ofVec2f offset;
 };
 
+
 class kaiserNav  {
 	
 public:
@@ -84,5 +85,6 @@ public:
 
     
     vector<dragScale> settings;
+    map<string, pair<int,int> > imagesData;
         
 };

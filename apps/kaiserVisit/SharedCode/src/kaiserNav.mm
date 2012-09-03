@@ -139,6 +139,13 @@ void kaiserNav::setup(){
         }
     }
     
+    xml.clear();
+    if (xml.loadFile("images.xml")) {
+        xml.pushTag("images");
+        for (int i=0; i<xml.getNumTags("image"); i++) {
+            imagesData[xml.getAttribute("image", "name", "",i)] = make_pair(xml.getAttribute("image", "width", 0,i), xml.getAttribute("image", "height", 0,i));
+        }
+    }
     
     
     doc.setup("DOMDocument.xml");
@@ -173,7 +180,11 @@ void kaiserNav::setImage(string name) {
     
     
     this->imageName = name;
-    image.loadImage(name+".png", 1024);
+    pair<int,int> imageSize = imagesData[name];
+    if (image.getDidLoad()) {
+        image.release();
+    }
+    image.loadImage(ofToDataPath(name), 1024,imageSize.first,imageSize.second);
     
     if (!image.getDidLoad()) {
         cout << "setImage: could not find " << name << endl;
@@ -433,13 +444,16 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             
             //    cout << p.x << "\t" << p.y << endl;
             
-            if (bCaptionActive && !caption.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
+            vector<ofxSymbolInstance *> hits;
+            
+            if (bCaptionActive && caption.hitTest(ofVec2f(touch.x,touch.y),hits)) {
                 bCaptionActive =false;
             }
             
+            hits.clear();
             for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance > >::iterator iter=markers.begin();iter!=markers.end();iter++) {
                 
-                if (!iter->second.hitTest(ofVec2f(touch.x,touch.y)).empty()) {
+                if (iter->second.hitTest(ofVec2f(touch.x,touch.y),hits)) {
                     cout << iter->first->name << endl;
                     setCaption(iter->first->name);
                 }
@@ -447,36 +461,41 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             
 //            ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
 //            titles->bVisible = false;
-            
-            vector<ofxSymbolInstance*> hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y));
-            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if ((*iter)->type==SYMBOL_INSTANCE) {
-                    cout << (*iter)->name << endl;
-                    setImage((*iter)->name);
-                }
-            }
-            
-            hits = interfaceLayout.hitLayer(interfaceLayout.getLayer("language"),ofVec2f(touch.x,touch.y));
-            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if ((*iter)->type==SYMBOL_INSTANCE) {
-                    cout << (*iter)->name << endl;
-                    lang = (*iter)->name;
-                    if (bCaptionActive) {
-                        setCaption(captionName);
+            hits.clear();
+            if (interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y),hits)) {
+                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                    if ((*iter)->type==SYMBOL_INSTANCE) {
+                        cout << (*iter)->name << endl;
+                        setImage((*iter)->name);
                     }
                 }
             }
             
             
-            hits = interfaceLayout.getChild("titles")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)));
-            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name == imageName+"_C_"+lang) {
-                    
-                    bSubTitle = !bSubTitle;
-                    bCaptionActive = false;
-                    
-                    
+            hits.clear();
+            if(interfaceLayout.hitLayer(interfaceLayout.getLayer("language"),ofVec2f(touch.x,touch.y),hits)) {
+                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                    if ((*iter)->type==SYMBOL_INSTANCE) {
+                        cout << (*iter)->name << endl;
+                        lang = (*iter)->name;
+                        if (bCaptionActive) {
+                            setCaption(captionName);
+                        }
+                    }
+                }
+            }
+            
+            hits.clear();
+            if( interfaceLayout.getChild("titles")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name == imageName+"_C_"+lang) {
+                        
+                        bSubTitle = !bSubTitle;
+                        bCaptionActive = false;
+                        
+                        
 
+                    }
                 }
             }
 
@@ -521,6 +540,14 @@ void kaiserNav::touchDoubleTap(ofTouchEventArgs &touch){
                 }
                 break;
             }
+        }
+    }
+    
+    else {
+        if (imageName=="I2") {
+            setImage("I1");
+        } else {
+            setImage("I2");
         }
     }
     

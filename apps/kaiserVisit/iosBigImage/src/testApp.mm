@@ -11,7 +11,8 @@ void testApp::setup(){
 	//iPhoneAlerts will be sent to this.
 	ofxiPhoneAlerts.addListener(this);
     
-    image.loadImage("IMAGE_1.png",1024); 
+    image.loadImage(ofToDataPath("I1"),1024,5359,3792);
+//    image.loadImage("I2.png",1024,2019,1639);
     
     float minZoom = (float)ofGetWidth()/(float)image.getWidth();
     //	cam.setZoom(0.125f);

@@ -10,18 +10,30 @@
 
 #include "ofMain.h"
 
+#ifdef TARGET_OPENGLES
+#include "ofxiTexture.h"
+#endif
+
 struct tile {
     tile(ofRectangle rect):rect(rect) {};
     
     ofRectangle rect;
+#ifdef TARGET_OPENGLES
+    ofxiTexture texture;
+#else
 	ofImage image;
+#endif
 };
 
 class ofxBigImage {
 public:
+#ifndef TARGET_OPENGLES
     void loadImage(ofImage image,int size);
-    void loadImage(string filename,int size);
+    
+#endif
+    void loadImage(string filename,int size,int width=0,int height=0);
     void draw();
+    void release();
     int getWidth();
     int getHeight();
     bool getDidLoad();
