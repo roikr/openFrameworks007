@@ -37,6 +37,7 @@ void silentNature::setup(){
     mat.scale(scale, scale, 1.0);
     mat.translate(0.5*(ofGetWidth()-scale*1080.0), 0, 0);
     layout = doc.getSymbolItem("Layout")->createInstance("layout",mat);
+    frame = doc.getSymbolItem("Frame")->createInstance("frame",mat);
     
     ofImage &image = doc.getBitmapItem("images/magenta")->getImage();
    
@@ -45,8 +46,9 @@ void silentNature::setup(){
     paper = NULL;
             
     canvas = layout.getChild("canvas");
-    
     layout.getChildMat(canvas, cmat);
+    publishCanvas = frame.getChild("publishCanvas");
+    frame.getChildMat(publishCanvas, publishMat);
   
     //cmat.translate(canvas->mat.getTranslation());
     
@@ -54,27 +56,17 @@ void silentNature::setup(){
     canvasTex.allocate(1024, 1024, GL_RGBA);
     //canvasTex.texData.bFlipTexture = true;
     fbo.setup(1024, 1024);
+    
 #else
     ofRectangle rect = canvas->getBoundingBox();
-    cout << rect.width << "\t" << rect.height << endl;
+//    cout << rect.width << "\t" << rect.height << endl;
     fbo.allocate(rect.width, rect.height);
+    
+    ofRectangle publishRect = publishCanvas->getBoundingBox();
+    publishFbo.allocate(publishRect.width, publishRect.height);
 #endif
 
-#ifdef TARGET_OPENGLES
-    fbo.begin(canvasTex.getTextureData().textureID);
-#else
-    fbo.begin();
-#endif
-    glClearColor(0,0,0, 0);
-    glClear( GL_COLOR_BUFFER_BIT);
-    fbo.end();
-    
-    //    if (iPhoneGetDeviceType() == OFXIPHONE_DEVICE_IPHONE) {
-    //        layout.mat.translate(64, 0, 0);
-    //        layout.mat.scale(5.0/6.0, 5.0/6.0, 1.0);
-    //    }
-    
-//    cout << ofGetWidth() << "\t" << ofGetHeight() << endl;
+    clear();
     
     bDown = false;
     
@@ -134,7 +126,18 @@ void silentNature::drawTool() {
     }
 }
 
-void silentNature::draw(){    
+void silentNature::draw(){   
+    
+    if (publishTimer>ofGetElapsedTimeMillis()) {
+        ofBackgroundHex(0xd5d0ca);
+        frame.draw();
+        ofPushMatrix();
+        glMultMatrixf(publishMat.getPtr());
+        publishImage.draw(0,0);
+        ofPopMatrix();
+        return;
+    }
+    
 	ofSetColor(255);
     
     
@@ -174,9 +177,70 @@ void silentNature::exit(){
     
 }
 
+ofRectangle getBoundaryBox(ofPixels &pixels) {
+    ofRectangle rect;
+    
+    
+    for (int i=0;i<pixels.getHeight();i++) {
+        int j;
+        for (j=0;j<pixels.getWidth();j++) {
+            if (pixels.getColor(j, i).a!=0) {
+                break;
+            }
+        }
+        if (j<pixels.getWidth()) {
+            rect.y = i;
+            break;
+        }
+    }
+    
+    for (int i=0;i<pixels.getHeight();i++) {
+        int j;
+        for (j=0;j<pixels.getWidth();j++) {
+            if (pixels.getColor(j, pixels.getHeight()-i-1).a!=0) {
+                break;
+            }
+        }
+        if (j<pixels.getWidth()) {
+            rect.height = pixels.getHeight()-i-1-rect.y+1;
+            break;
+        }
+    }
+    
+    for (int j=0;j<pixels.getWidth();j++) {
+        int i;
+        for (i=0;i<pixels.getHeight();i++) {
+            if (pixels.getColor(j, i).a!=0) {
+                break;
+            }
+        }
+        if (i<pixels.getHeight()) {
+            rect.x = j;
+            break;
+        }
+    }
+    
+    for (int j=0;j<pixels.getWidth();j++) {
+        int i;
+        for (i=0;i<pixels.getHeight();i++) {
+            if (pixels.getColor(pixels.getWidth()-j, i).a!=0) {
+                break;
+            }
+        }
+        if (i<pixels.getHeight()) {
+            rect.width = pixels.getWidth()-j-1-rect.x+1;
+            break;
+        }
+    }
+    
+    return rect;
+}
+
 //--------------------------------------------------------------
 void silentNature::publish(){
+    publishTimer = ofGetElapsedTimeMillis() + 5000;
     ofPixels pixels;
+    
     
 #ifdef TARGET_OPENGLES
     fbo.begin(canvasTex.getTextureData().textureID);
@@ -186,12 +250,40 @@ void silentNature::publish(){
     fbo.readToPixels(pixels);
 #endif
     
+    ofRectangle rect = getBoundaryBox(pixels);
+    cout <<  rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
     
-    string filename = "PHOTO_A_"+ofToString(counter)+".png";
+    ofRectangle fboRect(0,0,fbo.getWidth(),fbo.getHeight());
+    ofImage &pubcan=doc.getBitmapItem("images/publish_canvas.png")->getImage();
+    
+    float scale = min(pubcan.getWidth()/rect.width,pubcan.getHeight()/rect.height);
+    
+    ofMatrix4x4 mat;
+    mat.makeIdentityMatrix();
+    mat.translate(0.5*ofVec2f(pubcan.getWidth(),pubcan.getHeight()));//+fboRect.getCenter());
+    mat.preMultScale(ofVec3f(scale,scale,1.0));;
+    mat.preMultTranslate(-rect.getCenter());
+        
     
     ofImage image;
     image.setFromPixels(pixels);
-    image.saveImage(filename);
+#ifdef TARGET_OPENGLES
+    
+#else
+    publishFbo.begin();
+    pubcan.draw(0,0);
+    ofPushMatrix();
+    glMultMatrixf(mat.getPtr());
+    image.draw(0,0);
+    publishFbo.end();
+    publishFbo.readToPixels(pixels);
+#endif
+    
+
+    string filename = "PHOTO_A_"+ofToString(counter)+".png";
+    
+    publishImage.setFromPixels(pixels);
+    publishImage.saveImage(filename);
     
     ofxHttpForm form;
 //	form.action = "http://localhost:8888/postImage.of";
@@ -202,7 +294,20 @@ void silentNature::publish(){
 	form.addFile("file",filename);
 	httpUtils.addForm(form);
     counter++;
+    clear();
     
+}
+
+void silentNature::clear() {
+#ifdef TARGET_OPENGLES
+    fbo.begin(canvasTex.getTextureData().textureID);
+#else
+    fbo.begin();
+#endif
+    glClearColor(0,0,0, 0);
+    glClear( GL_COLOR_BUFFER_BIT);
+    fbo.end();
+
 }
 
 void silentNature::resetTools() {
@@ -349,15 +454,7 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
             
     items.clear();
     if (layout.hitLayer(layout.getLayer("clean"), pos, items)) {
-#ifdef TARGET_OPENGLES
-        fbo.begin(canvasTex.getTextureData().textureID);
-#else
-        fbo.begin();
-#endif
-        glClearColor(0,0,0, 0);
-        glClear( GL_COLOR_BUFFER_BIT);
-        fbo.end();
-
+        clear();
     }       
             
             

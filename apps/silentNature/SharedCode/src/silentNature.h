@@ -36,6 +36,7 @@ public:
 	void update();
 	void draw();
 	void exit();
+    void clear();
     void publish();
 	
 	void touchDown(ofTouchEventArgs &touch);
@@ -55,6 +56,7 @@ public:
     ofxDocument doc;
     ofxSymbolInstance layout;
     ofxSymbolInstance *canvas;
+    ofxSymbolInstance frame;
     
      
     int tool;
@@ -78,4 +80,9 @@ public:
     ofxHttpUtils httpUtils;
     int counter;
    
+    int publishTimer;
+    ofMatrix4x4 publishMat;
+    ofImage publishImage;
+    ofFbo publishFbo;
+    ofxSymbolInstance *publishCanvas;
 };
