@@ -240,6 +240,10 @@ void testApp::update(){
         bPostImage = false;
         if (state == STATE_FACEBOOK) {
             fb.postImage(shareImage);
+            shareLayout.getChild("label_sent")->bVisible = true;
+            state = STATE_SHARE;
+            idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
+            bIdle = false;
         }
     }
       
@@ -333,8 +337,8 @@ void testApp::draw(){
             
         
         case STATE_SHARE:
-//        case STATE_MAIL:
-//        case STATE_FACEBOOK:
+        case STATE_MAIL:
+        case STATE_FACEBOOK:
            
            
 
@@ -805,7 +809,7 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
         case FACEBOOK_ACTION_POST_IMAGE:
             switch (args.status) {
                 case FACEBOOK_SUCEEDED:
-                    shareLayout.getChild("label_sent")->bVisible = true;
+                    
                     break;
                 case FACEBOOK_FAILED:
                     break;
@@ -814,9 +818,7 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
                     break;
             }
             
-            state = STATE_SHARE;
-            idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
-            bIdle = false;
+            
             
             
             break;
