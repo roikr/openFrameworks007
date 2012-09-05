@@ -8,11 +8,14 @@
 #define MENU_SEPERATOR 15.0
 #define EXTENNSION "jpg"
 #define IDLE_DELAY 60000
+#define SHARE_DELAY 180000
 
 enum {
     STATE_IMAGES,
     STATE_OBJECTS,
-    STATE_SHARE
+    STATE_SHARE,
+    STATE_MAIL,
+    STATE_FACEBOOK
 };
 
 
@@ -146,9 +149,7 @@ void testApp::setup(){
     ofxRegisterMailNotification(this);
     
     ofxRegisterFacebookNotification(this);
-    string strs[] = {"publish_actions", "user_photos"};
-    fb.setup(false,vector<string>(strs,strs+2));
-    
+        
     bIdle = true;
     refresh();
 }
@@ -209,15 +210,39 @@ void testApp::update(){
         bShare = false;
     }
     
-    if (!bIdle && ofGetElapsedTimeMillis()>idleTimer) {
-        state = STATE_IMAGES;
-        thumbs.deselect();
-        image.clear();
-        items.clear();
-        bIdle = true;
-        refresh();
+    switch (state) {
+        case STATE_IMAGES:
+        case STATE_OBJECTS:
+        case STATE_SHARE:
+            if (!bIdle && ofGetElapsedTimeMillis()>idleTimer) {
+                state = STATE_IMAGES;
+                thumbs.deselect();
+                image.clear();
+                items.clear();
+                bIdle = true;
+                refresh();
+            }
+            break;
+        case STATE_MAIL:
+        case STATE_FACEBOOK:
+            if (ofGetElapsedTimeMillis()>shareTimer) {
+                bIdle = true;
+                state = STATE_IMAGES;
+            }
+            break;
+            
+        default:
+            break;
     }
-  
+    
+    
+    if (bPostImage) {
+        bPostImage = false;
+        if (state == STATE_FACEBOOK) {
+            fb.postImage(shareImage);
+        }
+    }
+      
 }
 
 /*
@@ -308,6 +333,8 @@ void testApp::draw(){
             
         
         case STATE_SHARE:
+//        case STATE_MAIL:
+//        case STATE_FACEBOOK:
            
            
 
@@ -405,7 +432,6 @@ void testApp::share() {
 }
 
 void testApp::sendMail() {
-    if (mail.getCanSendMail()) {
         mailStruct m;
         m.subject = "test";
         m.body = "now with attachment";
@@ -417,16 +443,16 @@ void testApp::sendMail() {
         cout << "sendMail: " << shareImage.getPixelsRef().size() << "\t" <<  buffer.size() << endl;
         m.attachments.push_back(attachmentStruct(buffer,"image/png","kaiser"));
         mail.sendMail(m);
-    }
 }
 
 
 void testApp::exit() {
     mail.exit();
-    fb.exit();
+    fb.logout();
 }
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
+    cout << "touchDown" << endl;
     
     idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
     bIdle = false;
@@ -443,49 +469,65 @@ void testApp::touchDown(ofTouchEventArgs &touch){
            
             thumbs.touchDown(menuTouch);
             
-            vector<ofxSymbolInstance*> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
-            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="edit") {
-                    state=STATE_OBJECTS;
-                    break;
+            vector<ofxSymbolInstance*> hits;
+            if (layout.hitTest(ofVec2f(touch.x,touch.y),hits)) {
+                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="edit") {
+                        state=STATE_OBJECTS;
+                        break;
+                    }
                 }
             }
             
         } break;
         case STATE_OBJECTS: {
             
-            objects.touchDown(menuTouch);
+            vector<item>::reverse_iterator riter;
+            for (riter=items.rbegin(); riter!=items.rend(); riter++) {
+                if (riter->drag.getIsActive()) {
+                    break;
+                }
+            }
             
+            bool bDragActive = riter!=items.rend();
             ofVec2f camPos = camMat.getInverse().preMult(ofVec3f(touch.x,touch.y));
             ofTouchEventArgs camTouch(touch);
             camTouch.x = camPos.x;
             camTouch.y = camPos.y;
             
+            if (bDragActive) {
+                riter->drag.touchDown(camTouch);
+            } else {
             
-            if (objects.getIsInside(ofVec2f(menuTouch.x,menuTouch.y)) && objects.getIsDown()) {
-                lastTouch = camTouch;
-                objectNum = objects.getDownNum(); // getDownNum valid only at down stage
-                bTouchObject = true;
-            }
-                        
-            for (vector<item>::reverse_iterator iter=items.rbegin(); iter!=items.rend(); iter++) {
-                if (iter->drag.inside(camTouch)) {
-                    iter->drag.touchDown(camTouch);
-                    break;
+                objects.touchDown(menuTouch);
+                
+                if (objects.getIsInside(ofVec2f(menuTouch.x,menuTouch.y)) && objects.getIsDown()) {
+                    lastTouch = camTouch;
+                    objectNum = objects.getDownNum(); // getDownNum valid only at down stage
+                    bTouchObject = true;
+                } else {
+                    for (riter=items.rbegin(); riter!=items.rend(); riter++) {
+                        if (riter->drag.inside(camTouch)) {
+                            riter->drag.touchDown(camTouch);
+                            break;
+                        }
+                    }
                 }
             }
-            
-            vector<ofxSymbolInstance*> hits = layout.hitTest(ofVec2f(touch.x,touch.y));
-            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="share") {
-                    shareLayout.getChild("label_sent")->bVisible = false;
-                    bShare = true; // need to render to fbo in update before draw 
-                    break;
-                }
-                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="back") {
-                    state=STATE_IMAGES;
-                    items.clear();
-                    break;
+                
+            vector<ofxSymbolInstance*> hits;
+            if (layout.hitTest(ofVec2f(touch.x,touch.y),hits)) {
+                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="share") {
+                        shareLayout.getChild("label_sent")->bVisible = false;
+                        bShare = true; // need to render to fbo in update before draw 
+                        break;
+                    }
+                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="back") {
+                        state=STATE_IMAGES;
+                        items.clear();
+                        break;
+                    }
                 }
             }
            
@@ -493,49 +535,62 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             
         case STATE_SHARE: {
             
-            vector<ofxSymbolInstance*> hits = shareLayout.hitTest(ofVec2f(touch.x,touch.y));
-            for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="mail") {
-                    shareLayout.getChild("label_sent")->bVisible = false;
-                    sendMail();
-                    break;
-                }
-                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="finish") {
-                    state = STATE_IMAGES;
-                    
-                    items.clear();
-                    thumbs.clear();
-                    image.clear();
-                    
-                    ofxOscMessage m;
-                    
-                    
-                    if (!images.empty()) {
-                        m.setAddress("/delete");
-                        m.addStringArg(images[0]);
-                        sender.sendMessage(m);
-                        images.clear();
-                        m.clear();
+            vector<ofxSymbolInstance*> hits;
+            if (shareLayout.hitTest(ofVec2f(touch.x,touch.y),hits)) {
+                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
+                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="mail") {
+                        if (mail.getCanSendMail()) {
+                            state = STATE_MAIL;
+                            shareLayout.getChild("label_sent")->bVisible = false;
+                            shareTimer = ofGetElapsedTimeMillis()+SHARE_DELAY;
+                            sendMail();
+                        }
                         
+                        break;
+                    }
+                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="finish") {
+                        state = STATE_IMAGES;
+                        
+                        items.clear();
+                        thumbs.clear();
+                        image.clear();
+                        
+                        ofxOscMessage m;
+                        
+                        
+                        if (!images.empty()) {
+                            m.setAddress("/delete");
+                            m.addStringArg(images[0]);
+                            sender.sendMessage(m);
+                            images.clear();
+                            m.clear();
+                            
+                        }
+                        
+                        m.setAddress("/list");
+                        m.addIntArg(receiverPort);
+                        sender.sendMessage(m);
+                        
+                        cout << "list: " << url << endl;
+                        break;
                     }
                     
-                    m.setAddress("/list");
-                    m.addIntArg(receiverPort);
-                    sender.sendMessage(m);
-                    
-                    cout << "list: " << url << endl;
-                    break;
-                }
-                
-                if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="facebook") {
-                    shareLayout.getChild("label_sent")->bVisible = false;
-                    
-                    fb.login();
-                    
-                    break;
+                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name=="facebook") {
+                        shareLayout.getChild("label_sent")->bVisible = false;
+                        
+                        bPostImage = false;
+                        state = STATE_FACEBOOK;
+                        shareTimer = ofGetElapsedTimeMillis()+SHARE_DELAY;
+                        
+                        if (fb.getIsLoggedIn()) {
+                            fb.logout();
+                        }
+                        string strs[] = {"publish_actions", "user_photos"};
+                        fb.login(vector<string>(strs,strs+2));
+                        break;
+                    }
                 }
             }
-            
             
         } break;
             
@@ -546,7 +601,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 }
 
 //--------------------------------------------------------------
-void testApp::touchMoved(ofTouchEventArgs &touch){
+void testApp::touchMoved(ofTouchEventArgs &touch) {
    
     ofVec2f menuPos = menuMat.getInverse().preMult(ofVec3f(touch.x,touch.y,0));
     ofTouchEventArgs menuTouch(touch);
@@ -680,12 +735,11 @@ void testApp::lostFocus(){
 
 //--------------------------------------------------------------
 void testApp::gotFocus(){
-    fb.gotFocus();
+    
 }
 
 void testApp::launchedWithURL(string url) {
-    fb.launchedWithURL(url);
-    
+        
 }
 
 
@@ -720,21 +774,58 @@ void testApp::mailComposer(int &result) {
     if (result == OFXIMAIL_SEND) {
         shareLayout.getChild("label_sent")->bVisible = true;
     }
+    state = STATE_SHARE;
+    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
+    bIdle = false;
 }
 
 void testApp::facebookEvent(ofxFBEventArgs &args) {
-    cout << "facebookEvent: " << args.message << "\tstatus: " << args.status << endl;
-    if (args.status==FACEBOOK_LOGGED_IN) {
-        //    ofBuffer buffer;
-        //    ofSaveImage(shareImage.getPixelsRef(), buffer,OF_IMAGE_FORMAT_PNG);
-        fb.postImage(shareImage);
+    cout << "facebookEvent, action: " << args.action << ", status: " << args.status << endl << "message: " << args.message << endl;
+    //    ofBuffer buffer;
+    //    ofSaveImage(shareImage.getPixelsRef(), buffer,OF_IMAGE_FORMAT_PNG);
+    switch (args.action) {
+        case FACEBOOK_ACTION_LOGIN:
+            switch (args.status) {
+                case FACEBOOK_SUCEEDED:
+                    bPostImage = true;
+                    //fb.postImage(shareImage);
+                    break;
+                case FACEBOOK_FAILED:
+                    state = STATE_SHARE;
+                    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
+                    bIdle = false;
+                    
+                    break;
+                    
+                default:
+                    break;
+            }
+
+            break;
+        case FACEBOOK_ACTION_POST_IMAGE:
+            switch (args.status) {
+                case FACEBOOK_SUCEEDED:
+                    shareLayout.getChild("label_sent")->bVisible = true;
+                    break;
+                case FACEBOOK_FAILED:
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            state = STATE_SHARE;
+            idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
+            bIdle = false;
+            
+            
+            break;
+            
+        default:
+            break;
     }
     
-    if (args.status==FACEBOOK_IMAGE_POSTED) {
-        shareLayout.getChild("label_sent")->bVisible = true;
-        fb.logout();
-    }
     
     
-    
+        
 }

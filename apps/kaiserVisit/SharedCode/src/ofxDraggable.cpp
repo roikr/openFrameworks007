@@ -37,6 +37,10 @@ bool ofxDraggable::inside(ofTouchEventArgs &touch) {
     return rect.inside(mat.getInverse().preMult(ofVec3f(touch.x,touch.y)));
 }
 
+bool ofxDraggable::getIsActive() {
+    return !touches.empty();
+}
+
 void ofxDraggable::touchDown(ofTouchEventArgs &touch) {
     if (inside(touch)) {
         touches.push_back(touch);

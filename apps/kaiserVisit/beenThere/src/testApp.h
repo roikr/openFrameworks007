@@ -86,7 +86,10 @@ public:
     ofImage shareImage;
     bool bShare;
     ofxiMail mail;
+    int shareTimer;
+    
     ofxiFacebook fb;
+    bool bPostImage; // use for calling fb.postImage outside fb event callback (bug due to reentrant ?)
     
     ofMatrix4x4 screenMat;
     

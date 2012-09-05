@@ -21,4 +21,5 @@
 7. remove 
     <key>UIApplicationExitsOnSuspend</key>
 	<true/>
+8. if you use webview - you need to add FacebookSDKResources.bundle from the sdk 
 	

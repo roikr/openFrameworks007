@@ -12,15 +12,22 @@
 #import <FacebookSDK/FacebookSDK.h>
 
 enum {
-    FACEBOOK_ERROR,
-    FACEBOOK_TOKEN_EXIST,
-    FACEBOOK_LOGGED_IN,
-    FACEBOOK_IMAGE_POSTED
+    FACEBOOK_ACTION_RETRIEVE_SESSION,
+    FACEBOOK_ACTION_LOGIN,
+    FACEBOOK_ACTION_LOGOUT,
+    FACEBOOK_ACTION_POST_IMAGE,
+    FACEBOOK_ACTION_GET_ME
+};
+
+enum {
+    FACEBOOK_FAILED,
+    FACEBOOK_SUCEEDED
 };
 
 class ofxFBEventArgs {
 public:    
     string message; 
+    int action;
     int status;
 };
 
@@ -41,23 +48,22 @@ void ofxUnregisterFacebookNotification(T * obj){
 
 class ofxiFacebook {
 public:
-    void setup(bool bSSO,vector<string> permissions=vector<string>());
+    ofxiFacebook():session(nil) {};
+    void setup(vector<string> permissions=vector<string>());
+    void exit();
     void gotFocus();
     void launchedWithURL(string url);
        
-    void login();
+    void login(vector<string> permissions=vector<string>());
     void logout();
     void postImage(ofImage &image);
+    void getMe();
     
     bool getIsLoggedIn();
     string getAccessToken();
     
-    void exit();
-    
-    
+   
       
 private:
     FBSession *session;
-    vector<string> permissions;
-    bool bSSO;
 };

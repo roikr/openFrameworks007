@@ -19,6 +19,7 @@
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E403782B15E1600200789BC6 /* ofxiMail.mm in Sources */ = {isa = PBXBuildFile; fileRef = E403782A15E1600200789BC6 /* ofxiMail.mm */; };
 		E403784B15E170A800789BC6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E403784A15E170A800789BC6 /* MessageUI.framework */; };
+		E403B30D15F7402B000A3535 /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E403B30C15F7402B000A3535 /* FacebookSDKResources.bundle */; };
 		E409645215E36AE600A30BF8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E409644E15E36AE600A30BF8 /* README.md */; };
 		E409645315E36AE600A30BF8 /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = E409645115E36AE600A30BF8 /* Settings.mm */; };
 		E409645515E36B6200A30BF8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E409645415E36B6200A30BF8 /* Settings.bundle */; };
@@ -91,6 +92,7 @@
 		E403782A15E1600200789BC6 /* ofxiMail.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiMail.mm; sourceTree = "<group>"; };
 		E403784615E16F8000789BC6 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E403784A15E170A800789BC6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		E403B30C15F7402B000A3535 /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../../../../Documents/FacebookSDK/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
 		E409644E15E36AE600A30BF8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		E409645015E36AE600A30BF8 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		E409645115E36AE600A30BF8 /* Settings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Settings.mm; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 				BB16F26B0F2B646B00518274 /* addons */,
 				BB16E9930F2B1E5900518274 /* libs */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				E403B30B15F73FB6000A3535 /* Resources */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -315,6 +318,14 @@
 				E403782115E15FCA00789BC6 /* StillCamera.m */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		E403B30B15F73FB6000A3535 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E403B30C15F7402B000A3535 /* FacebookSDKResources.bundle */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		E409644D15E36AE600A30BF8 /* ofxSettings */ = {
@@ -655,6 +666,7 @@
 				E409645515E36B6200A30BF8 /* Settings.bundle in Resources */,
 				E409646115E389DB00A30BF8 /* ofxiphone-Info.plist in Resources */,
 				E450930E15EF543400FD0F4C /* FACEBOOK in Resources */,
+				E403B30D15F7402B000A3535 /* FacebookSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
