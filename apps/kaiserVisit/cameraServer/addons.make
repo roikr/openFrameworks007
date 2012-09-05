@@ -1,0 +1,3 @@
+ofxHttpServer
+ofxOsc
+ofxXmlSettings
