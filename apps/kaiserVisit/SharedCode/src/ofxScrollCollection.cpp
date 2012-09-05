@@ -21,6 +21,10 @@ inline float easeOutBack(float t, float b, float c, float d, float s) {
     return c*(t*t*((s+1)*t + s) + 1) + b;
 }
 
+inline float easeOutQuad(float t, float b, float c, float d) {
+    return -c *(t/=d)*(t-2) + b;
+};
+
 #define EASE_DURATION 0.5f
 #define DECAY_FACTOR 0.8f
 #define STOP_VELOCITY 0.0001f
@@ -39,21 +43,52 @@ void ofxScrollCollection::setup(scrollCollectionPrefs prefs) {
 //    pos = prefs.mat.preMult(ofVec3f(0,0,0));
 //    imat = prefs.mat.getInverse();
     state = SLIDER_STATE_IDLE;
+    counter = 1; // first id is 1
+    selected = items.end();
 }
 
-void ofxScrollCollection::addItem(ofImage &img) {
+deque<itemStruct>::iterator ofxScrollCollection::findByID(int itemID) {
+    deque<itemStruct>::iterator iter;
+    for (iter=items.begin();iter!=items.end();iter++) {
+        if (iter->itemID == itemID) {
+            break;
+        }
+    }
+    
+    return iter;
+}
+
+int ofxScrollCollection::addItem(ofImage &img,string name) {
     
     if (img.getWidth()>0) {
         //bool bSelected = !images.empty() && selected != images.rend();
-        images.push_back(img); 
-        deselect();
+        int selectedID = getSelectedID();
+        items.push_front(itemStruct(img,name,counter));
+        counter++;
+        if (selectedID) {
+            select(selectedID);
+        } else {
+            deselect();
+        }
+        return items.front().itemID;
+        
     }
+    
+    return 0;
 }
 
-void ofxScrollCollection::removeItem(int pos) {
-    if (pos<images.size()) {
-        images.erase(images.begin()+pos);
-        deselect();
+void ofxScrollCollection::removeItem(int itemID) {
+    deque<itemStruct>::iterator iter=findByID(itemID);
+    if (iter!=items.end()) {
+        
+        int selectedID = getSelectedID();
+        items.erase(iter);
+        if (selectedID && selectedID!=itemID) {
+            select(selectedID);
+        } else {
+            deselect();
+        }
+        
     }
 }
 
@@ -73,7 +108,8 @@ void ofxScrollCollection::update() {
         case SLIDER_STATE_BACK_TRACKING: {
             float t = ofGetElapsedTimef();
             if (t-time<EASE_DURATION) {
-                offset = getVec(easeOutBack(t-time, easeStart, easeTarget-easeStart, EASE_DURATION,4));
+                //offset = getVec(easeOutBack(t-time, easeStart, easeTarget-easeStart, EASE_DURATION,4));
+                offset = getVec(easeOutQuad(t-time, easeStart, easeTarget-easeStart, EASE_DURATION));
             } else {
                 offset = getVec(easeTarget);
                 state = SLIDER_STATE_IDLE;
@@ -117,12 +153,12 @@ void ofxScrollCollection::draw() {
         pos+=ofVec2f(offset.x+prefs.seperator,prefs.inset);
     }
         
-    for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
+    for (deque<itemStruct>::iterator iter=items.begin(); iter!=items.end(); iter++) {
        
         if (prefs.bVertical) {
-            h = iter->getHeight()/iter->getWidth()*w;
+            h = iter->image.getHeight()/iter->image.getWidth()*w;
         } else {
-            w = iter->getWidth()/iter->getHeight()*h;
+            w = iter->image.getWidth()/iter->image.getHeight()*h;
         }
         
 //        if (iter == selected) {
@@ -135,7 +171,7 @@ void ofxScrollCollection::draw() {
 //        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
 //            ofEnableAlphaBlending();
 //        }
-        iter->draw(pos, w, h);
+        iter->image.draw(pos, w, h);
 //        if (iter->type == OF_IMAGE_COLOR_ALPHA) {
 //            ofDisableAlphaBlending();
 //        }
@@ -148,40 +184,40 @@ void ofxScrollCollection::draw() {
 }
 
 void ofxScrollCollection::clear() {
-    images.clear();      // roikr: careful - involve with copy ?
+    items.clear();      // roikr: careful - involve with copy ?
     deselect();
 }
 
-void ofxScrollCollection::select(int num) {
-    selected = images.rbegin()+num;
+void ofxScrollCollection::select(int itemID) {
+    selected = findByID(itemID);
 }
 
 void ofxScrollCollection::deselect() {
-    selected = images.rend();
+    selected = items.end();
     //selected = images.rbegin();
 }
 
 bool ofxScrollCollection::getIsSelected() {
-    return selected!=images.rend();
+    return selected!=items.end();
 }
 
-int ofxScrollCollection::getSelectedNum() {
-    return images.size()-distance(images.rbegin(), selected)-1;
+int ofxScrollCollection::getSelectedID() {
+    return selected!=items.end() ? selected->itemID : 0;
 }
 
-ofImage &ofxScrollCollection::getImage(int num) {
-    return *(images.rbegin()+num);
+itemStruct &ofxScrollCollection::getItem(int itemID) {
+    return *findByID(itemID);
 }
 
 bool ofxScrollCollection::getIsDown() {
-    return downIter!=images.rend();
+    return downIter!=items.end();
 }
 
-int ofxScrollCollection::getDownNum() {
-    return distance(images.rbegin(), downIter);
+int ofxScrollCollection::getDownID() {
+    return downIter!=items.end() ? downIter->itemID : 0;
 }
 
-ofRectangle ofxScrollCollection::getRectangle(int num) {
+ofRectangle ofxScrollCollection::getRectangle(int itemID) {
     ofRectangle rect;
     
     float w =  prefs.width-2*prefs.inset;
@@ -194,15 +230,15 @@ ofRectangle ofxScrollCollection::getRectangle(int num) {
         pos+=ofVec2f(offset.x+prefs.seperator,prefs.inset);
     }
     
-    for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
+    for (deque<itemStruct>::iterator iter=items.begin(); iter!=items.end(); iter++) {
         
         if (prefs.bVertical) {
-            h = iter->getHeight()/iter->getWidth()*w;
+            h = iter->image.getHeight()/iter->image.getWidth()*w;
         } else {
-            w = iter->getWidth()/iter->getHeight()*h;
+            w = iter->image.getWidth()/iter->image.getHeight()*h;
         }
         
-        if (distance(images.rbegin(),iter) == num) {
+        if (iter->itemID == itemID) {
 //            ofVec2f rectPos = prefs.mat.preMult(ofVec3f(pos.x,pos.y));
 //            ofVec2f rectMax = prefs.mat.preMult(ofVec3f(pos.x+w,pos.y+h));
 //            rect.set(rectPos, rectMax.x-rectPos.x, rectMax.y-rectPos.y);
@@ -228,7 +264,7 @@ void ofxScrollCollection::touchDown(ofTouchEventArgs &touch) {
     
     
     ofVec2f downPos(touch.x,touch.y);
-    downIter = images.rend();
+    downIter = items.end();
     if (ofRectangle(0,0,prefs.width,prefs.height).inside(downPos) && state !=SLIDER_STATE_PANNING) {
         state = SLIDER_STATE_DOWN;
         this->touch = touch;
@@ -239,22 +275,28 @@ void ofxScrollCollection::touchDown(ofTouchEventArgs &touch) {
 }
 
 void ofxScrollCollection::touchMoved(ofTouchEventArgs &touch){
-    if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id) {
-        downIter = images.rend();
-        state = SLIDER_STATE_PANNING;
-        ofVec2f posDiff = degenerate(ofVec2f(touch.x,touch.y) - ofVec2f(this->touch.x,this->touch.y));
-        offset+=posDiff;
-        this->touch = touch;
-        float newTime = ofGetElapsedTimef();
-                    
-        if (newTime-time>0) {
-            velocity = posDiff/(newTime-time);
-        } else {
-            velocity = ofVec2f(0,0);
+    float contentLength = getContentLength();
+    float rectLength = getScalar(ofVec2f(prefs.width,prefs.height));
+    //            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
+    
+    if (rectLength<contentLength) { 
+        if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id) {
+            downIter = items.end();
+            state = SLIDER_STATE_PANNING;
+            ofVec2f posDiff = degenerate(ofVec2f(touch.x,touch.y) - ofVec2f(this->touch.x,this->touch.y));
+            offset+=posDiff;
+            this->touch = touch;
+            float newTime = ofGetElapsedTimef();
+                        
+            if (newTime-time>0) {
+                velocity = posDiff/(newTime-time);
+            } else {
+                velocity = ofVec2f(0,0);
+            }
+                        
+            time = newTime;
+            
         }
-                    
-        time = newTime;
-        
     }
 }
 
@@ -262,12 +304,12 @@ void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
     if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id) {
         
         
-        if (downIter!=images.rend() && state == SLIDER_STATE_DOWN) {
+        if (downIter!=items.end() && state == SLIDER_STATE_DOWN) {
             selected = downIter;
         }
 
         
-        downIter = images.rend();
+        downIter = items.end();
         float v0=velocity.length();
         if (v0>STOP_VELOCITY) {
             
@@ -285,21 +327,21 @@ void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
 //            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
                 
             if (rectLength>contentLength) {
-                if (getScalar(velocity)>0) {
-                    if (getScalar(offset)+dist>rectLength-contentLength) {
-                        state = SLIDER_STATE_BACK_TRACKING;
-                        easeTarget = rectLength-contentLength;
-                    } else {
-                        state = SLIDER_STATE_ANIMATING;
-                    }
-                } else {
-                    if (getScalar(offset)-dist<0) {
-                        state = SLIDER_STATE_BACK_TRACKING;
-                        easeTarget = 0;
-                    } else {
-                        state = SLIDER_STATE_ANIMATING;
-                    }
-                } 
+//                if (getScalar(velocity)>0) {
+//                    if (getScalar(offset)+dist>rectLength-contentLength) {
+//                        state = SLIDER_STATE_BACK_TRACKING;
+//                        easeTarget = rectLength-contentLength;
+//                    } else {
+//                        state = SLIDER_STATE_ANIMATING;
+//                    }
+//                } else {
+//                    if (getScalar(offset)-dist<0) {
+//                        state = SLIDER_STATE_BACK_TRACKING;
+//                        easeTarget = 0;
+//                    } else {
+//                        state = SLIDER_STATE_ANIMATING;
+//                    }
+//                } 
             } else {
                 if (getScalar(velocity)>0) {
                     if (getScalar(offset)+dist>0) {
@@ -329,8 +371,8 @@ void ofxScrollCollection::touchDoubleTap(ofTouchEventArgs &touch){
     ofVec2f pos(touch.x,touch.y);
    
     if (ofRectangle(0,0,prefs.width,prefs.height).inside(pos)) {
-        vector<ofImage>::reverse_iterator iter = find(pos);
-        if (iter!=images.rend()) {
+        deque<itemStruct>::iterator iter = find(pos);
+        if (iter!=items.end()) {
             selected = iter;
         }
                 
@@ -349,12 +391,12 @@ float ofxScrollCollection::getContentLength() {
     
     
     if (prefs.bVertical) {
-        for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
-            contentLength+=iter->getHeight()/iter->getWidth()*w+prefs.seperator;
+        for (deque<itemStruct>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+            contentLength+=iter->image.getHeight()/iter->image.getWidth()*w+prefs.seperator;
         }
     } else {
-        for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
-            contentLength+=iter->getWidth()/iter->getHeight()*h+prefs.seperator;
+        for (deque<itemStruct>::iterator iter=items.begin(); iter!=items.end(); iter++) {
+            contentLength+=iter->image.getWidth()/iter->image.getHeight()*h+prefs.seperator;
         }
     }
     
@@ -367,7 +409,7 @@ bool ofxScrollCollection::getIsInside(ofVec2f pos) {
     return ofRectangle(0,0,prefs.width,prefs.height).inside(pos);
 }
 
-vector<ofImage>::reverse_iterator ofxScrollCollection::find(ofVec2f wpos) {
+deque<itemStruct>::iterator ofxScrollCollection::find(ofVec2f wpos) {
     
     float w =  prefs.width-2*prefs.inset;
     float h =  prefs.height-2*prefs.inset;
@@ -380,11 +422,11 @@ vector<ofImage>::reverse_iterator ofxScrollCollection::find(ofVec2f wpos) {
     }
 
     
-    for (vector<ofImage>::reverse_iterator iter=images.rbegin(); iter!=images.rend(); iter++) {
+    for (deque<itemStruct>::iterator iter=items.begin(); iter!=items.end(); iter++) {
         if (prefs.bVertical) {
-            h = iter->getHeight()/iter->getWidth()*w;
+            h = iter->image.getHeight()/iter->image.getWidth()*w;
         } else {
-            w = iter->getWidth()/iter->getHeight()*h;
+            w = iter->image.getWidth()/iter->image.getHeight()*h;
         }
         
         if (getScalar(wpos)>getScalar(pos) && getScalar(wpos)<getScalar(pos+ofVec2f(w,h))) {
@@ -394,7 +436,7 @@ vector<ofImage>::reverse_iterator ofxScrollCollection::find(ofVec2f wpos) {
         pos+=degenerate(ofVec2f(w,h)+prefs.seperator*ofVec2f(1,1));
     }
     
-    return images.rend();
+    return items.end();
 }
 
 ofVec2f ofxScrollCollection::getVec(float x) {
@@ -413,3 +455,16 @@ scrollCollectionPrefs& ofxScrollCollection::getPrefs()  {
     return prefs;
 }
 
+int ofxScrollCollection::getNumItems() {
+    return items.size();
+}
+int ofxScrollCollection::findItemByName(string name) {
+    deque<itemStruct>::iterator iter;
+    for (iter=items.begin();iter!=items.end();iter++) {
+        if (iter->name == name) {
+            return iter->itemID;
+        }
+    }
+    
+    return 0;
+}

@@ -24,20 +24,25 @@ struct scrollCollectionPrefs {
     float width;
     float height;
     
-    
-    
+};
+
+struct itemStruct  {
+    itemStruct(ofImage &image,string name,int itemID):image(image),name(name),itemID(itemID) {};
+    ofImage image;
+    string name;
+    int itemID;
 };
 
 class ofxScrollCollection {
 public:
     void setup(scrollCollectionPrefs prefs);
-    void addItem(ofImage &image);
-    void removeItem(int pos);
+    int addItem(ofImage &image,string name="");
+    void removeItem(int itemID);
     void update();
     void draw();
     
     void clear();
-    void select(int num);
+    void select(int itemID);
     void deselect();
     
     void touchDown(ofTouchEventArgs &touch);
@@ -47,21 +52,26 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
     bool getIsSelected();
-    int getSelectedNum();
-    ofImage &getImage(int num);
+    int getSelectedID();
+    itemStruct &getItem(int itemID);
+    
     
     bool getIsDown();
-    int getDownNum();
-    ofRectangle getRectangle(int num);
+    int getDownID();
+    ofRectangle getRectangle(int itemID);
 
     bool getIsInside(ofVec2f pos);
     scrollCollectionPrefs& getPrefs();
+    int getNumItems();
+    int findItemByName(string name);
     
 //    ofVec2f screenToWorld(ofVec2f pos);
     
     
 private:
-    vector<ofImage>::reverse_iterator find(ofVec2f pos); // world pos
+    deque<itemStruct>::iterator find(ofVec2f pos); // world pos
+    deque<itemStruct>::iterator findByID(int itemID);
+    
     float getContentLength();
     
     ofVec2f getVec(float x);
@@ -69,8 +79,9 @@ private:
     ofVec2f degenerate(ofVec2f v);
     
     
-    vector<ofImage> images;
-    vector<ofImage>::reverse_iterator selected;
+    deque<itemStruct> items;
+    deque<itemStruct>::iterator selected;
+   
    
     scrollCollectionPrefs prefs;
     
@@ -82,12 +93,14 @@ private:
     float time;
     
     float downTime;
-    vector<ofImage>::reverse_iterator downIter;
+    deque<itemStruct>::iterator downIter;
     
     int state;
     
     float easeStart;
     float easeTarget;
+    
+    int counter;
     
 //    ofMatrix4x4 imat;
     

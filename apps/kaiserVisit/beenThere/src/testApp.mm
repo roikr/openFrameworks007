@@ -7,8 +7,8 @@
 #define MENU_INSET 15.0
 #define MENU_SEPERATOR 15.0
 #define EXTENNSION "jpg"
-#define IDLE_DELAY 60000
-#define SHARE_DELAY 180000
+#define IDLE_DELAY 20000
+#define SHARE_DELAY 20000
 
 enum {
     STATE_IMAGES,
@@ -149,8 +149,9 @@ void testApp::setup(){
     ofxRegisterMailNotification(this);
     
     ofxRegisterFacebookNotification(this);
-        
-    bIdle = true;
+    actionTime = ofGetElapsedTimeMillis()-IDLE_DELAY;    
+    bSetIdle = false;
+    
     refresh();
 }
 
@@ -159,41 +160,36 @@ void testApp::update(){
 	ofBackground(255,255,255);	
     
     
-    
-    // check for waiting messages
-	while( receiver.hasWaitingMessages() )
-	{
-		// get the next message
-		ofxOscMessage m;
-		receiver.getNextMessage( &m );
-        
-		// check for mouse moved message
-        bNewImage = m.getAddress() == "/new";
-		if ( bNewImage || m.getAddress() == "/add") {
-            if (bNewImage) {
-                ofLoadURLAsync(url+"/photos/"+m.getArgAsString(0)+"."+EXTENNSION);
-            }
-            ofLoadURLAsync(url+"/thumbs/"+m.getArgAsString(0)+"_THUMB."+EXTENNSION);
-            if (find(images.begin(), images.end(), m.getArgAsString(0)) == images.end()) {
-                cout << "will add: " << m.getArgAsString(0) << endl;
-                images.push_back(m.getArgAsString(0));
-            } 
+    if (state==STATE_IMAGES) {
+        // check for waiting messages
+        while( receiver.hasWaitingMessages() )
+        {
+            // get the next message
+            ofxOscMessage m;
+            receiver.getNextMessage( &m );
             
-            cout << images.back() << endl;
-            
-		} else if ( m.getAddress() == "/remove" ) {
-            
-            vector<string>::iterator iter = find(images.begin(),images.end(), m.getArgAsString(0));
-            if (iter!=images.end()) {
-                cout << "remove: " << m.getArgAsString(0) << endl;
-                int pos = distance(images.begin(),iter);
-                images.erase(iter);
-                thumbs.removeItem(pos);
+            // check for mouse moved message
+            bNewImage = m.getAddress() == "/new";
+            if ( bNewImage || m.getAddress() == "/add") {
+                if (bNewImage &&  ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
+                    ofLoadURLAsync(url+"/photos/"+m.getArgAsString(0)+"."+EXTENNSION);
+                }
+                ofLoadURLAsync(url+"/thumbs/"+m.getArgAsString(0)+"."+EXTENNSION);
+            } else if ( m.getAddress() == "/remove" ) {
                 
-            }
-            
-            
-        }		
+                int itemID = thumbs.findItemByName(m.getArgAsString(0));
+                if (itemID) {
+                    if (thumbs.getIsSelected() && thumbs.getSelectedID()==itemID) {
+                        image.clear();
+                        
+                    }
+                    thumbs.removeItem(itemID);
+                    refresh();
+                }
+                            
+                
+            }		
+        }
     }
     
     
@@ -214,20 +210,24 @@ void testApp::update(){
         case STATE_IMAGES:
         case STATE_OBJECTS:
         case STATE_SHARE:
-            if (!bIdle && ofGetElapsedTimeMillis()>idleTimer) {
+            if (bSetIdle && ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
+                bSetIdle = false;
                 state = STATE_IMAGES;
                 thumbs.deselect();
                 image.clear();
                 items.clear();
-                bIdle = true;
                 refresh();
+                
             }
             break;
         case STATE_MAIL:
         case STATE_FACEBOOK:
-            if (ofGetElapsedTimeMillis()>shareTimer) {
-                bIdle = true;
+            if (ofGetElapsedTimeMillis()>actionTime+SHARE_DELAY) {
                 state = STATE_IMAGES;
+                thumbs.deselect();
+                image.clear();
+                items.clear();
+                refresh();
             }
             break;
             
@@ -242,8 +242,8 @@ void testApp::update(){
             fb.postImage(shareImage);
             shareLayout.getChild("label_sent")->bVisible = true;
             state = STATE_SHARE;
-            idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
-            bIdle = false;
+            actionTime = ofGetElapsedTimeMillis();
+            bSetIdle = true;
         }
     }
       
@@ -272,7 +272,7 @@ void testApp::draw(){
             thumbs.draw();
             if (thumbs.getIsSelected()) {
                 
-                ofRectangle rect = thumbs.getRectangle(images.size()-thumbs.getSelectedNum()-1);
+                ofRectangle rect = thumbs.getRectangle(thumbs.getSelectedID());
                 ofImage &im = selectedFrame->getImage();
                 im.draw(rect.x-0.5*(im.getWidth()-rect.width),rect.y-0.5*(im.getHeight()-rect.height));
             }
@@ -304,7 +304,7 @@ void testApp::draw(){
             
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
                 iter->drag.begin();
-                ofImage &image(objects.getImage(iter->objectNum));
+                ofImage &image(objects.getItem(iter->objectID).image);
                 ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
                 image.draw(0,0);
                 iter->drag.end();
@@ -325,7 +325,7 @@ void testApp::draw(){
                 glMultMatrixf(camMat.getPtr());
                 item &it=newItem.front();
                 it.drag.begin();
-                ofImage &image(objects.getImage(it.objectNum));
+                ofImage &image(objects.getItem(it.objectID).image);
                 ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
                 image.draw(0,0);
                 it.drag.end();
@@ -378,8 +378,8 @@ void testApp::refresh() {
             
             layout.getChild("edit")->bVisible = thumbs.getIsSelected();
             
-            layout.getChild("label_take")->bVisible = images.empty();
-            layout.getChild("label_choose")->bVisible = !images.empty();
+            layout.getChild("label_take")->bVisible = thumbs.getNumItems()==0;
+            layout.getChild("label_choose")->bVisible = thumbs.getNumItems()!=0;
             
             break;
         case STATE_OBJECTS:
@@ -414,7 +414,7 @@ void testApp::share() {
         
         
         iter->drag.begin();
-        ofImage &image(objects.getImage(iter->objectNum));
+        ofImage &image(objects.getItem(iter->objectID).image);
         ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
         image.draw(0,0);
         iter->drag.end();
@@ -458,8 +458,8 @@ void testApp::exit() {
 void testApp::touchDown(ofTouchEventArgs &touch){
     cout << "touchDown" << endl;
     
-    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
-    bIdle = false;
+    actionTime = ofGetElapsedTimeMillis();
+    bSetIdle = true;
     
     ofVec2f menuPos = menuMat.getInverse().preMult(ofVec3f(touch.x,touch.y,0));
     ofTouchEventArgs menuTouch(touch);
@@ -507,7 +507,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 
                 if (objects.getIsInside(ofVec2f(menuTouch.x,menuTouch.y)) && objects.getIsDown()) {
                     lastTouch = camTouch;
-                    objectNum = objects.getDownNum(); // getDownNum valid only at down stage
+                    objectID = objects.getDownID(); // getDownNum valid only at down stage
                     bTouchObject = true;
                 } else {
                     for (riter=items.rbegin(); riter!=items.rend(); riter++) {
@@ -546,7 +546,8 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                         if (mail.getCanSendMail()) {
                             state = STATE_MAIL;
                             shareLayout.getChild("label_sent")->bVisible = false;
-                            shareTimer = ofGetElapsedTimeMillis()+SHARE_DELAY;
+                            actionTime = ofGetElapsedTimeMillis();
+                            bSetIdle = true;
                             sendMail();
                         }
                         
@@ -556,20 +557,20 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                         state = STATE_IMAGES;
                         
                         items.clear();
-                        thumbs.clear();
                         image.clear();
                         
                         ofxOscMessage m;
                         
-                        
-                        if (!images.empty()) {
+                        if (thumbs.getIsSelected()) {
+                            
                             m.setAddress("/delete");
-                            m.addStringArg(images[0]);
+                            m.addStringArg(thumbs.getItem(thumbs.getSelectedID()).name);
                             sender.sendMessage(m);
-                            images.clear();
                             m.clear();
                             
                         }
+                        
+                        thumbs.clear();
                         
                         m.setAddress("/list");
                         m.addIntArg(receiverPort);
@@ -584,7 +585,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                         
                         bPostImage = false;
                         state = STATE_FACEBOOK;
-                        shareTimer = ofGetElapsedTimeMillis()+SHARE_DELAY;
+                        actionTime = ofGetElapsedTimeMillis();
                         
                         if (fb.getIsLoggedIn()) {
                             fb.logout();
@@ -635,15 +636,15 @@ void testApp::touchMoved(ofTouchEventArgs &touch) {
  //                   ofRectangle rect = objects.getRectangle(objectNum);
                     item x;
 //                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-                    ofImage &image = objects.getImage(objectNum);
+                    ofImage &image(objects.getItem(objectID).image); 
                     ofMatrix4x4 mat(ofMatrix4x4::newTranslationMatrix(camTouch.x,camTouch.y,0));
-                    mat.preMultScale(ofVec3f(scales[objectNum],scales[objectNum],1.0));
+                    mat.preMultScale(ofVec3f(scales[objectID],scales[objectID],1.0));
                     x.drag.setup(image.width,image.height,mat);
                     x.drag.touchDown(lastTouch);
                     x.drag.touchMoved(camTouch);
-                    x.objectNum = objectNum;
+                    x.objectID = objectID;
 //                    x.scale = (100-40)/objects.getImage(x.objectNum).getWidth();
-                    x.scale = menuMat.getScale().x*objects.getRectangle(objectNum).width/objects.getImage(x.objectNum).getWidth();
+                    x.scale = menuMat.getScale().x*objects.getRectangle(objectID).width/objects.getItem(x.objectID).image.getWidth();
                     newItem.push_back(x);
                     objects.touchUp(touch);
                 } 
@@ -681,15 +682,14 @@ void testApp::touchUp(ofTouchEventArgs &touch){
     switch (state) {
         case STATE_IMAGES: {
             bool bSelected =thumbs.getIsSelected();
-            int numSelected = thumbs.getSelectedNum();
+            int selectedID = thumbs.getSelectedID();
             
             thumbs.touchUp(menuTouch);
             
-            if ( thumbs.getIsSelected() && (!bSelected || numSelected!=thumbs.getSelectedNum())) {
-                if (thumbs.getSelectedNum()<images.size()) {
-                    ofLoadURLAsync(url+"/photos/"+images[thumbs.getSelectedNum()]+"."+EXTENNSION);
-                    refresh();
-                }
+            if ( thumbs.getIsSelected() && (!bSelected || selectedID!=thumbs.getSelectedID())) {
+                ofLoadURLAsync(url+"/photos/"+thumbs.getItem(thumbs.getSelectedID()).name+"."+EXTENNSION);
+                refresh();
+                
             }
             
             
@@ -755,12 +755,12 @@ void testApp::urlResponse(ofHttpResponse &response) {
             if (*(split.end()-2)=="thumbs") {
                 ofImage thumb;
                 thumb.loadImage(response.data);
-                thumbs.addItem(thumb);
-                if (bIdle && bNewImage) {
-                    thumbs.select(0);
+                string name = ofSplitString(split.back(), ".").front();
+                cout << "urlResponse: " << name << endl;
+                int itemID = thumbs.addItem(thumb,name);
+                if (bNewImage && state==STATE_IMAGES && ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
+                    thumbs.select(itemID);
                     bNewImage = false;
-                    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
-                    bIdle = false;
                 }
                 refresh();
             } else {
@@ -779,8 +779,9 @@ void testApp::mailComposer(int &result) {
         shareLayout.getChild("label_sent")->bVisible = true;
     }
     state = STATE_SHARE;
-    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
-    bIdle = false;
+    actionTime = ofGetElapsedTimeMillis();
+    bSetIdle = true;
+   
 }
 
 void testApp::facebookEvent(ofxFBEventArgs &args) {
@@ -796,8 +797,9 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
                     break;
                 case FACEBOOK_FAILED:
                     state = STATE_SHARE;
-                    idleTimer = ofGetElapsedTimeMillis()+IDLE_DELAY;
-                    bIdle = false;
+                    actionTime = ofGetElapsedTimeMillis();
+                    bSetIdle = true;
+                   
                     
                     break;
                     

@@ -13,7 +13,7 @@
 #include "ofxiFacebook.h"
 
 struct item {
-    int objectNum;
+    int objectID;
     ofxDraggable drag;
     float scale;
 };
@@ -58,7 +58,7 @@ public:
    
     ofTouchEventArgs lastTouch;
     bool bTouchObject;
-    int objectNum;
+    int objectID;
     
 
     ofxDocument doc;
@@ -79,24 +79,22 @@ public:
     ofxOscReceiver receiver;
     int receiverPort; // receiver port;
     string url;
-    vector<string> images;
     
     ofxiFbo fbo;
     ofTexture tex;
     ofImage shareImage;
     bool bShare;
     ofxiMail mail;
-    int shareTimer;
     
     ofxiFacebook fb;
     bool bPostImage; // use for calling fb.postImage outside fb event callback (bug due to reentrant ?)
     
     ofMatrix4x4 screenMat;
     
-    int idleTimer;
-    bool bIdle;
+    int actionTime;
     bool bNewImage;
     ofxBitmapItem *selectedFrame;
     ofMatrix4x4 menuMat;
+    bool bSetIdle;
     
 };
