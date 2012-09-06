@@ -9,20 +9,25 @@
 #include "silentNature.h"
 
 
-#define BRUSH_THICKNESS 30.0
-#define CRAYON_THICKNESS 15.0
-#define ERASER_THICKNESS 60.0
+#define BRUSH_THICKNESS 40.0
+#define CRAYON_THICKNESS 5.0
+#define ERASER_THICKNESS 40.0
+#define APP_ORIENTATION OF_ORIENTATION_90_LEFT
 
 #ifdef TARGET_OPENGLES
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 #endif
 
+enum {
+    STATE_DRAW,
+    STATE_PUBLISH
+};
+
 //--------------------------------------------------------------
 void silentNature::setup(){	
 	
-    
-	
+    ofHideCursor();
     ofEnableAlphaBlending();
     ofEnableSmoothing();
     ofSetLineWidth(5);
@@ -33,9 +38,9 @@ void silentNature::setup(){
     doc.load();
     
     ofMatrix4x4 mat;
-    float scale = (float)ofGetHeight()/1920.0;
+    float scale = (float)ofGetWidth()/1920.0;
     mat.scale(scale, scale, 1.0);
-    mat.translate(0.5*(ofGetWidth()-scale*1080.0), 0, 0);
+    mat.translate(0.5*(ofGetHeight()-scale*1080.0), 0, 0);
     layout = doc.getSymbolItem("Layout")->createInstance("layout",mat);
     frame = doc.getSymbolItem("Frame")->createInstance("frame",mat);
     
@@ -43,13 +48,13 @@ void silentNature::setup(){
    
     tool = BRUSH_TOOL;
     color = image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2);
-    paper = NULL;
+    paperNum = 1;
             
     canvas = layout.getChild("canvas");
     layout.getChildMat(canvas, cmat);
-    publishCanvas = frame.getChild("publishCanvas");
-    frame.getChildMat(publishCanvas, publishMat);
-  
+    ofxSymbolInstance *preview = frame.getChild("preview");
+    frame.getChildMat(preview, previewMat);
+    
     //cmat.translate(canvas->mat.getTranslation());
     
 #ifdef TARGET_OPENGLES
@@ -62,8 +67,8 @@ void silentNature::setup(){
 //    cout << rect.width << "\t" << rect.height << endl;
     fbo.allocate(rect.width, rect.height);
     
-    ofRectangle publishRect = publishCanvas->getBoundingBox();
-    publishFbo.allocate(publishRect.width, publishRect.height);
+    ofImage &pubcan=doc.getBitmapItem("images/publish_canvas.png")->getImage();
+    publishFbo.allocate(pubcan.getWidth(), pubcan.getHeight());
 #endif
 
     clear();
@@ -74,6 +79,7 @@ void silentNature::setup(){
 	ofAddListener(httpUtils.newResponseEvent,this,&silentNature::newResponse);
 	httpUtils.start();
     counter = 0;
+    state = STATE_DRAW;
 
 }
 
@@ -84,6 +90,13 @@ void silentNature::setup(){
 void silentNature::update(){
     
     layout.update();
+    
+    if (ofGetElapsedTimeMillis()>publishTimer && state==STATE_PUBLISH) {
+        state = STATE_DRAW;
+        clear();
+    }
+    
+    ofSetOrientation(APP_ORIENTATION); // just before we set viewport for draw
 }
 
 void silentNature::drawTool() {
@@ -128,47 +141,46 @@ void silentNature::drawTool() {
 
 void silentNature::draw(){   
     
-    if (publishTimer>ofGetElapsedTimeMillis()) {
-        ofBackgroundHex(0xd5d0ca);
-        frame.draw();
-        ofPushMatrix();
-        glMultMatrixf(publishMat.getPtr());
-        publishImage.draw(0,0);
-        ofPopMatrix();
-        return;
-    }
-    
-	ofSetColor(255);
-    
-    
-    ofPushMatrix();
-    layout.draw();
-    ofPopMatrix();
-    
-    
-    ofPushMatrix();
-    glMultMatrixf(cmat.getPtr())    ;
     ofSetColor(255);
+    
+    switch (state) {
+        case STATE_DRAW: 
+            ofPushMatrix();
+            layout.draw();
+            ofPopMatrix();
+            ofPushMatrix();
+            glMultMatrixf(cmat.getPtr())    ;
+            ofSetColor(255);
 #ifdef TARGET_OPENGLES
-    canvasTex.draw(0, 0);
+            canvasTex.draw(0, 0);
 #else
-    fbo.draw(0, 0);
+            fbo.draw(0, 0);
 #endif
-    if (bDown) {
-        switch (tool) {
-            case BRUSH_TOOL:
-            case CRAYON_TOOL:
-                drawTool();
-                break;
-                
-        }
+            if (bDown) {
+                switch (tool) {
+                    case BRUSH_TOOL:
+                    case CRAYON_TOOL:
+                        drawTool();
+                        break;
+                        
+                }
+            }
+            ofPopMatrix();
+            
+            break;
+        case STATE_PUBLISH:
+            ofBackgroundHex(0xd5d0ca);
+            frame.draw();
+            ofPushMatrix();
+            glMultMatrixf(previewMat.getPtr());
+            glMultMatrixf(publishMat.getPtr());
+            fbo.draw(0, 0);
+            ofPopMatrix();
+            break;
+            
+        default:
+            break;
     }
-    ofPopMatrix();
-    
-    
-    
-   
-    
 }
 
 //--------------------------------------------------------------
@@ -238,6 +250,9 @@ ofRectangle getBoundaryBox(ofPixels &pixels) {
 
 //--------------------------------------------------------------
 void silentNature::publish(){
+    
+    
+    state = STATE_PUBLISH;
     publishTimer = ofGetElapsedTimeMillis() + 5000;
     ofPixels pixels;
     
@@ -247,6 +262,7 @@ void silentNature::publish(){
    glReadPixels(0, 0, 1024, 1024, GL_RGBA, GL_UNSIGNED_BYTE, pixels.getPixels());
     fbo.end();
 #else
+    ofSetOrientation(OF_ORIENTATION_DEFAULT);
     fbo.readToPixels(pixels);
 #endif
     
@@ -257,12 +273,11 @@ void silentNature::publish(){
     ofImage &pubcan=doc.getBitmapItem("images/publish_canvas.png")->getImage();
     
     float scale = min(pubcan.getWidth()/rect.width,pubcan.getHeight()/rect.height);
-    
-    ofMatrix4x4 mat;
-    mat.makeIdentityMatrix();
-    mat.translate(0.5*ofVec2f(pubcan.getWidth(),pubcan.getHeight()));//+fboRect.getCenter());
-    mat.preMultScale(ofVec3f(scale,scale,1.0));;
-    mat.preMultTranslate(-rect.getCenter());
+
+    publishMat.makeIdentityMatrix();
+    publishMat.translate(0.5*ofVec2f(pubcan.getWidth(),pubcan.getHeight()));//+fboRect.getCenter());
+    publishMat.preMultScale(ofVec3f(scale,scale,1.0));;
+    publishMat.preMultTranslate(-rect.getCenter());
         
     
     ofImage image;
@@ -273,15 +288,16 @@ void silentNature::publish(){
     publishFbo.begin();
     pubcan.draw(0,0);
     ofPushMatrix();
-    glMultMatrixf(mat.getPtr());
+    glMultMatrixf(publishMat.getPtr());
     image.draw(0,0);
     publishFbo.end();
     publishFbo.readToPixels(pixels);
 #endif
     
 
-    string filename = "PHOTO_A_"+ofToString(counter)+".png";
+    string filename = "images/PHOTO_A_"+ofToString(counter)+".png";
     
+    ofImage publishImage;
     publishImage.setFromPixels(pixels);
     publishImage.saveImage(filename);
     
@@ -294,7 +310,7 @@ void silentNature::publish(){
 	form.addFile("file",filename);
 	httpUtils.addForm(form);
     counter++;
-    clear();
+    
     
 }
 
@@ -330,6 +346,10 @@ void silentNature::resetTools() {
 
 //--------------------------------------------------------------
 void silentNature::touchDown(ofTouchEventArgs &touch){
+    
+    if (state==STATE_PUBLISH) {
+        return;
+    }
     
     ofVec2f pos = ofVec2f(touch.x,touch.y);
     
@@ -378,21 +398,16 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
 //        cout << endl;
         
 
-        ofxSymbolInstance &si = papers->frames.front().instances.front();
-        si.gotoAndStop(items.front()->name[1]-48);
+        paperNum = items.front()->name[5]-48;
+//        papers->frames.front().instances.front().gotoAndStop(paperNum); // "paper1"...
         this->tool = CUTOUT_TOOL ;
-        
-        ofxSymbolInstance &sym = items.front()->layers.front().frames.front().instances.front();
-        if (sym.type == BITMAP_INSTANCE) {
-            cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
-            paper = &sym.bitmapItem->getImage();
-        } else {
-            paper = NULL;
-        }
+
     }
     
     items.clear();
     if (layout.hitLayer(layout.getLayer("eraser"), pos, items)) {
+        resetTools();
+        items.front()->play();
         this->tool = ERASER_TOOL;
     }
     
@@ -413,31 +428,34 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                 touches.push_back(cpos);
                 break;
                 
-            case CUTOUT_TOOL:
+            case CUTOUT_TOOL: {
+                
+                
                 
 #ifdef TARGET_OPENGLES
                 fbo.begin(canvasTex.getTextureData().textureID);
 #else
+                ofSetOrientation(OF_ORIENTATION_DEFAULT);
                 fbo.begin();
 #endif
-                if (paper!=NULL) {
-                    ofPushMatrix();
-                    ofTranslate(cpos);
-                    
-                    ofRotate(ofRandom(-180, 180));
-                    float scale = ofRandom(0.7, 1.5);
-                    ofScale(scale, scale);
-                    
-                    ofTranslate(-0.5*ofVec2f(paper->getWidth(),paper->getHeight()));
-                    
-                    
-                    paper->draw(0,0);
-                    ofPopMatrix();
-                }
+                
+                ofPushMatrix();
+                ofTranslate(cpos);
+                
+                ofRotate(ofRandom(-180, 180));
+                float scale = ofRandom(0.7, 1.5);
+                ofScale(scale, scale);
+                
+                ofImage &paper = doc.getBitmapItem("papers_folder/paper"+ofToString(paperNum)+(paperNum == 1 ? "_"+ofToString(rand()%5):"")+".png")->getImage();
+                ofTranslate(-0.5*ofVec2f(paper.getWidth(),paper.getHeight()));
+                
+                paper.draw(0,0);
+                ofPopMatrix();
+                
                 fbo.end();
                 
                 
-                break;
+            } break;
                 
             case ERASER_TOOL:
                 
@@ -472,6 +490,11 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void silentNature::touchMoved(ofTouchEventArgs &touch){
+    
+    if (state==STATE_PUBLISH) {
+        return;
+    }
+    
     ofVec2f pos = ofVec2f(touch.x,touch.y);
     
     vector<ofxSymbolInstance*> items;
@@ -498,6 +521,7 @@ void silentNature::touchMoved(ofTouchEventArgs &touch){
 #ifdef TARGET_OPENGLES
                      fbo.begin(canvasTex.getTextureData().textureID);
 #else
+                     ofSetOrientation(OF_ORIENTATION_DEFAULT);
                      fbo.begin();
 #endif
                      drawTool();  
@@ -520,6 +544,11 @@ void silentNature::touchMoved(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void silentNature::touchUp(ofTouchEventArgs &touch){
+    
+    if (state==STATE_PUBLISH) {
+        return;
+    }
+    
     if (bDown) {
         switch (tool) {
             case BRUSH_TOOL:
@@ -528,6 +557,7 @@ void silentNature::touchUp(ofTouchEventArgs &touch){
 #ifdef TARGET_OPENGLES
                 fbo.begin(canvasTex.getTextureData().textureID);
 #else
+                ofSetOrientation(OF_ORIENTATION_DEFAULT);
                 fbo.begin();
 #endif
                 drawTool();

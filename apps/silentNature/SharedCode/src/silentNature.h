@@ -61,7 +61,8 @@ public:
      
     int tool;
     ofColor color;
-    ofImage *paper;
+    int paperNum;
+    
     
 #ifdef TARGET_OPENGLES
     ofxiFbo fbo;
@@ -81,8 +82,9 @@ public:
     int counter;
    
     int publishTimer;
-    ofMatrix4x4 publishMat;
-    ofImage publishImage;
+    ofMatrix4x4 previewMat;
     ofFbo publishFbo;
-    ofxSymbolInstance *publishCanvas;
+    ofMatrix4x4 publishMat;
+    
+    int state;
 };
