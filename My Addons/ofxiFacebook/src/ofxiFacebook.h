@@ -50,6 +50,7 @@ class ofxiFacebook {
 public:
     ofxiFacebook():session(nil) {};
     void setup(vector<string> permissions=vector<string>());
+    void ssoLogin(vector<string> permissions=vector<string>());
     void exit();
     void gotFocus();
     void launchedWithURL(string url);

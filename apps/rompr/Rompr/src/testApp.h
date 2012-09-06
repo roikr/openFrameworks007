@@ -59,6 +59,7 @@ public:
     void showRecommendation(string html);
     void hideRecommendation();
     void urlResponse(ofxHttpResponse &response);
+    void facebookEvent(ofxFBEventArgs &args);
     
     ofVec2f getScreenCoordinatesForLocation(ofxMapKitLocation location);
     ofxMapKitLocation getUserLocation();
@@ -77,6 +78,7 @@ public:
     
     void volumeButtonPressed(int &button);
     void pictureTaken(ofPixels &pixels);
+    
     
     bool bUpdatingRegion;
     bool bQueryLocation;
@@ -122,6 +124,7 @@ public:
     
     ofxPenner penner;
     ofxiFacebook fb; 
-    bool bLogin;
+    bool bGetMe;
+    bool bSsoLogin;
     
 };

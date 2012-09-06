@@ -64,28 +64,39 @@ void ofxiFacebook::setup(vector<string> permissions) {
 //        if (session.state != FBSessionStateCreated) {
                 
         // if the session isn't open, let's open it now and present the login UX to the user
-        [session openWithCompletionHandler:^(FBSession *session, 
-                                             FBSessionState status, 
-                                             NSError *error) {
-            ofxFBEventArgs args;
-            args.action = FACEBOOK_ACTION_LOGIN;
-            
-            if (error) {
-                args.status = FACEBOOK_FAILED;
-                args.message = ofxNSStringToString([error description]);
-            } else {
-                args.status = FACEBOOK_SUCEEDED;
-                args.message = "logged in";
-            }
-            
-            ofNotifyEvent(ofxFacebookEvent, args);
-            
-        }];
+        ssoLogin();
     }
       
 
 }
 
+void ofxiFacebook::ssoLogin(vector<string> permissions) {
+    
+    if (session!=nil) {
+        [session release];
+        session = nil;
+    }
+    
+    session = [[[FBSession alloc] initWithPermissions:convertPermissions(permissions)] retain];
+    
+    [session openWithCompletionHandler:^(FBSession *session, 
+                                         FBSessionState status, 
+                                         NSError *error) {
+        ofxFBEventArgs args;
+        args.action = FACEBOOK_ACTION_LOGIN;
+        
+        if (error) {
+            args.status = FACEBOOK_FAILED;
+            args.message = ofxNSStringToString([error description]);
+        } else {
+            args.status = FACEBOOK_SUCEEDED;
+            args.message = "logged in";
+        }
+        
+        ofNotifyEvent(ofxFacebookEvent, args);
+        
+    }];
+}
 
 void ofxiFacebook::gotFocus() {
     /*

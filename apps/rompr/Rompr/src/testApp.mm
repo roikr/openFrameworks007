@@ -14,7 +14,7 @@
 #define MAP_RECT_WIDTH      mapKit.getMKMapView().visibleMapRect.size.width
 
 const string HOST_NAME = "107.21.224.181";
-const string USER_ID = "549453367";
+
 //const string FB_ACCESS_TOKEN = "AAACtapZAgifcBAG1nd96WupL2vU103yrSCsmUA9KX0ElPYISwqhYcAco7W3BSh8NSha0qkDvMjp3xfUE2W1AHA3apk2rmlIYHstZAMwQZDZD";
 
 enum  {
@@ -111,11 +111,11 @@ void testApp::setup(){
     bStopCamera = false;
     cameraXform.setup(ofVec2f(ofGetWidth(),ofGetHeight())*0.5,0.01,0);
     
+    ofxRegisterFacebookNotification(this);
+    bGetMe = false;
+    bSsoLogin = false;
     fb.setup();
-    bLogin = false;
-    fb.login();
-    
-    
+   
 }
 
 
@@ -575,6 +575,54 @@ void testApp::urlResponse(ofxHttpResponse &response) {
     } 
 }
 
+void testApp::facebookEvent(ofxFBEventArgs &args) {
+    cout << "facebookEvent, action: " << args.action << ", status: " << args.status << endl << "message: " << args.message << endl;
+    
+    switch (args.action) {
+        case FACEBOOK_ACTION_RETRIEVE_SESSION:
+            switch (args.status) {
+                case FACEBOOK_FAILED:
+                    bSsoLogin = true;
+                    break;
+                case FACEBOOK_SUCEEDED:
+                    bGetMe = true;
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case FACEBOOK_ACTION_LOGIN:
+            switch (args.status) {
+                case FACEBOOK_FAILED:
+                    
+                    break;
+                case FACEBOOK_SUCEEDED:
+                    bGetMe = true;
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case FACEBOOK_ACTION_GET_ME:
+            switch (args.status) {
+                case FACEBOOK_FAILED:
+                    bSsoLogin = true; // for some reason we are have token but not authrozied
+                    break;
+                case FACEBOOK_SUCEEDED: {
+                    string url = "http://"+HOST_NAME+"/mobile/start/"+args.message+"/"+fb.getAccessToken();
+                    cout << url << endl;
+                    queue[ofxLoadURLAsync(url)] = REQUEST_TYPE_LOGIN;
+                }  break;
+                default:
+                    break;
+            }
+            break;
+                    
+        default:
+            break;
+    }
+}
+
 ofVec2f testApp::getScreenCoordinatesForLocation(ofxMapKitLocation location) {
     CGPoint cgPoint = [mapKit.getMKMapView() convertCoordinate:location toPointToView:nil];
     
@@ -590,11 +638,7 @@ ofxMapKitLocation testApp::getUserLocation() {
 //--------------------------------------------------------------
 void testApp::update(){
     
-    if (!bLogin && fb.getIsLoggedIn()) {
-        bLogin = true;
-        cout << fb.getAccessToken() << endl;
-        queue[ofxLoadURLAsync("http://"+HOST_NAME+"/mobile/start/"+USER_ID+"/"+fb.getAccessToken())] = REQUEST_TYPE_LOGIN;
-    }
+    
     
 	if (bUpdatingRegion) {
 //        cout << mapKit.getScreenCoordinatesForLocation(HOME_LATITUDE, HOME_LONGITUDE) << endl;
@@ -676,6 +720,17 @@ void testApp::update(){
     calcItems(); 
     penner.update();
 
+    if (bGetMe) {
+        bGetMe = false;
+        fb.getMe();
+    }
+    
+    if (bSsoLogin) {
+        
+        bSsoLogin = false;
+        fb.logout();
+        fb.ssoLogin();
+    }
 }
 
 
