@@ -8,9 +8,16 @@
 
 #include "ofxBigImage.h"
 
-#ifdef TARGET_OPENGLES
 
-void ofxBigImage::loadImage(string filename,int size,int width,int height) {
+
+void loadTile(string filename,ofImage &image) {
+    image.setUseTexture(false);
+    image.loadImage(filename+".png");
+}
+
+    
+
+void ofxBigImage::setup(string filename,int size,int width,int height) {
     this->size = size;
     this->width = width;
     this->height = height;
@@ -27,44 +34,30 @@ void ofxBigImage::loadImage(string filename,int size,int width,int height) {
     
     for (int i=0; i<numRows; i++) {
         for (int j=0; j<numCols ; j++) {
-            tiles.push_back(tile(ofRectangle(j*size, i*size, 1, 1)));
-            tiles.back().texture.load(filename+"/"+basename+'_'+ofToString(i)+'_'+ofToString(j)+".pvr");
+            tiles.push_back(tile(ofRectangle(j*size, i*size, size, size)));
+            loadTile(filename+"/"+basename+'_'+ofToString(i)+'_'+ofToString(j), tiles.back().image);
         }
-        tiles.push_back(tile(ofRectangle(numCols*size, i*size, widthRem/float(size), 1)));
-        tiles.back().texture.load(filename+"/"+basename+'_'+ofToString(i)+'_'+ofToString(numCols)+".pvr");
+        tiles.push_back(tile(ofRectangle(numCols*size, i*size, widthRem, size)));
+        loadTile(filename+"/"+basename+'_'+ofToString(i)+'_'+ofToString(numCols), tiles.back().image);
     }
     
     for (int j=0; j<numCols ; j++) {
-        tiles.push_back(tile(ofRectangle(j*size, numRows*size, 1, heightRem/float(size))));
-        tiles.back().texture.load(filename+"/"+basename+'_'+ofToString(numRows)+'_'+ofToString(j)+".pvr");
+        tiles.push_back(tile(ofRectangle(j*size, numRows*size, size, heightRem)));
+        loadTile(filename+"/"+basename+'_'+ofToString(numRows)+'_'+ofToString(j), tiles.back().image);
     }
     
-    tiles.push_back(tile(ofRectangle(numCols*size,numRows*size,widthRem/float(size),heightRem/float(size))));
-    tiles.back().texture.load(filename+"/"+basename+'_'+ofToString(numRows)+'_'+ofToString(numCols)+".pvr");
+    tiles.push_back(tile(ofRectangle(numCols*size,numRows*size,widthRem,heightRem)));
+    loadTile(filename+"/"+basename+'_'+ofToString(numRows)+'_'+ofToString(numCols), tiles.back().image);
 
     cout << "finish loading: " <<  endl;
     cout << "time: " << ofGetElapsedTimeMillis()-start << endl; 
-}
-
-void ofxBigImage::draw() {
-    //    ofTranslate(-width/2, -height/2);
     
-    for (vector<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
-        ofPushMatrix();
-        ofTranslate(iter->rect.x, iter->rect.y);
-        iter->texture.draw(iter->rect.width,iter->rect.height);
-        ofPopMatrix();
-    }
+    bLoaded = false;
 }
 
-void ofxBigImage::release() {
-    for (vector<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
-        iter->texture.release();
-    }
-    tiles.clear();
-}
 
-#else
+
+/*
 void ofxBigImage::loadImage(string filename,int size) {
     ofImage image;
     image.setUseTexture(false);
@@ -110,7 +103,23 @@ void ofxBigImage::loadImage(ofImage image,int size) {
         iter->image.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // roikr: this was the trick to boost the fps as alternative to linear filtering...
     }
 }
+*/
 
+void ofxBigImage::load() {
+    for (vector<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
+        iter->image.setUseTexture(true);
+        iter->image.reloadTexture();
+    } 
+    bLoaded = true;
+}
+void ofxBigImage::unload() {
+    for (vector<tile>::iterator iter=tiles.begin(); iter!=tiles.end(); iter++) {
+        iter->image.setUseTexture(false);
+        iter->image.getTextureReference().clear();
+        
+    }
+    bLoaded = false;
+}
 
 void ofxBigImage::draw() {
 //    ofTranslate(-width/2, -height/2);
@@ -122,7 +131,7 @@ void ofxBigImage::draw() {
 void ofxBigImage::release() {
     tiles.clear();
 }
-#endif
+
 
 int ofxBigImage::getWidth() {
     return width;
@@ -133,6 +142,6 @@ int ofxBigImage::getHeight() {
 }
 
 bool ofxBigImage::getDidLoad() {
-    return !tiles.empty();
+    return bLoaded;
 }
 

@@ -17,6 +17,8 @@
 		BB24DD8F10DA77E000E9C588 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8C10DA77E000E9C588 /* Default.png */; };
 		BB24DD9010DA77E000E9C588 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8D10DA77E000E9C588 /* Icon.png */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
+		E406072215FCD41500BDCB7A /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
+		E406072715FCD5B700BDCB7A /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E406072615FCD5B700BDCB7A /* ofxiTexture.mm */; };
 		E41D400B13B39D2100A75A5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
 		E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
@@ -31,8 +33,6 @@
 		E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
 		E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
 		E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
-		E4C0054E15C9730200210411 /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
-		E4D7573915D16C61007DAD05 /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D7573815D16C61007DAD05 /* ofxiTexture.mm */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 		E4D9893E15C14E9E00465293 /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
@@ -73,6 +73,8 @@
 		BB24DD8D10DA77E000E9C588 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E406072515FCD5B700BDCB7A /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
+		E406072615FCD5B700BDCB7A /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E41D3ED613B38FB500A75A5D /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E41D3EE513B3906D00A75A5D /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/iphone/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E41D400613B39D2100A75A5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -100,8 +102,6 @@
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4C0054C15C9730200210411 /* ofxBigImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBigImage.cpp; sourceTree = "<group>"; };
 		E4C0054D15C9730200210411 /* ofxBigImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBigImage.h; sourceTree = "<group>"; };
-		E4D7573715D16C61007DAD05 /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
-		E4D7573815D16C61007DAD05 /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -193,10 +193,10 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E406072315FCD5B600BDCB7A /* ofxiTexture */,
 				E4F8552F15DA53BD00C98739 /* ofxDragScale */,
 				E4DB625415DA151900419506 /* ofxPenner */,
 				E49BC29715D180EC0030291D /* ofxiVideoPlayer */,
-				E4D7573515D16C61007DAD05 /* ofxiTexture */,
 				E430146D15B59B6B005347AE /* ofxXmlSettings */,
 				E430125815B598F3005347AE /* ofxFlash */,
 				E4A2753C15A389EF009F7B62 /* SharedCode */,
@@ -232,6 +232,24 @@
 				29B97323FDCFA39411CA2CEA /* core frameworks */,
 			);
 			name = core;
+			sourceTree = "<group>";
+		};
+		E406072315FCD5B600BDCB7A /* ofxiTexture */ = {
+			isa = PBXGroup;
+			children = (
+				E406072415FCD5B700BDCB7A /* src */,
+			);
+			name = ofxiTexture;
+			path = "../../../My Addons/ofxiTexture";
+			sourceTree = "<group>";
+		};
+		E406072415FCD5B700BDCB7A /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E406072515FCD5B700BDCB7A /* ofxiTexture.h */,
+				E406072615FCD5B700BDCB7A /* ofxiTexture.mm */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		E41D40FE13B3A0D800A75A5D /* Products */ = {
@@ -349,24 +367,6 @@
 				E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */,
 				E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */,
 				E431347315B6BA9300864C97 /* ofxFloatingCaption.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4D7573515D16C61007DAD05 /* ofxiTexture */ = {
-			isa = PBXGroup;
-			children = (
-				E4D7573615D16C61007DAD05 /* src */,
-			);
-			name = ofxiTexture;
-			path = "../../../My Addons/ofxiTexture";
-			sourceTree = "<group>";
-		};
-		E4D7573615D16C61007DAD05 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4D7573715D16C61007DAD05 /* ofxiTexture.h */,
-				E4D7573815D16C61007DAD05 /* ofxiTexture.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -529,12 +529,12 @@
 				E4D9893E15C14E9E00465293 /* kaiserNav.mm in Sources */,
 				E4FB3AB015C689B40002E5C3 /* ofxiExternalView.mm in Sources */,
 				E4FB3AB115C689B40002E5C3 /* ExternalGLView.mm in Sources */,
-				E4C0054E15C9730200210411 /* ofxBigImage.cpp in Sources */,
-				E4D7573915D16C61007DAD05 /* ofxiTexture.mm in Sources */,
 				E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */,
 				E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */,
 				E4DB625815DA151900419506 /* ofxPenner.cpp in Sources */,
 				E4F8555115DA53BD00C98739 /* ofxDragScale.cpp in Sources */,
+				E406072215FCD41500BDCB7A /* ofxBigImage.cpp in Sources */,
+				E406072715FCD5B700BDCB7A /* ofxiTexture.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

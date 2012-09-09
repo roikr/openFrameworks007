@@ -51,7 +51,8 @@ bool ofxiTexture::load(string filename,int type) {
 		
 		
 		
-		CGImageRef textureImage = [UIImage imageNamed:texturePath].CGImage;
+//		CGImageRef textureImage = [UIImage imageNamed:texturePath].CGImage;
+        CGImageRef textureImage = [UIImage imageWithContentsOfFile:texturePath].CGImage;
 		if (textureImage == nil) {
 			NSLog(@"Failed to load texture image");
 			return false;

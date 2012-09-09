@@ -1,8 +1,8 @@
 //
-//  ofxBigImage.h
-//  emptyExample
+//  ofxiBigImage.h
+//  kaiserNav
 //
-//  Created by Roee Kremer on 8/1/12.
+//  Created by Roee Kremer on 9/9/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -10,24 +10,21 @@
 
 #include "ofMain.h"
 
-//#define USE_PVR
 
+#include "ofxiTexture.h"
 
 
 struct tile {
     tile(ofRectangle rect):rect(rect) {};
-    
     ofRectangle rect;
-	ofImage image;
+    ofxiTexture texture;
 
 };
 
-class ofxBigImage {
+class ofxiBigImage {
 public:
 
-    void setup(string filename,int size,int width=0,int height=0);
-    void load();
-    void unload();
+    void loadImage(string filename,int size,int width=0,int height=0);
     void draw();
     void release();
     int getWidth();
@@ -39,5 +36,5 @@ private:
     vector<tile> tiles;
     int width;
     int height;
-    bool bLoaded;
 };
+

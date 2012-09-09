@@ -54,8 +54,7 @@ public:
     void setState(int state);
    
 	ofxDragScale cam;
-    ofxBigImage image;
-    	
+    
     ofxDocument doc;
     ofxSymbolInstance interfaceLayout;
     ofxSymbolInstance imageLayout;
@@ -67,7 +66,7 @@ public:
     
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
     ofxSymbolInstance screenMarker;
-    ofxSymbolInstance screenOverlay;
+    ofxSymbolInstance screenLayout;
     layer *titlesLayer;
     
     string lang;
@@ -85,6 +84,9 @@ public:
 
     
     vector<dragScale> settings;
-    map<string, pair<int,int> > imagesData;
+    vector<ofxBigImage > images;
+    map<string,int> imagesMap;
+    int imageNum;
+   
         
 };

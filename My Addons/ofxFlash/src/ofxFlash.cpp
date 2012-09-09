@@ -32,7 +32,7 @@ void ofxBitmapItem::load(float u,float v) {
         //            } else {
         image.setUseTexture(true);
         image.reloadTexture();
-        image.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // roikr: this was the trick to boost the fps as alternative to linear filtering...
+//        image.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // roikr: this was the trick to boost the fps as alternative to linear filtering...
         //            }
         
         
@@ -1033,7 +1033,7 @@ ofxSymbolInstance *ofxSymbolInstance::getChild(string name) {
         }
     }
     
-    cout << "could not found ofxSymbolInstance: " << name << " - expect a crash" << endl;
+    cout << "could not found ofxSymbolInstance: " << name << endl;
     return NULL;
 }
 

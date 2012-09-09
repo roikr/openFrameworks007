@@ -19,46 +19,47 @@ enum {
 void kaiserNav::updateOverlays() {
     for (vector<pair<ofxSymbolInstance *,ofxSymbolInstance > >::iterator iter=markers.begin();iter!=markers.end();iter++) {
 //        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(width,height)));
-        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(image.getWidth(),image.getHeight())));
-//        iter->second.second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(image.getWidth(),image.getHeight())));
+        iter->second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
+//        iter->second.second.mat.makeTranslationMatrix(cam.worldToScreen(iter->first->mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
         
         
     }
     
     
     
-    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
-    string titleName = imageName+"_C_"+lang;
-    string subTitleName = imageName+"_SC_"+lang;
     
+    string subTitleName = imageName+"_SC_"+lang;
+    string titleName = imageName+"_C_"+lang;
+    
+    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
+    bool bHasSubtitle = false;
     for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
         for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
-            if (iter->type==SYMBOL_INSTANCE) {
-                if (iter->name == titleName) {
-                    iter->bVisible = true;
-                    
-                    ofxSymbolInstance *sym = iter->getChild("open");
-                    if (sym) {
-                        sym->bVisible = !bSubTitle;
-                    }
-                    
-                    sym = iter->getChild("close");
-                    if (sym) {
-                        sym->bVisible = bSubTitle;
-                    }
-                    
-                } else if (iter->name == subTitleName){
-                    iter->bVisible = bSubTitle;
-                } else {
-                    iter->bVisible = false;
-                }
-                
-                
-                
+            iter->bVisible = false;
+            if (iter->name == subTitleName) {
+                iter->bVisible = bSubTitle;
+                bHasSubtitle = true;
             }
         }
     }
-        
+    titles->getChild(titleName)->bVisible = true;
+    titles->getChild("TITLE_STRIP")->bVisible = true;
+    if (bHasSubtitle) {
+        titles->getChild("MARKER_PLUS_"+lang)->bVisible = !bSubTitle;
+        titles->getChild("MARKER_MINUSE_"+lang)->bVisible = bSubTitle;
+    }
+    
+    for (vector<layer>::iterator liter=screenLayout.layers.begin(); liter!=screenLayout.layers.end(); liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
+            iter->bVisible = false;
+            if (iter->name == subTitleName) {
+                iter->bVisible = bSubTitle;
+            }
+        }
+    }
+    
+    screenLayout.getChild(titleName)->bVisible = true;
+    screenLayout.getChild("TITLE_STRIP")->bVisible = true;
     
 //    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
         
@@ -70,7 +71,7 @@ void kaiserNav::updateOverlays() {
         ofMatrix4x4 mat; // should initialized to general transform if any exist
         mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
         
-        ofVec2f trans(cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(image.getWidth(),image.getHeight())));
+        ofVec2f trans(cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
         
         screenMarker.mat.makeTranslationMatrix(trans);
         
@@ -90,13 +91,20 @@ void kaiserNav::updateOverlays() {
         
     }
     
-    
-    layer *langLayer = interfaceLayout.getLayer("language");
-    for (vector<ofxSymbolInstance>::iterator iter=langLayer->frames.front().instances.begin(); iter!=langLayer->frames.front().instances.end(); iter++) {
-        if (iter->type==SYMBOL_INSTANCE) {
-            iter->alphaMultiplier = lang == iter->name ? 1.0 : 0.6;
+    ofxSymbolInstance *language = interfaceLayout.getChild("LANGUAGE");
+    for (vector<layer>::iterator liter=language->layers.begin(); liter!=language->layers.end(); liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
+            if (iter->name.size()==2) {
+                iter->bVisible = iter->name!=lang;
+            } else {
+                iter->bVisible = iter->name==lang+"_S";
+            }
         }
     }
+    
+    
+    
+    
 //    interfaceLayout.update();
 }
 
@@ -114,7 +122,7 @@ void kaiserNav::setCaption(string name) {
     ofMatrix4x4 mat; // should initialized to general transform if any exist
     mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
     
-    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(image.getWidth(),image.getHeight())));
+    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
     
 }
 
@@ -143,7 +151,13 @@ void kaiserNav::setup(){
     if (xml.loadFile("images.xml")) {
         xml.pushTag("images");
         for (int i=0; i<xml.getNumTags("image"); i++) {
-            imagesData[xml.getAttribute("image", "name", "",i)] = make_pair(xml.getAttribute("image", "width", 0,i), xml.getAttribute("image", "height", 0,i));
+//            imagesData[xml.getAttribute("image", "name", "",i)] = make_pair(xml.getAttribute("image", "width", 0,i), xml.getAttribute("image", "height", 0,i));
+            string name = xml.getAttribute("image", "name", "",i);
+            imagesMap[name] = images.size();
+            ofxBigImage image;
+            images.push_back(image);
+            images.back().setup(name, 1024,xml.getAttribute("image", "width", 0,i),xml.getAttribute("image", "height", 0,i));
+            
         }
     }
     
@@ -157,11 +171,12 @@ void kaiserNav::setup(){
     interfaceLayout.getChildMat(interfaceLayout.getChild("idle")->getChild("video"), videoMat); 
     titlesLayer = interfaceLayout.getLayer("titles");
    
-    screenOverlay = doc.getSymbolItem("SCREEN_OVERLY")->createInstance("screen");
+    screenLayout = doc.getSymbolItem("ScreenLayout")->createInstance("screenLayout");
     
     
 	lang = "HE";
-    setImage("I2");	
+    imageNum = 0;
+    setImage("I1");	
     
     
 	
@@ -178,19 +193,19 @@ void kaiserNav::setup(){
 
 void kaiserNav::setImage(string name) {
     
-    
-    this->imageName = name;
-    pair<int,int> imageSize = imagesData[name];
-    if (image.getDidLoad()) {
-        image.release();
-    }
-    image.loadImage(ofToDataPath(name), 1024,imageSize.first,imageSize.second);
-    
-    if (!image.getDidLoad()) {
-        cout << "setImage: could not find " << name << endl;
+    map<string,int>::iterator miter = imagesMap.find(name);
+    if (miter==imagesMap.end()) {
         return;
     }
     
+    imageName = name;
+    
+    if (images[imageNum].getDidLoad()) {
+        images[imageNum].unload();
+    }
+    
+    imageNum = miter->second;    
+    images[imageNum].load();
     
     
     
@@ -241,14 +256,14 @@ void kaiserNav::setImage(string name) {
         ofMatrix4x4 mat;
         mat.makeScaleMatrix(iter->zoom,iter->zoom,1.0f);
         mat.translate(iter->offset);
-        cam.setup(window, image.getWidth(), image.getHeight(),mat);
+        cam.setup(window, images[imageNum].getWidth(), images[imageNum].getHeight(),mat);
         cam.setMinZoom(iter->minZoom);
         cam.setMaxZoom(iter->maxZoom);
         
     } else {
     
-        cam.setup(window, image.getWidth(), image.getHeight());
-        cam.setMinZoom(960.0f/(float)image.getWidth());
+        cam.setup(window, images[imageNum].getWidth(), images[imageNum].getHeight());
+        cam.setMinZoom(960.0f/(float)images[imageNum].getWidth());
         cam.setMaxZoom(1.0f);
     }
     
@@ -316,15 +331,15 @@ void kaiserNav::draw2nd() {
     switch (state) {
         case STATE_NAVIGATION:
             cam.begin(); //put all our drawing under the ofxPanZoom effect
-            ofTranslate(ofVec2f(-0.5*ofVec2f(image.getWidth(),image.getHeight())));
-            image.draw();
+            ofTranslate(ofVec2f(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
+            images[imageNum].draw();
             cam.end();	//back to normal ofSetupScreen() projection
             break;
         case STATE_TUTORIAL:
             
             cam.begin(); //put all our drawing under the ofxPanZoom effect
-            ofTranslate(ofVec2f(-0.5*ofVec2f(image.getWidth(),image.getHeight())));
-            image.draw();
+            ofTranslate(ofVec2f(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
+            images[imageNum].draw();
             cam.end();	//back to normal ofSetupScreen() projection
             break;
             
@@ -345,7 +360,7 @@ void kaiserNav::draw2nd() {
 
     
     ofEnableAlphaBlending();
-    screenOverlay.draw();
+    screenLayout.draw();
     interfaceLayout.drawLayer(titlesLayer);
     
     if (bCaptionActive) {
@@ -369,10 +384,10 @@ void kaiserNav::draw() {
     
 	cam.begin(); //put all our drawing under the ofxPanZoom effect
        
-    ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
+    ofTranslate(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight()));
 
     ofDisableAlphaBlending();
-    image.draw();
+    images[imageNum].draw();
     ofEnableAlphaBlending();
     
     imageLayout.draw();
@@ -463,40 +478,44 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
 //            titles->bVisible = false;
             hits.clear();
             if (interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y),hits)) {
-                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                    if ((*iter)->type==SYMBOL_INSTANCE) {
-                        cout << (*iter)->name << endl;
-                        setImage((*iter)->name);
-                    }
+                if (hits.front()->name != imageName) {
+                    setImage(hits.front()->name);
                 }
             }
             
             
             hits.clear();
             if(interfaceLayout.hitLayer(interfaceLayout.getLayer("language"),ofVec2f(touch.x,touch.y),hits)) {
-                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                    if ((*iter)->type==SYMBOL_INSTANCE) {
-                        cout << (*iter)->name << endl;
-                        lang = (*iter)->name;
-                        if (bCaptionActive) {
-                            setCaption(captionName);
-                        }
+                if (hits.front()->name.size()==2) {
+                    lang = hits.front()->name;
+                    if (bCaptionActive) {
+                        setCaption(captionName);
                     }
                 }
             }
             
             hits.clear();
-            if( interfaceLayout.getChild("titles")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
-                for (vector<ofxSymbolInstance*>::iterator iter=hits.begin(); iter!=hits.end(); iter++) {
-                    if ((*iter)->type==SYMBOL_INSTANCE && (*iter)->name == imageName+"_C_"+lang) {
-                        
-                        bSubTitle = !bSubTitle;
-                        bCaptionActive = false;
-                        
-                        
-
+            if( interfaceLayout.getChild("LANGUAGE")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+                if (hits.front()->name!=lang+"_S") {
+                    lang = hits.front()->name;
+                    if (bCaptionActive) {
+                        setCaption(captionName);
                     }
                 }
+            }
+            
+            
+            
+            hits.clear();
+            if( interfaceLayout.getChild("titles")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+                for (vector<ofxSymbolInstance *>::iterator iter = hits.begin();iter!=hits.end();iter++) {
+                    if ((*iter)->name == "MARKER_MINUSE_"+lang || (*iter)->name == "MARKER_PLUS_"+lang) {
+                        bSubTitle = !bSubTitle;
+                        bCaptionActive = false;
+                        break;
+                    }
+                }
+                
             }
 
             
@@ -543,13 +562,13 @@ void kaiserNav::touchDoubleTap(ofTouchEventArgs &touch){
         }
     }
     
-    else {
-        if (imageName=="I2") {
-            setImage("I1");
-        } else {
-            setImage("I2");
-        }
-    }
+//    else {
+//        if (imageName=="I2") {
+//            setImage("I1");
+//        } else {
+//            setImage("I2");
+//        }
+//    }
     
 }
 
