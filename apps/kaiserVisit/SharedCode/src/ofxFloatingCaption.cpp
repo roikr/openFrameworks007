@@ -62,34 +62,20 @@ void ofxFloatingCaption::setAnchor(ofVec2f anchor) {
     linep2 = getPos()+vec*(length-13.5-20);
     fade = 1;
     
-    float aa = d.angle(ofVec2f(1,0)) * PI/180; // anchor to orbit angle
-    ofVec2f apos=ofVec2f(0.5*(screenRect.width-captionRect.width)*cos(aa),0.5*(screenRect.height-captionRect.height)*sin(aa));
-    float minPos = apos.length();
-    float maxPos =  MIN(0.5*screenRect.width/abs(cos(aa)),0.5*screenRect.height/abs(sin(aa)));
+    float aa = d.angle(ofVec2f(1,0));// * PI/180; // anchor to orbit angle
+
+//    ofVec2f apos=ofVec2f(0.5*screenRect.width*cos(aa),0.5*screenRect.height*sin(aa));
+//  
+//    float minPos = apos.length();
+//    float maxPos =  MIN(0.5*screenRect.width/abs(cos(aa)),0.5*screenRect.height/abs(sin(aa)));
 //     cout << aa*180/PI << "\t" << d.length() << "\t" << minPos << "\t" << maxPos << endl;
-    fade = ofMap(d.length(), minPos, maxPos, 1, 0,true);
+//    fade = ofMap(d.length(), minPos, maxPos, 1, 0,true);
+    if (abs(d.x)>0.5*screenRect.width) {
+        fade = ofMap(abs(d.x)-0.5*screenRect.width, 0, 100, 1, 0,true);
+    } else if (abs(d.y)>0.5*screenRect.height) {
+        fade = ofMap(abs(d.y)-0.5*screenRect.height, 0, 100, 1, 0,true);
+    }
+    
     
 }
 
-ofVec2f ofxFloatingCaption::getPos() {
-    return pos;
-}
-
-ofVec2f ofxFloatingCaption::getAnchor() {
-    return anchor;
-}
-
-//float ofxFloatingCaption::getLegnth() {
-//    return length;
-//}
-
-float ofxFloatingCaption::getFade() {
-    return fade;
-    
-}
-
-/*
-ofRectangle ofxFloatingCaption::getBoundingBox() {
-    return rect;
-}
-*/

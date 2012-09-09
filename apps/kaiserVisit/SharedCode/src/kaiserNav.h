@@ -61,13 +61,14 @@ public:
     
     bool bCaptionActive;
     ofxSymbolInstance caption;
+    ofxSymbolInstance extCaption;
     ofxFloatingCaption floating;
     
     
     vector<pair<ofxSymbolInstance *,ofxSymbolInstance> > markers;
-    ofxSymbolInstance screenMarker;
+    ofxSymbolInstance extMarker;
     ofxSymbolInstance screenLayout;
-    layer *titlesLayer;
+   
     
     string lang;
     string imageName;
@@ -88,5 +89,8 @@ public:
     map<string,int> imagesMap;
     int imageNum;
    
+    ofMatrix4x4 extMat;
+    ofVec2f linep1;
+    ofVec2f linep2;
         
 };

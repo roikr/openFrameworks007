@@ -9,6 +9,8 @@
 #include "kaiserNav.h"
 #include "ofxXmlSettings.h"
 
+#define EXTERNAL_ZOOM 1.29032258064516
+
 enum {
     STATE_IDLE,
     STATE_TUTORIAL,
@@ -62,31 +64,45 @@ void kaiserNav::updateOverlays() {
     screenLayout.getChild("TITLE_STRIP")->bVisible = true;
     
 //    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
-        
+    
+    extMat = ofMatrix4x4::newTranslationMatrix(640, 400, 0);
+    extMat.preMult(cam.getTransform().getPtr());
+    extMat.preMult(ofMatrix4x4::newScaleMatrix(EXTERNAL_ZOOM, EXTERNAL_ZOOM, 1.0));
+    
+    
     if (bCaptionActive) {
         
+        ofMatrix4x4 mat; 
+        imageLayout.getChildMat(imageLayout.getChild(caption.name), mat); // we set the caption name to the correspond marker when we create it
         
-        
-        ofxSymbolInstance *child = imageLayout.getChild(caption.name);
-        ofMatrix4x4 mat; // should initialized to general transform if any exist
-        mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
-        
-        ofVec2f trans(cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
-        
-        screenMarker.mat.makeTranslationMatrix(trans);
-        
-        floating.setAnchor(trans); 
+        ofVec3f trans(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight()));
+        floating.setAnchor(cam.worldToScreen(trans)); 
         
         ofRectangle rect = caption.getBoundingBox();
-        
-//        cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
-
         caption.mat.makeTranslationMatrix(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
-        caption.alphaMultiplier = floating.getFade();
-//        caption.update();
+        caption.alphaMultiplier =  floating.getFade();
+        
         if (floating.getFade()<=0) {
             bCaptionActive = false;
         }
+        
+        
+        ofVec3f extAnchor = extMat.preMult(trans);
+        extMarker.mat.makeTranslationMatrix(extAnchor);
+        ofVec3f extPos = ofVec2f(640,400)+floating.getVec()*EXTERNAL_ZOOM;
+        extCaption.mat.makeTranslationMatrix(extPos-0.5*ofVec2f(rect.width,rect.height));
+        extCaption.alphaMultiplier = floating.getFade();
+
+        ofVec2f vec = extAnchor-extPos;
+        float length = vec.length();
+        
+        vec.normalize();
+        float va = vec.angle(ofVec2f(1,0))*PI/180;
+        float captionLength = MIN(rect.width/(2.0*abs(cos(va))),rect.height/(2.0*abs(sin(va))));
+        
+        
+        linep1 = extPos+vec*(captionLength+20);
+        linep2 = extPos+vec*(length-13.5-20);
         
         
     }
@@ -113,16 +129,17 @@ void kaiserNav::setCaption(string name) {
     bSubTitle = false;
     captionName = name;
     
-    screenMarker = doc.getSymbolItem("MARKER_SCREEN")->createInstance(name);
+    extMarker = doc.getSymbolItem("MARKER_SCREEN")->createInstance(name);
     
     caption = doc.getSymbolItem(captionName+'_'+lang)->createInstance(name);
+    extCaption = doc.getSymbolItem(captionName+'_'+lang)->createInstance(name);
     ofRectangle rect = caption.getBoundingBox();
     
     ofxSymbolInstance *child = imageLayout.getChild(caption.name);
     ofMatrix4x4 mat; // should initialized to general transform if any exist
     mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
     
-    floating.setup(ofRectangle(35, 35, ofGetWidth()-70, 535), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
+    floating.setup(ofRectangle(16, 36, 992, 620), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
     
 }
 
@@ -169,8 +186,7 @@ void kaiserNav::setup(){
     
     interfaceLayout = doc.getSymbolItem("Layout")->createInstance("layout");
     interfaceLayout.getChildMat(interfaceLayout.getChild("idle")->getChild("video"), videoMat); 
-    titlesLayer = interfaceLayout.getLayer("titles");
-   
+    
     screenLayout = doc.getSymbolItem("ScreenLayout")->createInstance("screenLayout");
     
     
@@ -312,6 +328,7 @@ void kaiserNav::update() {
     
     if (state!=STATE_IDLE && ofGetElapsedTimeMillis()>timer) {
         setState(STATE_IDLE);
+        updateOverlays();
     }
     
     if (state==STATE_IDLE && !player.getIsPlaying()) {
@@ -330,14 +347,17 @@ void kaiserNav::draw2nd() {
     
     switch (state) {
         case STATE_NAVIGATION:
-            cam.begin(); //put all our drawing under the ofxPanZoom effect
+            ofPushMatrix();
+            glMultMatrixf(extMat.getPtr());
             ofTranslate(ofVec2f(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
             images[imageNum].draw();
-            cam.end();	//back to normal ofSetupScreen() projection
+//            cam.end();	//back to normal ofSetupScreen() projection
+            ofPopMatrix();
             break;
         case STATE_TUTORIAL:
             
             cam.begin(); //put all our drawing under the ofxPanZoom effect
+            ofScale(EXTERNAL_ZOOM, EXTERNAL_ZOOM);
             ofTranslate(ofVec2f(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
             images[imageNum].draw();
             cam.end();	//back to normal ofSetupScreen() projection
@@ -361,12 +381,17 @@ void kaiserNav::draw2nd() {
     
     ofEnableAlphaBlending();
     screenLayout.draw();
-    interfaceLayout.drawLayer(titlesLayer);
+   
     
     if (bCaptionActive) {
-        screenMarker.draw();
-        floating.draw();
-        caption.draw();
+        extMarker.draw();
+        ofPushStyle();
+        ofSetColor(184,41,35,floating.getFade()*255);
+        ofSetLineWidth(2);
+        ofLine(linep1,linep2);
+        
+        ofPopStyle();
+        extCaption.draw();
         
     }
     

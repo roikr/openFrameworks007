@@ -22,7 +22,8 @@ void ofxDragScale::setup(ofRectangle window,float width,float height,ofMatrix4x4
     this->mat = this->screenMat = screenMat;
     
     this->mat.preMult(ofMatrix4x4::newTranslationMatrix(window.getCenter()));
-    this->mat.preMult(mat);
+    this->xformMat = mat;
+    this->mat.preMult(this->xformMat);
   
     //this->mat.preMult(mat);
     imat = this->mat.getInverse();
@@ -258,6 +259,8 @@ bool ofxDragScale::transform(ofVec2f anchor,ofVec2f trans,float scl) {
     if (temp.getScale().x >= minZoom && temp.getScale().x <= maxZoom && rect.inside(itemp.preMult(screenMat.preMult(ofVec3f(window.getCenter()))))) {
         mat = temp;
         imat = itemp;
+        xformMat.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));
+        xformMat.translate(trans-vec);
         return true;
     }
     

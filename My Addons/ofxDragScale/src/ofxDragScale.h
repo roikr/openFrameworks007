@@ -41,6 +41,7 @@ public:
     ofVec3f screenToWorld(ofVec3f p);
     ofVec3f worldToScreen(ofVec3f p);
     float getScale() {return mat.getScale().x/screenMat.getScale().x;}
+    ofMatrix4x4 &getTransform() {return xformMat;}
 	
 private:
 	
@@ -49,6 +50,7 @@ private:
     vector<ofTouchEventArgs> touches;
     
     ofMatrix4x4 mat;
+    ofMatrix4x4 xformMat;
     ofMatrix4x4 imat;
     
     ofMatrix4x4 screenMat;

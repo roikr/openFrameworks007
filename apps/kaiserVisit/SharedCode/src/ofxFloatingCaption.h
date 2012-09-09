@@ -15,9 +15,11 @@ public:
     void setup(ofRectangle screenRect,ofRectangle captionRect,float radius,ofVec2f anchor);
     void draw();
     void setAnchor(ofVec2f anchor);
-    ofVec2f getPos();
-    ofVec2f getAnchor();
-    float getFade();
+    ofVec2f getPos() {return pos;}
+    ofVec2f getAnchor() {return anchor;}
+    float getFade(){return fade;}
+    
+    ofVec2f getVec() {return pos-screenRect.getCenter();}
     
 private:
     ofVec2f anchor;
