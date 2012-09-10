@@ -10,6 +10,10 @@
 #include "ofxXmlSettings.h"
 
 #define EXTERNAL_ZOOM 1.29032258064516
+#define WINDOW_WIDTH 992.0
+#define WINDOW_HEIGHT 620.0
+#define SCREEN_WIDTH 1280.0
+#define SCREEN_HEIGHT 800.0
 
 enum {
     STATE_IDLE,
@@ -65,7 +69,7 @@ void kaiserNav::updateOverlays() {
     
 //    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
     
-    extMat = ofMatrix4x4::newTranslationMatrix(640, 400, 0);
+    extMat = ofMatrix4x4::newTranslationMatrix(SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     extMat.preMult(cam.getTransform().getPtr());
     extMat.preMult(ofMatrix4x4::newScaleMatrix(EXTERNAL_ZOOM, EXTERNAL_ZOOM, 1.0));
     
@@ -89,7 +93,7 @@ void kaiserNav::updateOverlays() {
         
         ofVec3f extAnchor = extMat.preMult(trans);
         extMarker.mat.makeTranslationMatrix(extAnchor);
-        ofVec3f extPos = ofVec2f(640,400)+floating.getVec()*EXTERNAL_ZOOM;
+        ofVec3f extPos = ofVec2f(SCREEN_WIDTH, SCREEN_HEIGHT)+floating.getVec()*EXTERNAL_ZOOM;
         extCaption.mat.makeTranslationMatrix(extPos-0.5*ofVec2f(rect.width,rect.height));
         extCaption.alphaMultiplier = floating.getFade();
 
@@ -139,7 +143,7 @@ void kaiserNav::setCaption(string name) {
     ofMatrix4x4 mat; // should initialized to general transform if any exist
     mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
     
-    floating.setup(ofRectangle(16, 36, 992, 620), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
+    floating.setup(ofRectangle(16, 16+36, WINDOW_WIDTH, WINDOW_HEIGHT-36), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
     
 }
 
@@ -253,7 +257,7 @@ void kaiserNav::setImage(string name) {
     
     
     ofVec2f p1 = videoMat.preMult(ofVec3f());
-    ofVec2f p2 = videoMat.preMult(ofVec3f(960,540));
+    ofVec2f p2 = videoMat.preMult(ofVec3f(WINDOW_WIDTH,WINDOW_HEIGHT));
     ofVec2f size = p2-p1;
     ofRectangle window(p1.x,p1.y,size.x, size.y);
     
@@ -272,15 +276,17 @@ void kaiserNav::setImage(string name) {
         ofMatrix4x4 mat;
         mat.makeScaleMatrix(iter->zoom,iter->zoom,1.0f);
         mat.translate(iter->offset);
-        cam.setup(window, images[imageNum].getWidth(), images[imageNum].getHeight(),mat);
+        
+        float scale = max(images[imageNum].getWidth()/window.width,images[imageNum].getHeight()/window.height);
+        cam.setup(window,window.width*scale,window.height*scale,mat);
         cam.setMinZoom(iter->minZoom);
         cam.setMaxZoom(iter->maxZoom);
         
     } else {
     
         cam.setup(window, images[imageNum].getWidth(), images[imageNum].getHeight());
-        cam.setMinZoom(960.0f/(float)images[imageNum].getWidth());
-        cam.setMaxZoom(1.0f);
+        cam.setMinZoom(WINDOW_WIDTH/(float)images[imageNum].getWidth());
+        cam.setMaxZoom(2.0f);
     }
     
     	

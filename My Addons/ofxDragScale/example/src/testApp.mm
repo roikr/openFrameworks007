@@ -21,7 +21,7 @@ void testApp::setup(){
     
 //    drag.setup(ofRectangle(200,200,bikers.getWidth(),bikers.getHeight()),ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
     
-    drag.setup(window,image.getWidth(),image.getHeight(),ofMatrix4x4::newScaleMatrix(0.5, 0.5, 1.0),mat);
+    drag.setup(window,image.getWidth(),image.getHeight(),ofMatrix4x4::newScaleMatrix(2, 2, 1.0),mat);
     
     drag.setMaxZoom(10);
 	

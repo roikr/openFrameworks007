@@ -22,9 +22,9 @@
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
 		E41D421413B3A95300A75A5D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
+		E46F586D15FDBC7100009EB4 /* ofxiBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46F586B15FDBC7100009EB4 /* ofxiBigImage.cpp */; };
+		E46F58CB15FDBC8A00009EB4 /* ofxDragScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46F58A315FDBC8900009EB4 /* ofxDragScale.cpp */; };
 		E48B647B15F4E1D800E9938E /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E48B647A15F4E1D800E9938E /* ofxiTexture.mm */; };
-		E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */; };
-		E4C0054E15C9730200210411 /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -67,13 +67,13 @@
 		E41D400813B39D2100A75A5D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		E41D400913B39D2100A75A5D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iPhone+OF Lib.xcodeproj"; path = "../../../libs/openFrameworksCompiled/project/iphone/iPhone+OF Lib.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		E46F586B15FDBC7100009EB4 /* ofxiBigImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxiBigImage.cpp; sourceTree = "<group>"; };
+		E46F586C15FDBC7100009EB4 /* ofxiBigImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiBigImage.h; sourceTree = "<group>"; };
+		E46F58A315FDBC8900009EB4 /* ofxDragScale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDragScale.cpp; sourceTree = "<group>"; };
+		E46F58A415FDBC8900009EB4 /* ofxDragScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDragScale.h; sourceTree = "<group>"; };
 		E48B647915F4E1D800E9938E /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
 		E48B647A15F4E1D800E9938E /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanZoom.cpp; sourceTree = "<group>"; };
-		E4B7D9FF15A3900600DA6DA8 /* ofxPanZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPanZoom.h; sourceTree = "<group>"; };
-		E4C0054C15C9730200210411 /* ofxBigImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBigImage.cpp; sourceTree = "<group>"; };
-		E4C0054D15C9730200210411 /* ofxBigImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBigImage.h; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -155,8 +155,8 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E46F586E15FDBC8900009EB4 /* ofxDragScale */,
 				E48B647715F4E1D800E9938E /* ofxiTexture */,
-				E4B7D98E15A3900500DA6DA8 /* ofxPanZoom */,
 				E4A2753C15A389EF009F7B62 /* SharedCode */,
 			);
 			name = addons;
@@ -200,6 +200,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E46F586E15FDBC8900009EB4 /* ofxDragScale */ = {
+			isa = PBXGroup;
+			children = (
+				E46F58A215FDBC8900009EB4 /* src */,
+			);
+			name = ofxDragScale;
+			path = "../../../My Addons/ofxDragScale";
+			sourceTree = "<group>";
+		};
+		E46F58A215FDBC8900009EB4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E46F58A315FDBC8900009EB4 /* ofxDragScale.cpp */,
+				E46F58A415FDBC8900009EB4 /* ofxDragScale.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		E48B647715F4E1D800E9938E /* ofxiTexture */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,26 +248,8 @@
 		E4A2753D15A389EF009F7B62 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E4C0054C15C9730200210411 /* ofxBigImage.cpp */,
-				E4C0054D15C9730200210411 /* ofxBigImage.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4B7D98E15A3900500DA6DA8 /* ofxPanZoom */ = {
-			isa = PBXGroup;
-			children = (
-				E4B7D9FD15A3900600DA6DA8 /* src */,
-			);
-			name = ofxPanZoom;
-			path = "../../../My Addons/ofxPanZoom";
-			sourceTree = "<group>";
-		};
-		E4B7D9FD15A3900600DA6DA8 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4B7D9FE15A3900600DA6DA8 /* ofxPanZoom.cpp */,
-				E4B7D9FF15A3900600DA6DA8 /* ofxPanZoom.h */,
+				E46F586B15FDBC7100009EB4 /* ofxiBigImage.cpp */,
+				E46F586C15FDBC7100009EB4 /* ofxiBigImage.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -364,9 +364,9 @@
 			files = (
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
-				E4B7DA5915A3900600DA6DA8 /* ofxPanZoom.cpp in Sources */,
-				E4C0054E15C9730200210411 /* ofxBigImage.cpp in Sources */,
 				E48B647B15F4E1D800E9938E /* ofxiTexture.mm in Sources */,
+				E46F586D15FDBC7100009EB4 /* ofxiBigImage.cpp in Sources */,
+				E46F58CB15FDBC8A00009EB4 /* ofxDragScale.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
