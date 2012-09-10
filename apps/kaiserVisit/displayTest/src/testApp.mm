@@ -12,7 +12,8 @@ void testApp::setup(){
 	//iPhoneAlerts will be sent to this.
 	ofxiPhoneAlerts.addListener(this);
     
-    image.loadImage("1280_800_test.png",2048);
+    image.setup("1280_800_test.png",2048);
+    image.load();
 	
 	//If you want a landscape oreintation 
 	iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_LEFT);

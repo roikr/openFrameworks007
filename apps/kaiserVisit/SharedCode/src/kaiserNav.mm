@@ -144,7 +144,7 @@ void kaiserNav::setCaption(string name) {
     ofMatrix4x4 mat; // should initialized to general transform if any exist
     mat.preMult(child->mat); // we set the caption name to the correspond marker when we create it
     
-    floating.setup(ofRectangle(16, 16+36, WINDOW_WIDTH, WINDOW_HEIGHT-36), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
+    floating.setup(ofRectangle(24, 54, 978, 570), rect, 150,cam.worldToScreen(mat.preMult(ofVec3f(0,0,0))-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
     
 }
 
