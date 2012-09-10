@@ -18,7 +18,7 @@ void testApp::setup(){
     
     for (vector<pair<int, int> >::iterator iter=modes.begin(); iter!=modes.end(); iter++) {
         cout << iter->first << "x" << iter->second << endl;
-        if (iter->first == 1280 && iter->second == 800) {
+        if (iter->first == 1280 && iter->second == 1024) {
             extView.setupMode(distance(modes.begin(), iter));
             break;
         }

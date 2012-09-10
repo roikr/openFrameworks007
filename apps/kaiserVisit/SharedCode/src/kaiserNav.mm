@@ -10,6 +10,7 @@
 #include "ofxXmlSettings.h"
 
 #define EXTERNAL_ZOOM 1.29032258064516
+#define EXTERNAL_ZOOM_RECIP 0.775
 #define WINDOW_WIDTH 992.0
 #define WINDOW_HEIGHT 620.0
 #define SCREEN_WIDTH 1280.0
@@ -69,7 +70,7 @@ void kaiserNav::updateOverlays() {
     
 //    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
     
-    extMat = ofMatrix4x4::newTranslationMatrix(SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    extMat = ofMatrix4x4::newTranslationMatrix(0.5*ofVec2f(SCREEN_WIDTH, SCREEN_HEIGHT));
     extMat.preMult(cam.getTransform().getPtr());
     extMat.preMult(ofMatrix4x4::newScaleMatrix(EXTERNAL_ZOOM, EXTERNAL_ZOOM, 1.0));
     
@@ -93,7 +94,7 @@ void kaiserNav::updateOverlays() {
         
         ofVec3f extAnchor = extMat.preMult(trans);
         extMarker.mat.makeTranslationMatrix(extAnchor);
-        ofVec3f extPos = ofVec2f(SCREEN_WIDTH, SCREEN_HEIGHT)+floating.getVec()*EXTERNAL_ZOOM;
+        ofVec3f extPos = 0.5*ofVec2f(SCREEN_WIDTH, SCREEN_HEIGHT)+floating.getVec()*EXTERNAL_ZOOM;
         extCaption.mat.makeTranslationMatrix(extPos-0.5*ofVec2f(rect.width,rect.height));
         extCaption.alphaMultiplier = floating.getFade();
 
@@ -195,8 +196,10 @@ void kaiserNav::setup(){
     
     
 	lang = "HE";
-    imageNum = 0;
-    setImage("I1");	
+    imageName = imagesMap.begin()->first;
+    imageNum = imagesMap.begin()->second;
+    
+    
     
     
 	
@@ -312,6 +315,7 @@ void kaiserNav::setState(int state) {
             break;
             
         case STATE_TUTORIAL:
+            
             interfaceLayout.getChild("tutorial")->bVisible = true;
             break;
             
@@ -334,6 +338,9 @@ void kaiserNav::update() {
     
     if (state!=STATE_IDLE && ofGetElapsedTimeMillis()>timer) {
         setState(STATE_IDLE);
+        if (images[imageNum].getDidLoad()) {
+            images[imageNum].unload();
+        }
         updateOverlays();
     }
     
@@ -341,9 +348,6 @@ void kaiserNav::update() {
         player.play(ofToDataPath("video.mov"));
     }
     
-    if (state!=STATE_IDLE && player.getIsPlaying()) {
-        player.stop();
-    }
 #endif
 }
 
@@ -353,28 +357,36 @@ void kaiserNav::draw2nd() {
     
     switch (state) {
         case STATE_NAVIGATION:
+        case STATE_TUTORIAL:
             ofPushMatrix();
             glMultMatrixf(extMat.getPtr());
             ofTranslate(ofVec2f(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
             images[imageNum].draw();
 //            cam.end();	//back to normal ofSetupScreen() projection
             ofPopMatrix();
-            break;
-        case STATE_TUTORIAL:
             
-            cam.begin(); //put all our drawing under the ofxPanZoom effect
-            ofScale(EXTERNAL_ZOOM, EXTERNAL_ZOOM);
-            ofTranslate(ofVec2f(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
-            images[imageNum].draw();
-            cam.end();	//back to normal ofSetupScreen() projection
+            ofEnableAlphaBlending();
+            screenLayout.draw();
+            
+            
+            if (bCaptionActive) {
+                extMarker.draw();
+                ofPushStyle();
+                ofSetColor(184,41,35,floating.getFade()*255);
+                ofSetLineWidth(2);
+                ofLine(linep1,linep2);
+                
+                ofPopStyle();
+                extCaption.draw();
+                
+            }
+            
             break;
+        
             
         case STATE_IDLE:
 #ifdef TARGET_OF_IPHONE
-            ofPushMatrix();
-            glMultMatrixf(videoMat.getPtr());
             player.draw(ofRectangle(0,0,player.getWidth(),player.getHeight()));
-            ofPopMatrix();
 #endif           
             break;
         default:
@@ -385,21 +397,7 @@ void kaiserNav::draw2nd() {
     
 
     
-    ofEnableAlphaBlending();
-    screenLayout.draw();
-   
     
-    if (bCaptionActive) {
-        extMarker.draw();
-        ofPushStyle();
-        ofSetColor(184,41,35,floating.getFade()*255);
-        ofSetLineWidth(2);
-        ofLine(linep1,linep2);
-        
-        ofPopStyle();
-        extCaption.draw();
-        
-    }
     
     
     ofPopMatrix();
@@ -448,6 +446,7 @@ void kaiserNav::draw() {
 //        player.draw(ofRectangle(offset,offset,player.getWidth(),player.getHeight()));
         ofPushMatrix();
         glMultMatrixf(videoMat.getPtr());
+        ofScale(EXTERNAL_ZOOM_RECIP, EXTERNAL_ZOOM_RECIP);
         player.draw(ofRectangle(0,0,player.getWidth(),player.getHeight()));
         ofPopMatrix();
     }
@@ -473,9 +472,12 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
     
     timer = ofGetElapsedTimeMillis()+30000;
     
+    
+    
     switch (state) {
         case STATE_IDLE:
-            
+            player.stop();
+            setImage(imageName);
             setState(STATE_TUTORIAL);
             break;
         case STATE_TUTORIAL:
