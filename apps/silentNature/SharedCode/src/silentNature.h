@@ -15,6 +15,7 @@
 #endif
 #include "ofxStroke.h"
 #include "ofxHttpUtils.h"
+#include "ofxChalk.h"
 
 enum {
     BRUSH_TOOL,
@@ -74,7 +75,6 @@ public:
     
     ofMatrix4x4 cmat;
     
-    deque<ofVec2f> touches;
     ofxStroke stroke;
     bool bDown;
     
@@ -87,4 +87,6 @@ public:
     ofMatrix4x4 publishMat;
     
     int state;
+    
+    ofxChalk chalk;
 };

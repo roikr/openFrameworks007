@@ -8,10 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
-		E41848CA15E66B0700304452 /* ofxStroke.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E41848C815E66B0700304452 /* ofxStroke.cpp */; };
-		E41848CF15E675DA00304452 /* ofxTouchEmulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E41848CD15E675DA00304452 /* ofxTouchEmulator.cpp */; };
+		E406862415F9E1AE00719F5B /* ofxStroke.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E406862015F9E1AE00719F5B /* ofxStroke.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
-		E450DD5015FE9FAA0076CC9F /* ofxChalk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E450DD4E15FE9FAA0076CC9F /* ofxChalk.cpp */; };
+		E450DD4415FE9A510076CC9F /* ofxChalk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E450DD4315FE9A510076CC9F /* ofxChalk.cpp */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
 		E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9730E8CC7DD009D7055 /* AudioToolbox.framework */; };
@@ -21,18 +20,11 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
-		E47132E615C7053300D837E4 /* silentNature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E47132E415C7053300D837E4 /* silentNature.cpp */; };
-		E4A33F8F15E698F700EA8377 /* ofxHttpUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A33F8D15E698F700EA8377 /* ofxHttpUtils.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */; };
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
-		E4D98B2E15C1510F00465293 /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98A6715C1510D00465293 /* ofxFlash.cpp */; };
-		E4D98B7015C1518F00465293 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6915C1518F00465293 /* tinyxml.cpp */; };
-		E4D98B7115C1518F00465293 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6B15C1518F00465293 /* tinyxmlerror.cpp */; };
-		E4D98B7215C1518F00465293 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6C15C1518F00465293 /* tinyxmlparser.cpp */; };
-		E4D98B7315C1518F00465293 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D98B6E15C1518F00465293 /* ofxXmlSettings.cpp */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,13 +60,11 @@
 
 /* Begin PBXFileReference section */
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
-		E41848C815E66B0700304452 /* ofxStroke.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxStroke.cpp; sourceTree = "<group>"; };
-		E41848C915E66B0700304452 /* ofxStroke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxStroke.h; sourceTree = "<group>"; };
-		E41848CD15E675DA00304452 /* ofxTouchEmulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTouchEmulator.cpp; sourceTree = "<group>"; };
-		E41848CE15E675DA00304452 /* ofxTouchEmulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTouchEmulator.h; sourceTree = "<group>"; };
+		E406862015F9E1AE00719F5B /* ofxStroke.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxStroke.cpp; sourceTree = "<group>"; };
+		E406862115F9E1AE00719F5B /* ofxStroke.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxStroke.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
-		E450DD4E15FE9FAA0076CC9F /* ofxChalk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxChalk.cpp; sourceTree = "<group>"; };
-		E450DD4F15FE9FAA0076CC9F /* ofxChalk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxChalk.h; sourceTree = "<group>"; };
+		E450DD4215FE9A1C0076CC9F /* ofxChalk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxChalk.h; sourceTree = "<group>"; };
+		E450DD4315FE9A510076CC9F /* ofxChalk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxChalk.cpp; sourceTree = "<group>"; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
 		E45BE9730E8CC7DD009D7055 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
@@ -84,17 +74,7 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E47132E415C7053300D837E4 /* silentNature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = silentNature.cpp; path = ../../SharedCode/src/silentNature.cpp; sourceTree = "<group>"; };
-		E47132E515C7053300D837E4 /* silentNature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = silentNature.h; path = ../../SharedCode/src/silentNature.h; sourceTree = "<group>"; };
-		E4A33F8715E698F700EA8377 /* .cproject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .cproject; sourceTree = "<group>"; };
-		E4A33F8815E698F700EA8377 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		E4A33F8915E698F700EA8377 /* .project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .project; sourceTree = "<group>"; };
-		E4A33F8A15E698F700EA8377 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
-		E4A33F8C15E698F700EA8377 /* ofxHttpTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHttpTypes.h; sourceTree = "<group>"; };
-		E4A33F8D15E698F700EA8377 /* ofxHttpUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxHttpUtils.cpp; sourceTree = "<group>"; };
-		E4A33F8E15E698F700EA8377 /* ofxHttpUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHttpUtils.h; sourceTree = "<group>"; };
-		E4A33F9715E69BA200EA8377 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxThread.h; sourceTree = "<group>"; };
-		E4B69B5B0A3A1756003C02F2 /* silentNatureDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = silentNatureDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69B5B0A3A1756003C02F2 /* emptyExampleDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emptyExampleDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -102,15 +82,6 @@
 		E4C2424410CC5A17004149E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		E4C2424510CC5A17004149E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
-		E4D98A6715C1510D00465293 /* ofxFlash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlash.cpp; sourceTree = "<group>"; };
-		E4D98A6815C1510D00465293 /* ofxFlash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlash.h; sourceTree = "<group>"; };
-		E4D98B6715C1518F00465293 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
-		E4D98B6915C1518F00465293 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
-		E4D98B6A15C1518F00465293 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
-		E4D98B6B15C1518F00465293 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
-		E4D98B6C15C1518F00465293 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
-		E4D98B6E15C1518F00465293 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
-		E4D98B6F15C1518F00465293 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -143,12 +114,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E4A33F9515E69BA200EA8377 /* ofxThread */,
-				E4A33F8615E698F700EA8377 /* ofxHttpUtils */,
-				E41848CB15E675DA00304452 /* ofxTouchEmulator */,
-				E47132E215C7053300D837E4 /* SharedCode */,
-				E4D98B6615C1518F00465293 /* ofxXmlSettings */,
-				E4D9894B15C1510B00465293 /* ofxFlash */,
+				E406861E15F9E1AE00719F5B /* SharedCode */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -180,20 +146,22 @@
 			name = "3rd party frameworks";
 			sourceTree = "<group>";
 		};
-		E41848CB15E675DA00304452 /* ofxTouchEmulator */ = {
+		E406861E15F9E1AE00719F5B /* SharedCode */ = {
 			isa = PBXGroup;
 			children = (
-				E41848CC15E675DA00304452 /* src */,
+				E406861F15F9E1AE00719F5B /* src */,
 			);
-			name = ofxTouchEmulator;
-			path = "../../../My Addons/ofxTouchEmulator";
+			name = SharedCode;
+			path = ../SharedCode;
 			sourceTree = "<group>";
 		};
-		E41848CC15E675DA00304452 /* src */ = {
+		E406861F15F9E1AE00719F5B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E41848CD15E675DA00304452 /* ofxTouchEmulator.cpp */,
-				E41848CE15E675DA00304452 /* ofxTouchEmulator.h */,
+				E406862015F9E1AE00719F5B /* ofxStroke.cpp */,
+				E406862115F9E1AE00719F5B /* ofxStroke.h */,
+				E450DD4215FE9A1C0076CC9F /* ofxChalk.h */,
+				E450DD4315FE9A510076CC9F /* ofxChalk.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -215,66 +183,6 @@
 			name = frameworks;
 			sourceTree = "<group>";
 		};
-		E47132E215C7053300D837E4 /* SharedCode */ = {
-			isa = PBXGroup;
-			children = (
-				E47132E315C7053300D837E4 /* src */,
-			);
-			name = SharedCode;
-			path = ../SharedCode;
-			sourceTree = "<group>";
-		};
-		E47132E315C7053300D837E4 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E450DD4E15FE9FAA0076CC9F /* ofxChalk.cpp */,
-				E450DD4F15FE9FAA0076CC9F /* ofxChalk.h */,
-				E41848C815E66B0700304452 /* ofxStroke.cpp */,
-				E41848C915E66B0700304452 /* ofxStroke.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4A33F8615E698F700EA8377 /* ofxHttpUtils */ = {
-			isa = PBXGroup;
-			children = (
-				E4A33F8715E698F700EA8377 /* .cproject */,
-				E4A33F8815E698F700EA8377 /* .gitignore */,
-				E4A33F8915E698F700EA8377 /* .project */,
-				E4A33F8A15E698F700EA8377 /* index.html */,
-				E4A33F8B15E698F700EA8377 /* src */,
-			);
-			name = ofxHttpUtils;
-			path = ../../../addons/ofxHttpUtils;
-			sourceTree = "<group>";
-		};
-		E4A33F8B15E698F700EA8377 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4A33F8C15E698F700EA8377 /* ofxHttpTypes.h */,
-				E4A33F8D15E698F700EA8377 /* ofxHttpUtils.cpp */,
-				E4A33F8E15E698F700EA8377 /* ofxHttpUtils.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4A33F9515E69BA200EA8377 /* ofxThread */ = {
-			isa = PBXGroup;
-			children = (
-				E4A33F9615E69BA200EA8377 /* src */,
-			);
-			name = ofxThread;
-			path = ../../../addons/ofxThread;
-			sourceTree = "<group>";
-		};
-		E4A33F9615E69BA200EA8377 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4A33F9715E69BA200EA8377 /* ofxThread.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
@@ -284,7 +192,7 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				E4B69B5B0A3A1756003C02F2 /* silentNatureDebug.app */,
+				E4B69B5B0A3A1756003C02F2 /* emptyExampleDebug.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -294,60 +202,9 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
-				E47132E415C7053300D837E4 /* silentNature.cpp */,
-				E47132E515C7053300D837E4 /* silentNature.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
-		};
-		E4D9894B15C1510B00465293 /* ofxFlash */ = {
-			isa = PBXGroup;
-			children = (
-				E4D98A6615C1510D00465293 /* src */,
-			);
-			name = ofxFlash;
-			path = "../../../My Addons/ofxFlash";
-			sourceTree = "<group>";
-		};
-		E4D98A6615C1510D00465293 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4D98A6715C1510D00465293 /* ofxFlash.cpp */,
-				E4D98A6815C1510D00465293 /* ofxFlash.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4D98B6615C1518F00465293 /* ofxXmlSettings */ = {
-			isa = PBXGroup;
-			children = (
-				E4D98B6715C1518F00465293 /* install.xml */,
-				E4D98B6815C1518F00465293 /* libs */,
-				E4D98B6D15C1518F00465293 /* src */,
-			);
-			name = ofxXmlSettings;
-			path = ../../../addons/ofxXmlSettings;
-			sourceTree = "<group>";
-		};
-		E4D98B6815C1518F00465293 /* libs */ = {
-			isa = PBXGroup;
-			children = (
-				E4D98B6915C1518F00465293 /* tinyxml.cpp */,
-				E4D98B6A15C1518F00465293 /* tinyxml.h */,
-				E4D98B6B15C1518F00465293 /* tinyxmlerror.cpp */,
-				E4D98B6C15C1518F00465293 /* tinyxmlparser.cpp */,
-			);
-			path = libs;
-			sourceTree = "<group>";
-		};
-		E4D98B6D15C1518F00465293 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4D98B6E15C1518F00465293 /* ofxXmlSettings.cpp */,
-				E4D98B6F15C1518F00465293 /* ofxXmlSettings.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
 		};
 		E4EEC9E9138DF44700A80321 /* openFrameworks */ = {
 			isa = PBXGroup;
@@ -361,9 +218,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* silentNature */ = {
+		E4B69B5A0A3A1756003C02F2 /* emptyExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "silentNature" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "emptyExample" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -375,9 +232,9 @@
 			dependencies = (
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
-			name = silentNature;
+			name = emptyExample;
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* silentNatureDebug.app */;
+			productReference = E4B69B5B0A3A1756003C02F2 /* emptyExampleDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -388,7 +245,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "silentNature" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "emptyExample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -409,7 +266,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* silentNature */,
+				E4B69B5A0A3A1756003C02F2 /* emptyExample */,
 			);
 		};
 /* End PBXProject section */
@@ -447,16 +304,8 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
-				E4D98B2E15C1510F00465293 /* ofxFlash.cpp in Sources */,
-				E4D98B7015C1518F00465293 /* tinyxml.cpp in Sources */,
-				E4D98B7115C1518F00465293 /* tinyxmlerror.cpp in Sources */,
-				E4D98B7215C1518F00465293 /* tinyxmlparser.cpp in Sources */,
-				E4D98B7315C1518F00465293 /* ofxXmlSettings.cpp in Sources */,
-				E47132E615C7053300D837E4 /* silentNature.cpp in Sources */,
-				E41848CA15E66B0700304452 /* ofxStroke.cpp in Sources */,
-				E41848CF15E675DA00304452 /* ofxTouchEmulator.cpp in Sources */,
-				E4A33F8F15E698F700EA8377 /* ofxHttpUtils.cpp in Sources */,
-				E450DD5015FE9FAA0076CC9F /* ofxChalk.cpp in Sources */,
+				E406862415F9E1AE00719F5B /* ofxStroke.cpp in Sources */,
+				E450DD4415FE9A510076CC9F /* ofxChalk.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,7 +465,7 @@
 					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/iphone\"",
 					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"",
 				);
-				PRODUCT_NAME = silentNatureDebug;
+				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -703,7 +552,7 @@
 					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/iphone\"",
 					"\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"",
 				);
-				PRODUCT_NAME = silentNature;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -711,7 +560,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "silentNature" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "emptyExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
@@ -720,7 +569,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "silentNature" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "emptyExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,

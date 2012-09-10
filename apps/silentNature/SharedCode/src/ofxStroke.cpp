@@ -8,9 +8,9 @@
 
 #include "ofxStroke.h"
 
-vector<ofVec2f> catmullRomPatch(vector<ofVec2f> &curveVertices,int curveResolution) {
+void catmullRomPatch(vector<ofVec2f> &curveVertices,int curveResolution,vector<ofVec2f> &points) {
     
-    vector<ofVec2f> points;
+    
     
 	if (curveVertices.size() == 4){
         
@@ -60,15 +60,29 @@ vector<ofVec2f> catmullRomPatch(vector<ofVec2f> &curveVertices,int curveResoluti
 
 
 
-void ofxStroke::setup(float spacing) {
+void ofxStroke::clear(float spacing) {
     curve.clear();
+    touches.clear();
     this->spacing = spacing;
+}
+
+void ofxStroke::addTouch(ofVec2f pos) {
+    if (touches.empty()) {
+        curve.push_back(pos);
+    }
+    touches.push_back(pos);
+    
+    if (touches.size()==4) {
+        addPatch(vector<ofVec2f>(touches.begin(),touches.end()));
+        touches.pop_front();
+    }
+    
 }
 
 void ofxStroke::addPatch(vector<ofVec2f> ctrl) {
     float dist = (ctrl[2]-ctrl[1]).length();
-    vector<ofVec2f> pnts = catmullRomPatch(ctrl,dist/spacing);
-    curve.insert(curve.end(), pnts.begin(), pnts.end());
+//    cout << dist << "\t" << dist/spacing << endl;
+    catmullRomPatch(ctrl,dist/spacing,curve);
 }
 
 vector<ofVec2f> &ofxStroke::getCurve() {
