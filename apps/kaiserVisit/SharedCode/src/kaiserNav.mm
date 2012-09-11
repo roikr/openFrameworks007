@@ -460,9 +460,9 @@ void kaiserNav::draw() {
     }
     
     ofPopMatrix();
-    ofPushStyle();
-	cam.draw(); //see info on ofxPanZoom status
-    ofPopStyle();
+//    ofPushStyle();
+//	cam.draw(); //see info on ofxPanZoom status
+//    ofPopStyle();
 }
 
 void kaiserNav::exit() {
