@@ -54,7 +54,7 @@ void catmullRomPatch(vector<ofVec2f > curveVertices,int curveResolution,vector<o
     
     
     
-    return points;
+    
 }
 
 
