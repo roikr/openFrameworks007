@@ -13,9 +13,12 @@
 #ifdef TARGET_OPENGLES
 #include "ofxiFbo.h"
 #endif
-#include "ofxStroke.h"
+
 #include "ofxHttpUtils.h"
-#include "ofxChalk.h"
+
+#include "ofxEraser.h"
+#include "ofxBrush.h"
+#include "ofxSimpleBrush.h"
 
 enum {
     BRUSH_TOOL,
@@ -47,23 +50,17 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
     void updateTool();
-    void drawTool();
     void resetTools();
     
-    
     void newResponse(ofxHttpResponse & response);
-    
     
     ofxDocument doc;
     ofxSymbolInstance layout;
     ofxSymbolInstance *canvas;
     ofxSymbolInstance frame;
     
-     
     int tool;
-    ofColor color;
     int paperNum;
-    
     
 #ifdef TARGET_OPENGLES
     ofxiFbo fbo;
@@ -72,10 +69,8 @@ public:
     ofFbo fbo;
 #endif   
     
-    
     ofMatrix4x4 cmat;
     
-    ofxStroke stroke;
     bool bDown;
     
     ofxHttpUtils httpUtils;
@@ -88,5 +83,12 @@ public:
     
     int state;
     
-    ofxChalk chalk;
+    ofxBrush crayon;
+    ofxSimpleBrush brush;
+    ofxEraser eraser;
+    
+    bool bPublish;
+    
+    string url;
+    string prefix;
 };

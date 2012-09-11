@@ -2,26 +2,46 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    nat.setup();
-   
+    
+    ofBackground(255);
+    ofEnableAlphaBlending();
+    ofBackground(127,127,127);
+    ofSetColor(50);
+    stroke.setup(5);
+    
+    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    nat.update();
+
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    nat.draw();
     
-//    glColor4f(1,1,1,1);
-//	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );
+    ofNoFill();
+    
+    for (vector<ofVec2f>::iterator iter=stroke.getCurve().begin();iter!=stroke.getCurve().end();iter++) {
+        ofRectangle rect;
+        rect.setFromCenter(*iter, 1, 1);
+        ofRect(rect);
+    }
+    
+    
+    
+    for (vector<ofVec2f>::iterator iter=drags.begin();iter!=drags.end();iter++) {
+        ofRectangle rect;
+        rect.setFromCenter(*iter, 3, 3);
+        ofRect(rect);
+    }
+    
 }
+
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    emulator.keyPressed(key);
+
 }
 
 //--------------------------------------------------------------
@@ -31,35 +51,30 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-    
-}
-
-//--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button) {
-//    cout << x << "\t" << y << "\t" << button << endl;
-    if (emulator.getShouldMove()) {
-        ofTouchEventArgs touch = emulator.mouseDragged(x, y);
-        nat.touchMoved(touch);
-    }
-    
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button) {
+void testApp::mouseDragged(int x, int y, int button){
+//    cout << "mouseDragged" << endl;
+   stroke.touch(ofVec2f(x,y));
+    drags.push_back(ofVec2f(x,y));
+   
+}
     
+
+//--------------------------------------------------------------
+void testApp::mousePressed(int x, int y, int button){
     
-    ofTouchEventArgs touch = emulator.mousePressed(x, y, button);
-    nat.touchDown(touch);
+    stroke.clear();
+    drags.clear();
+    stroke.touch(ofVec2f(x,y));
+   
+
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button) {
-    
-    ofTouchEventArgs touch = emulator.mouseReleased(x, y, button);
-    nat.touchUp(touch);
-    
-        
+void testApp::mouseReleased(int x, int y, int button){
     
 }
 

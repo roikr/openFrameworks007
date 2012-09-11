@@ -7,11 +7,11 @@
 //
 
 #include "silentNature.h"
+#include "ofxXmlSettings.h"
 
-
-#define BRUSH_THICKNESS 40.0
-#define CRAYON_THICKNESS 5.0
-#define ERASER_THICKNESS 40.0
+#define BRUSH_THICKNESS 10.0
+#define CRAYON_THICKNESS 10.0
+#define ERASER_THICKNESS 15.0
 #define APP_ORIENTATION  OF_ORIENTATION_DEFAULT // OF_ORIENTATION_90_LEFT
 
 #ifdef TARGET_OPENGLES
@@ -26,8 +26,20 @@ enum {
 
 //--------------------------------------------------------------
 void silentNature::setup(){	
+    
+    ofxXmlSettings xml;
+    if (xml.loadFile("settings.xml")) {
+        xml.pushTag("settings");
+        url = xml.getAttribute("http", "url", "");
+        prefix = xml.getAttribute("file", "prefix", "");
+        if (!xml.getNumTags("cursor")) {
+            ofHideCursor();
+        }
+    } else {
+        std::exit(0);
+    }
 	
-    //ofHideCursor();
+    
     ofEnableAlphaBlending();
     ofEnableSmoothing();
     ofSetLineWidth(5);
@@ -46,9 +58,7 @@ void silentNature::setup(){
     
     ofImage &image = doc.getBitmapItem("images/magenta")->getImage();
    
-    tool = BRUSH_TOOL;
-    color = image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2);
-    paperNum = 1;
+    
             
     canvas = layout.getChild("canvas");
     layout.getChildMat(canvas, cmat);
@@ -66,7 +76,19 @@ void silentNature::setup(){
     ofRectangle rect = canvas->getBoundingBox();
 //    cout << rect.width << "\t" << rect.height << endl;
     fbo.allocate(rect.width, rect.height);
-    chalk.setup(rect.width,rect.height);
+    
+    ofImage texture;
+    texture.loadImage("crayola_256.png");
+    ofImage tip;
+    tip.loadImage("crayonTip.png");
+    
+    crayon.setup(tip,CRAYON_THICKNESS,texture,rect.width,rect.height);
+    
+    ofImage brushTip;
+    brushTip.loadImage("brush_256.png");
+    brush.setup(brushTip, BRUSH_THICKNESS, rect.width,rect.height);
+
+    eraser.setup(ERASER_THICKNESS);
     
     ofImage &pubcan=doc.getBitmapItem("images/publish_canvas.png")->getImage();
     publishFbo.allocate(pubcan.getWidth(), pubcan.getHeight());
@@ -81,7 +103,12 @@ void silentNature::setup(){
 	httpUtils.start();
     counter = 0;
     state = STATE_DRAW;
-
+    bPublish = false;
+    
+    tool = BRUSH_TOOL;
+    brush.setColor(image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2));
+    layout.getChild("c1")->play();
+    paperNum = 1;
 }
 
 
@@ -92,6 +119,11 @@ void silentNature::update(){
     
     layout.update();
     
+    if (ofGetElapsedTimeMillis()>publishTimer-4700 && bPublish) {
+        bPublish = false;
+        publish();
+    }
+    
     if (ofGetElapsedTimeMillis()>publishTimer && state==STATE_PUBLISH) {
         state = STATE_DRAW;
         clear();
@@ -100,45 +132,6 @@ void silentNature::update(){
     ofSetOrientation(APP_ORIENTATION); // just before we set viewport for draw
 }
 
-void silentNature::drawTool() {
-    
-   
-    
-    switch (tool) {
-        case BRUSH_TOOL: {
-            ofSetColor(color);
-            vector<ofVec2f> &curve = stroke.getCurve();
-            for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
-                ofCircle(*iter, BRUSH_THICKNESS/2);
-            }
-                    
-        } break;
-        case CRAYON_TOOL: {
-            ofSetColor(color);
-            vector<ofVec2f> &curve = stroke.getCurve();
-            for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
-                ofCircle(*iter, CRAYON_THICKNESS/2);
-            }
-            
-        } break;
-            
-        case ERASER_TOOL: {
-            ofSetColor(0,0,0,0);
-            ofDisableAlphaBlending();
-            vector<ofVec2f> &curve = stroke.getCurve();
-            for (vector<ofVec2f>::iterator iter=curve.begin();iter!=curve.end();iter++) {
-                ofCircle(*iter, ERASER_THICKNESS/2);
-            }
-            ofEnableAlphaBlending();
-           
-        } break;
-            
-            
-            
-            
-            
-    }
-}
 
 void silentNature::draw(){   
     
@@ -156,12 +149,14 @@ void silentNature::draw(){
             canvasTex.draw(0, 0);
 #else
             fbo.draw(0, 0);
-            chalk.draw();
 #endif
             if (bDown) {
                 switch (tool) {
                     case BRUSH_TOOL:
-                        drawTool();
+                        brush.draw();
+                        break;
+                    case CRAYON_TOOL:
+                        crayon.draw();
                         break;
                         
                 }
@@ -254,7 +249,7 @@ void silentNature::publish(){
     
     
     state = STATE_PUBLISH;
-    publishTimer = ofGetElapsedTimeMillis() + 5000;
+    
     ofPixels pixels;
     
     
@@ -296,16 +291,14 @@ void silentNature::publish(){
 #endif
     
 
-    string filename = "images/PHOTO_A_"+ofToString(counter)+".png";
+    string filename = "images/"+prefix+ofToString(counter)+".png";
     
     ofImage publishImage;
     publishImage.setFromPixels(pixels);
     publishImage.saveImage(filename);
     
     ofxHttpForm form;
-//	form.action = "http://localhost:8888/postImage.of";
-	form.action = "http://192.168.10.6:8888/postImage.of";    
-//    form.action = "http://192.168.10.5/upload/";
+	form.action = url;    
 	form.method = OFX_HTTP_POST;
 	form.addFormField("name", "fileupload1");
 	form.addFile("file",filename);
@@ -321,8 +314,7 @@ void silentNature::clear() {
 #else
     fbo.begin();
 #endif
-    glClearColor(0,0,0, 0);
-    glClear( GL_COLOR_BUFFER_BIT);
+    ofClear(0,0,0,0);
     fbo.end();
 
 }
@@ -343,12 +335,18 @@ void silentNature::resetTools() {
         iter->gotoAndStop(0);
     }
     
+    ly = layout.getLayer("eraser");
+    for (vector<ofxSymbolInstance>::iterator iter = ly->frames[ly->currentFrame].instances.begin();iter!=ly->frames[ly->currentFrame].instances.end();iter++) {
+        iter->gotoAndStop(0);
+    }
+    
+    
 }
 
 //--------------------------------------------------------------
 void silentNature::touchDown(ofTouchEventArgs &touch){
     
-    if (state==STATE_PUBLISH) {
+    if (state==STATE_PUBLISH || bPublish) {
         return;
     }
     
@@ -365,10 +363,10 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
         if (sym.type == BITMAP_INSTANCE) {
             cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
             ofImage &image = sym.bitmapItem->getImage();
-            this->color= image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2);
+            brush.setColor(image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2));
             
         } else {
-            this->color = ofColor(255);
+            brush.setColor(ofColor(255));
         }
     }
     
@@ -382,10 +380,10 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
         if (sym.type == BITMAP_INSTANCE) {
             cout << sym.bitmapItem->name << "\t" << sym.bitmapItem->href << endl;
             ofImage &image = sym.bitmapItem->getImage();
-            chalk.setColor(image.getPixelsRef().getColor(image.getWidth()/2, 5)); // get the crayon tip color
+            crayon.setColor(image.getPixelsRef().getColor(image.getWidth()/2, 5)); // get the crayon tip color
             
         } else {
-            this->color = ofColor(255);
+            crayon.setColor(255);
         }
     }
     
@@ -399,8 +397,9 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
 //        cout << endl;
         
 
-        paperNum = items.front()->name[5]-48;
-//        papers->frames.front().instances.front().gotoAndStop(paperNum); // "paper1"...
+        paperNum = items.front()->name[1]-48;
+        cout << items.front()->name <<"\t" << paperNum << endl;;
+        papers->frames.front().instances.front().gotoAndStop(paperNum); // "paper1"...
         this->tool = CUTOUT_TOOL ;
 
     }
@@ -421,13 +420,13 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
         switch (tool) {
             case BRUSH_TOOL:
                 
-                stroke.clear(1);
-                stroke.addTouch(cpos);
+                brush.clear();
+                brush.touch(cpos);
                 
                 break;
             case CRAYON_TOOL:
-                chalk.clear();
-                chalk.touch(cpos);
+                crayon.clear();
+                crayon.touch(cpos);
                 break;
                 
             case CUTOUT_TOOL: {
@@ -445,7 +444,7 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                 ofTranslate(cpos);
                 
                 ofRotate(ofRandom(-180, 180));
-                float scale = ofRandom(0.7, 1.5);
+                float scale = ofRandom(0.7, 0.8);
                 ofScale(scale, scale);
                 
                 ofImage &paper = doc.getBitmapItem("papers_folder/paper"+ofToString(paperNum)+(paperNum == 1 ? "_"+ofToString(rand()%5):"")+".png")->getImage();
@@ -460,8 +459,8 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
             } break;
                 
             case ERASER_TOOL:
-                
-                stroke.clear(7);
+                eraser.clear();
+                eraser.touch(cpos, fbo);
                
                 break;
                 
@@ -474,13 +473,17 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
             
     items.clear();
     if (layout.hitLayer(layout.getLayer("clean"), pos, items)) {
+        items.front()->play();
         clear();
     }       
             
             
     items.clear();
-    if (layout.hitLayer(layout.getLayer("publish"), pos, items)) {       
-        publish();
+    if (layout.hitLayer(layout.getLayer("publish"), pos, items)) { 
+        items.front()->play();
+        bPublish = true;
+        publishTimer = ofGetElapsedTimeMillis() + 5000;
+        
     }
 
             
@@ -506,26 +509,13 @@ void silentNature::touchMoved(ofTouchEventArgs &touch){
          
          switch (tool) {
              case BRUSH_TOOL:
-                 stroke.addTouch(cpos);
-                 
-                 
+                 brush.touch(cpos);
                  break;
             case CRAYON_TOOL:
-                 chalk.touch(cpos);
+                 crayon.touch(cpos);
                  break;
              case ERASER_TOOL:
-                 stroke.addTouch(cpos);                     
-#ifdef TARGET_OPENGLES
-                 fbo.begin(canvasTex.getTextureData().textureID);
-#else
-                 ofSetOrientation(OF_ORIENTATION_DEFAULT);
-                 fbo.begin();
-#endif
-                 drawTool();  
-                 fbo.end();
-                     
-                 
-                 
+                 eraser.touch(cpos,fbo);
                  break;
                  
              default:
@@ -557,17 +547,24 @@ void silentNature::touchUp(ofTouchEventArgs &touch){
                 ofSetOrientation(OF_ORIENTATION_DEFAULT);
                 fbo.begin();
 #endif
-                drawTool();
+                ofSetColor(255);
+                brush.draw();
                 fbo.end();
                 
                 break;
                 
             case CRAYON_TOOL:
-                chalk.touch(cmat.getInverse().preMult(ofVec3f(touch.x,touch.y,0)));
+#ifdef TARGET_OPENGLES
+                fbo.begin(canvasTex.getTextureData().textureID);
+#else
+                ofSetOrientation(OF_ORIENTATION_DEFAULT);
+                fbo.begin();
+#endif
+                ofSetColor(255);
+                crayon.draw();
+                fbo.end();
                 break;
-            case ERASER_TOOL:
-               
-                break;
+            
                 
             default:
                 break;

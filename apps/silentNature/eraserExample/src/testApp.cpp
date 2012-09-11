@@ -2,26 +2,47 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    nat.setup();
-   
+    
+    canvas.loadImage("canvas.png");
+ 
+    
+    ofBackground(255);
+    ofEnableAlphaBlending();
+    
+    fbo.allocate(ofGetWidth(),ofGetHeight());
+    
+    fbo.begin();
+    glClearColor(0,0,0, 0);
+    glClear( GL_COLOR_BUFFER_BIT);
+    ofSetColor(255, 0, 0);
+    ofCircle(0.5*ofVec2f(ofGetWidth(),ofGetHeight()), ofGetWidth()/2);
+    fbo.end();
+    
+    
+    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    nat.update();
+
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    nat.draw();
     
-//    glColor4f(1,1,1,1);
-//	ofDrawBitmapString("fps: " + ofToString( ofGetFrameRate(), 1 ),  10, ofGetHeight() - 10 );
+    ofSetColor(255);
+    canvas.draw(0,0);
+    fbo.draw(0, 0);
+    
+    
+    
+    
 }
+
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    emulator.keyPressed(key);
+
 }
 
 //--------------------------------------------------------------
@@ -31,36 +52,29 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-    
-}
-
-//--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button) {
-//    cout << x << "\t" << y << "\t" << button << endl;
-    if (emulator.getShouldMove()) {
-        ofTouchEventArgs touch = emulator.mouseDragged(x, y);
-        nat.touchMoved(touch);
-    }
-    
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button) {
+void testApp::mouseDragged(int x, int y, int button){
+//    cout << "mouseDragged" << endl;
+   eraser.touch(ofVec2f(x,y),fbo);
+   
+}
     
+
+//--------------------------------------------------------------
+void testApp::mousePressed(int x, int y, int button){
     
-    ofTouchEventArgs touch = emulator.mousePressed(x, y, button);
-    nat.touchDown(touch);
+    eraser.clear(15);
+    eraser.touch(ofVec2f(x,y),fbo);
+   
+
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button) {
-    
-    ofTouchEventArgs touch = emulator.mouseReleased(x, y, button);
-    nat.touchUp(touch);
-    
-        
-    
+void testApp::mouseReleased(int x, int y, int button){
+    eraser.touch(ofVec2f(x,y),fbo);
 }
 
 //--------------------------------------------------------------

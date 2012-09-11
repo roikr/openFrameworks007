@@ -14,17 +14,25 @@
 class ofxStroke {
 	
 public:
-	void clear(float spacing);
-    void addTouch(ofVec2f pos);
+    void setup(float spacing);
+	void clear();
+    void touch(ofVec2f pos);
 	
-	vector<ofVec2f> &getCurve();
+	vector<ofVec2f > &getCurve() {return curve;}
+    vector<ofVec2f > &getVelocities() {return velocities;}
 	
-     deque<ofVec2f> touches;
+    deque<ofVec2f> touches;
+    deque<ofVec2f> touches2;
+    
 
 private:
-    void addPatch(vector<ofVec2f> ctrl);
     
-    vector<ofVec2f> curve;
+    
+    vector<ofVec2f > curve;
+    vector<ofVec2f > velocities;
+//    vector<ofVec2f > diff;
+   
    
     float spacing;
+   
 };
