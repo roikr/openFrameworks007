@@ -14,6 +14,8 @@ class testApp : public ofBaseApp,public ofxHTTPServerListener{
 		void setup();
 		void update();
 		void draw();
+    
+        void process();
 
 		void keyPressed  (int key);
 		void mouseMoved(int x, int y );
@@ -33,10 +35,12 @@ class testApp : public ofBaseApp,public ofxHTTPServerListener{
 
         string postedImgName;
         string postedImgFile;
-        string prevPostedImg;
-        ofImage postedImg;
-
-
+        
+        
+        vector<string> images;
+        int timer;
+        int imageNum;
+        ofImage image;
 };
 
 #endif
