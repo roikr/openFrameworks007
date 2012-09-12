@@ -65,6 +65,10 @@ public:
     ofxSymbolInstance layout;
     ofxSymbolInstance defaultImage;
     
+    ofxSymbolInstance *menuInterface;
+    ofxSymbolInstance *dragInterface;
+    ofxSymbolInstance *shareInterface;
+    
     ofRectangle imageRect;
     ofMatrix4x4 camMat;
     
@@ -92,9 +96,11 @@ public:
     ofMatrix4x4 screenMat;
     
     int actionTime;
-    bool bNewImage;
     ofxBitmapItem *selectedFrame;
     ofMatrix4x4 menuMat;
-    bool bSetIdle;
+    
+    
+    string lang;
+    bool bSuccess;
     
 };

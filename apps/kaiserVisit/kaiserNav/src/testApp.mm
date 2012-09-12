@@ -5,7 +5,7 @@
 void testApp::setup(){	
 	// register touch events
 	ofRegisterTouchEvents(this);
-	ofxiPhoneSetOrientation( OF_ORIENTATION_90_LEFT );	
+	ofxiPhoneSetOrientation( OF_ORIENTATION_90_RIGHT );	
 	// initialize the accelerometer
 	ofxAccelerometer.setup();	
 	//iPhoneAlerts will be sent to this.

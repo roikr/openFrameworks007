@@ -15,8 +15,8 @@ void testApp::setup(){
 
     ofxXmlSettings xml;
     if (xml.loadFile("settings.xml")) {
-        camWidth = xml.getAttribute("settings", "width", 1024);
-        camHeight = xml.getAttribute("settings", "width", 768);
+        camWidth = xml.getAttribute("settings", "width", 1280);
+        camHeight = xml.getAttribute("settings", "width", 720);
         vidGrabber.setVerbose(true);
         vidGrabber.initGrabber(camWidth,camHeight);
         //xml.getAttribute("settings", "root", "");
@@ -215,10 +215,14 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofSetHexColor(0xffffff);
+    ofPushMatrix();
+    float scale = ofGetWidth()/vidGrabber.getWidth();
+    ofScale(scale, scale);
 	vidGrabber.draw(0,0);
     if (image.getTextureReference().bAllocated()) {
         image.draw(40,40);
     }
+    ofPopMatrix();
 //	videoTexture.draw(20+camWidth,20,camWidth,camHeight);
 }
 
