@@ -8,9 +8,13 @@
 #include "ofxFlash.h"
 #include "ofxOsc.h"
 #include "ofxiFbo.h"
-#include "ofxiMail.h"
+//#include "ofxiMail.h"
 #include "Settings.h"
 #include "ofxiFacebook.h"
+
+#include "Poco/Net/SMTPClientSession.h"
+
+using Poco::Net::SMTPClientSession;
 
 struct item {
     int objectID;
@@ -37,7 +41,7 @@ public:
 	void touchCancelled(ofTouchEventArgs &touch);
     
     void urlResponse(ofHttpResponse &response);
-    void mailComposer(int &result);
+//    void mailComposer(int &result);
     void facebookEvent(ofxFBEventArgs &args);
     
     void lostFocus();
@@ -88,7 +92,7 @@ public:
     ofTexture tex;
     ofImage shareImage;
     bool bShare;
-    ofxiMail mail;
+//    ofxiMail mail;
     
     ofxiFacebook fb;
     bool bPostImage; // use for calling fb.postImage outside fb event callback (bug due to reentrant ?)
@@ -102,5 +106,8 @@ public:
     
     string lang;
     bool bSuccess;
+    
+    ofxiPhoneKeyboard *keyboard;
+    SMTPClientSession * session;
     
 };

@@ -4,6 +4,15 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 
+#include "Poco/Net/MailMessage.h"
+#include "Poco/Net/FilePartSource.h"
+#include "Poco/Net/StringPartSource.h"
+#include "Poco/Exception.h"
+
+using Poco::Exception;
+
+#define OFX_SMTP_PORT 25
+
 #define MENU_INSET 15.0
 #define MENU_SEPERATOR 15.0
 #define EXTENNSION "jpg"
@@ -42,12 +51,9 @@ void testApp::setup(){
             Settings::setInt(xml.getAttribute("http", "port", 8888),"http");
             Settings::setInt(xml.getAttribute("sender", "port", 10000),"sender");
             Settings::setInt(xml.getAttribute("receiver", "port", 10001),"receiver");
+            Settings::setString(xml.getAttribute("smtp", "host", "192.168.10.136"),"smtp");
             xml.popTag();
         }
-            
-            
-         
-        
     } 
     
     string host = Settings::getString("host");
@@ -55,6 +61,7 @@ void testApp::setup(){
     int senderPort = Settings::getInt("sender");
     receiverPort = Settings::getInt("receiver");
     url = "http://"+host+":"+ofToString(httpPort);
+    string smtp = Settings::getString("smtp");
     cout << url << "\tsender: " << senderPort << "\treceiver: " << receiverPort << endl;
     
     sender.setup(host,senderPort);
@@ -64,6 +71,14 @@ void testApp::setup(){
     m.setAddress("/list");
     m.addIntArg(receiverPort);
     sender.sendMessage(m);
+    
+    try{
+		session=new Poco::Net::SMTPClientSession(smtp,OFX_SMTP_PORT);
+        session->login();
+        
+	}catch(Poco::Exception e){
+		ofLog(OF_LOG_ERROR,"cannot connect to the server");
+	}
     
     doc.setup("DOMDocument.xml");
     doc.load();
@@ -153,8 +168,9 @@ void testApp::setup(){
     fbo.setup(tex.getWidth(), tex.getHeight());
     shareImage.allocate(800, 600, OF_IMAGE_COLOR_ALPHA);
     bShare = false;
-    mail.setup();
-    ofxRegisterMailNotification(this);
+    
+//    mail.setup();
+//    ofxRegisterMailNotification(this);
     
     ofxRegisterFacebookNotification(this);
     actionTime = ofGetElapsedTimeMillis();    
@@ -162,8 +178,17 @@ void testApp::setup(){
     
     lang = "HE";
     bSuccess = false;
-    
+    bPostImage = false;
     refresh();
+    
+    
+    
+    keyboard = new ofxiPhoneKeyboard(0,0,480,32);
+	keyboard->setVisible(false);
+	keyboard->setBgColor(255, 255, 255, 255);
+	keyboard->setFontColor(0,0,0, 255);
+	keyboard->setFontSize(26);
+   
 }
 
 //--------------------------------------------------------------
@@ -252,6 +277,27 @@ void testApp::update(){
             }
             break;
         case STATE_MAIL:
+            
+            if (ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
+                state = STATE_IMAGES;
+                thumbs.deselect();
+                image.clear();
+                items.clear();
+                refresh();
+            } else {
+                if (!keyboard->isKeyboardShowing()) {
+                    keyboard->setVisible(false);
+                    sendMail();
+                }
+            }
+            
+            
+            
+            
+            
+            
+            
+            break;
         case STATE_FACEBOOK:
             
             if (ofGetElapsedTimeMillis()>actionTime+SHARE_DELAY) {
@@ -380,7 +426,7 @@ void testApp::draw(){
             
         
         case STATE_SHARE:
-        case STATE_MAIL:
+        
         case STATE_FACEBOOK:
            
            
@@ -395,6 +441,29 @@ void testApp::draw(){
             }
             
             ofPopMatrix();
+            
+            
+            break;
+            
+        case STATE_MAIL:
+        
+            
+            
+            
+            shareLayout.draw();
+            
+            ofPushMatrix();
+            glMultMatrixf(shareMat.getPtr());
+            
+            if( shareImage.bAllocated()) {
+                shareImage.draw(0, 0);
+            }
+            
+            ofPopMatrix();
+            
+            ofSetColor(100,100,100,100);
+            ofRect(0, 0, ofGetWidth(), ofGetHeight());
+            
             
             
             break;
@@ -525,6 +594,7 @@ void testApp::share() {
 
 }
 
+/*
 void testApp::sendMail() {
         mailStruct m;
         m.subject = "test";
@@ -538,10 +608,43 @@ void testApp::sendMail() {
         m.attachments.push_back(attachmentStruct(buffer,"image/png","kaiser"));
         mail.sendMail(m);
 }
+*/
 
+void testApp::sendMail() {
+    
+    string attachmentPath = ofxiPhoneGetDocumentsDirectory()+"kaiser.png";
+    shareImage.saveImage(attachmentPath);
+    
+    try{
+        Poco::Net::MailMessage message;
+		message.setDate(Poco::Timestamp());
+		message.setSender("post@kaiser.lofipeople.com");
+		message.setSubject(keyboard->getText());
+        message.setContentType("text/plain");
+		message.addContent(new Poco::Net::StringPartSource("testing"));
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"roikr75@gmail.com"));
+        message.addAttachment("kaiser.png", new Poco::Net::FilePartSource(attachmentPath));
+		session->sendMessage(message);
+        bSuccess = true;
+	}catch(Poco::Exception e){
+		ofLog(OF_LOG_ERROR,"cannot send mail");
+        bSuccess = false;
+	}
+    
+
+    state = STATE_SHARE;
+    actionTime = ofGetElapsedTimeMillis();
+
+    refresh();
+
+    
+}
 
 void testApp::exit() {
-    mail.exit();
+    if (session) {
+        session->close();
+    }
+//    mail.exit();
     fb.logout();
 }
 //--------------------------------------------------------------
@@ -666,12 +769,18 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 }
                 
                 if (hits.front()->name=="B_MAIL_"+lang) {
-                    if (mail.getCanSendMail()) {
-                        state = STATE_MAIL;
-                        bSuccess = false;
-                        actionTime = ofGetElapsedTimeMillis();
-                        sendMail();
-                    }
+                    state = STATE_MAIL;
+                    bSuccess = false;
+                    actionTime = ofGetElapsedTimeMillis();
+                    keyboard->setVisible(true);
+                    keyboard->openKeyboard();
+                    
+//                    if (mail.getCanSendMail()) {
+//                        state = STATE_MAIL;
+//                        bSuccess = false;
+//                        actionTime = ofGetElapsedTimeMillis();
+//                        sendMail();
+//                    }
                 }
                 
                 if (hits.front()->name=="B_FINISH_"+lang) {
@@ -706,6 +815,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             
             
         } break;
+            
             
         default:
             break;
@@ -882,6 +992,7 @@ void testApp::urlResponse(ofHttpResponse &response) {
     
 }
 
+/*
 void testApp::mailComposer(int &result) {
     cout << "mailComposer: " << result << endl;
     if (result == OFXIMAIL_SEND) {
@@ -894,6 +1005,7 @@ void testApp::mailComposer(int &result) {
     refresh();
    
 }
+*/
 
 void testApp::facebookEvent(ofxFBEventArgs &args) {
     cout << "facebookEvent, action: " << args.action << ", status: " << args.status << endl << "message: " << args.message << endl;

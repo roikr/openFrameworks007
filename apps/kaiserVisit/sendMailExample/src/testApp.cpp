@@ -10,7 +10,7 @@
 using Poco::Net::SMTPClientSession;
 using Poco::Exception;
 
-#define OFX_SMTP_HOST "localhost"
+#define OFX_SMTP_HOST "192.168.10.136"
 #define OFX_SMTP_PORT 25
 
 //--------------------------------------------------------------
@@ -33,7 +33,7 @@ void testApp::setup(){
         vector<string> attachmentPaths;
         
         recipients.push_back("roikr75@gmail.com");
-        sender="roikr75@gmail.com";
+        sender="post@kaiser.lofipeople.com";
         subject="test";
         date=Poco::Timestamp();
         
