@@ -16,7 +16,7 @@ using Poco::Exception;
 #define MENU_INSET 15.0
 #define MENU_SEPERATOR 15.0
 #define EXTENNSION "jpg"
-#define IDLE_DELAY 90000
+#define IDLE_DELAY 10000
 #define SHARE_DELAY 180000
 
 enum {
@@ -157,6 +157,9 @@ void testApp::setup(){
     shareLayout = doc.getSymbolItem("ShareLayout")->createInstance("shareLayout", screenMat);
     shareInterface = shareLayout.getChild("shareInterface");
     shareLayout.getChildMat(shareLayout.getChild("overlay"), shareMat);
+    
+    mailInterface = doc.getSymbolItem("MailInterface")->createInstance("mailInterface", screenMat);
+    
 //    shareMat = mat;
 //    shareMat.preMult(shareLayout.getChild("overlay")->mat);
     
@@ -181,14 +184,16 @@ void testApp::setup(){
     bPostImage = false;
     refresh();
     
+    int sscale = [[UIScreen mainScreen] scale];
+    ofRectangle rect = mailInterface.getChild("EMAIL_BOX")->getBoundingBox(mailInterface.mat) ;
+    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
     
-    
-    keyboard = new ofxiPhoneKeyboard(0,0,480,32);
+    keyboard = new ofxiPhoneKeyboard(rect.x/sscale,rect.y/sscale,rect.width/sscale,rect.height/sscale);
 	keyboard->setVisible(false);
-	keyboard->setBgColor(255, 255, 255, 255);
-	keyboard->setFontColor(0,0,0, 255);
-	keyboard->setFontSize(26);
-   
+//	keyboard->setBgColor(255, 255, 255, 0);
+	keyboard->setFontColor(255,255,255, 255);
+	keyboard->setFontSize(20);
+    keyboard->setText("roikr75@gmail.com");
 }
 
 //--------------------------------------------------------------
@@ -196,10 +201,11 @@ void testApp::update(){
 	ofBackground(255,255,255);	
     
     
+    
     switch (state) {
         case STATE_SLEEP:
-        case STATE_NEW_IMAGE: 
-        case STATE_IMAGES: {
+        case STATE_NEW_IMAGE:
+        case STATE_IMAGES:
             // check for waiting messages
             while( receiver.hasWaitingMessages() )
             {
@@ -216,6 +222,7 @@ void testApp::update(){
                     cout << m.getAddress() << "\t" << m.getArgAsString(0) << endl;
                     if (bNewImage &&  state == STATE_SLEEP) {
                         state = STATE_NEW_IMAGE;
+                        thumbs.deselect();
                         actionTime = ofGetElapsedTimeMillis();
                         ofLoadURLAsync(url+"/photos/"+m.getArgAsString(0)+"."+EXTENNSION);
                         refresh();
@@ -239,24 +246,13 @@ void testApp::update(){
                     
                 }		
             }
-        } break;
-            
+            break;
         default:
             break;
-    }
+    }           
+       
     
-               
-    objects.update();
-    thumbs.update();
-   
-    
-    if (bShare) {
-        share();
-        state=STATE_SHARE;
-        bShare = false;
-        refresh();
-    }
-    
+        
     switch (state) {
         case STATE_SLEEP:
         
@@ -265,47 +261,27 @@ void testApp::update(){
         case STATE_NEW_IMAGE:
         case STATE_IMAGES:
         case STATE_OBJECTS:
+            
+            if (ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
+                done(false);
+            }
+            
+            break;
         case STATE_SHARE:
             if (ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
-                
-                state = STATE_SLEEP;
-                thumbs.deselect();
-                image.clear();
-                items.clear();
-                refresh();
-                
+                done(bSuccess);
             }
             break;
         case STATE_MAIL:
-            
-            if (ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
-                state = STATE_IMAGES;
-                thumbs.deselect();
-                image.clear();
-                items.clear();
-                refresh();
-            } else {
-                if (!keyboard->isKeyboardShowing()) {
-                    keyboard->setVisible(false);
-                    sendMail();
-                }
+            if (ofGetElapsedTimeMillis()>actionTime+SHARE_DELAY) {
+                done(true);
             }
-            
-            
-            
-            
-            
-            
-            
             break;
+        
         case STATE_FACEBOOK:
             
             if (ofGetElapsedTimeMillis()>actionTime+SHARE_DELAY) {
-                state = STATE_IMAGES;
-                thumbs.deselect();
-                image.clear();
-                items.clear();
-                refresh();
+                done(true);
             }
             
             if (bPostImage) {
@@ -329,10 +305,16 @@ void testApp::update(){
     }
     
     
-    if (bPostImage) {
-        
-        
+    if (bShare) {
+        share();
+        state=STATE_SHARE;
+        bShare = false;
+        refresh();
     }
+
+    objects.update();
+    thumbs.update();
+
       
 }
 
@@ -461,10 +443,7 @@ void testApp::draw(){
             
             ofPopMatrix();
             
-            ofSetColor(100,100,100,100);
-            ofRect(0, 0, ofGetWidth(), ofGetHeight());
-            
-            
+            mailInterface.draw();
             
             break;
 
@@ -473,6 +452,7 @@ void testApp::draw(){
             break;
     }
     
+    ofSetColor(0);
     ofDrawBitmapString(ofToString(state), 5,10);
     
 }
@@ -482,6 +462,8 @@ void testApp::refresh() {
     menuInterface->bVisible = false;
     dragInterface->bVisible = false;
     shareInterface->bVisible = false;
+    
+
     
     ofxSymbolInstance *language = layout.getChild("langs");
     for (vector<layer>::iterator liter=language->layers.begin(); liter!=language->layers.end(); liter++) {
@@ -527,9 +509,24 @@ void testApp::refresh() {
             dragInterface->getChild("T_DRAG_"+lang)->bVisible = true;
             break;
             
+        case STATE_MAIL: {
+           
+            layer *ly = mailInterface.getLayer("interface");
+            
+            for (vector<ofxSymbolInstance>::iterator iter=ly->frames.front().instances.begin(); iter!=ly->frames.front().instances.end();iter++) {
+                iter->bVisible = false;
+            }
+            
+            
+            mailInterface.getChild("T_ENTER_MAIL_"+lang)->bVisible = true;
+            mailInterface.getChild("B_CANCEL_"+lang)->bVisible = true;
+            mailInterface.getChild("B_SEND_"+lang)->bVisible = true;
+            
+            
+        }    
         case STATE_SHARE:
         case STATE_FACEBOOK:
-        case STATE_MAIL:
+        
             shareInterface->bVisible = true;
             
             for (vector<layer>::iterator liter=shareInterface->layers.begin(); liter!=shareInterface->layers.end(); liter++) {
@@ -619,10 +616,10 @@ void testApp::sendMail() {
         Poco::Net::MailMessage message;
 		message.setDate(Poco::Timestamp());
 		message.setSender("post@kaiser.lofipeople.com");
-		message.setSubject(keyboard->getText());
+		message.setSubject("been there, done that");
         message.setContentType("text/plain");
 		message.addContent(new Poco::Net::StringPartSource("testing"));
-        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"roikr75@gmail.com"));
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,keyboard->getText()));
         message.addAttachment("kaiser.png", new Poco::Net::FilePartSource(attachmentPath));
 		session->sendMessage(message);
         bSuccess = true;
@@ -630,14 +627,43 @@ void testApp::sendMail() {
 		ofLog(OF_LOG_ERROR,"cannot send mail");
         bSuccess = false;
 	}
+}
+
+void testApp::done(bool bDelete) {
+    
+    
+    keyboard->setVisible(false);
+    state = STATE_SLEEP;
+    
+    image.clear();
+    items.clear();
     
 
-    state = STATE_SHARE;
-    actionTime = ofGetElapsedTimeMillis();
-
+    if (bDelete) {
+        ofxOscMessage m;
+        if (thumbs.getIsSelected()) {
+            
+            m.setAddress("/delete");
+            m.addStringArg(thumbs.getItem(thumbs.getSelectedID()).name);
+            sender.sendMessage(m);
+            m.clear();
+            
+        }
+        
+        thumbs.clear();
+        
+        
+        m.setAddress("/list");
+        m.addIntArg(receiverPort);
+        sender.sendMessage(m);
+        
+        cout << "list: " << url << endl;
+    } else {
+        thumbs.deselect();
+    }
+    
     refresh();
 
-    
 }
 
 void testApp::exit() {
@@ -784,37 +810,32 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 }
                 
                 if (hits.front()->name=="B_FINISH_"+lang) {
-                    
-                    
-                    items.clear();
-                    image.clear();
-                    
-                    ofxOscMessage m;
-                    
-                    if (thumbs.getIsSelected()) {
-                        
-                        m.setAddress("/delete");
-                        m.addStringArg(thumbs.getItem(thumbs.getSelectedID()).name);
-                        sender.sendMessage(m);
-                        m.clear();
-                        
-                    }
-                    
-                    thumbs.clear();
-                    
-                    m.setAddress("/list");
-                    m.addIntArg(receiverPort);
-                    sender.sendMessage(m);
-                    
-                    cout << "list: " << url << endl;
-                    
-                    state = STATE_SLEEP;
+                    done(true);
                 }
             }
             
             
             
         } break;
+            
+        case STATE_MAIL:
+            hits.clear();
+            if( mailInterface.hitLayer(mailInterface.getLayer("interface"),ofVec3f(touch.x,touch.y),hits)) {
+                if (hits.front()->name=="B_SEND_"+lang) {
+                    if (!keyboard->getText().empty()) {
+                        sendMail();
+                    }
+                    keyboard->setVisible(false);
+                    state = STATE_SHARE;
+                }
+                
+                if (hits.front()->name=="B_CANCEL_"+lang) {
+                    keyboard->setVisible(false);
+                    state = STATE_SHARE;
+                }
+            }
+            
+            break;
             
             
         default:
@@ -976,7 +997,7 @@ void testApp::urlResponse(ofHttpResponse &response) {
                 string name = ofSplitString(split.back(), ".").front();
                 cout << "urlResponse: " << name << endl;
                 int itemID = thumbs.addItem(thumb,name);
-                if (state==STATE_NEW_IMAGE) {
+                if (state==STATE_NEW_IMAGE && !thumbs.getIsSelected()) {
                     thumbs.select(itemID);
                 }
                 refresh();

@@ -7,12 +7,11 @@
 //
 
 #include "ofxFlash.h"
-
 #include "ofxXmlSettings.h"
 
 #define PIXEL_SCALE 20.0
 #define MAX_TEXTURE_SIZE 1024
-#define FRAMES_PER_SECOND 24
+#define FRAMES_PER_SECOND 30
 
 
 void ofxBitmapItem::load(float u,float v) {
@@ -914,9 +913,10 @@ void ofxSymbolInstance::draw(float alpha) {
 }
 
 
-ofRectangle ofxSymbolInstance::getBoundingBox() {
+ofRectangle ofxSymbolInstance::getBoundingBox(ofMatrix4x4 mat) {
 //    cout << "bounding box" << endl;
     ofRectangle rect(0,0,0,0);
+    mat.preMult(this->mat);
     
     switch (type) {
         case BITMAP_INSTANCE: {
@@ -929,7 +929,17 @@ ofRectangle ofxSymbolInstance::getBoundingBox() {
             
             for (vector<layer>::iterator liter=layers.begin();liter!=layers.end();liter++) {
                 frame &f = liter->frames[liter->currentFrame];
-                for (vector<ofxSymbolInstance>::iterator iter=f.instances.begin(); iter!=f.instances.end(); iter++) {
+                
+                vector<ofxSymbolInstance>::iterator iter=f.instances.begin();
+                while (iter!=f.instances.end()) {
+                    rect = iter->getBoundingBox(mat);
+                    iter++;
+                    if (rect.width!=0 || rect.height!=0) {
+                        break;
+                    }
+                }
+                
+                while (iter!=f.instances.end()) {
                     
                     ofRectangle iterect = iter->getBoundingBox();
                     if (iterect.width!=0 || iterect.height!=0) {
@@ -947,6 +957,7 @@ ofRectangle ofxSymbolInstance::getBoundingBox() {
                             //                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
                             
                     }
+                    iter++;
                    
                 }
             }

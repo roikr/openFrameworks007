@@ -32,6 +32,7 @@ public:
     void refresh();
     void share();
     void sendMail();
+    void done(bool bDelete);
     void exit();
 	
 	void touchDown(ofTouchEventArgs &touch);
@@ -72,6 +73,7 @@ public:
     ofxSymbolInstance *menuInterface;
     ofxSymbolInstance *dragInterface;
     ofxSymbolInstance *shareInterface;
+    ofxSymbolInstance mailInterface;
     
     ofRectangle imageRect;
     ofMatrix4x4 camMat;

@@ -172,7 +172,7 @@ public:
     bool hitLayer(layer *ly,ofVec2f pos,vector<ofxSymbolInstance*> &instances);
 //    void update();
     
-    ofRectangle getBoundingBox();
+    ofRectangle getBoundingBox(ofMatrix4x4 mat = ofMatrix4x4());
     
     ofxSymbolInstance *getChild(string name);
     bool getChildMat(ofxSymbolInstance *child,ofMatrix4x4 &mat);
