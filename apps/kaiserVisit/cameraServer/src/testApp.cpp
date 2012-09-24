@@ -15,21 +15,24 @@ void testApp::setup(){
 
     ofxXmlSettings xml;
     if (xml.loadFile("settings.xml")) {
-        camWidth = xml.getAttribute("settings", "width", 1280);
-        camHeight = xml.getAttribute("settings", "width", 720);
+        xml.pushTag("settings");
+        camWidth = xml.getAttribute("camera", "width", 1600);
+        camHeight = xml.getAttribute("camera", "height", 1200);
+        photoWidth = xml.getAttribute("photo", "width", 800.0);
+        photoHeight = xml.getAttribute("photo", "height", 600.0);
         vidGrabber.setVerbose(true);
         vidGrabber.initGrabber(camWidth,camHeight);
         //xml.getAttribute("settings", "root", "");
-        xml.pushTag("settings");
+
         receiver.setup(xml.getAttribute("receiver", "port", 10000));
-        sound.loadSound(xml.getAttribute("trigger", "sound", ""));
+        sound.loadSound(xml.getAttribute("trigger", "sound", "SOUND_SEQ.aif"));
         delay = xml.getAttribute("trigger", "delay", 3000);
 
         server = ofxHTTPServer::getServer(); // get the instance of the server
         server->setServerRoot("");		 // folder with files to be served
         server->start(xml.getAttribute("server", "port", 8888));
 
-        bSerial = serial.setup(xml.getAttribute("trigger", "portname", "/dev/tty.usbmodemfd121"), xml.getAttribute("trigger", "baudrate", 9600));
+        bSerial = serial.setup(xml.getAttribute("trigger", "portname", "/dev/ttyACM0"), xml.getAttribute("trigger", "baudrate", 9600));
         if (bSerial) {
             serial.writeByte('r');
         }
@@ -63,6 +66,7 @@ void testApp::update(){
                     break;
                 case OF_SERIAL_NO_DATA:
                     break;
+                    cout << "no data" << endl;
                 default:
                     trigger();
                     break;
@@ -85,11 +89,9 @@ void testApp::update(){
         bTrigger = false;
         image.setFromPixels(vidGrabber.getPixelsRef());
 
-        float width = 800.0;
-        float height = 600.0;
-        float scale = min((float)vidGrabber.getWidth()/width,(float)vidGrabber.getHeight()/height);
-        int newWidth = floor(width*scale);
-        int newHeight = floor(height*scale);
+        float scale = min((float)vidGrabber.getWidth()/photoWidth,(float)vidGrabber.getHeight()/photoHeight);
+        int newWidth = floor(photoWidth*scale);
+        int newHeight = floor(photoHeight*scale);
         cout << newWidth << "\t" << newHeight << endl;
 
         stringstream ss;
@@ -97,7 +99,7 @@ void testApp::update(){
         cout << ss.str() << endl;
 
         image.crop(0.5*(image.getWidth()-newWidth), 0.5*(image.getHeight()-newHeight), newWidth, newHeight);
-        image.resize(width, height);
+        image.resize(photoWidth, photoHeight);
         unsigned char *data = image.getPixels(); // unsigned char
 
 
@@ -215,14 +217,13 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofSetHexColor(0xffffff);
-    ofPushMatrix();
-    float scale = ofGetWidth()/vidGrabber.getWidth();
-    ofScale(scale, scale);
-	vidGrabber.draw(0,0);
+
+    vidGrabber.draw(0,0,ofGetWidth(),ofGetHeight());
+
+
     if (image.getTextureReference().bAllocated()) {
         image.draw(40,40);
     }
-    ofPopMatrix();
 //	videoTexture.draw(20+camWidth,20,camWidth,camHeight);
 }
 
