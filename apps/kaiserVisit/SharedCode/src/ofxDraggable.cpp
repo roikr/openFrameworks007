@@ -42,9 +42,14 @@ bool ofxDraggable::getIsActive() {
 }
 
 void ofxDraggable::touchDown(ofTouchEventArgs &touch) {
-    if (inside(touch)) {
+    if (touches.empty()) {
+        if (inside(touch)) {
+            touches.push_back(touch);
+        }
+    } else {
         touches.push_back(touch);
     }
+    
 };
 
 void ofxDraggable::touchMoved(ofTouchEventArgs &touch) {
@@ -58,16 +63,16 @@ void ofxDraggable::touchMoved(ofTouchEventArgs &touch) {
         
         
         if (iter==touches.end()) {
-            if (touches.size()<2) {
-                touches.push_back(touch);
-            }
+            cout << "ofxDraggable::touchMoved - can't find touch" << endl;
         } else {
             switch (touches.size()) {
                 case 1:
-                    mat.postMult(ofMatrix4x4::newTranslationMatrix(ofVec2f(touch.x,touch.y)-ofVec2f(iter->x,iter->y)));
-                    
-
-                    *iter = touch;
+                    if (inside(touch)) {
+                        mat.postMult(ofMatrix4x4::newTranslationMatrix(ofVec2f(touch.x,touch.y)-ofVec2f(iter->x,iter->y)));
+                        *iter = touch;
+                    } else {
+                        touchUp(touch);
+                    }
                     break;
                 case 2: {
                     ofVec2f p2(touch.x,touch.y);

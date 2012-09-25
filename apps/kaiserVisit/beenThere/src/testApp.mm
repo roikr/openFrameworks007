@@ -7,8 +7,10 @@
 #include "Poco/Net/MailMessage.h"
 #include "Poco/Net/FilePartSource.h"
 #include "Poco/Net/StringPartSource.h"
+#include "Poco/Net/SMTPClientSession.h"
 #include "Poco/Exception.h"
 
+using Poco::Net::SMTPClientSession;
 using Poco::Exception;
 
 #define OFX_SMTP_PORT 25
@@ -16,7 +18,7 @@ using Poco::Exception;
 #define MENU_INSET 15.0
 #define MENU_SEPERATOR 15.0
 #define EXTENNSION "jpg"
-#define IDLE_DELAY 10000
+#define IDLE_DELAY 90000
 #define SHARE_DELAY 180000
 
 enum {
@@ -42,44 +44,36 @@ void testApp::setup(){
     ofEnableAlphaBlending();
    
 	
-    if (Settings::getBool("reset")) {
-        ofxXmlSettings xml;
-        if (xml.loadFile("settings.xml")) {
-            Settings::setString(xml.getAttribute("settings", "host", "192.168.10.97"),"host");
-            
-            xml.pushTag("settings");
-            Settings::setInt(xml.getAttribute("http", "port", 8888),"http");
-            Settings::setInt(xml.getAttribute("sender", "port", 10000),"sender");
-            Settings::setInt(xml.getAttribute("receiver", "port", 10001),"receiver");
-            Settings::setString(xml.getAttribute("smtp", "host", "192.168.10.136"),"smtp");
-            xml.popTag();
-        }
-    } 
+//    if (Settings::getBool("reset")) {
+//        ofxXmlSettings xml;
+//        if (xml.loadFile("settings.xml")) {
+//            Settings::setString(xml.getAttribute("settings", "host", "192.168.10.97"),"host");
+//            
+//            xml.pushTag("settings");
+//            Settings::setInt(xml.getAttribute("http", "port", 8888),"http");
+//            Settings::setInt(xml.getAttribute("sender", "port", 10000),"sender");
+//            Settings::setInt(xml.getAttribute("receiver", "port", 10001),"receiver");
+//            Settings::setString(xml.getAttribute("smtp", "host", "192.168.10.136"),"smtp");
+//            xml.popTag();
+//        }
+//    } 
     
+      
     string host = Settings::getString("host");
     int httpPort = Settings::getInt("http");
     int senderPort = Settings::getInt("sender");
-    receiverPort = Settings::getInt("receiver");
+    
     url = "http://"+host+":"+ofToString(httpPort);
-    string smtp = Settings::getString("smtp");
-    cout << url << "\tsender: " << senderPort << "\treceiver: " << receiverPort << endl;
+    
+    cout << url << "\tsender: " << senderPort << "\treceiver: " << Settings::getInt("receiver") << "\tsmtp: " << Settings::getString("smtp") << endl;
     
     sender.setup(host,senderPort);
-    receiver.setup(receiverPort);
+    receiver.setup(Settings::getInt("receiver"));
     
     ofxOscMessage m;
     m.setAddress("/list");
-    m.addIntArg(receiverPort);
+    m.addIntArg(Settings::getInt("receiver"));
     sender.sendMessage(m);
-    
-    try{
-		session=new Poco::Net::SMTPClientSession(smtp,OFX_SMTP_PORT);
-        session->login();
-        
-	}catch(Poco::Exception e){
-		ofLog(OF_LOG_ERROR,"cannot connect to the server");
-	}
-    
     doc.setup("DOMDocument.xml");
     doc.load();
     
@@ -135,8 +129,8 @@ void testApp::setup(){
         for (int i=0;i<xml.getNumTags("object");i++) {
             ofImage img;
             img.loadImage(xml.getAttribute("object", "name", "",i));
-            scales.insert(scales.begin(),xml.getAttribute("object", "scale", 0.5,i) ); // 
-            objects.addItem(img);
+            scales[objects.addItem(img)]=xml.getAttribute("object", "scale", 0.5,i) ; // 
+            
 
         }
                 
@@ -194,6 +188,9 @@ void testApp::setup(){
 	keyboard->setFontColor(255,255,255, 255);
 	keyboard->setFontSize(20);
     keyboard->setText("roikr75@gmail.com");
+    
+    activeIter = items.rend();
+    bNewItem = false;
 }
 
 //--------------------------------------------------------------
@@ -374,12 +371,15 @@ void testApp::draw(){
             
             
             for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
-                iter->drag.begin();
-                ofImage &image(objects.getItem(iter->objectID).image);
-                ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
-                image.draw(0,0);
-                iter->drag.end();
+                if (!bNewItem || iter!=items.end()-1) {
+                    iter->drag.begin();
+                    ofImage &image(objects.getItem(iter->objectID).image);
+                    ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
+                    image.draw(0,0);
+                    iter->drag.end();
+                }
             }
+            
             ofPopMatrix();
             
             layout.draw();
@@ -391,15 +391,15 @@ void testApp::draw(){
             
            
             
-            if (!newItem.empty()) {
+            if (bNewItem) {
                 ofPushMatrix();
                 glMultMatrixf(camMat.getPtr());
-                item &it=newItem.front();
-                it.drag.begin();
-                ofImage &image(objects.getItem(it.objectID).image);
+                //item &it=items.front();
+                activeIter->drag.begin();
+                ofImage &image(objects.getItem(activeIter->objectID).image);
                 ofTranslate(-0.5*ofVec2f(image.getWidth(),image.getHeight()));
                 image.draw(0,0);
-                it.drag.end();
+                activeIter->drag.end();
                 ofPopMatrix();
             }
             
@@ -611,8 +611,14 @@ void testApp::sendMail() {
     
     string attachmentPath = ofxiPhoneGetDocumentsDirectory()+"kaiser.png";
     shareImage.saveImage(attachmentPath);
+    SMTPClientSession * session;
     
     try{
+        
+        session=new Poco::Net::SMTPClientSession(Settings::getString("smtp"),OFX_SMTP_PORT);
+        session->login();
+            
+        
         Poco::Net::MailMessage message;
 		message.setDate(Poco::Timestamp());
 		message.setSender("post@kaiser.lofipeople.com");
@@ -623,10 +629,20 @@ void testApp::sendMail() {
         message.addAttachment("kaiser.png", new Poco::Net::FilePartSource(attachmentPath));
 		session->sendMessage(message);
         bSuccess = true;
+        
+        if (session) {
+            session->close();
+            session = 0;
+        }
 	}catch(Poco::Exception e){
-		ofLog(OF_LOG_ERROR,"cannot send mail");
+		ofLog(OF_LOG_ERROR,"cannot connect to the server");
         bSuccess = false;
+        if (session) {
+            session->close();
+        }
 	}
+    
+    
 }
 
 void testApp::done(bool bDelete) {
@@ -654,7 +670,7 @@ void testApp::done(bool bDelete) {
         
         
         m.setAddress("/list");
-        m.addIntArg(receiverPort);
+        m.addIntArg(Settings::getInt("receiver"));
         sender.sendMessage(m);
         
         cout << "list: " << url << endl;
@@ -667,9 +683,7 @@ void testApp::done(bool bDelete) {
 }
 
 void testApp::exit() {
-    if (session) {
-        session->close();
-    }
+    
 //    mail.exit();
     fb.logout();
 }
@@ -723,22 +737,16 @@ void testApp::touchDown(ofTouchEventArgs &touch){
         } break;
         case STATE_OBJECTS: {
             
-            vector<item>::reverse_iterator riter;
-            for (riter=items.rbegin(); riter!=items.rend(); riter++) {
-                if (riter->drag.getIsActive()) {
-                    break;
-                }
-            }
-            
-            bool bDragActive = riter!=items.rend();
             ofVec2f camPos = camMat.getInverse().preMult(ofVec3f(touch.x,touch.y));
             ofTouchEventArgs camTouch(touch);
             camTouch.x = camPos.x;
             camTouch.y = camPos.y;
             
-            if (bDragActive) {
-                riter->drag.touchDown(camTouch);
-            } else {
+            
+            if (activeIter!=items.rend()) {
+                activeIter->drag.touchDown(camTouch); // second finger ?
+            }
+            else {
             
                 objects.touchDown(menuTouch);
                 
@@ -747,8 +755,9 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                     objectID = objects.getDownID(); // getDownNum valid only at down stage
                     bTouchObject = true;
                 } else {
-                    for (riter=items.rbegin(); riter!=items.rend(); riter++) {
+                    for (vector<item>::reverse_iterator riter=items.rbegin(); riter!=items.rend(); riter++) {
                         if (riter->drag.inside(camTouch)) {
+                            activeIter = riter;
                             riter->drag.touchDown(camTouch);
                             break;
                         }
@@ -884,19 +893,16 @@ void testApp::touchMoved(ofTouchEventArgs &touch) {
                     x.objectID = objectID;
 //                    x.scale = (100-40)/objects.getImage(x.objectNum).getWidth();
                     x.scale = menuMat.getScale().x*objects.getRectangle(objectID).width/objects.getItem(x.objectID).image.getWidth();
-                    newItem.push_back(x);
+                    items.push_back(x);
+                    activeIter = items.rbegin();
+                    bNewItem = true;
                     objects.touchUp(touch);
                 } 
                 
                 lastTouch = camTouch;
             } else {
-                if (newItem.empty()) {
-                    for (vector<item>::reverse_iterator iter=items.rbegin(); iter!=items.rend(); iter++) {
-                        iter->drag.touchMoved(camTouch);
-                        
-                    }
-                } else{
-                    newItem.front().drag.touchMoved(camTouch);
+                if (activeIter!=items.rend()) {
+                    activeIter->drag.touchMoved(camTouch);
                 }
             }
             
@@ -941,14 +947,15 @@ void testApp::touchUp(ofTouchEventArgs &touch){
             camTouch.x = pos.x;
             camTouch.y = pos.y;
             
-            if (newItem.empty()) {
-                for (vector<item >::reverse_iterator iter=items.rbegin(); iter!=items.rend(); iter++) {
-                    iter->drag.touchUp(camTouch);
+            if (activeIter!=items.rend()) {
+                activeIter->drag.touchUp(camTouch);
+                if (!activeIter->drag.getIsActive()) {
+                    activeIter = items.rend();
                 }
-            } else {
-                newItem.front().drag.touchUp(camTouch);
-                items.push_back(newItem.front());
-                newItem.clear();
+            } 
+            
+            if (bNewItem && !items.empty() && !items.back().drag.getIsActive()) {
+                bNewItem = false;
             }
             
         }   break;

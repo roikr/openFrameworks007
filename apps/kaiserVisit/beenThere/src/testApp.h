@@ -12,9 +12,7 @@
 #include "Settings.h"
 #include "ofxiFacebook.h"
 
-#include "Poco/Net/SMTPClientSession.h"
 
-using Poco::Net::SMTPClientSession;
 
 struct item {
     int objectID;
@@ -53,14 +51,14 @@ public:
     ofxScrollCollection thumbs;
     ofxScrollCollection objects;
     ofImage image;
-    vector<float> scales;
+    map<int,float> scales;
     
     int state;
     
     vector<item> items;
-    vector<item> newItem;
-    
-   
+    vector<item>::reverse_iterator activeIter;
+    bool bNewItem;
+      
     ofTouchEventArgs lastTouch;
     bool bTouchObject;
     int objectID;
@@ -87,7 +85,6 @@ public:
     
     ofxOscSender sender;
     ofxOscReceiver receiver;
-    int receiverPort; // receiver port;
     string url;
     
     ofxiFbo fbo;
@@ -110,6 +107,5 @@ public:
     bool bSuccess;
     
     ofxiPhoneKeyboard *keyboard;
-    SMTPClientSession * session;
     
 };

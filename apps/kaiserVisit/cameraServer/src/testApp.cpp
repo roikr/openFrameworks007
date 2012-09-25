@@ -2,7 +2,7 @@
 #include "ofxXmlSettings.h"
 
 #define EXTENSION "jpg"
-
+#define PROCESS_DELAY 30000
 
 
 //--------------------------------------------------------------
@@ -20,6 +20,7 @@ void testApp::setup(){
         camHeight = xml.getAttribute("camera", "height", 1200);
         photoWidth = xml.getAttribute("photo", "width", 800.0);
         photoHeight = xml.getAttribute("photo", "height", 600.0);
+        lifetime = xml.getAttribute("photo", "lifetime", 4.0);
         vidGrabber.setVerbose(true);
         vidGrabber.initGrabber(camWidth,camHeight);
         //xml.getAttribute("settings", "root", "");
@@ -47,6 +48,7 @@ void testApp::setup(){
     bTrigger = false;
    //	videoInverted 	= new unsigned char[camWidth*camHeight*3];
 //	videoTexture.allocate(camWidth,camHeight, GL_RGB);
+    processTimer = ofGetElapsedTimeMillis();
 }
 
 
@@ -210,6 +212,35 @@ void testApp::update(){
 		}
 
     }
+    
+    if (ofGetElapsedTimeMillis()-processTimer>PROCESS_DELAY) {
+        cout << "processing" << endl;
+        processTimer = ofGetElapsedTimeMillis();
+        
+        ofDirectory dir(ofToDataPath("photos"));
+        dir.listDir();
+        for (int i=0;i<dir.size();i++) {
+            float diff = difftime(time(NULL),dir.getFile(i).getPocoFile().getLastModified().epochTime()) / 60;
+            if (diff>lifetime) {
+                dir.getFile(i).remove();
+                
+                ofFile file(ofToDataPath("thumbs/"+dir.getName(i)));
+                if (file.exists()) {
+                    file.remove();
+                }
+                            
+                ofxOscMessage m;
+                
+                m.setAddress("/remove");
+                m.addStringArg(ofSplitString(dir.getName(i), ".").front());
+                for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+                    iter->second->sendMessage(m);
+                }
+                
+            }
+        }
+        
+    }
 }
 
 
@@ -217,13 +248,14 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofSetHexColor(0xffffff);
-
-    vidGrabber.draw(0,0,ofGetWidth(),ofGetHeight());
-
-
+    ofPushMatrix();
+    float scale = ofGetWidth()/vidGrabber.getWidth();
+    ofScale(scale, scale);
+	vidGrabber.draw(0,0);
     if (image.getTextureReference().bAllocated()) {
         image.draw(40,40);
     }
+    ofPopMatrix();
 //	videoTexture.draw(20+camWidth,20,camWidth,camHeight);
 }
 

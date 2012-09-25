@@ -275,29 +275,41 @@ void ofxScrollCollection::touchDown(ofTouchEventArgs &touch) {
 }
 
 void ofxScrollCollection::touchMoved(ofTouchEventArgs &touch){
-    float contentLength = getContentLength();
-    float rectLength = getScalar(ofVec2f(prefs.width,prefs.height));
-    //            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
     
-    if (rectLength<contentLength) { 
-        if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id) {
-            downIter = items.end();
-            state = SLIDER_STATE_PANNING;
-            ofVec2f posDiff = degenerate(ofVec2f(touch.x,touch.y) - ofVec2f(this->touch.x,this->touch.y));
-            offset+=posDiff;
-            this->touch = touch;
-            float newTime = ofGetElapsedTimef();
-                        
-            if (newTime-time>0) {
-                velocity = posDiff/(newTime-time);
-            } else {
-                velocity = ofVec2f(0,0);
-            }
-                        
-            time = newTime;
+    ofVec2f movePos(touch.x,touch.y);
+    if (state == SLIDER_STATE_IDLE) {
+        touchDown(touch);
+    } else if ((state==SLIDER_STATE_DOWN || state==SLIDER_STATE_PANNING) && touch.id == this->touch.id)  {
+        if (!ofRectangle(0,0,prefs.width,prefs.height).inside(movePos)) {
+            touchUp(touch);
+        } else {
+            float contentLength = getContentLength();
+            float rectLength = getScalar(ofVec2f(prefs.width,prefs.height));
+            //            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
             
+            if (rectLength<contentLength) { 
+                
+                downIter = items.end();
+                state = SLIDER_STATE_PANNING;
+                ofVec2f posDiff = degenerate(movePos - ofVec2f(this->touch.x,this->touch.y));
+                offset+=posDiff;
+                this->touch = touch;
+                float newTime = ofGetElapsedTimef();
+                
+                if (newTime-time>0) {
+                    velocity = posDiff/(newTime-time);
+                } else {
+                    velocity = ofVec2f(0,0);
+                }
+                
+                time = newTime;
+                    
+                
+            }
         }
     }
+    
+    
 }
 
 void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
@@ -310,62 +322,70 @@ void ofxScrollCollection::touchUp(ofTouchEventArgs &touch){
 
         
         downIter = items.end();
-        float v0=velocity.length();
-        if (v0>STOP_VELOCITY) {
-            
-            time = ofGetElapsedTimef();
-            easeStart = getScalar(offset);
-            
-            float b= log(DECAY_FACTOR)*ofGetFrameRate(); // because we decay the velocity each frame 
-            float t = log(STOP_VELOCITY/v0)/b; // estimate time for stop
-            float dist = v0/b*(exp(t*b)-1); // estimate stop distance
-            
-//            cout << v0 << "\t" << t << "\t" << dist << endl;
-            
-            float contentLength = getContentLength();
-            float rectLength = getScalar(ofVec2f(prefs.width,prefs.height));
-//            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
-                
-            if (rectLength>contentLength) {
-//                if (getScalar(velocity)>0) {
-//                    if (getScalar(offset)+dist>rectLength-contentLength) {
-//                        state = SLIDER_STATE_BACK_TRACKING;
-//                        easeTarget = rectLength-contentLength;
-//                    } else {
-//                        state = SLIDER_STATE_ANIMATING;
-//                    }
-//                } else {
-//                    if (getScalar(offset)-dist<0) {
-//                        state = SLIDER_STATE_BACK_TRACKING;
-//                        easeTarget = 0;
-//                    } else {
-//                        state = SLIDER_STATE_ANIMATING;
-//                    }
-//                } 
+        
+        float contentLength = getContentLength();
+        float rectLength = getScalar(ofVec2f(prefs.width,prefs.height));
+        time = ofGetElapsedTimef();
+        easeStart = getScalar(offset);
+        
+        if (contentLength>rectLength) { 
+            if (getScalar(offset)>0) {
+                state = SLIDER_STATE_BACK_TRACKING;
+                easeTarget = 0;
+            } else if (getScalar(offset)<rectLength-contentLength) {
+                state = SLIDER_STATE_BACK_TRACKING;
+                easeTarget = rectLength-contentLength;
             } else {
-                if (getScalar(velocity)>0) {
-                    if (getScalar(offset)+dist>0) {
-                        state = SLIDER_STATE_BACK_TRACKING;
-                        easeTarget = 0;
-                    } else {
-                        state = SLIDER_STATE_ANIMATING;
-                    }
-                } else {
-                    if (getScalar(offset)-dist<rectLength-contentLength) {
-                        state = SLIDER_STATE_BACK_TRACKING;
-                        easeTarget = rectLength-contentLength;
-                    } else {
-                        state = SLIDER_STATE_ANIMATING;
-                    }
-                } 
+                float v0=velocity.length();
                 
+                if (v0<STOP_VELOCITY) {
+                    state = SLIDER_STATE_IDLE;
+                } else {
+                    
+                    float b= log(DECAY_FACTOR)*ofGetFrameRate(); // because we decay the velocity each frame 
+                    float t = log(STOP_VELOCITY/v0)/b; // estimate time for stop
+                    float dist = v0/b*(exp(t*b)-1); // estimate stop distance
+                    //            cout << v0 << "\t" << t << "\t" << dist << endl;
+                    //            float rectPos = getScalar(ofVec2f(prefs.rect.x,prefs.rect.y));
+                    if (getScalar(velocity)>0) {
+                        if (getScalar(offset)+dist>0) {
+                            state = SLIDER_STATE_BACK_TRACKING;
+                            easeTarget = 0;
+                        } else {
+                            state = SLIDER_STATE_ANIMATING;
+                        }
+                    } else {
+                        if (getScalar(offset)-dist<rectLength-contentLength) {
+                            state = SLIDER_STATE_BACK_TRACKING;
+                            easeTarget = rectLength-contentLength;
+                        } else {
+                            state = SLIDER_STATE_ANIMATING;
+                        }
+                    } 
+                }
+                    
             }
-              
         } else {
-            state = SLIDER_STATE_IDLE;
+//            if (getScalar(velocity)>0) {
+//                if (getScalar(offset)+dist>rectLength-contentLength) {
+//                    state = SLIDER_STATE_BACK_TRACKING;
+//                    easeTarget = rectLength-contentLength;
+//                } else {
+//                    state = SLIDER_STATE_ANIMATING;
+//                }
+//            } else {
+//                if (getScalar(offset)-dist<0) {
+//                    state = SLIDER_STATE_BACK_TRACKING;
+//                    easeTarget = 0;
+//                } else {
+//                    state = SLIDER_STATE_ANIMATING;
+//                }
+//            } 
+
         }
     }
 }
+
 
 void ofxScrollCollection::touchDoubleTap(ofTouchEventArgs &touch){
     ofVec2f pos(touch.x,touch.y);

@@ -48,4 +48,7 @@ class testApp : public ofBaseApp{
     bool bSerial;
     int blinkCounter;
     int blinkTimer;
+    
+    int processTimer;
+    float lifetime;
 };
