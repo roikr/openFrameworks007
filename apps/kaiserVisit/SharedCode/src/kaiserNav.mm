@@ -38,36 +38,30 @@ void kaiserNav::updateOverlays() {
     string subTitleName = imageName+"_SC_"+lang;
     string titleName = imageName+"_C_"+lang;
     
-    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
-    bool bHasSubtitle = false;
-    for (vector<layer>::iterator liter=titles->layers.begin(); liter!=titles->layers.end(); liter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
+    title = doc.getBitmapItem(titleName+".png");
+    subTitle = doc.getBitmapItem(subTitleName+".png");
+    extSubTitle = doc.getBitmapItem(subTitleName+"_EX.png");
+    
+    
+    
+    ofxSymbolInstance  *titlesButtons = interfaceLayout.getChild("titleButtons");
+    for (vector<layer>::iterator liter=titlesButtons->layers.begin(); liter!=titlesButtons->layers.end(); liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->frames[liter->currentFrame].instances.begin(); iter!=liter->frames[liter->currentFrame].instances.end();iter++) {
             iter->bVisible = false;
-            if (iter->name == subTitleName) {
-                iter->bVisible = bSubTitle;
-                bHasSubtitle = true;
-            }
         }
     }
-    titles->getChild(titleName)->bVisible = true;
-    titles->getChild("TITLE_STRIP")->bVisible = true;
-    if (bHasSubtitle) {
-        titles->getChild("MARKER_PLUS_"+lang)->bVisible = !bSubTitle;
-        titles->getChild("MARKER_MINUSE_"+lang)->bVisible = bSubTitle;
+
+    if (subTitle) {
+        
+        titlesButtons->getChild("MARKER_PLUS_"+lang)->bVisible = !bSubTitle;
+        titlesButtons->getChild("MARKER_MINUSE_"+lang)->bVisible = bSubTitle;
     }
     
-    for (vector<layer>::iterator liter=screenLayout.layers.begin(); liter!=screenLayout.layers.end(); liter++) {
-        for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
-            iter->bVisible = false;
-            if (iter->name == subTitleName) {
-                iter->bVisible = bSubTitle;
-            }
-        }
-    }
-    
-    screenLayout.getChild(titleName)->bVisible = true;
-    screenLayout.getChild("TITLE_STRIP")->bVisible = true;
-    
+    interfaceLayout.getChildMat(interfaceLayout.getChild("titleMarker"), titleMat);
+    interfaceLayout.getChildMat(interfaceLayout.getChild("subTitleMarker"), subTitleMat);
+    screenLayout.getChildMat(screenLayout.getChild("titleMarker_"+lang), extTitleMat);
+    screenLayout.getChildMat(screenLayout.getChild("subTitleMarker"), extSubTitleMat);
+        
 //    ofVec2f camOffset = cam.offset*cam.zoom+0.5*ofVec2f(ofGetWidth(),ofGetHeight());
     
     extMat = ofMatrix4x4::newTranslationMatrix(0.5*ofVec2f(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -198,7 +192,8 @@ void kaiserNav::setup(){
 	lang = "HE";
     imageName = imagesMap.begin()->first;
     imageNum = imagesMap.begin()->second;
-    
+    title = 0;
+    subTitle = 0;
     
     
     
@@ -300,23 +295,19 @@ void kaiserNav::setImage(string name) {
 
 void kaiserNav::setState(int state) {
     
-    interfaceLayout.getChild("idle")->bVisible = false;
-    interfaceLayout.getChild("tutorial")->bVisible = false;
+    
 
     this->state = state;
     
-    ofxSymbolInstance *titles = interfaceLayout.getChild("titles");
-    titles->bVisible = state!=STATE_IDLE;
+    interfaceLayout.getChild("idle")->bVisible = state==STATE_IDLE;
+    interfaceLayout.getChild("tutorial")->bVisible = state==STATE_TUTORIAL;
+    interfaceLayout.getChild("titleStrip")->bVisible = state!=STATE_IDLE;
+    interfaceLayout.getChild("titleButtons")->bVisible = state!=STATE_IDLE;
+   
     
     switch (this->state) {
         case STATE_IDLE:
             bCaptionActive = false;
-            interfaceLayout.getChild("idle")->bVisible = true;
-            break;
-            
-        case STATE_TUTORIAL:
-            
-            interfaceLayout.getChild("tutorial")->bVisible = true;
             break;
             
         default:
@@ -367,6 +358,22 @@ void kaiserNav::draw2nd() {
             
             ofEnableAlphaBlending();
             screenLayout.draw();
+            
+            
+            if (title) {
+                ofPushMatrix();
+                glMultMatrixf(extTitleMat.getPtr());
+                title->getImage().draw(0,0);
+                ofPopMatrix();
+            }
+            
+            if (extSubTitle && bSubTitle) {
+                ofPushMatrix();
+                glMultMatrixf(extSubTitleMat.getPtr());
+                extSubTitle->getImage().draw(0,0);
+                ofPopMatrix();
+            }
+                
             
             
             if (bCaptionActive) {
@@ -454,9 +461,25 @@ void kaiserNav::draw() {
     
     interfaceLayout.draw();
     
-    if (bCaptionActive) {
-        floating.draw();
-        caption.draw();
+    if (state!=STATE_IDLE) {
+        if (title) {
+            ofPushMatrix();
+            glMultMatrixf(titleMat.getPtr());
+            title->getImage().draw(0,0);
+            ofPopMatrix();
+        }
+        
+        if (subTitle && bSubTitle) {
+            ofPushMatrix();
+            glMultMatrixf(subTitleMat.getPtr());
+            subTitle->getImage().draw(0,0);
+            ofPopMatrix();
+        }
+        
+        if (bCaptionActive) {
+            floating.draw();
+            caption.draw();
+        }
     }
     
     ofPopMatrix();
@@ -472,7 +495,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
     
     timer = ofGetElapsedTimeMillis()+30000;
     
-    
+    vector<ofxSymbolInstance *> hits;
     
     switch (state) {
         case STATE_IDLE:
@@ -481,7 +504,13 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             setState(STATE_TUTORIAL);
             break;
         case STATE_TUTORIAL:
-            setState(STATE_NAVIGATION);
+            hits.clear();
+            if( interfaceLayout.getChild("tutorial")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+                if (hits.front()->name=="close") {
+                     setState(STATE_NAVIGATION);
+                }
+            }
+           
             break;
         case STATE_NAVIGATION: {
             cam.touchDown(touch); //fw event to cam
@@ -492,7 +521,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             
             //    cout << p.x << "\t" << p.y << endl;
             
-            vector<ofxSymbolInstance *> hits;
+            hits.clear();
             
             if (bCaptionActive && caption.hitTest(ofVec2f(touch.x,touch.y),hits)) {
                 bCaptionActive =false;
@@ -511,6 +540,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
 //            titles->bVisible = false;
             hits.clear();
             if (interfaceLayout.hitLayer(interfaceLayout.getLayer("thumbs"),ofVec2f(touch.x,touch.y),hits)) {
+                hits.front()->gotoAndStop(1);
                 if (hits.front()->name != imageName) {
                     setImage(hits.front()->name);
                 }
@@ -540,7 +570,7 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             
             
             hits.clear();
-            if( interfaceLayout.getChild("titles")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+            if( interfaceLayout.getChild("titleButtons")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
                 for (vector<ofxSymbolInstance *>::iterator iter = hits.begin();iter!=hits.end();iter++) {
                     if ((*iter)->name == "MARKER_MINUSE_"+lang || (*iter)->name == "MARKER_PLUS_"+lang) {
                         bSubTitle = !bSubTitle;
@@ -572,6 +602,11 @@ void kaiserNav::touchMoved(ofTouchEventArgs &touch){
 
 void kaiserNav::touchUp(ofTouchEventArgs &touch){
 	cam.touchUp(touch);	//fw event to cam
+    
+    layer *ly = interfaceLayout.getLayer("thumbs");
+    for (vector<ofxSymbolInstance>::iterator iter=ly->frames[ly->currentFrame].instances.begin(); iter!=ly->frames[ly->currentFrame].instances.end();iter++) {
+        iter->gotoAndStop(0);
+    }
 }
 
 

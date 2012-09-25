@@ -74,6 +74,13 @@ public:
     string imageName;
     string captionName;
     bool bSubTitle;
+    ofxBitmapItem *title;
+    ofxBitmapItem *subTitle;
+    ofxBitmapItem *extSubTitle;
+    ofMatrix4x4 titleMat;
+    ofMatrix4x4 subTitleMat;
+    ofMatrix4x4 extTitleMat;
+    ofMatrix4x4 extSubTitleMat;
     
     int state;
     int timer;
