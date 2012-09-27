@@ -11,7 +11,6 @@
 enum {
     STATE_IDLE,
     STATE_ANIMATING_DRAG,
-    STATE_ANIMATING_SCALE,
     STATE_ANIMATING_BACK
 };
 
@@ -108,13 +107,32 @@ void ofxDragScale::setMaxZoom(float maxZoom) {
     cout << "maxZoom: " << this->maxZoom << endl;
 }
 
+
+void ofxDragScale::transform(ofVec2f trans,float scl,ofVec2f anchor) {
+    
+    
+    ofMatrix4x4 temp(mat);
+    temp.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));  
+    
+    ofVec2f vec = temp.preMult(ofVec3f(anchor))-mat.preMult(ofVec3f(anchor));
+    temp.translate(trans-vec);
+    
+    mat = temp;
+    imat = temp.getInverse();
+    
+    xformMat.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));
+    xformMat.translate(trans-vec);
+    
+    
+}
+
 void ofxDragScale::touchDown(ofTouchEventArgs &touch) {
     
     
  
         
-    if (state!=STATE_ANIMATING_SCALE &&  inside(ofVec2f(touch.x,touch.y))) {
-        if (!shouldDecay()) {
+    if ((state==STATE_IDLE ||  state==STATE_ANIMATING_DRAG) &&  inside(ofVec2f(touch.x,touch.y))) {
+        if (!shouldDecay(mat)) {
             gmat = mat;
             
         }
@@ -126,13 +144,14 @@ void ofxDragScale::touchDown(ofTouchEventArgs &touch) {
         state = STATE_IDLE;
         bMoving = false;
         lastMove = ofGetElapsedTimeMillis();
+        velocity = ofVec2f(0,0);
     }
 };
 
 void ofxDragScale::touchMoved(ofTouchEventArgs &touch) {
     if (!touches.empty()) {
         
-        if (!shouldDecay()) {
+        if (!shouldDecay(mat)) {
             gmat = mat;
             
         }      
@@ -171,11 +190,11 @@ void ofxDragScale::touchMoved(ofTouchEventArgs &touch) {
                     velocity = translation/(float)(lastMove-startMove)*1000.0;
                    
                     
-                    if (shouldDecay()) {
+                    if (shouldDecay(mat)) {
                         trans *= 0.5;
                     }
 
-                    transform(ofVec2f(0,0),trans,1.0);
+                    transform(trans,1.0);
                     
                    
                 }    break;
@@ -188,15 +207,19 @@ void ofxDragScale::touchMoved(ofTouchEventArgs &touch) {
                     
                     
                     ofVec2f anchor = imat.preMult(ofVec3f(0.5*(p1+q)));
-                    
                     float scl = qp2.length()/qp1.length();
-                    
                     ofVec2f trans(0.5*(qp1-qp2));
-                    if (shouldDecay()) {
+                    
+                    
+                    
+                    
+                    
+                    
+                    if (shouldDecay(mat)) {
                         trans *= 0.5;
                     }
 
-                    transform(anchor,trans,scl ); 
+                    transform(trans,scl,anchor); 
                     
                 } break;
                 default:
@@ -226,7 +249,7 @@ void ofxDragScale::touchUp(ofTouchEventArgs &touch) {
                 centerMat.preMult(ofMatrix4x4::newScaleMatrix(minZoom, minZoom, 1.0));
                 
                 animateBack(centerMat);
-            } else if (shouldDecay()) {
+            } else if (shouldDecay(mat)) {
                 animateBack(gmat);               
             } else if ( velocity.length()>0 && ofGetElapsedTimeMillis()-lastMove<100) {
 //                cout << velocity.length() << endl;
@@ -249,13 +272,14 @@ void ofxDragScale::touchCancelled(ofTouchEventArgs &touch) {
 
 void ofxDragScale::update() {
 	
+        
     if (state == STATE_ANIMATING_DRAG) {
-        if (shouldDecay()) {
+        if (shouldDecay(mat)) {
             animateBack(gmat);
         } else {
             gmat = mat;
             if (velocity.length()>1) {
-                transform(ofVec2f(0,0),velocity/ofGetFrameRate(), 1.0);
+                transform(velocity/ofGetFrameRate(), 1.0);
                 velocity*=0.8;
                 
             } else {
@@ -266,26 +290,18 @@ void ofxDragScale::update() {
 		
 	}	
     
-        
-    if (state == STATE_ANIMATING_SCALE) {
-        penner.update();
-        ofVec2f anchor = imat.preMult(ofVec3f(downPos));
-        transform(anchor, ofVec2f(0,0), penner.getParam(PARAM_SCALE)/mat.getScale().x);
-        
-        if (!penner.getIsEasing(PARAM_SCALE)) {
-            state = STATE_IDLE;
-        } 
-        
-    }
-    
+            
     if (state == STATE_ANIMATING_BACK) {
+       
+        gmat = mat;
         penner.update();
-        //ofVec2f anchor = imat.preMult(ofVec3f(downPos));
-        transform(ofVec2f(0,0), ofVec2f(penner.getParam(PARAM_X)-mat.getTranslation().x,penner.getParam(PARAM_Y)-mat.getTranslation().y), penner.getParam(PARAM_SCALE)/mat.getScale().x);
+        transform(ofVec2f(penner.getParam(PARAM_X)-mat.getTranslation().x,penner.getParam(PARAM_Y)-mat.getTranslation().y), penner.getParam(PARAM_SCALE)/mat.getScale().x);
         
         if (!penner.getIsEasing(PARAM_X)) {
             state = STATE_IDLE;
         } 
+               
+        
         
     }
     
@@ -295,66 +311,27 @@ bool ofxDragScale::getIsAnimating() {
     return state!=STATE_IDLE;
 };
 
-bool ofxDragScale::shouldDecay() {
-    ofVec2f topLeft(worldToScreen(ofVec2f(rect.x,rect.y)));
-    ofVec2f bottomRight(worldToScreen(ofVec2f(rect.x+rect.width,rect.y+rect.height)));
+bool ofxDragScale::shouldDecay(ofMatrix4x4 mat) {
+    ofVec2f topLeft(mat.preMult(ofVec3f(rect.x,rect.y)));
+    ofVec2f bottomRight(mat.preMult(ofVec3f(rect.x+rect.width,rect.y+rect.height)));
     
     return mat.getScale().x>maxZoom || topLeft.x>window.x || topLeft.y>window.y || bottomRight.x<window.x+window.width || bottomRight.y<window.y+window.height;
         
 }
 
-void ofxDragScale::transform(ofVec2f anchor,ofVec2f trans,float scl) {
-    
-        
-    
-    ofMatrix4x4 temp(mat);
-    temp.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));  
-    
-    ofVec2f vec = temp.preMult(ofVec3f(anchor))-mat.preMult(ofVec3f(anchor));
-    temp.translate(trans-vec);
-    
-    mat = temp;
-    imat = temp.getInverse();
-    
-    xformMat.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));
-    xformMat.translate(trans-vec);
-        
-    
-}
 
 
-/*
-bool ofxDragScale::transform(ofVec2f anchor,ofVec2f trans,float scl) {
-    
-   
-    
-    ofMatrix4x4 temp(mat);
-    temp.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));  
-    
-    ofVec2f vec = temp.preMult(ofVec3f(anchor))-mat.preMult(ofVec3f(anchor));
-
-    
-    temp.translate(trans-vec);
-        
-    ofMatrix4x4 itemp = temp.getInverse();
-       
-    if (temp.getScale().x >= minZoom && temp.getScale().x <= maxZoom && rect.inside(itemp.preMult(screenMat.preMult(ofVec3f(window.getCenter()))))) {
-        mat = temp;
-        imat = itemp;
-        xformMat.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));
-        xformMat.translate(trans-vec);
-        return true;
-    }
-    
-    return false;
-}
-*/
 
 void ofxDragScale::animateScale(ofVec2f pos,float scale) {
-    state = STATE_ANIMATING_SCALE;
-    penner.setup(PARAM_SCALE, mat.getScale().x);
-    penner.start(PARAM_SCALE, EASE_OUT_QUAD, scale);
-    downPos = pos;
+
+    ofMatrix4x4 target(mat);
+    float scl = scale/mat.getScale().x;
+    target.preMult(ofMatrix4x4::newScaleMatrix(scl, scl, 1.0));  
+  
+    ofVec2f vec = target.preMult(imat.preMult(ofVec3f(pos)))-pos;
+    target.translate(-vec);
+    animateBack(target);
+    
     
 }
 

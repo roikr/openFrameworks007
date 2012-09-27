@@ -18,7 +18,6 @@
 
 enum {
     STATE_IDLE,
-    STATE_TUTORIAL,
     STATE_NAVIGATION
 };
 
@@ -78,7 +77,10 @@ void kaiserNav::updateOverlays() {
         floating.setAnchor(cam.worldToScreen(trans)); 
         
         ofRectangle rect = caption.getBoundingBox();
-        caption.mat.makeTranslationMatrix(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
+        ofVec2f capTrans(floating.getPos()-0.5*ofVec2f(rect.width,rect.height));
+        capTrans.x = round(capTrans.x);
+        capTrans.y = round(capTrans.y);
+        caption.mat.makeTranslationMatrix(capTrans);
         caption.alphaMultiplier =  floating.getFade();
         
         if (floating.getFade()<=0) {
@@ -89,7 +91,11 @@ void kaiserNav::updateOverlays() {
         ofVec3f extAnchor = extMat.preMult(trans);
         extMarker.mat.makeTranslationMatrix(extAnchor);
         ofVec3f extPos = 0.5*ofVec2f(SCREEN_WIDTH, SCREEN_HEIGHT)+floating.getVec()*EXTERNAL_ZOOM;
-        extCaption.mat.makeTranslationMatrix(extPos-0.5*ofVec2f(rect.width,rect.height));
+        
+        capTrans =ofVec2f(extPos-0.5*ofVec2f(rect.width,rect.height));
+        capTrans.x = round(capTrans.x);
+        capTrans.y = round(capTrans.y);
+        extCaption.mat.makeTranslationMatrix(capTrans);
         extCaption.alphaMultiplier = floating.getFade();
 
         ofVec2f vec = extAnchor-extPos;
@@ -300,19 +306,12 @@ void kaiserNav::setState(int state) {
     this->state = state;
     
     interfaceLayout.getChild("idle")->bVisible = state==STATE_IDLE;
-    interfaceLayout.getChild("tutorial")->bVisible = state==STATE_TUTORIAL;
     interfaceLayout.getChild("titleStrip")->bVisible = state!=STATE_IDLE;
     interfaceLayout.getChild("titleButtons")->bVisible = state!=STATE_IDLE;
-   
+    interfaceLayout.getChild("tutorial")->bVisible = state!=STATE_IDLE;
+    bCaptionActive = false;
     
-    switch (this->state) {
-        case STATE_IDLE:
-            bCaptionActive = false;
-            break;
-            
-        default:
-            break;
-    }
+    
 }
 
 
@@ -348,7 +347,6 @@ void kaiserNav::draw2nd() {
     
     switch (state) {
         case STATE_NAVIGATION:
-        case STATE_TUTORIAL:
             ofPushMatrix();
             glMultMatrixf(extMat.getPtr());
             ofTranslate(ofVec2f(-0.5*ofVec2f(images[imageNum].getWidth(),images[imageNum].getHeight())));
@@ -501,17 +499,9 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
         case STATE_IDLE:
             player.stop();
             setImage(imageName);
-            setState(STATE_TUTORIAL);
+            setState(STATE_NAVIGATION);
             break;
-        case STATE_TUTORIAL:
-            hits.clear();
-            if( interfaceLayout.getChild("tutorial")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
-                if (hits.front()->name=="close") {
-                     setState(STATE_NAVIGATION);
-                }
-            }
-           
-            break;
+        
         case STATE_NAVIGATION: {
             cam.touchDown(touch); //fw event to cam
             
@@ -579,6 +569,13 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
                     }
                 }
                 
+            }
+            
+            hits.clear();
+            if( interfaceLayout.getChild("tutorial")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+                if (hits.front()->name=="close") {
+                    interfaceLayout.getChild("tutorial")->bVisible = false;
+                }
             }
 
             

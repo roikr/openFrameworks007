@@ -46,8 +46,8 @@ public:
 	
 private:
 	
-    bool shouldDecay();
-	void transform(ofVec2f anchor,ofVec2f trans,float scl);
+    bool shouldDecay(ofMatrix4x4 mat);
+	void transform(ofVec2f trans,float scl,ofVec2f anchor=ofVec2f(0,0));
     
     vector<ofTouchEventArgs> touches;
     
@@ -76,10 +76,9 @@ private:
     ofVec2f velocity;
     
     
-    ofxPenner penner;
-    ofVec2f downPos;
-    
+    ofxPenner penner;    
     ofMatrix4x4 gmat;
+    
     
     
 };

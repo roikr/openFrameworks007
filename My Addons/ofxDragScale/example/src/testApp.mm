@@ -21,7 +21,7 @@ void testApp::setup(){
     
 //    drag.setup(ofRectangle(200,200,bikers.getWidth(),bikers.getHeight()),ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
     
-    drag.setup(window,image.getWidth(),image.getHeight(),ofMatrix4x4::newScaleMatrix(2, 2, 1.0),mat);
+    drag.setup(window,image.getWidth()+200,image.getHeight(),ofMatrix4x4::newScaleMatrix(2, 2, 1.0),mat);
     
     drag.setMaxZoom(10);
 	
@@ -66,7 +66,7 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-    drag.animateScale(ofVec2f(touch.x,touch.y), 2);
+    drag.animateScale(ofVec2f(touch.x,touch.y), 5);
 }
 
 //--------------------------------------------------------------
