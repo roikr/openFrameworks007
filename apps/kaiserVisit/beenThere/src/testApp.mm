@@ -15,11 +15,16 @@ using Poco::Exception;
 
 #define OFX_SMTP_PORT 25
 
-#define MENU_INSET 15.0
-#define MENU_SEPERATOR 15.0
+#define MENU_INSET 10.0
+#define MENU_SEPERATOR 10.0
 #define EXTENNSION "jpg"
 #define IDLE_DELAY 90000
 #define SHARE_DELAY 180000
+
+#define MENU_WIDTH 140
+#define MENU_HEIGHT 768
+#define PHOTO_WIDTH 864
+#define PHOTO_HEIGHT 540
 
 enum {
     STATE_SLEEP,
@@ -96,13 +101,9 @@ void testApp::setup(){
     
     selectedFrame = doc.getBitmapItem("TAMB_STROKE.png");
     
-    ofxBitmapItem *overlayItem = doc.getBitmapItem("MIGDAL_OVERLAY_HE.png");
-    
-    imageRect = ofRectangle(0,0,overlayItem->getWidth(),overlayItem->getHeight());
     camMat = screenMat;
     camMat.preMult(layout.getChild("photo")->mat);
     
-    ofxBitmapItem *menuItem = doc.getBitmapItem("MENU_BACKGROUND.png");
     menuMat = screenMat;
     menuMat.preMult(layout.getChild("menu")->mat);
 //    cout << menuMat << endl;
@@ -110,8 +111,8 @@ void testApp::setup(){
 //    cout << pos << endl;
 //    
 //    ofRectangle menuRect(pos.x,pos.y,menuItem.width,menuItem.height);
-    thumbs.setup(scrollCollectionPrefs(true,menuItem->getWidth(),menuItem->getHeight(),MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
-    objects.setup(scrollCollectionPrefs(true,menuItem->getWidth(),menuItem->getHeight(),MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    thumbs.setup(scrollCollectionPrefs(true,MENU_WIDTH,MENU_HEIGHT,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
+    objects.setup(scrollCollectionPrefs(true,MENU_WIDTH,MENU_HEIGHT,MENU_SEPERATOR,MENU_INSET,5,0x00FF00,100));
     
 //    ofDirectory dir;
 //    dir.allowExt("jpg");
@@ -149,8 +150,12 @@ void testApp::setup(){
     
     
     shareLayout = doc.getSymbolItem("ShareLayout")->createInstance("shareLayout", screenMat);
+    success = doc.getSymbolItem("Success")->createInstance("success", screenMat);
     shareInterface = shareLayout.getChild("shareInterface");
-    shareLayout.getChildMat(shareLayout.getChild("overlay"), shareMat);
+    
+    ofxSymbolInstance *overlay = shareLayout.getChild("overlay");
+    
+    shareLayout.getChildMat(overlay, shareMat);
     
     mailInterface = doc.getSymbolItem("MailInterface")->createInstance("mailInterface", screenMat);
     
@@ -161,9 +166,11 @@ void testApp::setup(){
     bTouchObject = false;
     state = STATE_SLEEP;
   
-    tex.allocate(800, 600, GL_RGBA);
+    imageRect = ofRectangle(0,0,PHOTO_WIDTH,PHOTO_HEIGHT);
+    ofImage &overlayImage = doc.getBitmapItem("MIGDAL_OVERLAY_EN.png")->getImage();
+    tex.allocate(overlayImage.getWidth(), overlayImage.getHeight(), GL_RGBA);
     fbo.setup(tex.getWidth(), tex.getHeight());
-    shareImage.allocate(800, 600, OF_IMAGE_COLOR_ALPHA);
+    shareImage.allocate(overlayImage.getWidth(), overlayImage.getHeight(), OF_IMAGE_COLOR_ALPHA);
     bShare = false;
     
 //    mail.setup();
@@ -186,11 +193,19 @@ void testApp::setup(){
 	keyboard->setVisible(false);
 //	keyboard->setBgColor(255, 255, 255, 0);
 	keyboard->setFontColor(255,255,255, 255);
-	keyboard->setFontSize(20);
+	keyboard->setFontSize(52);
     keyboard->setText("roikr75@gmail.com");
     
     activeIter = items.rend();
     bNewItem = false;
+    
+    defaultTexts["MAIL_SUBJECT_HE"]="הייתי שם – תערוכת ביקור הקיסר במגדל דוד";
+    defaultTexts["MAIL_SUBJECT_EN"]="I Was There – the Kaiser Exhibition at the Tower of David Museum";
+    defaultTexts["MAIL_BODY_HE"]="<html><head/><body>שלום,<br>מצורפת התמונה שיצרת במסגרת התערוכה ביקור הקיסר במגדל דוד<br>כל טוב.<br/>שלך,<br>הקיסר וילהלם השני<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    defaultTexts["MAIL_BODY_EN"]="<html><head/><body>Shalom,<br>Here is your photo from the Kaiser Exhibition at the Tower of David Museum<br>Best wishes,<br>Kaiser Wilhelm II</body></html>";
+    defaultTexts["FACEBOOK_HE"]="גם אני פגשתי את הקיסר at Tower of David Museum";
+    defaultTexts["FACEBOOK_EN"]="I met the Kaiser at the Tower of David Museum!";
+    
 }
 
 //--------------------------------------------------------------
@@ -217,7 +232,7 @@ void testApp::update(){
                 bool bNewImage = m.getAddress() == "/new";
                 if ( bNewImage || m.getAddress() == "/add") {
                     cout << m.getAddress() << "\t" << m.getArgAsString(0) << endl;
-                    if (bNewImage &&  state == STATE_SLEEP) {
+                    if (bNewImage &&  state != STATE_IMAGES) {
                         state = STATE_NEW_IMAGE;
                         thumbs.deselect();
                         actionTime = ofGetElapsedTimeMillis();
@@ -322,6 +337,34 @@ if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
 } 
 */
 
+void testApp::urlResponse(ofHttpResponse &response) {
+    if (response.status == 200) {
+        string url = response.request.url;
+        vector<string> split = ofSplitString(url, "/");
+        if (split.size()>1) {
+            if (*(split.end()-2)=="thumbs") {
+                ofImage thumb;
+                thumb.loadImage(response.data);
+                string name = ofSplitString(split.back(), ".").front();
+                cout << "urlResponse: " << name << endl;
+                int itemID = thumbs.addItem(thumb,name);
+                if (state==STATE_NEW_IMAGE) {
+                    thumbs.select(itemID);
+                }
+                refresh();
+            } else {
+                image.loadImage(response.data);
+            }
+        }
+        
+    } else {
+        cout << response.request.url << "\t" <<  response.error << endl;
+    }
+    
+    
+}
+
+
 //--------------------------------------------------------------
 void testApp::draw(){	
     ofSetHexColor(0xFFFFFF);
@@ -409,7 +452,7 @@ void testApp::draw(){
         
         case STATE_SHARE:
         
-        case STATE_FACEBOOK:
+        
            
            
 
@@ -423,26 +466,19 @@ void testApp::draw(){
             }
             
             ofPopMatrix();
+            success.draw();
             
+            break;
             
+        case STATE_FACEBOOK:
+            ofPushMatrix();
+            glMultMatrixf(screenMat.getPtr());
+            fbBackground->getImage().draw(0, 0);
+            ofPopMatrix();
             break;
             
         case STATE_MAIL:
         
-            
-            
-            
-            shareLayout.draw();
-            
-            ofPushMatrix();
-            glMultMatrixf(shareMat.getPtr());
-            
-            if( shareImage.bAllocated()) {
-                shareImage.draw(0, 0);
-            }
-            
-            ofPopMatrix();
-            
             mailInterface.draw();
             
             break;
@@ -466,6 +502,17 @@ void testApp::refresh() {
 
     
     ofxSymbolInstance *language = layout.getChild("langs");
+    for (vector<layer>::iterator liter=language->layers.begin(); liter!=language->layers.end(); liter++) {
+        for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
+            if (iter->name.size()==2) {
+                iter->bVisible = iter->name!=lang;
+            } else {
+                iter->bVisible = iter->name==lang+"_S";
+            }
+        }
+    }
+    
+    language = shareLayout.getChild("langs");
     for (vector<layer>::iterator liter=language->layers.begin(); liter!=language->layers.end(); liter++) {
         for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
             if (iter->name.size()==2) {
@@ -525,7 +572,7 @@ void testApp::refresh() {
             
         }    
         case STATE_SHARE:
-        case STATE_FACEBOOK:
+        
         
             shareInterface->bVisible = true;
             
@@ -535,11 +582,21 @@ void testApp::refresh() {
                 }
             }
             
-            shareInterface->getChild("T_SUCCESSFULLY_"+lang)->bVisible = bSuccess;
+            for (vector<layer>::iterator liter=success.layers.begin(); liter!=success.layers.end(); liter++) {
+                for (vector<ofxSymbolInstance>::iterator iter=liter->frames.front().instances.begin(); iter!=liter->frames.front().instances.end();iter++) {
+                    iter->bVisible = false;
+                }
+            }
+            
+            success.getChild("T_SUCCESSFULLY_"+lang)->bVisible = bSuccess;
             shareInterface->getChild("B_FACEBOOK_"+lang)->bVisible = true;
             shareInterface->getChild("B_MAIL_"+lang)->bVisible = true;
             shareInterface->getChild("B_FINISH_"+lang)->bVisible = true;
                     
+            break;
+            
+        case STATE_FACEBOOK:
+            
             break;
         default:
             break;
@@ -561,10 +618,9 @@ void testApp::share() {
     
     if (thumbs.getIsSelected()) {
         
-        image.draw(imageRect);
+        image.draw(shareLayout.getChild("overlay")->getChild("imageMarker")->mat.getTranslation());
         
     }
-    
     
     for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
         
@@ -622,10 +678,11 @@ void testApp::sendMail() {
         Poco::Net::MailMessage message;
 		message.setDate(Poco::Timestamp());
 		message.setSender("post@kaiser.lofipeople.com");
-		message.setSubject("been there, done that");
-        message.setContentType("text/plain");
-		message.addContent(new Poco::Net::StringPartSource("testing"));
+		message.setSubject(defaultTexts["MAIL_SUBJECT_"+lang]);
+       
+		message.addContent(new Poco::Net::StringPartSource(defaultTexts["MAIL_BODY_"+lang],"text/html")); // ,Poco::Net::MailMessage::ENCODING_BASE64
         message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,keyboard->getText()));
+        keyboard->setText("");
         message.addAttachment("kaiser.png", new Poco::Net::FilePartSource(attachmentPath));
 		session->sendMessage(message);
         bSuccess = true;
@@ -707,13 +764,19 @@ void testApp::touchDown(ofTouchEventArgs &touch){
      vector<ofxSymbolInstance*> hits;
     
     if( layout.getChild("langs")->hitTest(layout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
-                
         if (hits.front()->name.size()==2) {
-            lang = hits.front()->name;
-            
-            if (lang=="AR") {
-                lang="HE";
-            
+            string newLang = hits.front()->name;
+            if (lang!=newLang) {
+                lang = newLang;
+                
+                if (lang=="AR") {
+                    lang="HE";
+                
+                }
+                
+                if (state == STATE_SHARE) {
+                    bShare = true;
+                }
             }
         }
     }
@@ -794,6 +857,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                     bPostImage = false;
                     state = STATE_FACEBOOK;
                     actionTime = ofGetElapsedTimeMillis();
+                    fbBackground = doc.getBitmapItem("FB_BG_"+lang+".png");
                     
                     if (fb.getIsLoggedIn()) {
                         fb.logout();
@@ -831,10 +895,11 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             hits.clear();
             if( mailInterface.hitLayer(mailInterface.getLayer("interface"),ofVec3f(touch.x,touch.y),hits)) {
                 if (hits.front()->name=="B_SEND_"+lang) {
+                    keyboard->setVisible(false);
                     if (!keyboard->getText().empty()) {
                         sendMail();
                     }
-                    keyboard->setVisible(false);
+                    
                     state = STATE_SHARE;
                 }
                 
@@ -993,32 +1058,6 @@ void testApp::launchedWithURL(string url) {
 }
 
 
-void testApp::urlResponse(ofHttpResponse &response) {
-    if (response.status == 200) {
-        string url = response.request.url;
-        vector<string> split = ofSplitString(url, "/");
-        if (split.size()>1) {
-            if (*(split.end()-2)=="thumbs") {
-                ofImage thumb;
-                thumb.loadImage(response.data);
-                string name = ofSplitString(split.back(), ".").front();
-                cout << "urlResponse: " << name << endl;
-                int itemID = thumbs.addItem(thumb,name);
-                if (state==STATE_NEW_IMAGE && !thumbs.getIsSelected()) {
-                    thumbs.select(itemID);
-                }
-                refresh();
-            } else {
-                image.loadImage(response.data);
-            }
-        }
-        
-    } else {
-        cout << response.request.url << "\t" <<  response.error << endl;
-    }
-    
-    
-}
 
 /*
 void testApp::mailComposer(int &result) {

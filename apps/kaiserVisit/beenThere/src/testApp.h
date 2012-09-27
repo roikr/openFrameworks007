@@ -77,6 +77,7 @@ public:
     ofMatrix4x4 camMat;
     
     ofxSymbolInstance shareLayout;
+    ofxSymbolInstance success;
    
     
     ofRectangle shareRect;
@@ -105,7 +106,10 @@ public:
     
     string lang;
     bool bSuccess;
+    ofxBitmapItem *fbBackground;
     
     ofxiPhoneKeyboard *keyboard;
+    
+    map<string,string> defaultTexts;
     
 };
