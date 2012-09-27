@@ -274,6 +274,12 @@ void ofxScrollCollection::touchDown(ofTouchEventArgs &touch) {
     }
 }
 
+int ofxScrollCollection::getID(ofVec2f pos) {
+    deque<itemStruct>::iterator iter = find(pos);
+    return iter!=items.end() ? iter->itemID : 0;
+    
+}
+
 void ofxScrollCollection::touchMoved(ofTouchEventArgs &touch){
     
     ofVec2f movePos(touch.x,touch.y);

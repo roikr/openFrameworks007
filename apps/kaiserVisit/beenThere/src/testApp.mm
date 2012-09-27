@@ -163,7 +163,7 @@ void testApp::setup(){
 //    shareMat.preMult(shareLayout.getChild("overlay")->mat);
     
     
-    bTouchObject = false;
+   
     state = STATE_SLEEP;
   
     imageRect = ofRectangle(0,0,PHOTO_WIDTH,PHOTO_HEIGHT);
@@ -746,7 +746,7 @@ void testApp::exit() {
 }
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
-    cout << "touchDown" << endl;
+//    cout << "touchDown" << endl;
     
     if (state==STATE_SLEEP || state == STATE_NEW_IMAGE) {
         state = STATE_IMAGES;
@@ -804,6 +804,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             ofTouchEventArgs camTouch(touch);
             camTouch.x = camPos.x;
             camTouch.y = camPos.y;
+            lastTouch = camTouch;
             
             
             if (activeIter!=items.rend()) {
@@ -813,11 +814,8 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             
                 objects.touchDown(menuTouch);
                 
-                if (objects.getIsInside(ofVec2f(menuTouch.x,menuTouch.y)) && objects.getIsDown()) {
-                    lastTouch = camTouch;
-                    objectID = objects.getDownID(); // getDownNum valid only at down stage
-                    bTouchObject = true;
-                } else {
+                if (!objects.getIsInside(ofVec2f(menuTouch.x,menuTouch.y))) {
+                    
                     for (vector<item>::reverse_iterator riter=items.rbegin(); riter!=items.rend(); riter++) {
                         if (riter->drag.inside(camTouch)) {
                             activeIter = riter;
@@ -825,7 +823,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                             break;
                         }
                     }
-                }
+                } 
             }
                 
             hits.clear();
@@ -938,14 +936,17 @@ void testApp::touchMoved(ofTouchEventArgs &touch) {
             ofTouchEventArgs camTouch(touch);
             camTouch.x = pos.x;
             camTouch.y = pos.y;
-
             
-            if (bTouchObject) {
-                float angle = (ofVec2f(camTouch.x,camTouch.y)-ofVec2f(lastTouch.x,lastTouch.y)).angle(ofVec2f(-1.0,0.0));
-                //cout << angle << endl;
+            int objectID;
                 
-                if (angle == 0) {
-                    bTouchObject = false;
+            if (!bNewItem && objects.getIsInside(menuPos) && (objectID = objects.getID(menuPos))!=0) {
+            
+
+                float angle = (ofVec2f(camTouch.x,camTouch.y)-ofVec2f(lastTouch.x,lastTouch.y)).angle(ofVec2f(-1.0,0.0));
+//                cout << angle << endl;
+                
+                if (abs(angle) < 45) {
+                   
  //                   ofRectangle rect = objects.getRectangle(objectNum);
                     item x;
 //                    cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;

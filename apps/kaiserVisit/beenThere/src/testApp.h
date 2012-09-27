@@ -60,8 +60,8 @@ public:
     bool bNewItem;
       
     ofTouchEventArgs lastTouch;
-    bool bTouchObject;
-    int objectID;
+//    bool bTouchObject;
+//    int objectID;
     
 
     ofxDocument doc;

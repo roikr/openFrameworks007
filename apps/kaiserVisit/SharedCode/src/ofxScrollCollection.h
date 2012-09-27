@@ -61,6 +61,7 @@ public:
     ofRectangle getRectangle(int itemID);
 
     bool getIsInside(ofVec2f pos);
+    int getID(ofVec2f pos);
     scrollCollectionPrefs& getPrefs();
     int getNumItems();
     int findItemByName(string name);
