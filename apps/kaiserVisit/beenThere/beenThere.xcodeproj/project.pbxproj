@@ -23,7 +23,6 @@
 		E409645215E36AE600A30BF8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E409644E15E36AE600A30BF8 /* README.md */; };
 		E409645315E36AE600A30BF8 /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = E409645115E36AE600A30BF8 /* Settings.mm */; };
 		E409645515E36B6200A30BF8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E409645415E36B6200A30BF8 /* Settings.bundle */; };
-		E409646115E389DB00A30BF8 /* ofxiphone-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E409646015E389DB00A30BF8 /* ofxiphone-Info.plist */; };
 		E40ED8AD15D15E6300556B9C /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E40ED88A15D15E6300556B9C /* install.xml */; };
 		E40ED8AE15D15E6300556B9C /* osc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E40ED89F15D15E6300556B9C /* osc.a */; };
 		E40ED8B015D15E6300556B9C /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E40ED8A515D15E6300556B9C /* ofxOscBundle.cpp */; };
@@ -616,7 +615,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "beenThere" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -664,7 +663,6 @@
 				E40ED8AD15D15E6300556B9C /* install.xml in Resources */,
 				E409645215E36AE600A30BF8 /* README.md in Resources */,
 				E409645515E36B6200A30BF8 /* Settings.bundle in Resources */,
-				E409646115E389DB00A30BF8 /* ofxiphone-Info.plist in Resources */,
 				E450930E15EF543400FD0F4C /* FACEBOOK in Resources */,
 				E403B30D15F7402B000A3535 /* FacebookSDKResources.bundle in Resources */,
 			);
@@ -788,6 +786,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Debug;
@@ -813,6 +812,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Release;
@@ -839,6 +839,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = "Ad Hoc";

@@ -126,21 +126,50 @@ void ofxiFacebook::login(vector<string> permissions) {
     if (session==nil || ![session isOpen]) {
         
         session = [[[FBSession alloc] initWithPermissions:convertPermissions(permissions)] retain];
-        NSLog(@"session open: %i, state: %i",[session isOpen],session.state);
+        NSLog(@"login: %i, state: %i",[session isOpen],session.state);
         [session openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, 
                                                                                                     FBSessionState status, 
                                                                                                     NSError *error) {
+            
+            NSLog(@"login::completionHandler, open: %i, status: %i",[session isOpen],status);
+            
             ofxFBEventArgs args;
-            args.action = FACEBOOK_ACTION_LOGIN;
+
             
-            if (error) {
-                args.status = FACEBOOK_FAILED;
-                args.message = ofxNSStringToString([error description]);
-            } else {
-                args.status = FACEBOOK_SUCEEDED;
-                args.message = "logged in";
+            switch (status) {
+                case FBSessionStateOpen:
+                case FBSessionStateOpenTokenExtended:
+                case FBSessionStateClosedLoginFailed: 
+                    args.action = FACEBOOK_ACTION_LOGIN;
+                    
+                    if (error) {
+                        args.status = FACEBOOK_FAILED;
+                        args.message = ofxNSStringToString([error description]);
+                    } else {
+                        args.status = FACEBOOK_SUCEEDED;
+                        args.message = "logged in";
+                    }
+                    break;
+                    
+                case FBSessionStateClosed: 
+                    args.action = FACEBOOK_ACTION_LOGOUT;
+                    
+                    if (error) {
+                        args.status = FACEBOOK_FAILED;
+                        args.message = ofxNSStringToString([error description]);
+                    } else {
+                        args.status = FACEBOOK_SUCEEDED;
+                        args.message = "logged out";
+                    }
+                    
+                    
+                    
+                    break;
+                    
+                default:
+                    break;
             }
-            
+                        
             ofNotifyEvent(ofxFacebookEvent, args);
         }];
         
@@ -160,7 +189,7 @@ void ofxiFacebook::logout() {
     }
 }
 
-void ofxiFacebook::postImage(ofImage &image) {
+void ofxiFacebook::postImage(ofImage &image,string message) {
     
        
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
@@ -176,6 +205,8 @@ void ofxiFacebook::postImage(ofImage &image) {
     NSString *graphPath = @"me/photos";
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
     [parameters setObject:img forKey:@"picture"];
+    NSString *str = [NSString stringWithCString:message.c_str() encoding:NSUTF8StringEncoding];;
+    [parameters setObject:str forKey:@"message"];
     
     FBRequest *photoUploadRequest = [[[FBRequest alloc] initWithSession:session
                                                    graphPath:graphPath
@@ -194,6 +225,7 @@ void ofxiFacebook::postImage(ofImage &image) {
     [photoUploadRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) { 
 //        NSLog(@"%@",[connection.urlResponse.allHeaderFields description]);
         
+        NSLog(@"postImage::startWithCompletionHandler");
         
         ofxFBEventArgs args;
         args.action = FACEBOOK_ACTION_POST_IMAGE;
@@ -223,6 +255,8 @@ void ofxiFacebook::getMe() {
                                      // birthday with property syntax
                                      NSDictionary<FBGraphUser> *user,
                                      NSError *error) {
+        
+        NSLog(@"getMe::startWithCompletionHandler");
         
         ofxFBEventArgs args;
         args.action = FACEBOOK_ACTION_GET_ME;

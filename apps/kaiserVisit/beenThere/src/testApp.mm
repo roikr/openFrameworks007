@@ -19,7 +19,7 @@ using Poco::Exception;
 #define MENU_SEPERATOR 10.0
 #define EXTENNSION "jpg"
 #define IDLE_DELAY 90000
-#define SHARE_DELAY 180000
+
 
 #define MENU_WIDTH 140
 #define MENU_HEIGHT 768
@@ -34,6 +34,12 @@ enum {
     STATE_SHARE,
     STATE_MAIL,
     STATE_FACEBOOK
+};
+
+enum {
+    FB_STATE_IDLE,
+    FB_STATE_LOGIN,
+    FB_STATE_UPLOAD
 };
 
 
@@ -183,6 +189,7 @@ void testApp::setup(){
     lang = "HE";
     bSuccess = false;
     bPostImage = false;
+    fbState = FB_STATE_IDLE;
     refresh();
     
     int sscale = [[UIScreen mainScreen] scale];
@@ -195,6 +202,7 @@ void testApp::setup(){
 	keyboard->setFontColor(255,255,255, 255);
 	keyboard->setFontSize(52);
     keyboard->setText("roikr75@gmail.com");
+    [keyboard->getTextField() setKeyboardType:UIKeyboardTypeEmailAddress];
     
     activeIter = items.rend();
     bNewItem = false;
@@ -203,7 +211,7 @@ void testApp::setup(){
     defaultTexts["MAIL_SUBJECT_EN"]="I Was There – the Kaiser Exhibition at the Tower of David Museum";
     defaultTexts["MAIL_BODY_HE"]="<html><head/><body>שלום,<br>מצורפת התמונה שיצרת במסגרת התערוכה ביקור הקיסר במגדל דוד<br>כל טוב.<br/>שלך,<br>הקיסר וילהלם השני<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
     defaultTexts["MAIL_BODY_EN"]="<html><head/><body>Shalom,<br>Here is your photo from the Kaiser Exhibition at the Tower of David Museum<br>Best wishes,<br>Kaiser Wilhelm II</body></html>";
-    defaultTexts["FACEBOOK_HE"]="גם אני פגשתי את הקיסר at Tower of David Museum";
+    defaultTexts["FACEBOOK_HE"]="at Tower of David Museum גם אני פגשתי את הקיסר";
     defaultTexts["FACEBOOK_EN"]="I met the Kaiser at the Tower of David Museum!";
     
 }
@@ -213,26 +221,24 @@ void testApp::update(){
 	ofBackground(255,255,255);	
     
     
-    
-    switch (state) {
-        case STATE_SLEEP:
-        case STATE_NEW_IMAGE:
-        case STATE_IMAGES:
-            // check for waiting messages
-            while( receiver.hasWaitingMessages() )
-            {
-                
-                // get the next message
-                ofxOscMessage m;
-                receiver.getNextMessage( &m );
-                
-                
+    // check for waiting messages
+    while( receiver.hasWaitingMessages() )
+    {
+        
+        // get the next message
+        ofxOscMessage m;
+        receiver.getNextMessage( &m );
+        
+        switch (state) {
+            case STATE_SLEEP:
+            case STATE_NEW_IMAGE:
+            case STATE_IMAGES: 
                 
                 // check for mouse moved message
-                bool bNewImage = m.getAddress() == "/new";
-                if ( bNewImage || m.getAddress() == "/add") {
+               
+                if ( m.getAddress() == "/new" || m.getAddress() == "/add") {
                     cout << m.getAddress() << "\t" << m.getArgAsString(0) << endl;
-                    if (bNewImage &&  state != STATE_IMAGES) {
+                    if (m.getAddress() == "/new" &&  state != STATE_IMAGES) {
                         state = STATE_NEW_IMAGE;
                         thumbs.deselect();
                         actionTime = ofGetElapsedTimeMillis();
@@ -254,17 +260,22 @@ void testApp::update(){
                         }
                         refresh();
                     }
-                    
-                    
-                }		
-            }
-            break;
-        default:
-            break;
-    }           
-       
-    
+                }
+            
+
+                
+                break;
+            default:
+                break;
+        }
         
+    }
+    
+    
+    
+    
+    
+    
     switch (state) {
         case STATE_SLEEP:
         
@@ -285,30 +296,14 @@ void testApp::update(){
             }
             break;
         case STATE_MAIL:
-            if (ofGetElapsedTimeMillis()>actionTime+SHARE_DELAY) {
+            if (ofGetElapsedTimeMillis()>actionTime+IDLE_DELAY) {
                 done(true);
             }
             break;
         
         case STATE_FACEBOOK:
             
-            if (ofGetElapsedTimeMillis()>actionTime+SHARE_DELAY) {
-                done(true);
-            }
-            
-            if (bPostImage) {
-                bPostImage = false;
-                fb.postImage(shareImage);
-                bSuccess = true;
-                refresh();
-                state = STATE_SHARE;
-                actionTime = ofGetElapsedTimeMillis();
-                
-            } 
-            
-                
-            
-            
+
             
             break;
             
@@ -323,11 +318,16 @@ void testApp::update(){
         bShare = false;
         refresh();
     }
+    
+    if (bPostImage) {
+        bPostImage = false;
+        
+    }
 
     objects.update();
     thumbs.update();
 
-      
+    
 }
 
 /*
@@ -434,7 +434,7 @@ void testApp::draw(){
             
            
             
-            if (bNewItem) {
+            if (bNewItem && activeIter != items.rend()) {
                 ofPushMatrix();
                 glMultMatrixf(camMat.getPtr());
                 //item &it=items.front();
@@ -489,7 +489,7 @@ void testApp::draw(){
     }
     
     ofSetColor(0);
-    ofDrawBitmapString(ofToString(state), 5,10);
+    ofDrawBitmapString(ofToString(state)+" "+ofToString(fbState), 5,10);
     
 }
 
@@ -710,6 +710,7 @@ void testApp::done(bool bDelete) {
     
     image.clear();
     items.clear();
+    activeIter = items.rend();
     
 
     if (bDelete) {
@@ -747,7 +748,7 @@ void testApp::exit() {
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs &touch){
 //    cout << "touchDown" << endl;
-    
+       
     if (state==STATE_SLEEP || state == STATE_NEW_IMAGE) {
         state = STATE_IMAGES;
     }
@@ -831,6 +832,8 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                 if (hits.front()->name=="B_BACK_"+lang) {
                     state=STATE_IMAGES;
                     items.clear();
+                    activeIter = items.rend();
+                    thumbs.deselect();
                 }
                 
                 if (hits.front()->name=="B_NEXT2_"+lang) {
@@ -849,7 +852,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             
             hits.clear();
             if( shareLayout.getChild("shareInterface")->hitTest(shareLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
-                if (hits.front()->name=="B_FACEBOOK_"+lang) {
+                if (hits.front()->name=="B_FACEBOOK_"+lang && fbState == FB_STATE_IDLE) {
                     bSuccess = false;
                     
                     bPostImage = false;
@@ -862,6 +865,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                     }
                     string strs[] = {"publish_actions", "user_photos"};
                     fb.login(vector<string>(strs,strs+2));
+                    fbState = FB_STATE_LOGIN;
                     
                 }
                 
@@ -893,7 +897,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             hits.clear();
             if( mailInterface.hitLayer(mailInterface.getLayer("interface"),ofVec3f(touch.x,touch.y),hits)) {
                 if (hits.front()->name=="B_SEND_"+lang) {
-                    keyboard->setVisible(false);
+                    keyboard->setVisible(false);  // we can get the textfield content only after keyboard closed
                     if (!keyboard->getText().empty()) {
                         sendMail();
                     }
@@ -918,7 +922,8 @@ void testApp::touchDown(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs &touch) {
-   
+    
+    
     ofVec2f menuPos = menuMat.getInverse().preMult(ofVec3f(touch.x,touch.y,0));
     ofTouchEventArgs menuTouch(touch);
     menuTouch.x = menuPos.x;
@@ -939,7 +944,7 @@ void testApp::touchMoved(ofTouchEventArgs &touch) {
             
             int objectID;
                 
-            if (!bNewItem && objects.getIsInside(menuPos) && (objectID = objects.getID(menuPos))!=0) {
+            if (activeIter==items.rend() && objects.getIsInside(menuPos) && (objectID = objects.getID(menuPos))!=0) {
             
 
                 float angle = (ofVec2f(camTouch.x,camTouch.y)-ofVec2f(lastTouch.x,lastTouch.y)).angle(ofVec2f(-1.0,0.0));
@@ -985,10 +990,14 @@ void testApp::touchMoved(ofTouchEventArgs &touch) {
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs &touch){
     
+    
+    
     ofVec2f menuPos = menuMat.getInverse().preMult(ofVec3f(touch.x,touch.y,0));
     ofTouchEventArgs menuTouch(touch);
     menuTouch.x = menuPos.x;
     menuTouch.y = menuPos.y;
+    
+    bNewItem = false;
     
     switch (state) {
         case STATE_IMAGES: {
@@ -1020,9 +1029,9 @@ void testApp::touchUp(ofTouchEventArgs &touch){
                 }
             } 
             
-            if (bNewItem && !items.empty() && !items.back().drag.getIsActive()) {
-                bNewItem = false;
-            }
+//            if (bNewItem && !items.empty() && !items.back().drag.getIsActive()) {
+//                bNewItem = false;
+//            }
             
         }   break;
             
@@ -1081,20 +1090,25 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
     //    ofSaveImage(shareImage.getPixelsRef(), buffer,OF_IMAGE_FORMAT_PNG);
     switch (args.action) {
         case FACEBOOK_ACTION_LOGIN:
+            
+            if (state==STATE_FACEBOOK) {
+                state = STATE_SHARE;
+                
+            }
+            actionTime = ofGetElapsedTimeMillis();
+            
             switch (args.status) {
                 case FACEBOOK_SUCEEDED:
-                    if (state == STATE_FACEBOOK) {
-                        bPostImage = true;
+                    if (fbState == FB_STATE_LOGIN) {
+                        fbState = FB_STATE_UPLOAD;
+                        fb.postImage(shareImage,defaultTexts["FACEBOOK_"+lang]);
                     }
                     
-                    //fb.postImage(shareImage);
+                    
+                    
                     break;
                 case FACEBOOK_FAILED:
-                    state = STATE_SHARE;
-                    actionTime = ofGetElapsedTimeMillis();
-                    
-                   
-                    
+                    fbState = FB_STATE_IDLE;
                     break;
                     
                 default:
@@ -1105,6 +1119,9 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
         case FACEBOOK_ACTION_POST_IMAGE:
             switch (args.status) {
                 case FACEBOOK_SUCEEDED:
+                    if (fbState == FB_STATE_UPLOAD && state == STATE_SHARE) {
+                        bSuccess = true;
+                    }
                     
                     break;
                 case FACEBOOK_FAILED:
@@ -1113,6 +1130,8 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
                 default:
                     break;
             }
+            
+            fbState = FB_STATE_IDLE;
             
             
             

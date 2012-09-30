@@ -96,6 +96,7 @@ public:
     
     ofxiFacebook fb;
     bool bPostImage; // use for calling fb.postImage outside fb event callback (bug due to reentrant ?)
+    int fbState;
     
     ofMatrix4x4 screenMat;
     

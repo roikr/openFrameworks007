@@ -57,7 +57,7 @@ public:
        
     void login(vector<string> permissions=vector<string>());
     void logout();
-    void postImage(ofImage &image);
+    void postImage(ofImage &image,string message);
     void getMe();
     
     bool getIsLoggedIn();
