@@ -56,6 +56,10 @@ void kaiserNav::updateOverlays() {
         titlesButtons->getChild("MARKER_MINUSE_"+lang)->bVisible = bSubTitle;
     }
     
+    if (bSubTitle) {
+        interfaceLayout.getChild("tutorial")->bVisible = false;
+    }
+    
     interfaceLayout.getChildMat(interfaceLayout.getChild("titleMarker"), titleMat);
     interfaceLayout.getChildMat(interfaceLayout.getChild("subTitleMarker"), subTitleMat);
     screenLayout.getChildMat(screenLayout.getChild("titleMarker_"+lang), extTitleMat);
@@ -69,6 +73,7 @@ void kaiserNav::updateOverlays() {
     
     
     if (bCaptionActive) {
+        interfaceLayout.getChild("tutorial")->bVisible = false;
         
         ofMatrix4x4 mat; 
         imageLayout.getChildMat(imageLayout.getChild(caption.name), mat); // we set the caption name to the correspond marker when we create it
@@ -481,9 +486,9 @@ void kaiserNav::draw() {
     }
     
     ofPopMatrix();
-//    ofPushStyle();
-//	cam.draw(); //see info on ofxPanZoom status
-//    ofPopStyle();
+    ofPushStyle();
+	cam.draw(); //see info on ofxPanZoom status
+    ofPopStyle();
 }
 
 void kaiserNav::exit() {
@@ -560,15 +565,22 @@ void kaiserNav::touchDown(ofTouchEventArgs &touch){
             
             
             hits.clear();
-            if( interfaceLayout.getChild("titleButtons")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
-                for (vector<ofxSymbolInstance *>::iterator iter = hits.begin();iter!=hits.end();iter++) {
-                    if ((*iter)->name == "MARKER_MINUSE_"+lang || (*iter)->name == "MARKER_PLUS_"+lang) {
-                        bSubTitle = !bSubTitle;
-                        bCaptionActive = false;
-                        break;
+            
+            if( interfaceLayout.getChild("titleStrip")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+                bSubTitle = !bSubTitle;
+                bCaptionActive = false;
+            } else {
+                hits.clear();
+                if( interfaceLayout.getChild("titleButtons")->hitTest(interfaceLayout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
+                    for (vector<ofxSymbolInstance *>::iterator iter = hits.begin();iter!=hits.end();iter++) {
+                        if ((*iter)->name == "MARKER_MINUSE_"+lang || (*iter)->name == "MARKER_PLUS_"+lang) {
+                            bSubTitle = !bSubTitle;
+                            bCaptionActive = false;
+                            break;
+                        }
                     }
+                    
                 }
-                
             }
             
             hits.clear();

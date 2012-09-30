@@ -14,8 +14,6 @@
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		BB16EBD20F2B2A9500518274 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
 		BB16EBD90F2B2AB500518274 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
-		BB24DD8F10DA77E000E9C588 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8C10DA77E000E9C588 /* Default.png */; };
-		BB24DD9010DA77E000E9C588 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8D10DA77E000E9C588 /* Icon.png */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E406072215FCD41500BDCB7A /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
 		E406072715FCD5B700BDCB7A /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E406072615FCD5B700BDCB7A /* ofxiTexture.mm */; };
@@ -31,6 +29,13 @@
 		E430147A15B59B6B005347AE /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147315B59B6B005347AE /* tinyxmlparser.cpp */; };
 		E430147B15B59B6B005347AE /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147515B59B6B005347AE /* ofxXmlSettings.cpp */; };
 		E431347415B6BA9300864C97 /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
+		E45B78E0161847260035F873 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78DF161847260035F873 /* Default-Portrait.png */; };
+		E45B78E7161848B60035F873 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E1161848B60035F873 /* Icon-72.png */; };
+		E45B78E8161848B60035F873 /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E2161848B60035F873 /* Icon-Small-50.png */; };
+		E45B78E9161848B60035F873 /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E3161848B60035F873 /* Icon-Small.png */; };
+		E45B78EA161848B60035F873 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E4161848B60035F873 /* Icon-Small@2x.png */; };
+		E45B78EB161848B60035F873 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E5161848B60035F873 /* Icon.png */; };
+		E45B78EC161848B60035F873 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E6161848B60035F873 /* Icon@2x.png */; };
 		E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
 		E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
@@ -69,9 +74,6 @@
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		BB16EBD10F2B2A9500518274 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BB16EBD80F2B2AB500518274 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BB24DD8C10DA77E000E9C588 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		BB24DD8D10DA77E000E9C588 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E406072515FCD5B700BDCB7A /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
 		E406072615FCD5B700BDCB7A /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
@@ -93,6 +95,14 @@
 		E430147615B59B6B005347AE /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFloatingCaption.cpp; sourceTree = "<group>"; };
 		E431347315B6BA9300864C97 /* ofxFloatingCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFloatingCaption.h; sourceTree = "<group>"; };
+		E45B78D1161846B00035F873 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
+		E45B78DF161847260035F873 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait.png"; path = "bin/kaiserNav1/Default-Portrait.png"; sourceTree = "<group>"; };
+		E45B78E1161848B60035F873 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "bin/data/Icon-72.png"; sourceTree = "<group>"; };
+		E45B78E2161848B60035F873 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "bin/data/Icon-Small-50.png"; sourceTree = "<group>"; };
+		E45B78E3161848B60035F873 /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "bin/data/Icon-Small.png"; sourceTree = "<group>"; };
+		E45B78E4161848B60035F873 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "bin/data/Icon-Small@2x.png"; sourceTree = "<group>"; };
+		E45B78E5161848B60035F873 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = bin/data/Icon.png; sourceTree = "<group>"; };
+		E45B78E6161848B60035F873 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "bin/data/Icon@2x.png"; sourceTree = "<group>"; };
 		E49BC2C615D180EC0030291D /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
 		E49BC2C715D180EC0030291D /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
 		E49BC2CC15D180EC0030291D /* ofxiVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoPlayer.h; sourceTree = "<group>"; };
@@ -153,7 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				E4D8936A11527B74007E1F53 /* src */,
-				BB24DD8B10DA77E000E9C588 /* data */,
+				E45B78CF161846510035F873 /* Resources */,
 				BB24E1F710DAA51900E9C588 /* openFrameworks */,
 				BB16F26B0F2B646B00518274 /* addons */,
 				BB16E9930F2B1E5900518274 /* libs */,
@@ -204,22 +214,11 @@
 			name = addons;
 			sourceTree = "<group>";
 		};
-		BB24DD8B10DA77E000E9C588 /* data */ = {
-			isa = PBXGroup;
-			children = (
-				BB24DD8C10DA77E000E9C588 /* Default.png */,
-				BB24DD8D10DA77E000E9C588 /* Icon.png */,
-			);
-			name = data;
-			path = bin/data;
-			sourceTree = "<group>";
-		};
 		BB24E1F710DAA51900E9C588 /* openFrameworks */ = {
 			isa = PBXGroup;
 			children = (
 				E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */,
 				32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */,
-				BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */,
 				E41D3EE513B3906D00A75A5D /* CoreOF.xcconfig */,
 				E41D3ED613B38FB500A75A5D /* Project.xcconfig */,
 			);
@@ -307,6 +306,29 @@
 				E430147615B59B6B005347AE /* ofxXmlSettings.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		E45B78CF161846510035F873 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E45B78E1161848B60035F873 /* Icon-72.png */,
+				E45B78E2161848B60035F873 /* Icon-Small-50.png */,
+				E45B78E3161848B60035F873 /* Icon-Small.png */,
+				E45B78E4161848B60035F873 /* Icon-Small@2x.png */,
+				E45B78E5161848B60035F873 /* Icon.png */,
+				E45B78E6161848B60035F873 /* Icon@2x.png */,
+				E45B78D2161846DE0035F873 /* kaiserNav1 */,
+				E45B78D1161846B00035F873 /* ofxiphone-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		E45B78D2161846DE0035F873 /* kaiserNav1 */ = {
+			isa = PBXGroup;
+			children = (
+				E45B78DF161847260035F873 /* Default-Portrait.png */,
+			);
+			name = kaiserNav1;
 			sourceTree = "<group>";
 		};
 		E49BC29715D180EC0030291D /* ofxiVideoPlayer */ = {
@@ -489,9 +511,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB24DD8F10DA77E000E9C588 /* Default.png in Resources */,
-				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				E430147715B59B6B005347AE /* install.xml in Resources */,
+				E45B78E0161847260035F873 /* Default-Portrait.png in Resources */,
+				E45B78E7161848B60035F873 /* Icon-72.png in Resources */,
+				E45B78E8161848B60035F873 /* Icon-Small-50.png in Resources */,
+				E45B78E9161848B60035F873 /* Icon-Small.png in Resources */,
+				E45B78EA161848B60035F873 /* Icon-Small@2x.png in Resources */,
+				E45B78EB161848B60035F873 /* Icon.png in Resources */,
+				E45B78EC161848B60035F873 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -509,7 +536,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -rf bin/data/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"\ncp -rf bin/kaiserNav1/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"";
+			shellScript = "cp -rf bin/kaiserNav1/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -593,6 +620,7 @@
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Debug;
@@ -617,6 +645,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Release;
@@ -642,6 +671,7 @@
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = "Ad Hoc";
