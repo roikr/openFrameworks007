@@ -36,6 +36,120 @@
 		E45B78EA161848B60035F873 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E4161848B60035F873 /* Icon-Small@2x.png */; };
 		E45B78EB161848B60035F873 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E5161848B60035F873 /* Icon.png */; };
 		E45B78EC161848B60035F873 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E6161848B60035F873 /* Icon@2x.png */; };
+		E494B90B161851A7001F518D /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E430146E15B59B6B005347AE /* install.xml */; };
+		E494B90D161851A7001F518D /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E1161848B60035F873 /* Icon-72.png */; };
+		E494B90E161851A7001F518D /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E2161848B60035F873 /* Icon-Small-50.png */; };
+		E494B90F161851A7001F518D /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E3161848B60035F873 /* Icon-Small.png */; };
+		E494B910161851A7001F518D /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E4161848B60035F873 /* Icon-Small@2x.png */; };
+		E494B911161851A7001F518D /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E5161848B60035F873 /* Icon.png */; };
+		E494B912161851A7001F518D /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E6161848B60035F873 /* Icon@2x.png */; };
+		E494B914161851A7001F518D /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
+		E494B915161851A7001F518D /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
+		E494B916161851A7001F518D /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430137215B598F4005347AE /* ofxFlash.cpp */; };
+		E494B917161851A7001F518D /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147015B59B6B005347AE /* tinyxml.cpp */; };
+		E494B918161851A7001F518D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147215B59B6B005347AE /* tinyxmlerror.cpp */; };
+		E494B919161851A7001F518D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147315B59B6B005347AE /* tinyxmlparser.cpp */; };
+		E494B91A161851A7001F518D /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147515B59B6B005347AE /* ofxXmlSettings.cpp */; };
+		E494B91B161851A7001F518D /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
+		E494B91C161851A7001F518D /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
+		E494B91D161851A7001F518D /* ofxiExternalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */; };
+		E494B91E161851A7001F518D /* ExternalGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */; };
+		E494B91F161851A7001F518D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
+		E494B920161851A7001F518D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
+		E494B921161851A7001F518D /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DB625615DA151900419506 /* ofxPenner.cpp */; };
+		E494B922161851A7001F518D /* ofxDragScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4F8554315DA53BD00C98739 /* ofxDragScale.cpp */; };
+		E494B923161851A7001F518D /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
+		E494B924161851A7001F518D /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E406072615FCD5B700BDCB7A /* ofxiTexture.mm */; };
+		E494B926161851A7001F518D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
+		E494B927161851A7001F518D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		E494B928161851A7001F518D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		E494B929161851A7001F518D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		E494B92A161851A7001F518D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
+		E494B92B161851A7001F518D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
+		E494B92C161851A7001F518D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
+		E494B92D161851A7001F518D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
+		E494B92E161851A7001F518D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
+		E494B92F161851A7001F518D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
+		E494B930161851A7001F518D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
+		E494B931161851A7001F518D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
+		E494B932161851A7001F518D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
+		E494B93D16185248001F518D /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E494B93C16185248001F518D /* Default-Portrait.png */; };
+		E494B94A16185472001F518D /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E430146E15B59B6B005347AE /* install.xml */; };
+		E494B94B16185472001F518D /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E1161848B60035F873 /* Icon-72.png */; };
+		E494B94C16185472001F518D /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E2161848B60035F873 /* Icon-Small-50.png */; };
+		E494B94D16185472001F518D /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E3161848B60035F873 /* Icon-Small.png */; };
+		E494B94E16185472001F518D /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E4161848B60035F873 /* Icon-Small@2x.png */; };
+		E494B94F16185472001F518D /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E5161848B60035F873 /* Icon.png */; };
+		E494B95016185472001F518D /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E6161848B60035F873 /* Icon@2x.png */; };
+		E494B95316185472001F518D /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
+		E494B95416185472001F518D /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
+		E494B95516185472001F518D /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430137215B598F4005347AE /* ofxFlash.cpp */; };
+		E494B95616185472001F518D /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147015B59B6B005347AE /* tinyxml.cpp */; };
+		E494B95716185472001F518D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147215B59B6B005347AE /* tinyxmlerror.cpp */; };
+		E494B95816185472001F518D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147315B59B6B005347AE /* tinyxmlparser.cpp */; };
+		E494B95916185472001F518D /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147515B59B6B005347AE /* ofxXmlSettings.cpp */; };
+		E494B95A16185472001F518D /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
+		E494B95B16185472001F518D /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
+		E494B95C16185472001F518D /* ofxiExternalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */; };
+		E494B95D16185472001F518D /* ExternalGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */; };
+		E494B95E16185472001F518D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
+		E494B95F16185472001F518D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
+		E494B96016185472001F518D /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DB625615DA151900419506 /* ofxPenner.cpp */; };
+		E494B96116185472001F518D /* ofxDragScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4F8554315DA53BD00C98739 /* ofxDragScale.cpp */; };
+		E494B96216185472001F518D /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
+		E494B96316185472001F518D /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E406072615FCD5B700BDCB7A /* ofxiTexture.mm */; };
+		E494B96516185472001F518D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
+		E494B96616185472001F518D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		E494B96716185472001F518D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		E494B96816185472001F518D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		E494B96916185472001F518D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
+		E494B96A16185472001F518D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
+		E494B96B16185472001F518D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
+		E494B96C16185472001F518D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
+		E494B96D16185472001F518D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
+		E494B96E16185472001F518D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
+		E494B96F16185472001F518D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
+		E494B97016185472001F518D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
+		E494B97116185472001F518D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
+		E494B97D161854E3001F518D /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E494B97C161854E3001F518D /* Default-Portrait.png */; };
+		E494B982161854EA001F518D /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E430146E15B59B6B005347AE /* install.xml */; };
+		E494B983161854EA001F518D /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E1161848B60035F873 /* Icon-72.png */; };
+		E494B984161854EA001F518D /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E2161848B60035F873 /* Icon-Small-50.png */; };
+		E494B985161854EA001F518D /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E3161848B60035F873 /* Icon-Small.png */; };
+		E494B986161854EA001F518D /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E4161848B60035F873 /* Icon-Small@2x.png */; };
+		E494B987161854EA001F518D /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E5161848B60035F873 /* Icon.png */; };
+		E494B988161854EA001F518D /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E45B78E6161848B60035F873 /* Icon@2x.png */; };
+		E494B98B161854EA001F518D /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
+		E494B98C161854EA001F518D /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
+		E494B98D161854EA001F518D /* ofxFlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430137215B598F4005347AE /* ofxFlash.cpp */; };
+		E494B98E161854EA001F518D /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147015B59B6B005347AE /* tinyxml.cpp */; };
+		E494B98F161854EA001F518D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147215B59B6B005347AE /* tinyxmlerror.cpp */; };
+		E494B990161854EA001F518D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147315B59B6B005347AE /* tinyxmlparser.cpp */; };
+		E494B991161854EA001F518D /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E430147515B59B6B005347AE /* ofxXmlSettings.cpp */; };
+		E494B992161854EA001F518D /* ofxFloatingCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E431347215B6BA9300864C97 /* ofxFloatingCaption.cpp */; };
+		E494B993161854EA001F518D /* kaiserNav.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D9893D15C14E9E00465293 /* kaiserNav.mm */; };
+		E494B994161854EA001F518D /* ofxiExternalView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAC15C689B40002E5C3 /* ofxiExternalView.mm */; };
+		E494B995161854EA001F518D /* ExternalGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4FB3AAF15C689B40002E5C3 /* ExternalGLView.mm */; };
+		E494B996161854EA001F518D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
+		E494B997161854EA001F518D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
+		E494B998161854EA001F518D /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4DB625615DA151900419506 /* ofxPenner.cpp */; };
+		E494B999161854EA001F518D /* ofxDragScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4F8554315DA53BD00C98739 /* ofxDragScale.cpp */; };
+		E494B99A161854EA001F518D /* ofxBigImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4C0054C15C9730200210411 /* ofxBigImage.cpp */; };
+		E494B99B161854EA001F518D /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E406072615FCD5B700BDCB7A /* ofxiTexture.mm */; };
+		E494B99D161854EA001F518D /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D410213B3A0D800A75A5D /* libofxiPhone_iphoneos_Debug.a */; };
+		E494B99E161854EA001F518D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		E494B99F161854EA001F518D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		E494B9A0161854EA001F518D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		E494B9A1161854EA001F518D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
+		E494B9A2161854EA001F518D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
+		E494B9A3161854EA001F518D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
+		E494B9A4161854EA001F518D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
+		E494B9A5161854EA001F518D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
+		E494B9A6161854EA001F518D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
+		E494B9A7161854EA001F518D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
+		E494B9A8161854EA001F518D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
+		E494B9A9161854EA001F518D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
+		E494B9B31618550C001F518D /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E494B9B21618550C001F518D /* Default-Portrait.png */; };
 		E49BC2F715D180ED0030291D /* ofxiVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CD15D180EC0030291D /* ofxiVideoPlayer.mm */; };
 		E49BC2F815D180ED0030291D /* VideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E49BC2CF15D180EC0030291D /* VideoPlayer.m */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
@@ -56,6 +170,27 @@
 			remoteInfo = "iPhone+OF Static Library";
 		};
 		E41D410313B3A11300A75A5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BB24DE5C10DA7A3F00E9C588;
+			remoteInfo = "iPhone+OF Static Library";
+		};
+		E494B909161851A7001F518D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BB24DE5C10DA7A3F00E9C588;
+			remoteInfo = "iPhone+OF Static Library";
+		};
+		E494B94816185472001F518D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BB24DE5C10DA7A3F00E9C588;
+			remoteInfo = "iPhone+OF Static Library";
+		};
+		E494B980161854EA001F518D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E41D40FD13B3A0D800A75A5D /* iPhone+OF Lib.xcodeproj */;
 			proxyType = 1;
@@ -103,6 +238,12 @@
 		E45B78E4161848B60035F873 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "bin/data/Icon-Small@2x.png"; sourceTree = "<group>"; };
 		E45B78E5161848B60035F873 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = bin/data/Icon.png; sourceTree = "<group>"; };
 		E45B78E6161848B60035F873 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "bin/data/Icon@2x.png"; sourceTree = "<group>"; };
+		E494B938161851A7001F518D /* kaiserNav2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kaiserNav2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E494B93C16185248001F518D /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait.png"; path = "bin/kaiserNav2/Default-Portrait.png"; sourceTree = "<group>"; };
+		E494B97716185472001F518D /* kaiserNav3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kaiserNav3.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E494B97C161854E3001F518D /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait.png"; path = "bin/kaiserNav3/Default-Portrait.png"; sourceTree = "<group>"; };
+		E494B9AF161854EA001F518D /* kaiserNav4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kaiserNav4.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E494B9B21618550C001F518D /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait.png"; path = "bin/kaiserNav4/Default-Portrait.png"; sourceTree = "<group>"; };
 		E49BC2C615D180EC0030291D /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
 		E49BC2C715D180EC0030291D /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
 		E49BC2CC15D180EC0030291D /* ofxiVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVideoPlayer.h; sourceTree = "<group>"; };
@@ -148,6 +289,66 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E494B925161851A7001F518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B926161851A7001F518D /* libofxiPhone_iphoneos_Debug.a in Frameworks */,
+				E494B927161851A7001F518D /* Foundation.framework in Frameworks */,
+				E494B928161851A7001F518D /* UIKit.framework in Frameworks */,
+				E494B929161851A7001F518D /* CoreGraphics.framework in Frameworks */,
+				E494B92A161851A7001F518D /* OpenGLES.framework in Frameworks */,
+				E494B92B161851A7001F518D /* QuartzCore.framework in Frameworks */,
+				E494B92C161851A7001F518D /* AudioToolbox.framework in Frameworks */,
+				E494B92D161851A7001F518D /* OpenAL.framework in Frameworks */,
+				E494B92E161851A7001F518D /* CoreLocation.framework in Frameworks */,
+				E494B92F161851A7001F518D /* AVFoundation.framework in Frameworks */,
+				E494B930161851A7001F518D /* CoreMedia.framework in Frameworks */,
+				E494B931161851A7001F518D /* CoreVideo.framework in Frameworks */,
+				E494B932161851A7001F518D /* MapKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E494B96416185472001F518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B96516185472001F518D /* libofxiPhone_iphoneos_Debug.a in Frameworks */,
+				E494B96616185472001F518D /* Foundation.framework in Frameworks */,
+				E494B96716185472001F518D /* UIKit.framework in Frameworks */,
+				E494B96816185472001F518D /* CoreGraphics.framework in Frameworks */,
+				E494B96916185472001F518D /* OpenGLES.framework in Frameworks */,
+				E494B96A16185472001F518D /* QuartzCore.framework in Frameworks */,
+				E494B96B16185472001F518D /* AudioToolbox.framework in Frameworks */,
+				E494B96C16185472001F518D /* OpenAL.framework in Frameworks */,
+				E494B96D16185472001F518D /* CoreLocation.framework in Frameworks */,
+				E494B96E16185472001F518D /* AVFoundation.framework in Frameworks */,
+				E494B96F16185472001F518D /* CoreMedia.framework in Frameworks */,
+				E494B97016185472001F518D /* CoreVideo.framework in Frameworks */,
+				E494B97116185472001F518D /* MapKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E494B99C161854EA001F518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B99D161854EA001F518D /* libofxiPhone_iphoneos_Debug.a in Frameworks */,
+				E494B99E161854EA001F518D /* Foundation.framework in Frameworks */,
+				E494B99F161854EA001F518D /* UIKit.framework in Frameworks */,
+				E494B9A0161854EA001F518D /* CoreGraphics.framework in Frameworks */,
+				E494B9A1161854EA001F518D /* OpenGLES.framework in Frameworks */,
+				E494B9A2161854EA001F518D /* QuartzCore.framework in Frameworks */,
+				E494B9A3161854EA001F518D /* AudioToolbox.framework in Frameworks */,
+				E494B9A4161854EA001F518D /* OpenAL.framework in Frameworks */,
+				E494B9A5161854EA001F518D /* CoreLocation.framework in Frameworks */,
+				E494B9A6161854EA001F518D /* AVFoundation.framework in Frameworks */,
+				E494B9A7161854EA001F518D /* CoreMedia.framework in Frameworks */,
+				E494B9A8161854EA001F518D /* CoreVideo.framework in Frameworks */,
+				E494B9A9161854EA001F518D /* MapKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -155,6 +356,9 @@
 			isa = PBXGroup;
 			children = (
 				1D6058910D05DD3D006BFB54 /* kaiserNav1.app */,
+				E494B938161851A7001F518D /* kaiserNav2.app */,
+				E494B97716185472001F518D /* kaiserNav3.app */,
+				E494B9AF161854EA001F518D /* kaiserNav4.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -318,6 +522,9 @@
 				E45B78E5161848B60035F873 /* Icon.png */,
 				E45B78E6161848B60035F873 /* Icon@2x.png */,
 				E45B78D2161846DE0035F873 /* kaiserNav1 */,
+				E494B93B1618522A001F518D /* kaiserNav2 */,
+				E494B97A161854C0001F518D /* KaiserNav3 */,
+				E494B97B161854C9001F518D /* kaiserNav4 */,
 				E45B78D1161846B00035F873 /* ofxiphone-Info.plist */,
 			);
 			name = Resources;
@@ -329,6 +536,30 @@
 				E45B78DF161847260035F873 /* Default-Portrait.png */,
 			);
 			name = kaiserNav1;
+			sourceTree = "<group>";
+		};
+		E494B93B1618522A001F518D /* kaiserNav2 */ = {
+			isa = PBXGroup;
+			children = (
+				E494B93C16185248001F518D /* Default-Portrait.png */,
+			);
+			name = kaiserNav2;
+			sourceTree = "<group>";
+		};
+		E494B97A161854C0001F518D /* KaiserNav3 */ = {
+			isa = PBXGroup;
+			children = (
+				E494B97C161854E3001F518D /* Default-Portrait.png */,
+			);
+			name = KaiserNav3;
+			sourceTree = "<group>";
+		};
+		E494B97B161854C9001F518D /* kaiserNav4 */ = {
+			isa = PBXGroup;
+			children = (
+				E494B9B21618550C001F518D /* Default-Portrait.png */,
+			);
+			name = kaiserNav4;
 			sourceTree = "<group>";
 		};
 		E49BC29715D180EC0030291D /* ofxiVideoPlayer */ = {
@@ -463,6 +694,63 @@
 			productReference = 1D6058910D05DD3D006BFB54 /* kaiserNav1.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E494B907161851A7001F518D /* kaiserNav2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E494B934161851A7001F518D /* Build configuration list for PBXNativeTarget "kaiserNav2" */;
+			buildPhases = (
+				E494B90A161851A7001F518D /* Resources */,
+				E494B913161851A7001F518D /* Sources */,
+				E494B925161851A7001F518D /* Frameworks */,
+				E494B933161851A7001F518D /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E494B908161851A7001F518D /* PBXTargetDependency */,
+			);
+			name = kaiserNav2;
+			productName = iPhone;
+			productReference = E494B938161851A7001F518D /* kaiserNav2.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E494B94616185472001F518D /* kaiserNav3 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E494B97316185472001F518D /* Build configuration list for PBXNativeTarget "kaiserNav3" */;
+			buildPhases = (
+				E494B94916185472001F518D /* Resources */,
+				E494B95216185472001F518D /* Sources */,
+				E494B96416185472001F518D /* Frameworks */,
+				E494B97216185472001F518D /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E494B94716185472001F518D /* PBXTargetDependency */,
+			);
+			name = kaiserNav3;
+			productName = iPhone;
+			productReference = E494B97716185472001F518D /* kaiserNav3.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E494B97E161854EA001F518D /* kaiserNav4 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E494B9AB161854EA001F518D /* Build configuration list for PBXNativeTarget "kaiserNav4" */;
+			buildPhases = (
+				E494B981161854EA001F518D /* Resources */,
+				E494B98A161854EA001F518D /* Sources */,
+				E494B99C161854EA001F518D /* Frameworks */,
+				E494B9AA161854EA001F518D /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E494B97F161854EA001F518D /* PBXTargetDependency */,
+			);
+			name = kaiserNav4;
+			productName = iPhone;
+			productReference = E494B9AF161854EA001F518D /* kaiserNav4.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -492,6 +780,9 @@
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* kaiserNav1 */,
+				E494B907161851A7001F518D /* kaiserNav2 */,
+				E494B94616185472001F518D /* kaiserNav3 */,
+				E494B97E161854EA001F518D /* kaiserNav4 */,
 			);
 		};
 /* End PBXProject section */
@@ -522,6 +813,51 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E494B90A161851A7001F518D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B90B161851A7001F518D /* install.xml in Resources */,
+				E494B90D161851A7001F518D /* Icon-72.png in Resources */,
+				E494B90E161851A7001F518D /* Icon-Small-50.png in Resources */,
+				E494B90F161851A7001F518D /* Icon-Small.png in Resources */,
+				E494B910161851A7001F518D /* Icon-Small@2x.png in Resources */,
+				E494B911161851A7001F518D /* Icon.png in Resources */,
+				E494B912161851A7001F518D /* Icon@2x.png in Resources */,
+				E494B93D16185248001F518D /* Default-Portrait.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E494B94916185472001F518D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B94A16185472001F518D /* install.xml in Resources */,
+				E494B94B16185472001F518D /* Icon-72.png in Resources */,
+				E494B94C16185472001F518D /* Icon-Small-50.png in Resources */,
+				E494B94D16185472001F518D /* Icon-Small.png in Resources */,
+				E494B94E16185472001F518D /* Icon-Small@2x.png in Resources */,
+				E494B94F16185472001F518D /* Icon.png in Resources */,
+				E494B95016185472001F518D /* Icon@2x.png in Resources */,
+				E494B97D161854E3001F518D /* Default-Portrait.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E494B981161854EA001F518D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B982161854EA001F518D /* install.xml in Resources */,
+				E494B983161854EA001F518D /* Icon-72.png in Resources */,
+				E494B984161854EA001F518D /* Icon-Small-50.png in Resources */,
+				E494B985161854EA001F518D /* Icon-Small.png in Resources */,
+				E494B986161854EA001F518D /* Icon-Small@2x.png in Resources */,
+				E494B987161854EA001F518D /* Icon.png in Resources */,
+				E494B988161854EA001F518D /* Icon@2x.png in Resources */,
+				E494B9B31618550C001F518D /* Default-Portrait.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -537,6 +873,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp -rf bin/kaiserNav1/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"";
+		};
+		E494B933161851A7001F518D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp -rf bin/kaiserNav2/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"";
+		};
+		E494B97216185472001F518D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp -rf bin/kaiserNav3/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"";
+		};
+		E494B9AA161854EA001F518D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp -rf bin/kaiserNav4/ \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -565,6 +940,78 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E494B913161851A7001F518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B914161851A7001F518D /* main.mm in Sources */,
+				E494B915161851A7001F518D /* testApp.mm in Sources */,
+				E494B916161851A7001F518D /* ofxFlash.cpp in Sources */,
+				E494B917161851A7001F518D /* tinyxml.cpp in Sources */,
+				E494B918161851A7001F518D /* tinyxmlerror.cpp in Sources */,
+				E494B919161851A7001F518D /* tinyxmlparser.cpp in Sources */,
+				E494B91A161851A7001F518D /* ofxXmlSettings.cpp in Sources */,
+				E494B91B161851A7001F518D /* ofxFloatingCaption.cpp in Sources */,
+				E494B91C161851A7001F518D /* kaiserNav.mm in Sources */,
+				E494B91D161851A7001F518D /* ofxiExternalView.mm in Sources */,
+				E494B91E161851A7001F518D /* ExternalGLView.mm in Sources */,
+				E494B91F161851A7001F518D /* ofxiVideoPlayer.mm in Sources */,
+				E494B920161851A7001F518D /* VideoPlayer.m in Sources */,
+				E494B921161851A7001F518D /* ofxPenner.cpp in Sources */,
+				E494B922161851A7001F518D /* ofxDragScale.cpp in Sources */,
+				E494B923161851A7001F518D /* ofxBigImage.cpp in Sources */,
+				E494B924161851A7001F518D /* ofxiTexture.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E494B95216185472001F518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B95316185472001F518D /* main.mm in Sources */,
+				E494B95416185472001F518D /* testApp.mm in Sources */,
+				E494B95516185472001F518D /* ofxFlash.cpp in Sources */,
+				E494B95616185472001F518D /* tinyxml.cpp in Sources */,
+				E494B95716185472001F518D /* tinyxmlerror.cpp in Sources */,
+				E494B95816185472001F518D /* tinyxmlparser.cpp in Sources */,
+				E494B95916185472001F518D /* ofxXmlSettings.cpp in Sources */,
+				E494B95A16185472001F518D /* ofxFloatingCaption.cpp in Sources */,
+				E494B95B16185472001F518D /* kaiserNav.mm in Sources */,
+				E494B95C16185472001F518D /* ofxiExternalView.mm in Sources */,
+				E494B95D16185472001F518D /* ExternalGLView.mm in Sources */,
+				E494B95E16185472001F518D /* ofxiVideoPlayer.mm in Sources */,
+				E494B95F16185472001F518D /* VideoPlayer.m in Sources */,
+				E494B96016185472001F518D /* ofxPenner.cpp in Sources */,
+				E494B96116185472001F518D /* ofxDragScale.cpp in Sources */,
+				E494B96216185472001F518D /* ofxBigImage.cpp in Sources */,
+				E494B96316185472001F518D /* ofxiTexture.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E494B98A161854EA001F518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E494B98B161854EA001F518D /* main.mm in Sources */,
+				E494B98C161854EA001F518D /* testApp.mm in Sources */,
+				E494B98D161854EA001F518D /* ofxFlash.cpp in Sources */,
+				E494B98E161854EA001F518D /* tinyxml.cpp in Sources */,
+				E494B98F161854EA001F518D /* tinyxmlerror.cpp in Sources */,
+				E494B990161854EA001F518D /* tinyxmlparser.cpp in Sources */,
+				E494B991161854EA001F518D /* ofxXmlSettings.cpp in Sources */,
+				E494B992161854EA001F518D /* ofxFloatingCaption.cpp in Sources */,
+				E494B993161854EA001F518D /* kaiserNav.mm in Sources */,
+				E494B994161854EA001F518D /* ofxiExternalView.mm in Sources */,
+				E494B995161854EA001F518D /* ExternalGLView.mm in Sources */,
+				E494B996161854EA001F518D /* ofxiVideoPlayer.mm in Sources */,
+				E494B997161854EA001F518D /* VideoPlayer.m in Sources */,
+				E494B998161854EA001F518D /* ofxPenner.cpp in Sources */,
+				E494B999161854EA001F518D /* ofxDragScale.cpp in Sources */,
+				E494B99A161854EA001F518D /* ofxBigImage.cpp in Sources */,
+				E494B99B161854EA001F518D /* ofxiTexture.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -572,6 +1019,21 @@
 			isa = PBXTargetDependency;
 			name = "iPhone+OF Static Library";
 			targetProxy = E41D410313B3A11300A75A5D /* PBXContainerItemProxy */;
+		};
+		E494B908161851A7001F518D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "iPhone+OF Static Library";
+			targetProxy = E494B909161851A7001F518D /* PBXContainerItemProxy */;
+		};
+		E494B94716185472001F518D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "iPhone+OF Static Library";
+			targetProxy = E494B94816185472001F518D /* PBXContainerItemProxy */;
+		};
+		E494B97F161854EA001F518D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "iPhone+OF Static Library";
+			targetProxy = E494B980161854EA001F518D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -650,6 +1112,99 @@
 			};
 			name = Release;
 		};
+		E494B935161851A7001F518D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav2;
+			};
+			name = Debug;
+		};
+		E494B936161851A7001F518D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav2;
+			};
+			name = Release;
+		};
+		E494B937161851A7001F518D /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav2;
+			};
+			name = "Ad Hoc";
+		};
+		E494B97416185472001F518D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav3;
+			};
+			name = Debug;
+		};
+		E494B97516185472001F518D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav3;
+			};
+			name = Release;
+		};
+		E494B97616185472001F518D /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav3;
+			};
+			name = "Ad Hoc";
+		};
+		E494B9AC161854EA001F518D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav4;
+			};
+			name = Debug;
+		};
+		E494B9AD161854EA001F518D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav4;
+			};
+			name = Release;
+		};
+		E494B9AE161854EA001F518D /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
+				INFOPLIST_FILE = "ofxiphone-Info.plist";
+				PRODUCT_NAME = kaiserNav4;
+			};
+			name = "Ad Hoc";
+		};
 		E497823915B72EFD00A8BE08 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E41D3ED613B38FB500A75A5D /* Project.xcconfig */;
@@ -705,6 +1260,36 @@
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
 				E497823915B72EFD00A8BE08 /* Ad Hoc */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E494B934161851A7001F518D /* Build configuration list for PBXNativeTarget "kaiserNav2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E494B935161851A7001F518D /* Debug */,
+				E494B936161851A7001F518D /* Release */,
+				E494B937161851A7001F518D /* Ad Hoc */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E494B97316185472001F518D /* Build configuration list for PBXNativeTarget "kaiserNav3" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E494B97416185472001F518D /* Debug */,
+				E494B97516185472001F518D /* Release */,
+				E494B97616185472001F518D /* Ad Hoc */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E494B9AB161854EA001F518D /* Build configuration list for PBXNativeTarget "kaiserNav4" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E494B9AC161854EA001F518D /* Debug */,
+				E494B9AD161854EA001F518D /* Release */,
+				E494B9AE161854EA001F518D /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

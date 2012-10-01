@@ -4,15 +4,45 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>kaiserNav.xcscheme</key>
+		<key>kaiserNav1.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
+		</dict>
+		<key>kaiserNav2.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>kaiserNav3.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>kaiserNav4.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>1D6058900D05DD3D006BFB54</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E494B907161851A7001F518D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E494B94616185472001F518D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E494B97E161854EA001F518D</key>
 		<dict>
 			<key>primary</key>
 			<true/>

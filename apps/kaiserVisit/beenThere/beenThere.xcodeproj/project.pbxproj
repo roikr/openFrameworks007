@@ -14,8 +14,6 @@
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		BB16EBD20F2B2A9500518274 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
 		BB16EBD90F2B2AB500518274 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
-		BB24DD8F10DA77E000E9C588 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8C10DA77E000E9C588 /* Default.png */; };
-		BB24DD9010DA77E000E9C588 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8D10DA77E000E9C588 /* Icon.png */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
 		E403782B15E1600200789BC6 /* ofxiMail.mm in Sources */ = {isa = PBXBuildFile; fileRef = E403782A15E1600200789BC6 /* ofxiMail.mm */; };
 		E403784B15E170A800789BC6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E403784A15E170A800789BC6 /* MessageUI.framework */; };
@@ -46,6 +44,9 @@
 		E468E3C515E20EF7001A0F14 /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E468E3C215E20E5D001A0F14 /* libofxiPhone_iphoneos_Debug.a */; };
 		E468E3D815E23141001A0F14 /* ofxiFbo.mm in Sources */ = {isa = PBXBuildFile; fileRef = E468E3D715E23141001A0F14 /* ofxiFbo.mm */; };
 		E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */; };
+		E4764B7A161A53A6003E6BCB /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B77161A53A6003E6BCB /* Default-Portrait.png */; };
+		E4764B7B161A53A6003E6BCB /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B78161A53A6003E6BCB /* Icon-72.png */; };
+		E4764B7C161A53A6003E6BCB /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B79161A53A6003E6BCB /* Icon-Small-50.png */; };
 		E4A39D9215DE1AE8008ACE7E /* ofxDraggable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
@@ -77,8 +78,6 @@
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		BB16EBD10F2B2A9500518274 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BB16EBD80F2B2AB500518274 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BB24DD8C10DA77E000E9C588 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		BB24DD8D10DA77E000E9C588 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E403781715E15FCA00789BC6 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		E403781815E15FCA00789BC6 /* testApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
@@ -147,6 +146,9 @@
 		E468E3D715E23141001A0F14 /* ofxiFbo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFbo.mm; sourceTree = "<group>"; };
 		E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxScrollCollection.h; sourceTree = "<group>"; };
 		E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxScrollCollection.cpp; sourceTree = "<group>"; };
+		E4764B77161A53A6003E6BCB /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
+		E4764B78161A53A6003E6BCB /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		E4764B79161A53A6003E6BCB /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50.png"; sourceTree = "<group>"; };
 		E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDraggable.cpp; sourceTree = "<group>"; };
 		E4A39D9115DE1AE8008ACE7E /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -253,8 +255,9 @@
 		BB24DD8B10DA77E000E9C588 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				BB24DD8C10DA77E000E9C588 /* Default.png */,
-				BB24DD8D10DA77E000E9C588 /* Icon.png */,
+				E4764B77161A53A6003E6BCB /* Default-Portrait.png */,
+				E4764B78161A53A6003E6BCB /* Icon-72.png */,
+				E4764B79161A53A6003E6BCB /* Icon-Small-50.png */,
 				E409645415E36B6200A30BF8 /* Settings.bundle */,
 			);
 			name = data;
@@ -657,14 +660,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB24DD8F10DA77E000E9C588 /* Default.png in Resources */,
-				BB24DD9010DA77E000E9C588 /* Icon.png in Resources */,
 				E44BC7EB15B2D84F00CD7BBD /* install.xml in Resources */,
 				E40ED8AD15D15E6300556B9C /* install.xml in Resources */,
 				E409645215E36AE600A30BF8 /* README.md in Resources */,
 				E409645515E36B6200A30BF8 /* Settings.bundle in Resources */,
 				E450930E15EF543400FD0F4C /* FACEBOOK in Resources */,
 				E403B30D15F7402B000A3535 /* FacebookSDKResources.bundle in Resources */,
+				E4764B7A161A53A6003E6BCB /* Default-Portrait.png in Resources */,
+				E4764B7B161A53A6003E6BCB /* Icon-72.png in Resources */,
+				E4764B7C161A53A6003E6BCB /* Icon-Small-50.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

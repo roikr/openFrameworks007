@@ -201,7 +201,7 @@ void testApp::setup(){
 //	keyboard->setBgColor(255, 255, 255, 0);
 	keyboard->setFontColor(255,255,255, 255);
 	keyboard->setFontSize(52);
-    keyboard->setText("roikr75@gmail.com");
+//    keyboard->setText("roikr75@gmail.com");
     [keyboard->getTextField() setKeyboardType:UIKeyboardTypeEmailAddress];
     
     activeIter = items.rend();
@@ -209,10 +209,15 @@ void testApp::setup(){
     
     defaultTexts["MAIL_SUBJECT_HE"]="הייתי שם – תערוכת ביקור הקיסר במגדל דוד";
     defaultTexts["MAIL_SUBJECT_EN"]="I Was There – the Kaiser Exhibition at the Tower of David Museum";
+    defaultTexts["MAIL_SUBJECT_AR"]="كنت هناك – معرض زيارة القيصر ٕالى قلعة داود";
+
     defaultTexts["MAIL_BODY_HE"]="<html><head/><body>שלום,<br>מצורפת התמונה שיצרת במסגרת התערוכה ביקור הקיסר במגדל דוד<br>כל טוב.<br/>שלך,<br>הקיסר וילהלם השני<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
-    defaultTexts["MAIL_BODY_EN"]="<html><head/><body>Shalom,<br>Here is your photo from the Kaiser Exhibition at the Tower of David Museum<br>Best wishes,<br>Kaiser Wilhelm II</body></html>";
-    defaultTexts["FACEBOOK_HE"]="at Tower of David Museum גם אני פגשתי את הקיסר";
+    defaultTexts["MAIL_BODY_EN"]="<html><head/><body>Shalom,<br>Here is your photo from the Kaiser Exhibition at the Tower of David Museum<br>Best wishes,<br>Kaiser Wilhelm II<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    defaultTexts["MAIL_BODY_AR"]="<html><head/><body>مرحبا،<br>مرفقة الصورة التي قمت بٕانتاجها في ٕاطار معرض \"القيصر في ٔاورشليم-القدس\"، في قلعة داود.<br>تحياتنا<br>باحترام،<br>القيصر ويلهلم الثاني<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    
+    defaultTexts["FACEBOOK_HE"]="גם אני פגשתי את הקיסר";
     defaultTexts["FACEBOOK_EN"]="I met the Kaiser at the Tower of David Museum!";
+    defaultTexts["FACEBOOK_AR"]="انا ٔايضا التقيت بالقيصر";
     
 }
 
@@ -488,8 +493,8 @@ void testApp::draw(){
             break;
     }
     
-    ofSetColor(0);
-    ofDrawBitmapString(ofToString(state)+" "+ofToString(fbState), 5,10);
+//    ofSetColor(0);
+//    ofDrawBitmapString(ofToString(state)+" "+ofToString(fbState), 5,10);
     
 }
 
@@ -615,10 +620,12 @@ void testApp::share() {
     
     ofSetColor(255);
    
+    ofPushMatrix();
+    glMultMatrixf(shareLayout.getChild("overlay")->getChild("imageMarker")->mat.getPtr());
     
     if (thumbs.getIsSelected()) {
         
-        image.draw(shareLayout.getChild("overlay")->getChild("imageMarker")->mat.getTranslation());
+        image.draw(0,0);
         
     }
     
@@ -632,6 +639,7 @@ void testApp::share() {
         iter->drag.end();
         
     }
+    ofPopMatrix();
     
     doc.getBitmapItem("MIGDAL_OVERLAY_"+lang+".png")->draw();
     
@@ -677,7 +685,7 @@ void testApp::sendMail() {
         
         Poco::Net::MailMessage message;
 		message.setDate(Poco::Timestamp());
-		message.setSender("post@kaiser.lofipeople.com");
+		message.setSender(Settings::getString("email"));
 		message.setSubject(defaultTexts["MAIL_SUBJECT_"+lang]);
        
 		message.addContent(new Poco::Net::StringPartSource(defaultTexts["MAIL_BODY_"+lang],"text/html")); // ,Poco::Net::MailMessage::ENCODING_BASE64
@@ -723,18 +731,17 @@ void testApp::done(bool bDelete) {
             m.clear();
             
         }
-        
-        thumbs.clear();
-        
-        
-        m.setAddress("/list");
-        m.addIntArg(Settings::getInt("receiver"));
-        sender.sendMessage(m);
-        
-        cout << "list: " << url << endl;
-    } else {
-        thumbs.deselect();
-    }
+    } 
+    
+    thumbs.clear();
+    
+    ofxOscMessage m;
+    m.setAddress("/list");
+    m.addIntArg(Settings::getInt("receiver"));
+    sender.sendMessage(m);
+    
+    cout << "list: " << url << endl;
+    
     
     refresh();
 
@@ -769,12 +776,6 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             string newLang = hits.front()->name;
             if (lang!=newLang) {
                 lang = newLang;
-                
-                if (lang=="AR") {
-                    lang="HE";
-                
-                }
-                
                 if (state == STATE_SHARE) {
                     bShare = true;
                 }
@@ -830,10 +831,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
             hits.clear();
             if( layout.getChild("dragInterface")->hitTest(layout.mat.getInverse().preMult(ofVec3f(touch.x,touch.y)),hits)) {
                 if (hits.front()->name=="B_BACK_"+lang) {
-                    state=STATE_IMAGES;
-                    items.clear();
-                    activeIter = items.rend();
-                    thumbs.deselect();
+                    done(false);
                 }
                 
                 if (hits.front()->name=="B_NEXT2_"+lang) {
@@ -1101,8 +1099,12 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
                 case FACEBOOK_SUCEEDED:
                     if (fbState == FB_STATE_LOGIN) {
                         fbState = FB_STATE_UPLOAD;
+                        if (state == STATE_SHARE) {
+                            bSuccess = true;
+                        }
                         fb.postImage(shareImage,defaultTexts["FACEBOOK_"+lang]);
                     }
+                    
                     
                     
                     
@@ -1119,9 +1121,7 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
         case FACEBOOK_ACTION_POST_IMAGE:
             switch (args.status) {
                 case FACEBOOK_SUCEEDED:
-                    if (fbState == FB_STATE_UPLOAD && state == STATE_SHARE) {
-                        bSuccess = true;
-                    }
+                    
                     
                     break;
                 case FACEBOOK_FAILED:

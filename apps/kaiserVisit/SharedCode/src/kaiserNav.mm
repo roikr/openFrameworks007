@@ -486,9 +486,9 @@ void kaiserNav::draw() {
     }
     
     ofPopMatrix();
-    ofPushStyle();
-	cam.draw(); //see info on ofxPanZoom status
-    ofPopStyle();
+//    ofPushStyle();
+//	cam.draw(); //see info on ofxPanZoom status
+//    ofPopStyle();
 }
 
 void kaiserNav::exit() {
@@ -496,7 +496,7 @@ void kaiserNav::exit() {
 
 void kaiserNav::touchDown(ofTouchEventArgs &touch){
     
-    timer = ofGetElapsedTimeMillis()+30000;
+    timer = ofGetElapsedTimeMillis()+180000;
     
     vector<ofxSymbolInstance *> hits;
     
