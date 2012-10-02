@@ -1,7 +1,8 @@
 #include "testApp.h"
 
 #define DELETE_AFTER 60 // minutes
-#define IMAGE_DURATION 240000 // milis
+#define NEW_IMAGE_DURATION 20000
+#define IMAGE_DURATION 10000 // milis
 //--------------------------------------------------------------
 void testApp::setup(){
     ofHideCursor();
@@ -45,7 +46,7 @@ void testApp::update(){
     if(postedImgFile!="") {
         imageNum = images.size();
         images.push_back("upload/"+postedImgFile);
-        timer = ofGetElapsedTimeMillis() + IMAGE_DURATION;
+        timer = ofGetElapsedTimeMillis() + NEW_IMAGE_DURATION;
 		image.loadImage(images.back());
 		postedImgFile ="";
 	}
@@ -53,11 +54,12 @@ void testApp::update(){
     if (ofGetElapsedTimeMillis()>timer) {
         if (image.bAllocated()) {
             image.clear();
-
-            if (imageNum<images.size()) {
-                images.erase(images.begin()+imageNum);
-            }
         }
+        
+        if (imageNum<images.size()) {
+            images.erase(images.begin()+imageNum);
+        }
+        
 
         if (images.empty()) {
             process();
@@ -94,8 +96,8 @@ void testApp::process(){
 
     dir.listDir("upload");
     for (int i=0;i<dir.size();i++) {
-        float diff = difftime(time(NULL),dir.getFile(i).getPocoFile().getLastModified().epochTime()) / 60;
-        if (diff<DELETE_AFTER) {
+        float diff = difftime(time(NULL),dir.getFile(i).getPocoFile().getLastModified().epochTime()) ;
+        if (diff<DELETE_AFTER*60) {
             images.push_back(dir.getPath(i));
         } else {
             dir.getFile(i).remove();
