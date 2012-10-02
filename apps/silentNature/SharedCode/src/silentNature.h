@@ -58,6 +58,7 @@ public:
     ofxSymbolInstance layout;
     ofxSymbolInstance *canvas;
     ofxSymbolInstance frame;
+    ofxSymbolInstance mask;
     
     int tool;
     int paperNum;
@@ -91,4 +92,8 @@ public:
     
     string url;
     string prefix;
+    
+    ofVideoPlayer video;
+    int idle;
+    int idleTimer;
 };

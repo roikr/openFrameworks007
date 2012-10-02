@@ -10,7 +10,7 @@
 #include "ofxXmlSettings.h"
 
 #define BRUSH_THICKNESS 10.0
-#define CRAYON_THICKNESS 10.0
+#define CRAYON_THICKNESS 5.0
 #define ERASER_THICKNESS 15.0
 #define APP_ORIENTATION  OF_ORIENTATION_DEFAULT // OF_ORIENTATION_90_LEFT
 
@@ -35,6 +35,12 @@ void silentNature::setup(){
         if (!xml.getNumTags("cursor")) {
             ofHideCursor();
         }
+        
+        if (xml.tagExists("video")) {
+            idle = xml.getAttribute("video", "idle", 1);
+            video.loadMovie(xml.getAttribute("video", "filename", ""));
+        }
+        
     } else {
         std::exit(0);
     }
@@ -55,8 +61,9 @@ void silentNature::setup(){
     mat.translate(0.5*(ofGetWidth()-scale*1080.0), 0, 0);
     layout = doc.getSymbolItem("Layout")->createInstance("layout",mat);
     frame = doc.getSymbolItem("Frame")->createInstance("frame",mat);
+    mask = doc.getSymbolItem("Mask")->createInstance("mask",mat);
     
-    ofImage &image = doc.getBitmapItem("images/magenta")->getImage();
+   
    
     
             
@@ -106,8 +113,9 @@ void silentNature::setup(){
     bPublish = false;
     
     tool = BRUSH_TOOL;
+     ofImage &image = doc.getBitmapItem("images/blue")->getImage();
     brush.setColor(image.getPixelsRef().getColor(image.getWidth()/2, image.getHeight()/2));
-    layout.getChild("c1")->play();
+    layout.getChild("b1")->play();
     paperNum = 1;
 }
 
@@ -130,6 +138,18 @@ void silentNature::update(){
     }
     
     ofSetOrientation(APP_ORIENTATION); // just before we set viewport for draw
+    if (video.isLoaded()) {
+        video.update();
+        if ( !video.isPlaying() && ofGetElapsedTimeMillis()-idleTimer > idle*1000) {
+            video.setPosition(0);
+            video.play();
+            cout << "play video" << endl;
+        }
+        if (video.isPlaying() && ofGetElapsedTimeMillis()-idleTimer < idle*1000) {
+            video.stop();
+            cout << "stop video" << endl;
+        }
+    }
 }
 
 
@@ -161,7 +181,20 @@ void silentNature::draw(){
                         
                 }
             }
+            
             ofPopMatrix();
+            
+            ofPushMatrix();
+            mask.draw();
+            ofPopMatrix();
+            
+            if (video.isLoaded() && video.isPlaying()) {
+                ofPushMatrix();
+                glMultMatrixf(layout.mat.getPtr());
+                video.draw(0, 0,1080,1920);
+                ofPopMatrix();
+            }
+
             
             break;
         case STATE_PUBLISH:
@@ -177,6 +210,7 @@ void silentNature::draw(){
         default:
             break;
     }
+    
 }
 
 //--------------------------------------------------------------
@@ -269,6 +303,14 @@ void silentNature::publish(){
     ofImage &pubcan=doc.getBitmapItem("images/publish_canvas.png")->getImage();
     
     float scale = min(pubcan.getWidth()/rect.width,pubcan.getHeight()/rect.height);
+    
+    
+    if (rect.width < 0.25 * pubcan.getWidth() && rect.height < 0.25 * pubcan.getHeight()) {
+        // for very small images we add empty thirds 
+        scale/=3;
+    }
+    
+    
 
     publishMat.makeIdentityMatrix();
     publishMat.translate(0.5*ofVec2f(pubcan.getWidth(),pubcan.getHeight()));//+fboRect.getCenter());
@@ -345,6 +387,9 @@ void silentNature::resetTools() {
 
 //--------------------------------------------------------------
 void silentNature::touchDown(ofTouchEventArgs &touch){
+    
+    idleTimer = ofGetElapsedTimeMillis();
+    
     
     if (state==STATE_PUBLISH || bPublish) {
         return;
@@ -447,7 +492,7 @@ void silentNature::touchDown(ofTouchEventArgs &touch){
                 float scale = ofRandom(0.7, 0.8);
                 ofScale(scale, scale);
                 
-                ofImage &paper = doc.getBitmapItem("papers_folder/paper"+ofToString(paperNum)+(paperNum == 1 ? "_"+ofToString(rand()%5):"")+".png")->getImage();
+                ofImage &paper = doc.getBitmapItem("papers_folder/paper"+ofToString(paperNum)+(paperNum == 1 ? "_"+ofToString(rand()%6):"")+".png")->getImage();
                 ofTranslate(-0.5*ofVec2f(paper.getWidth(),paper.getHeight()));
                 
                 paper.draw(0,0);

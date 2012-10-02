@@ -21,6 +21,9 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+    if (key=='t' || key=='T') {
+        ofToggleFullscreen();
+    }
     emulator.keyPressed(key);
 }
 

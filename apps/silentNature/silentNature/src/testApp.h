@@ -24,6 +24,4 @@ class testApp : public ofBaseApp{
     silentNature nat;
     
     ofxTouchEmulator emulator;
-
-		
 };
