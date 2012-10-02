@@ -14,7 +14,7 @@ class testApp : public ofBaseApp,public ofxHTTPServerListener{
 		void setup();
 		void update();
 		void draw();
-    
+
         void process();
 
 		void keyPressed  (int key);
@@ -23,8 +23,8 @@ class testApp : public ofBaseApp,public ofxHTTPServerListener{
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
-    
-    
+
+
 
 		void getRequest(ofxHTTPServerResponse & response);
 		void postRequest(ofxHTTPServerResponse & response);
@@ -35,12 +35,15 @@ class testApp : public ofBaseApp,public ofxHTTPServerListener{
 
         string postedImgName;
         string postedImgFile;
-        
-        
+
+
         vector<string> images;
         int timer;
         int imageNum;
         ofImage image;
+
+        bool bFullScreen;
+
 };
 
 #endif
