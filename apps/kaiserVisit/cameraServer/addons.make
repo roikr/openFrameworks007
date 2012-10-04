@@ -1,3 +1,4 @@
 ofxHttpServer
 ofxOsc
 ofxXmlSettings
+ofxSerial

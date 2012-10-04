@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Debug" />
-	<File name="src/testApp.cpp" open="1" top="1" tabpos="0">
-		<Cursor position="5038" topLine="78" />
+	<ActiveTarget name="Release" />
+	<File name="../../../addons/ofxSerial/src/ofxSerial.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="276" topLine="0" />
+	</File>
+	<File name="../../../addons/ofxSerial/src/ofxSerial.h" open="0" top="0" tabpos="4">
+		<Cursor position="0" topLine="6" />
+	</File>
+	<File name="src/main.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="231" topLine="0" />
+	</File>
+	<File name="src/testApp.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="97" topLine="0" />
+	</File>
+	<File name="src/testApp.h" open="1" top="0" tabpos="2">
+		<Cursor position="990" topLine="27" />
 	</File>
 </CodeBlocks_layout_file>

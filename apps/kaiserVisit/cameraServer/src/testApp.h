@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxHTTPServer.h"
+#include "ofxSerial.h"
 
 class testApp : public ofBaseApp{
 
@@ -19,7 +20,7 @@ class testApp : public ofBaseApp{
         void keyReleased(int key) {};
 		void mouseMoved(int x, int y ) {};
 		void mouseDragged(int x, int y, int button) {};
-		void mousePressed(int x, int y, int button) {};
+		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button) {};
 		void windowResized(int w, int h) {};
 		void dragEvent(ofDragInfo dragInfo) {};
@@ -31,6 +32,8 @@ class testApp : public ofBaseApp{
 		int 				camHeight;
 		float photoWidth;
 		float photoHeight;
+		float thumbWidth;
+		float thumbHeight;
 
 
     map<string,ofxOscSender*> senders;
@@ -44,11 +47,11 @@ class testApp : public ofBaseApp{
 
     ofxHTTPServer *server;
 
-    ofSerial serial;
-    bool bSerial;
+    ofxSerial *serial;
     int blinkCounter;
     int blinkTimer;
-    
+
     int processTimer;
     float lifetime;
+
 };

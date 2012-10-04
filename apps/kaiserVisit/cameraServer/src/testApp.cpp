@@ -2,15 +2,14 @@
 #include "ofxXmlSettings.h"
 
 #define EXTENSION "jpg"
-#define PROCESS_DELAY 30000
+#define PROCESS_DELAY 60000
 
 
 //--------------------------------------------------------------
 void testApp::setup(){
 
-	serial.listDevices();
+	//serial.listDevices();
     //vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
-
 
 
     ofxXmlSettings xml;
@@ -20,6 +19,8 @@ void testApp::setup(){
         camHeight = xml.getAttribute("camera", "height", 1200);
         photoWidth = xml.getAttribute("photo", "width", 800.0);
         photoHeight = xml.getAttribute("photo", "height", 600.0);
+        thumbWidth = xml.getAttribute("thumb", "width",120.0);
+        thumbHeight = xml.getAttribute("thumb", "height", 75.0);
         lifetime = xml.getAttribute("photo", "lifetime", 4.0);
         vidGrabber.setVerbose(true);
         vidGrabber.initGrabber(camWidth,camHeight);
@@ -33,13 +34,12 @@ void testApp::setup(){
         server->setServerRoot("");		 // folder with files to be served
         server->start(xml.getAttribute("server", "port", 8888));
 
-        bSerial = serial.setup(xml.getAttribute("trigger", "portname", "/dev/ttyACM0"), xml.getAttribute("trigger", "baudrate", 9600));
-        if (bSerial) {
-            serial.writeByte('r');
-        }
+
+        serial = new ofxSerial(xml.getAttribute("trigger", "portname", "/dev/ttyACM0"), xml.getAttribute("trigger", "baudrate", 9600));
+
+    } else {
+        serial = 0;
     }
-
-
 
 
 
@@ -49,6 +49,8 @@ void testApp::setup(){
    //	videoInverted 	= new unsigned char[camWidth*camHeight*3];
 //	videoTexture.allocate(camWidth,camHeight, GL_RGB);
     processTimer = ofGetElapsedTimeMillis();
+
+
 }
 
 
@@ -59,31 +61,28 @@ void testApp::update(){
 
 	vidGrabber.grabFrame();
 
-    if (bSerial) {
+    if (serial) {
 
-        if (serial.available()) {
-            switch (serial.readByte()) {
-                case OF_SERIAL_ERROR:
-                    cout << "serial error" << endl;
-                    break;
-                case OF_SERIAL_NO_DATA:
-                    break;
-                    cout << "no data" << endl;
-                default:
-                    trigger();
-                    break;
+        string str;
+        if (serial->readUntil(str,'t')) {
+            cout << str << endl;
+            if (!bTrigger) {
+                trigger();
             }
+
         }
 
 
-        if (blinkCounter && ofGetElapsedTimeMillis()>blinkTimer) {
 
-            serial.writeByte('l');
+        if (blinkCounter && ofGetElapsedTimeMillis()>blinkTimer) {
+            if (blinkCounter>1) {
+                serial->writeBytes("l",1);
+            } else
+            {
+                serial->writeBytes("f",1);
+            }
             blinkCounter--;
             blinkTimer = ofGetElapsedTimeMillis()+1000;
-            if (!blinkCounter) {
-                serial.writeByte('r');
-            }
         }
     }
 
@@ -129,7 +128,7 @@ void testApp::update(){
 
 
         image.saveImage("photos/"+ss.str()+"."+EXTENSION);
-        image.resize(120, 90);
+        image.resize(thumbWidth, thumbHeight);
         image.saveImage("thumbs/"+ss.str()+"."+EXTENSION);
         image.update();
 
@@ -167,6 +166,7 @@ void testApp::update(){
             }
 
             file = ofFile(ofToDataPath("thumbs/"+name+"."+EXTENSION));
+
             if (file.exists()) {
                 file.remove();
             }
@@ -212,34 +212,36 @@ void testApp::update(){
 		}
 
     }
-    
+
+
     if (ofGetElapsedTimeMillis()-processTimer>PROCESS_DELAY) {
         cout << "processing" << endl;
         processTimer = ofGetElapsedTimeMillis();
-        
+
         ofDirectory dir(ofToDataPath("photos"));
         dir.listDir();
         for (int i=0;i<dir.size();i++) {
             float diff = difftime(time(NULL),dir.getFile(i).getPocoFile().getLastModified().epochTime()) / 60;
+            cout << dir.getName(i) << "\tdiff: " << diff << "\t" << endl ;
             if (diff>lifetime) {
                 dir.getFile(i).remove();
-                
+
                 ofFile file(ofToDataPath("thumbs/"+dir.getName(i)));
                 if (file.exists()) {
                     file.remove();
                 }
-                            
+
                 ofxOscMessage m;
-                
+
                 m.setAddress("/remove");
                 m.addStringArg(ofSplitString(dir.getName(i), ".").front());
                 for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
                     iter->second->sendMessage(m);
                 }
-                
+
             }
         }
-        
+
     }
 }
 
@@ -269,7 +271,7 @@ void testApp::trigger() {
     delayTimer = ofGetElapsedTimeMillis()+3000;
     bTrigger = true;
     sound.play();
-    blinkCounter = 3;
+    blinkCounter = 4;
     blinkTimer = ofGetElapsedTimeMillis();
 }
 
@@ -282,12 +284,16 @@ void testApp::keyPressed  (int key){
 	// use alt-tab to navigate to the settings
 	// window. we are working on a fix for this...
 
+
 	if (key == 's' || key == 'S'){
 		vidGrabber.videoSettings();
 	}
 
-    if (key == ' ' && !bTrigger) {
+    if (key == ' '){
         trigger();
     }
 }
 
+void testApp::mousePressed(int x, int y, int button) {
+
+}
