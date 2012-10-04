@@ -282,7 +282,7 @@ ofRectangle getBoundaryBox(ofPixels &pixels) {
 void silentNature::publish(){
     
     
-    state = STATE_PUBLISH;
+    
     
     ofPixels pixels;
     
@@ -299,6 +299,11 @@ void silentNature::publish(){
     ofRectangle rect = getBoundaryBox(pixels);
     cout <<  rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
     
+    if (rect.width<10 && rect.height<10) {
+        return ;
+    }
+    
+    state = STATE_PUBLISH;
     ofRectangle fboRect(0,0,fbo.getWidth(),fbo.getHeight());
     ofImage &pubcan=doc.getBitmapItem("images/publish_canvas.png")->getImage();
     
