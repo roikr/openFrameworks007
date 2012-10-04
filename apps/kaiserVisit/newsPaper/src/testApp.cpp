@@ -10,7 +10,7 @@ void testApp::setup(){
 	ofBackground(255,255,255);
     
     
-    serial= new ofxSerial("/dev/tty.usbmodemfa131", 9600);
+    serial= new ofxSerial("/dev/tty.usbmodemfa1341", 9600);
     
     ofEnableAlphaBlending();
     
@@ -37,7 +37,7 @@ void testApp::setup(){
     nextPage = currentPage = 0;
     
     lang = 1>>8;
-    
+    bPageDown = false;
 }
 
 //--------------------------------------------------------------
@@ -52,7 +52,7 @@ void testApp::update(){
             }
         }
         
-        pins = lang;
+        pins = 0;//lang;
         for (int i=0;i<8;i++) {
             if (str[i]=='1') {
                 pins |= 1 << i;
@@ -65,27 +65,27 @@ void testApp::update(){
         pageUp();
     }
     
-    if (bFadeOut) {
-        if (ofGetElapsedTimeMillis()-fadeStart > FADE_DURATION) {
-            if (currentPage != nextPage) {
-                currentPage = nextPage;
-                video.setPaused(true);
-                video.setFrame(pages[currentPage].start+1);
-                video.setPaused(false);
-                bFadeOut = false;
-                
-            }
-        } else {
-            if (serial) {
-                for (vector<page>::iterator iter=pages.begin();iter!=pages.end();iter++) {
-                    if (iter->mask && (pins & iter->mask) == iter->mask) {
-                        pageDown(distance(pages.begin(), iter));
-                        break;
-                    }
-                }
+   
+    if (bFadeOut && ofGetElapsedTimeMillis()-fadeStart > FADE_DURATION) {
+        if (currentPage != nextPage) {
+            currentPage = nextPage;
+            video.setPaused(true);
+            video.setFrame(pages[currentPage].start+1);
+            video.setPaused(false);
+            bFadeOut = false;
+        }
+        
+    }
+        
+    if (serial && bFadeOut && !bPageDown) {
+        for (vector<page>::iterator iter=pages.begin();iter!=pages.end();iter++) {
+            if (iter->mask && (pins & iter->mask) == iter->mask) {
+                pageDown(distance(pages.begin(), iter));
+                break;
             }
         }
     }
+        
     
     
     
@@ -118,12 +118,14 @@ void testApp::draw(){
 
 void testApp::pageUp() {
     cout << "pageUp" << endl;
+    bPageDown = false;
     fadeStart = ofGetElapsedTimeMillis();
     bFadeOut = true;
 }
 
 void testApp::pageDown(int pageNum) {
     cout << "pageDown: " << pageNum << endl;
+    bPageDown = true;
     if (pageNum < pages.size()) {
         nextPage = pageNum;
     } else {

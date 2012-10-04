@@ -40,6 +40,7 @@ class testApp : public ofBaseApp{
     bool bFadeOut;
     int currentPage;
     int nextPage;
+    bool bPageDown;
     
     ofxSerial *serial;
     
