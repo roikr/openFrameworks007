@@ -19,7 +19,7 @@ void loop() {
 
    Serial.print('e');
    Serial.flush();
-   delay(50);
+   delay(100);
    
 }
   
