@@ -26,6 +26,7 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
+		E47968B31625813200DA1C8E /* ofxSerial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E47968B01625813200DA1C8E /* ofxSerial.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */; };
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
@@ -110,6 +111,9 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		E47968AC1625813200DA1C8E /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		E47968B01625813200DA1C8E /* ofxSerial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSerial.cpp; sourceTree = "<group>"; };
+		E47968B11625813200DA1C8E /* ofxSerial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSerial.h; sourceTree = "<group>"; };
 		E4B69B5B0A3A1756003C02F2 /* cameraServerDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cameraServerDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
@@ -163,6 +167,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E47968AB1625813200DA1C8E /* ofxSerial */,
 				E4F40EF015C02DEA00FD4414 /* ofxHttpServer */,
 				E43D40E915BFE2420093A973 /* ofxOsc */,
 				E43D410D15BFE2420093A973 /* ofxXmlSettings */,
@@ -332,6 +337,25 @@
 				BBAB23C913894ECA00AA2426 /* system frameworks */,
 			);
 			name = frameworks;
+			sourceTree = "<group>";
+		};
+		E47968AB1625813200DA1C8E /* ofxSerial */ = {
+			isa = PBXGroup;
+			children = (
+				E47968AC1625813200DA1C8E /* README */,
+				E47968AD1625813200DA1C8E /* src */,
+			);
+			name = ofxSerial;
+			path = ../../../addons/ofxSerial;
+			sourceTree = "<group>";
+		};
+		E47968AD1625813200DA1C8E /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E47968B01625813200DA1C8E /* ofxSerial.cpp */,
+				E47968B11625813200DA1C8E /* ofxSerial.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		E4B69B4A0A3A1720003C02F2 = {
@@ -538,6 +562,7 @@
 				E43D411F15BFE2420093A973 /* tinyxmlparser.cpp in Sources */,
 				E43D412015BFE2420093A973 /* ofxXmlSettings.cpp in Sources */,
 				E4F40F0D15C02DEA00FD4414 /* ofxHTTPServer.cpp in Sources */,
+				E47968B31625813200DA1C8E /* ofxSerial.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

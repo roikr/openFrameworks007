@@ -8,7 +8,7 @@ int buttonState = LOW;
 void setup() {
   pinMode(ledPin,OUTPUT);   // declare the LED's pin as output
   pinMode(buttonPin, INPUT);
-  Serial.begin(1200);        // connect to the serial port
+  Serial.begin(9600);        // connect to the serial port
   
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
@@ -32,16 +32,15 @@ void loop () {
         delay(600);
         digitalWrite(ledPin, LOW);
       }
-      
-      if (val == 'r') {
-        buttonState = LOW; // reset for next trigger
-      }
     }
   }
   
-  if (digitalRead(buttonPin) == HIGH && buttonState == LOW) {
-    buttonState = HIGH;
-    Serial.write(buttonState);
+  int newState = digitalRead(buttonPin);
+  if (newState != buttonState) {
+    buttonState = newState;
+    if (buttonState == HIGH) {
+      Serial.write('t');
+    }
   }
   delay(1);
 }
