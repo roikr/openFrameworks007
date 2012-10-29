@@ -44,6 +44,7 @@ void testApp::setup(){
 
 
     blinkCounter = 0;
+    imageCounter = 0;
 
     bTrigger = false;
    //	videoInverted 	= new unsigned char[camWidth*camHeight*3];
@@ -53,6 +54,7 @@ void testApp::setup(){
 
 }
 
+bool myfunction (string s1,string s2) { return (atoi(s1.c_str())<atoi(s2.c_str())); }
 
 //--------------------------------------------------------------
 void testApp::update(){
@@ -94,10 +96,10 @@ void testApp::update(){
         int newWidth = floor(photoWidth*scale);
         int newHeight = floor(photoHeight*scale);
         cout << newWidth << "\t" << newHeight << endl;
-
-        stringstream ss;
-        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds();
-        cout << ss.str() << endl;
+//
+//        stringstream ss;
+//        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds();
+//        cout << ss.str() << endl;
 
         image.crop(0.5*(image.getWidth()-newWidth), 0.5*(image.getHeight()-newHeight), newWidth, newHeight);
         image.resize(photoWidth, photoHeight);
@@ -126,15 +128,17 @@ void testApp::update(){
             data[i+2] = outputBlue;
         }
 
-
-        image.saveImage("photos/"+ss.str()+"."+EXTENSION);
+        string imageName = ofToString(imageCounter);
+        imageCounter++;
+        cout << "saving photo " << imageCounter << endl;
+        image.saveImage("photos/"+imageName+"."+EXTENSION);
         image.resize(thumbWidth, thumbHeight);
-        image.saveImage("thumbs/"+ss.str()+"."+EXTENSION);
+        image.saveImage("thumbs/"+imageName+"."+EXTENSION);
         image.update();
 
         ofxOscMessage m;
         m.setAddress("/new");
-        m.addStringArg(ss.str());
+        m.addStringArg(imageName);
         for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
             iter->second->sendMessage(m);
         }
@@ -202,11 +206,22 @@ void testApp::update(){
 
             ofDirectory dir(ofToDataPath("photos"));
             dir.listDir();
+            vector<string> names;
+            
             for (int i=0;i<dir.size();i++) {
+                names.push_back(ofSplitString(dir.getName(i), ".").front());
+            }
+            
+            sort (names.begin(), names.end(), myfunction); 
+
+            
+            cout << "list" << endl;
+            for (vector<string>::iterator iter= names.begin(); iter!=names.end();iter++) {
                 ofxOscMessage m;
                 m.setAddress("/add");
-                m.addStringArg(ofSplitString(dir.getName(i), ".").front());
+                m.addStringArg(*iter);
                 sender->sendMessage(m);
+                cout << "\t" << *iter << endl;
             }
 
 		}

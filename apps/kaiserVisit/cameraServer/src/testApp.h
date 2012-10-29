@@ -53,5 +53,7 @@ class testApp : public ofBaseApp{
 
     int processTimer;
     float lifetime;
+    
+    int imageCounter;
 
 };
