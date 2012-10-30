@@ -5,6 +5,7 @@
 #include "ofxHTTPServer.h"
 #include "ofxSerial.h"
 
+
 class testApp : public ofBaseApp{
 
 	public:
@@ -47,9 +48,13 @@ class testApp : public ofBaseApp{
 
     ofxHTTPServer *server;
 
-    ofxSerial *serial;
+    
+    string portname;
+    int baudrate;
     int blinkCounter;
     int blinkTimer;
+    ofxSerial *serial;
+    int serialTimer;
 
     int processTimer;
     float lifetime;

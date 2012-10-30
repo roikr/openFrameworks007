@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxSerial.h"
 
 class testApp : public ofBaseApp{
 	
@@ -21,10 +22,10 @@ class testApp : public ofBaseApp{
 		
 					// when did we last read?				
 		
-		ofSerial	serial;
-    int serialRetry;
-    bool bSerial;
+		ofxSerial	*serial;
+    
     
     int pin;
+    int serialTimer;
 };
 

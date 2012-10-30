@@ -11,53 +11,46 @@ void testApp::setup(){
 
 	
 			
-	serial.listDevices();
-	vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
+	serial = 0;
+    pin = 0;
 	
-	//----------------------------------- note:
-	// < this should be set
-	// to whatever com port
-	// your serial device is
-	// connected to.
-	// (ie, COM4 on a pc, /dev/tty.... on linux, /dev/tty... on a mac)
-	// arduino users check in arduino app....
-		
-	//serial.setup(0, 9600); //open the first device
-
-	//serial.setup("COM4");  						  // windows example
-	//serial.setup("/dev/tty.usbserial-A4001JEC",9600); // mac osx example
-	
+	serialTimer = ofGetElapsedTimeMillis();
     
-    bSerial = false;
-    serialRetry = ofGetElapsedTimeMillis();
-    
+	    
    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    
-    if (!bSerial && ofGetElapsedTimeMillis()>serialRetry) {
-        bSerial = serial.setup("/dev/tty.usbmodemfd121", 9600);			  //linux example
-        serialRetry = ofGetElapsedTimeMillis()+10000;
-    }
 	
-	if (bSerial) {
-        int byte = serial.readByte();
-        switch (byte) {
-            case OF_SERIAL_ERROR:
-                bSerial = false;
-               
-                break;
-            case OF_SERIAL_NO_DATA:
-                cout << "no data" << endl;
-                break;
-            default:
-                cout << byte << endl;
-                break;
+    string s;
+    if (!serial) {
+        cout << "\nconnecting" << endl;
+//        serial = new ofxSerial("/dev/tty.usbmodemfd121", 9600);
+        serial = new ofxSerial("/dev/tty.usbserial-A6006kiO", 9600);
+        serialTimer = ofGetElapsedTimeMillis()+5000;
+    } else {
+        if (serial->readUntil(s, 'e')) {
+            cout << s ;
+            serialTimer = ofGetElapsedTimeMillis()+5000;
+            pin = s[s.length()-2]-'0';
+        } else {
+            cout << ".";
+            if (ofGetElapsedTimeMillis()>serialTimer) {
+                serial = 0;
+            }
         }
-   
-    }
+        
+        
+    } 
+    
+	
+    
+//    if (nRead) {
+//        
+//        cout << byte << endl;
+//    }
+    
     
     
     
@@ -66,13 +59,17 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-
+    ofBackground(255*pin);
 	
 
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed  (int key){ 
+void testApp::keyPressed  (int key){
+    if (serial) {
+        const char s = key;
+        serial->writeBytes(&s, 1);
+    }
 }
 
 //--------------------------------------------------------------

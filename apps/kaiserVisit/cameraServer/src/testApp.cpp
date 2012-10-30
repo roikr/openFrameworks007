@@ -3,13 +3,13 @@
 
 #define EXTENSION "jpg"
 #define PROCESS_DELAY 60000
+#define SERIAL_RETRY_DELAY 5000
 
 
 //--------------------------------------------------------------
 void testApp::setup(){
 
-	//serial.listDevices();
-    //vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
+	ofSetLogLevel(OF_LOG_VERBOSE);
 
 
     ofxXmlSettings xml;
@@ -17,11 +17,11 @@ void testApp::setup(){
         xml.pushTag("settings");
         camWidth = xml.getAttribute("camera", "width", 1600);
         camHeight = xml.getAttribute("camera", "height", 1200);
-        photoWidth = xml.getAttribute("photo", "width", 800.0);
-        photoHeight = xml.getAttribute("photo", "height", 600.0);
+        photoWidth = xml.getAttribute("photo", "width", 864.0);
+        photoHeight = xml.getAttribute("photo", "height", 540.0);
         thumbWidth = xml.getAttribute("thumb", "width",120.0);
         thumbHeight = xml.getAttribute("thumb", "height", 75.0);
-        lifetime = xml.getAttribute("photo", "lifetime", 4.0);
+        lifetime = xml.getAttribute("photo", "lifetime", 20.0);
         vidGrabber.setVerbose(true);
         vidGrabber.initGrabber(camWidth,camHeight);
         //xml.getAttribute("settings", "root", "");
@@ -34,11 +34,9 @@ void testApp::setup(){
         server->setServerRoot("");		 // folder with files to be served
         server->start(xml.getAttribute("server", "port", 8888));
 
+        portname = xml.getAttribute("trigger", "portname", "/dev/ttyUSB0");
+        baudrate = xml.getAttribute("trigger", "baudrate", 9600);
 
-        serial = new ofxSerial(xml.getAttribute("trigger", "portname", "/dev/ttyACM0"), xml.getAttribute("trigger", "baudrate", 9600));
-
-    } else {
-        serial = 0;
     }
 
 
@@ -50,7 +48,9 @@ void testApp::setup(){
    //	videoInverted 	= new unsigned char[camWidth*camHeight*3];
 //	videoTexture.allocate(camWidth,camHeight, GL_RGB);
     processTimer = ofGetElapsedTimeMillis();
-
+    
+    serial = 0;
+    serialTimer = ofGetElapsedTimeMillis();
 
 }
 
@@ -60,22 +60,15 @@ bool myfunction (string s1,string s2) { return (atoi(s1.c_str())<atoi(s2.c_str()
 void testApp::update(){
 
 	ofBackground(100,100,100);
-
-	vidGrabber.grabFrame();
-
-    if (serial) {
-
-        string str;
-        if (serial->readUntil(str,'t')) {
-            cout << str << endl;
-            if (!bTrigger) {
-                trigger();
-            }
-
-        }
-
-
-
+    vidGrabber.grabFrame();
+    
+    
+    if (!serial) {
+        cout << "\nserial reconnecting" << endl;
+        serial = new ofxSerial(portname,baudrate);
+        serialTimer = ofGetElapsedTimeMillis()+SERIAL_RETRY_DELAY;
+    } else {
+        
         if (blinkCounter && ofGetElapsedTimeMillis()>blinkTimer) {
             if (blinkCounter>1) {
                 serial->writeBytes("l",1);
@@ -86,7 +79,40 @@ void testApp::update(){
             blinkCounter--;
             blinkTimer = ofGetElapsedTimeMillis()+1000;
         }
+        
+        string s;
+        if (serial->readUntil(s, 'e')) {
+            
+            //cout << s ;
+            serialTimer = ofGetElapsedTimeMillis()+SERIAL_RETRY_DELAY;
+            
+            if (!bTrigger && s.length()>=2 && s[s.length()-2]=='1') {
+                trigger();
+            }
+        
+        } else {
+            //cout << ".";
+            if (ofGetElapsedTimeMillis()>serialTimer) {
+                serial = 0;
+            }
+        }
+        
+                   
+            
+            
+            
+            
+        
+    
+        
     }
+    
+    
+    
+
+	
+
+    
 
     if (bTrigger && ofGetElapsedTimeMillis()>delayTimer ) {
         bTrigger = false;
@@ -269,17 +295,27 @@ void testApp::draw(){
     float scale = ofGetWidth()/vidGrabber.getWidth();
     ofScale(scale, scale);
 	vidGrabber.draw(0,0);
-    if (image.getTextureReference().bAllocated()) {
+    ofPopMatrix();
+    ofPushMatrix();
+        if (image.getTextureReference().bAllocated()) {
         image.draw(40,40);
     }
     ofPopMatrix();
+    ofSetHexColor(0x00ff00);
+    ofDrawBitmapString("fps: "+ofToString(ofGetFrameRate()), 10,10);
+    
+    
+   
 //	videoTexture.draw(20+camWidth,20,camWidth,camHeight);
 }
 
 void testApp::exit() {
+    vidGrabber.close();
     for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
         delete iter->second;
     }
+    
+    
 }
 
 void testApp::trigger() {
