@@ -20,6 +20,8 @@ using Poco::Exception;
 #define EXTENNSION "jpg"
 #define IDLE_DELAY 90000
 
+#define LIST_TIMEOUT 10000
+
 
 #define MENU_WIDTH 140
 #define MENU_HEIGHT 768
@@ -70,21 +72,7 @@ void testApp::setup(){
 //    } 
     
       
-    string host = Settings::getString("host");
-    int httpPort = Settings::getInt("http");
-    int senderPort = Settings::getInt("sender");
-    
-    url = "http://"+host+":"+ofToString(httpPort);
-    
-    cout << url << "\tsender: " << senderPort << "\treceiver: " << Settings::getInt("receiver") << "\tsmtp: " << Settings::getString("smtp") << endl;
-    
-    sender.setup(host,senderPort);
-    receiver.setup(Settings::getInt("receiver"));
-    
-    ofxOscMessage m;
-    m.setAddress("/list");
-    m.addIntArg(Settings::getInt("receiver"));
-    sender.sendMessage(m);
+
     doc.setup("DOMDocument.xml");
     doc.load();
     
@@ -176,7 +164,7 @@ void testApp::setup(){
     ofImage &overlayImage = doc.getBitmapItem("MIGDAL_OVERLAY_EN.png")->getImage();
     tex.allocate(overlayImage.getWidth(), overlayImage.getHeight(), GL_RGBA);
     fbo.setup(tex.getWidth(), tex.getHeight());
-    shareImage.allocate(overlayImage.getWidth(), overlayImage.getHeight(), OF_IMAGE_COLOR_ALPHA);
+    sharePixels.allocate(overlayImage.getWidth(), overlayImage.getHeight(), OF_IMAGE_COLOR_ALPHA);
     bShare = false;
     
 //    mail.setup();
@@ -211,14 +199,36 @@ void testApp::setup(){
     defaultTexts["MAIL_SUBJECT_EN"]="I Was There – the Kaiser Exhibition at the Tower of David Museum";
     defaultTexts["MAIL_SUBJECT_AR"]="كنت هناك – معرض زيارة القيصر ٕالى قلعة داود";
 
-    defaultTexts["MAIL_BODY_HE"]="<html><head/><body>שלום,<br>מצורפת התמונה שיצרת במסגרת התערוכה ביקור הקיסר במגדל דוד<br>כל טוב.<br/>שלך,<br>הקיסר וילהלם השני<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    defaultTexts["MAIL_BODY_HE"]="<html dir='rtl'><head><meta http-equiv='content-type' content='text/html;charset=iso-8859-8-i'></head><body>שלום,<br>מצורפת התמונה שיצרת במסגרת התערוכה ביקור הקיסר במגדל דוד<br>כל טוב.<br/>שלך,<br>הקיסר וילהלם השני<br><a href='http://www.towerofdavid.org.il'>www.towerofdavid.org.il</a></body></html>";
     defaultTexts["MAIL_BODY_EN"]="<html><head/><body>Shalom,<br>Here is your photo from the Kaiser Exhibition at the Tower of David Museum<br>Best wishes,<br>Kaiser Wilhelm II<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
-    defaultTexts["MAIL_BODY_AR"]="<html><head/><body>مرحبا،<br>مرفقة الصورة التي قمت بٕانتاجها في ٕاطار معرض \"القيصر في ٔاورشليم-القدس\"، في قلعة داود.<br>تحياتنا<br>باحترام،<br>القيصر ويلهلم الثاني<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    defaultTexts["MAIL_BODY_AR"]="<html dir=\"rtl\"><head/><body>مرحبا،<br>مرفقة الصورة التي قمت بٕانتاجها في ٕاطار معرض \"القيصر في ٔاورشليم-القدس\"، في قلعة داود.<br>تحياتنا<br>باحترام،<br>القيصر ويلهلم الثاني<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
     
     defaultTexts["FACEBOOK_HE"]="גם אני פגשתי את הקיסר";
     defaultTexts["FACEBOOK_EN"]="I met the Kaiser at the Tower of David Museum!";
     defaultTexts["FACEBOOK_AR"]="انا ٔايضا التقيت بالقيصر";
     
+    
+    string host = Settings::getString("host");
+    int httpPort = Settings::getInt("http");
+    int senderPort = Settings::getInt("sender");
+    
+    url = "http://"+host+":"+ofToString(httpPort);
+    
+    cout << url << "\tsender: " << senderPort << "\treceiver: " << Settings::getInt("receiver") << "\tsmtp: " << Settings::getString("smtp") << endl;
+    
+    sender.setup(host,senderPort);
+    receiver.setup(Settings::getInt("receiver"));
+    list();
+    
+}
+
+void testApp::list() {
+    ofxOscMessage m;
+    m.setAddress("/list");
+    m.addIntArg(Settings::getInt("receiver"));
+    sender.sendMessage(m);
+    bSent = true;
+    listTimer = ofGetElapsedTimeMillis() + LIST_TIMEOUT;
 }
 
 //--------------------------------------------------------------
@@ -226,10 +236,14 @@ void testApp::update(){
 	ofBackground(255,255,255);	
     
     
+    if (bSent && ofGetElapsedTimeMillis()>listTimer) {
+        list();
+    }
+    
     // check for waiting messages
     while( receiver.hasWaitingMessages() )
     {
-        
+        bSent = false;
         // get the next message
         ofxOscMessage m;
         receiver.getNextMessage( &m );
@@ -594,7 +608,7 @@ void testApp::refresh() {
             }
             
             success.getChild("T_SUCCESSFULLY_"+lang)->bVisible = bSuccess;
-            shareInterface->getChild("B_FACEBOOK_"+lang)->bVisible = true;
+            shareInterface->getChild("B_FACEBOOK_"+lang)->bVisible = true; 
             shareInterface->getChild("B_MAIL_"+lang)->bVisible = true;
             shareInterface->getChild("B_FINISH_"+lang)->bVisible = true;
                     
@@ -623,11 +637,7 @@ void testApp::share() {
     ofPushMatrix();
     glMultMatrixf(shareLayout.getChild("overlay")->getChild("imageMarker")->mat.getPtr());
     
-    if (thumbs.getIsSelected()) {
-        
-        image.draw(0,0);
-        
-    }
+    image.draw(0,0);
     
     for (vector<item>::iterator iter=items.begin(); iter!=items.end(); iter++) {
         
@@ -645,13 +655,16 @@ void testApp::share() {
     
    
     
-    glReadPixels(0, 0, shareImage.getWidth(), shareImage.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, shareImage.getPixels());
+    glReadPixels(0, 0, sharePixels.getWidth(), sharePixels.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, sharePixels.getPixels());
     
     fbo.end();
     
 //    glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFramebuffer);
     
-    shareImage.update();
+    shareImage.setFromPixels(sharePixels);
+    shareImage.setImageType(OF_IMAGE_COLOR);
+    
+//    shareImage.update();
 
 }
 
@@ -673,8 +686,9 @@ void testApp::sendMail() {
 
 void testApp::sendMail() {
     
-    string attachmentPath = ofxiPhoneGetDocumentsDirectory()+"kaiser.png";
-    shareImage.saveImage(attachmentPath);
+    string attachmentPath = ofxiPhoneGetDocumentsDirectory()+"kaiser.jpg";
+    shareImage.saveImage(attachmentPath,OF_IMAGE_QUALITY_MEDIUM);
+    
     SMTPClientSession * session;
     
     try{
@@ -691,7 +705,7 @@ void testApp::sendMail() {
 		message.addContent(new Poco::Net::StringPartSource(defaultTexts["MAIL_BODY_"+lang],"text/html")); // ,Poco::Net::MailMessage::ENCODING_BASE64
         message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,keyboard->getText()));
         keyboard->setText("");
-        message.addAttachment("kaiser.png", new Poco::Net::FilePartSource(attachmentPath));
+        message.addAttachment("kaiser.jpg", new Poco::Net::FilePartSource(attachmentPath));
 		session->sendMessage(message);
         bSuccess = true;
         
@@ -735,10 +749,7 @@ void testApp::done(bool bDelete) {
     
     thumbs.clear();
     
-    ofxOscMessage m;
-    m.setAddress("/list");
-    m.addIntArg(Settings::getInt("receiver"));
-    sender.sendMessage(m);
+    list();
     
     cout << "list: " << url << endl;
     
@@ -857,10 +868,6 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                     state = STATE_FACEBOOK;
                     actionTime = ofGetElapsedTimeMillis();
                     fbBackground = doc.getBitmapItem("FB_BG_"+lang+".png");
-                    
-                    if (fb.getIsLoggedIn()) {
-                        fb.logout();
-                    }
                     string strs[] = {"publish_actions", "user_photos"};
                     fb.login(vector<string>(strs,strs+2));
                     fbState = FB_STATE_LOGIN;
@@ -1051,19 +1058,8 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 
 }
 
-//--------------------------------------------------------------
-void testApp::lostFocus(){
-    
-}
 
-//--------------------------------------------------------------
-void testApp::gotFocus(){
-    
-}
 
-void testApp::launchedWithURL(string url) {
-        
-}
 
 
 
@@ -1096,7 +1092,7 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
             actionTime = ofGetElapsedTimeMillis();
             
             switch (args.status) {
-                case FACEBOOK_SUCEEDED:
+                case FACEBOOK_SUCCEEDED:
                     if (fbState == FB_STATE_LOGIN) {
                         fbState = FB_STATE_UPLOAD;
                         if (state == STATE_SHARE) {
@@ -1110,6 +1106,7 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
                     
                     break;
                 case FACEBOOK_FAILED:
+                   
                     fbState = FB_STATE_IDLE;
                     break;
                     
@@ -1120,7 +1117,7 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
             break;
         case FACEBOOK_ACTION_POST_IMAGE:
             switch (args.status) {
-                case FACEBOOK_SUCEEDED:
+                case FACEBOOK_SUCCEEDED:
                     
                     
                     break;

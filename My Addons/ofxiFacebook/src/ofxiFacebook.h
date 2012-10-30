@@ -12,7 +12,6 @@
 #import <FacebookSDK/FacebookSDK.h>
 
 enum {
-    FACEBOOK_ACTION_RETRIEVE_SESSION,
     FACEBOOK_ACTION_LOGIN,
     FACEBOOK_ACTION_LOGOUT,
     FACEBOOK_ACTION_POST_IMAGE,
@@ -21,7 +20,7 @@ enum {
 
 enum {
     FACEBOOK_FAILED,
-    FACEBOOK_SUCEEDED
+    FACEBOOK_SUCCEEDED
 };
 
 class ofxFBEventArgs {
@@ -48,15 +47,11 @@ void ofxUnregisterFacebookNotification(T * obj){
 
 class ofxiFacebook {
 public:
-    ofxiFacebook():session(nil) {};
-    void setup(vector<string> permissions=vector<string>());
-    void ssoLogin(vector<string> permissions=vector<string>());
-    void exit();
-    void gotFocus();
-    void launchedWithURL(string url);
-       
-    void login(vector<string> permissions=vector<string>());
+   
     void logout();
+    
+    
+    void login(vector<string> permissions=vector<string>());
     void postImage(ofImage &image,string message);
     void getMe();
     
@@ -64,7 +59,4 @@ public:
     string getAccessToken();
     
    
-      
-private:
-    FBSession *session;
 };

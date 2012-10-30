@@ -25,6 +25,7 @@ class testApp : public ofxiPhoneApp{
 	
 public:
 	void setup();
+    void list();
 	void update();
 	void draw();
     void refresh();
@@ -43,9 +44,6 @@ public:
 //    void mailComposer(int &result);
     void facebookEvent(ofxFBEventArgs &args);
     
-    void lostFocus();
-	void gotFocus();
-    void launchedWithURL(string url);
     
     
     ofxScrollCollection thumbs;
@@ -91,6 +89,7 @@ public:
     ofxiFbo fbo;
     ofTexture tex;
     ofImage shareImage;
+    ofPixels sharePixels;
     bool bShare;
 //    ofxiMail mail;
     
@@ -112,5 +111,8 @@ public:
     ofxiPhoneKeyboard *keyboard;
     
     map<string,string> defaultTexts;
+    
+    bool bSent;
+    int listTimer;
     
 };
