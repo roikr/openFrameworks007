@@ -7,7 +7,7 @@
 #include "ofxDraggable.h"
 #include "ofxFlash.h"
 #include "ofxOsc.h"
-#include "ofxiFbo.h"
+#include "ofxiOffScreen.h"
 //#include "ofxiMail.h"
 #include "Settings.h"
 #include "ofxiFacebook.h"
@@ -86,8 +86,7 @@ public:
     ofxOscReceiver receiver;
     string url;
     
-    ofxiFbo fbo;
-    ofTexture tex;
+    ofxiOffScreen offscreen;
     ofImage shareImage;
     ofPixels sharePixels;
     bool bShare;

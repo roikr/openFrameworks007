@@ -162,8 +162,8 @@ void testApp::setup(){
   
     imageRect = ofRectangle(0,0,PHOTO_WIDTH,PHOTO_HEIGHT);
     ofImage &overlayImage = doc.getBitmapItem("MIGDAL_OVERLAY_EN.png")->getImage();
-    tex.allocate(overlayImage.getWidth(), overlayImage.getHeight(), GL_RGBA);
-    fbo.setup(tex.getWidth(), tex.getHeight());
+   
+    offscreen.setup(overlayImage.getWidth(), overlayImage.getHeight());
     sharePixels.allocate(overlayImage.getWidth(), overlayImage.getHeight(), OF_IMAGE_COLOR_ALPHA);
     bShare = false;
     
@@ -630,7 +630,7 @@ void testApp::share() {
 //    GLint defaultFramebuffer;
 //    glGetIntegerv(GL_FRAMEBUFFER_BINDING_OES, &defaultFramebuffer);
     
-    fbo.begin(tex.getTextureData().textureID);
+    offscreen.begin();
     
     ofSetColor(255);
    
@@ -657,7 +657,7 @@ void testApp::share() {
     
     glReadPixels(0, 0, sharePixels.getWidth(), sharePixels.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, sharePixels.getPixels());
     
-    fbo.end();
+    offscreen.end();
     
 //    glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFramebuffer);
     
@@ -687,8 +687,8 @@ void testApp::sendMail() {
 void testApp::sendMail() {
     
     string attachmentPath = ofxiPhoneGetDocumentsDirectory()+"kaiser.jpg";
-    shareImage.saveImage(attachmentPath,OF_IMAGE_QUALITY_MEDIUM);
-    
+    shareImage.saveImage(attachmentPath,OF_IMAGE_QUALITY_HIGH); // OF_IMAGE_QUALITY_MEDIUM
+ 
     SMTPClientSession * session;
     
     try{
