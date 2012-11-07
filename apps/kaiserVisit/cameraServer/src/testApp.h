@@ -15,7 +15,9 @@ class testApp : public ofBaseApp{
 		void draw();
         void exit();
 
+        void list(ofxOscSender *sender);
         void trigger();
+        void mailAlert(string subject);
 
 		void keyPressed(int key);
         void keyReleased(int key) {};
@@ -49,16 +51,18 @@ class testApp : public ofBaseApp{
     ofxHTTPServer *server;
 
     
-    string portname;
+    string hostname;
     int baudrate;
     int blinkCounter;
     int blinkTimer;
-    ofxSerial *serial;
+    ofxSerial serial;
     int serialTimer;
+    bool bConnected;
 
     int processTimer;
     float lifetime;
     
     int imageCounter;
+    
 
 };

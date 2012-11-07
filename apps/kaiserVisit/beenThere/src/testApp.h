@@ -84,6 +84,7 @@ public:
     
     ofxOscSender sender;
     ofxOscReceiver receiver;
+    int heartbeatTimer;
     string url;
     
     ofxiOffScreen offscreen;
@@ -110,8 +111,5 @@ public:
     ofxiPhoneKeyboard *keyboard;
     
     map<string,string> defaultTexts;
-    
-    bool bSent;
-    int listTimer;
     
 };

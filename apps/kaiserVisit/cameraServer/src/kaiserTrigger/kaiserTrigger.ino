@@ -10,9 +10,11 @@ void setup() {
   pinMode(buttonPin, INPUT);
   Serial.begin(9600);        // connect to the serial port
   
+  /*
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
+  */
  
 }
 
@@ -35,6 +37,9 @@ void loop () {
     }
   }
   
+  Serial.print(digitalRead(buttonPin));
+  Serial.print('e');
+  /*
   int newState = digitalRead(buttonPin);
   if (newState != buttonState) {
     buttonState = newState;
@@ -42,5 +47,6 @@ void loop () {
       Serial.write('t');
     }
   }
-  delay(1);
+  */
+  delay(50);
 }

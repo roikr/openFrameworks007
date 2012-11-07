@@ -12,15 +12,17 @@
 
 using Poco::Net::SMTPClientSession;
 using Poco::Exception;
+using Poco::Net::MailMessage;
 
 #define OFX_SMTP_PORT 25
 
 #define MENU_INSET 10.0
 #define MENU_SEPERATOR 10.0
 #define EXTENNSION "jpg"
-#define IDLE_DELAY 90000
+#define IDLE_DELAY 90000 
 
 #define LIST_TIMEOUT 10000
+#define HEARTBEAT_TIME 30000
 
 
 #define MENU_WIDTH 140
@@ -195,13 +197,21 @@ void testApp::setup(){
     activeIter = items.rend();
     bNewItem = false;
     
-    defaultTexts["MAIL_SUBJECT_HE"]="הייתי שם – תערוכת ביקור הקיסר במגדל דוד";
-    defaultTexts["MAIL_SUBJECT_EN"]="I Was There – the Kaiser Exhibition at the Tower of David Museum";
-    defaultTexts["MAIL_SUBJECT_AR"]="كنت هناك – معرض زيارة القيصر ٕالى قلعة داود";
+    defaultTexts["MAIL_SUBJECT_HE"]="הייתי שם – תערוכה במגדל דוד: \"הקיסר מגיע לירושלים\"";
+    defaultTexts["MAIL_SUBJECT_EN"]="I Was There – Exhibition at the Tower of David Museum: \"The Kaiser is Coming!\"";
+    defaultTexts["MAIL_SUBJECT_AR"]="لقد كنت هناك – في معرض \" القيصر يزور أورشليم-القدس\" في متحف قلعة داود.";
 
-    defaultTexts["MAIL_BODY_HE"]="<html dir='rtl'><head><meta http-equiv='content-type' content='text/html;charset=iso-8859-8-i'></head><body>שלום,<br>מצורפת התמונה שיצרת במסגרת התערוכה ביקור הקיסר במגדל דוד<br>כל טוב.<br/>שלך,<br>הקיסר וילהלם השני<br><a href='http://www.towerofdavid.org.il'>www.towerofdavid.org.il</a></body></html>";
-    defaultTexts["MAIL_BODY_EN"]="<html><head/><body>Shalom,<br>Here is your photo from the Kaiser Exhibition at the Tower of David Museum<br>Best wishes,<br>Kaiser Wilhelm II<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
-    defaultTexts["MAIL_BODY_AR"]="<html dir=\"rtl\"><head/><body>مرحبا،<br>مرفقة الصورة التي قمت بٕانتاجها في ٕاطار معرض \"القيصر في ٔاورشليم-القدس\"، في قلعة داود.<br>تحياتنا<br>باحترام،<br>القيصر ويلهلم الثاني<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    /*
+    defaultTexts["MAIL_BODY_HE"]="<html dir='rtl'><head><meta http-equiv='content-type' content='text/html;charset=iso-8859-8-i'></head><body>שלום,<br>הצטלמתי באוהל הקיסר וילהלם השני.<br/>מצ\"ב מזכרת מהביקור שלי בתערוכה \"הקיסר מגיע לירושלים\" במוזיאון מגדל דוד.<br><a href='http://www.towerofdavid.org.il'>www.towerofdavid.org.il</a></body></html>";
+    defaultTexts["MAIL_BODY_EN"]="<html><head/><body>Shalom,<br>I was in Kaiser Wilhelm's tent!<br>Here is my photo from the Exhibition \"The Kaiser is Coming!\" at the Tower of David Museum.<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    defaultTexts["MAIL_BODY_AR"]="<html dir=\"rtl\"><head/><body>مرحبا،<br>لقد كنت في خيمة القيصر ويليام!<br>وهنا صورتي من معرض \" القيصر يزور أورشليم-القدس\" في متحف قلعة داود.<br><a href=\"http://www.towerofdavid.org.il\">www.towerofdavid.org.il</a></body></html>";
+    */
+    
+    defaultTexts["MAIL_BODY_HE"]="<p dir=\"rtl\"><span>שלום,</span></p><p dir=\"rtl\"><span>הצטלמתי באוהל הקיסר וילהלם השני. </span></p><p dir=\"rtl\"><span>מצ\"ב מזכרת מהביקור שלי בתערוכה \"הקיסר מגיע לירושלים\" במוזיאון מגדל דוד.</span></p><p dir=\"rtl\"><span><a href=\"http://www.towerofdavid.org.il/\">www.towerofdavid.org.il</a></span></p><p>&nbsp;</p>";
+    
+    defaultTexts["MAIL_BODY_AR"]="<p dir=\"rtl\"><span>مرحبا،</span></p><p dir=\"rtl\"><span>لقد كنت في خيمة القيصر ويليام! </span></p><p dir=\"rtl\"><span>وهنا صورتي من معرض \" القيصر يزور أورشليم-القدس\" في متحف قلعة داود.</span></p><p dir=\"rtl\"><span><a href=\"http://www.towerofdavid.org.il/\">www.towerofdavid.org.il</a></span></p><p>&nbsp;</p>";
+    
+    defaultTexts["MAIL_BODY_EN"]="<p dir=\"ltr\"><span>Shalom,</span></p><p dir=\"ltr\"><span>I was in Kaiser Wilhelm's tent! </span></p><p dir=\"ltr\"><span>Here is my photo from the Exhibition \"The Kaiser is Coming!\" at the Tower of David Museum.</span></p><p style=\"text-align: left;\" dir=\"rtl\"><span><a href=\"http://www.towerofdavid.org.il/\">www.towerofdavid.org.il</a></span></p><p>&nbsp;</p>";
     
     defaultTexts["FACEBOOK_HE"]="גם אני פגשתי את הקיסר";
     defaultTexts["FACEBOOK_EN"]="I met the Kaiser at the Tower of David Museum!";
@@ -218,32 +228,37 @@ void testApp::setup(){
     
     sender.setup(host,senderPort);
     receiver.setup(Settings::getInt("receiver"));
-    list();
     
+    heartbeatTimer = ofGetElapsedTimeMillis();
+    
+    list(); // if we are already register at the server plz list (else, will list in the first heartbeat)
 }
 
 void testApp::list() {
     ofxOscMessage m;
     m.setAddress("/list");
-    m.addIntArg(Settings::getInt("receiver"));
-    sender.sendMessage(m);
-    bSent = true;
-    listTimer = ofGetElapsedTimeMillis() + LIST_TIMEOUT;
+    sender.sendMessage(m); 
+    
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	ofBackground(255,255,255);	
     
-    
-    if (bSent && ofGetElapsedTimeMillis()>listTimer) {
-        list();
+    if (ofGetElapsedTimeMillis()> heartbeatTimer) {
+        ofxOscMessage m;
+        m.setAddress("/heartbeat");
+        m.addIntArg(Settings::getInt("receiver"));
+        sender.sendMessage(m);
+        heartbeatTimer = ofGetElapsedTimeMillis() + HEARTBEAT_TIME;
     }
+    
+   
     
     // check for waiting messages
     while( receiver.hasWaitingMessages() )
     {
-        bSent = false;
+        
         // get the next message
         ofxOscMessage m;
         receiver.getNextMessage( &m );
@@ -253,7 +268,7 @@ void testApp::update(){
             case STATE_NEW_IMAGE:
             case STATE_IMAGES: 
                 
-                // check for mouse moved message
+                
                
                 if ( m.getAddress() == "/new" || m.getAddress() == "/add") {
                     cout << m.getAddress() << "\t" << m.getArgAsString(0) << endl;
@@ -608,7 +623,7 @@ void testApp::refresh() {
             }
             
             success.getChild("T_SUCCESSFULLY_"+lang)->bVisible = bSuccess;
-            shareInterface->getChild("B_FACEBOOK_"+lang)->bVisible = true; 
+//            shareInterface->getChild("B_FACEBOOK_"+lang)->bVisible = true; // roikr
             shareInterface->getChild("B_MAIL_"+lang)->bVisible = true;
             shareInterface->getChild("B_FINISH_"+lang)->bVisible = true;
                     
@@ -695,14 +710,19 @@ void testApp::sendMail() {
         
         session=new Poco::Net::SMTPClientSession(Settings::getString("smtp"),OFX_SMTP_PORT);
         session->login();
-            
+        
+        string charset = "utf-8";
+        string contentType = "text/html; charset=\"utf-8\"";
         
         Poco::Net::MailMessage message;
 		message.setDate(Poco::Timestamp());
 		message.setSender(Settings::getString("email"));
 		message.setSubject(defaultTexts["MAIL_SUBJECT_"+lang]);
+        message.addContent(new Poco::Net::StringPartSource(defaultTexts["MAIL_BODY_"+lang],contentType),MailMessage::ENCODING_8BIT);
+        //message.setContentType(contentType);
+        //message.setContent(defaultTexts["MAIL_BODY_"+lang],MailMessage::ENCODING_8BIT);
        
-		message.addContent(new Poco::Net::StringPartSource(defaultTexts["MAIL_BODY_"+lang],"text/html")); // ,Poco::Net::MailMessage::ENCODING_BASE64
+		//message.addContent(,"text/html")); // ,Poco::Net::MailMessage::ENCODING_BASE64
         message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,keyboard->getText()));
         keyboard->setText("");
         message.addAttachment("kaiser.jpg", new Poco::Net::FilePartSource(attachmentPath));

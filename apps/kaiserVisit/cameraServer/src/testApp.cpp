@@ -1,15 +1,27 @@
 #include "testApp.h"
 #include "ofxXmlSettings.h"
 
+#include "Poco/Net/MailMessage.h"
+#include "Poco/Net/FilePartSource.h"
+#include "Poco/Net/StringPartSource.h"
+#include "Poco/Net/SMTPClientSession.h"
+#include "Poco/Exception.h"
+
+using Poco::Net::SMTPClientSession;
+using Poco::Exception;
+
 #define EXTENSION "jpg"
 #define PROCESS_DELAY 60000
-#define SERIAL_RETRY_DELAY 5000
+
+
+#define OFX_SMTP_PORT 25
+
 
 
 //--------------------------------------------------------------
 void testApp::setup(){
 
-	ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetLogLevel(OF_LOG_NOTICE);
 
 
     ofxXmlSettings xml;
@@ -34,7 +46,7 @@ void testApp::setup(){
         server->setServerRoot("");		 // folder with files to be served
         server->start(xml.getAttribute("server", "port", 8888));
 
-        portname = xml.getAttribute("trigger", "portname", "/dev/ttyUSB0");
+        hostname = xml.getAttribute("trigger", "hostname", "tevet machine");
         baudrate = xml.getAttribute("trigger", "baudrate", 9600);
 
     }
@@ -49,9 +61,11 @@ void testApp::setup(){
 //	videoTexture.allocate(camWidth,camHeight, GL_RGB);
     processTimer = ofGetElapsedTimeMillis();
     
-    serial = 0;
+    
     serialTimer = ofGetElapsedTimeMillis();
-
+    bConnected = false;
+    trigger();
+   
 }
 
 bool myfunction (string s1,string s2) { return (atoi(s1.c_str())<atoi(s2.c_str())); }
@@ -63,28 +77,35 @@ void testApp::update(){
     vidGrabber.grabFrame();
     
     
-    if (!serial) {
-        cout << "\nserial reconnecting" << endl;
-        serial = new ofxSerial(portname,baudrate);
-        serialTimer = ofGetElapsedTimeMillis()+SERIAL_RETRY_DELAY;
+    if (!bConnected) {
+        if (ofGetElapsedTimeMillis()>serialTimer) {
+            cout << ".";
+            bConnected=serial.connect(baudrate);
+            if (bConnected) {
+                cout << "\nconnected" << endl;
+                mailAlert(hostname+": arduino is connected");
+            }
+            serialTimer = ofGetElapsedTimeMillis()+10000;
+        }
+        
     } else {
         
         if (blinkCounter && ofGetElapsedTimeMillis()>blinkTimer) {
             if (blinkCounter>1) {
-                serial->writeBytes("l",1);
+                serial.writeBytes("l",1);
             } else
             {
-                serial->writeBytes("f",1);
+                serial.writeBytes("f",1);
             }
             blinkCounter--;
             blinkTimer = ofGetElapsedTimeMillis()+1000;
         }
         
         string s;
-        if (serial->readUntil(s, 'e')) {
+        if (serial.readUntil(s, 'e')) {
             
             //cout << s ;
-            serialTimer = ofGetElapsedTimeMillis()+SERIAL_RETRY_DELAY;
+            serialTimer = ofGetElapsedTimeMillis()+1000;
             
             if (!bTrigger && s.length()>=2 && s[s.length()-2]=='1') {
                 trigger();
@@ -93,27 +114,15 @@ void testApp::update(){
         } else {
             //cout << ".";
             if (ofGetElapsedTimeMillis()>serialTimer) {
-                serial = 0;
+                serialTimer = ofGetElapsedTimeMillis()+10000;
+                bConnected = false;
+                serial.close();
+                mailAlert(hostname+": been there done that but the arduino was disconnected");
             }
         }
         
-                   
-            
-            
-            
-            
-        
-    
-        
     }
     
-    
-    
-
-	
-
-    
-
     if (bTrigger && ofGetElapsedTimeMillis()>delayTimer ) {
         bTrigger = false;
         image.setFromPixels(vidGrabber.getPixelsRef());
@@ -121,7 +130,7 @@ void testApp::update(){
         float scale = min((float)vidGrabber.getWidth()/photoWidth,(float)vidGrabber.getHeight()/photoHeight);
         int newWidth = floor(photoWidth*scale);
         int newHeight = floor(photoHeight*scale);
-        cout << newWidth << "\t" << newHeight << endl;
+//        cout << newWidth << "\t" << newHeight << endl;
 //
 //        stringstream ss;
 //        ss << "PHOTO_" << ofGetHours() << "_" << ofGetMinutes() << "_" << ofGetSeconds();
@@ -156,11 +165,13 @@ void testApp::update(){
 
         string imageName = ofToString(imageCounter);
         imageCounter++;
-        cout << "saving photo " << imageCounter << endl;
+        cout << "saving photo " << imageName << endl;
+        
         image.saveImage("photos/"+imageName+"."+EXTENSION);
         image.resize(thumbWidth, thumbHeight);
         image.saveImage("thumbs/"+imageName+"."+EXTENSION);
         image.update();
+        
 
         ofxOscMessage m;
         m.setAddress("/new");
@@ -187,8 +198,31 @@ void testApp::update(){
 		ofxOscMessage m;
 		receiver.getNextMessage( &m );
 
-		// check for mouse moved message
-		if ( m.getAddress() == "/delete" ) {
+		
+        if ( m.getAddress() == "/heartbeat" ) {
+            string host = m.getRemoteIp();
+            if (senders.find(host)==senders.end()) {
+                
+                int port = m.getArgAsInt32(0);
+                ofxOscSender *sender = new ofxOscSender();
+                sender->setup(host,port);
+                
+                senders[host]=sender;
+                
+                cout <<"list for new client: " << host << "\t" << port << endl;
+                list(sender);
+            } 
+		} else if ( m.getAddress() == "/list" ) {
+            
+            
+            string host = m.getRemoteIp();
+            map<string,ofxOscSender*>::iterator iter = senders.find(host);
+            if (iter!=senders.end()) {
+                cout <<"list for existing client: " << host << endl;
+                list(iter->second);
+            }
+            
+		} else if ( m.getAddress() == "/delete" ) {
             string name = m.getArgAsString(0);
 			ofFile file(ofToDataPath("photos/"+name+"."+EXTENSION));
             if (file.exists()) {
@@ -208,63 +242,25 @@ void testApp::update(){
                 iter->second->sendMessage(m);
             }
 
-		}  else if ( m.getAddress() == "/list" ) {
-
-            ofxOscSender *sender;
-
-            string host = m.getRemoteIp();
-            if (senders.find(host)==senders.end()) {
-
-                int port = m.getArgAsInt32(0);
-                sender = new ofxOscSender();
-                sender->setup(host,port);
-
-                senders[host]=sender;
-
-                cout <<"new client: " << host << "\t" << port << endl;
-            } else {
-                sender = senders[host];
-                cout <<"existing client: " << host << endl;
-            }
-
-
-
-
-            ofDirectory dir(ofToDataPath("photos"));
-            dir.listDir();
-            vector<string> names;
-            
-            for (int i=0;i<dir.size();i++) {
-                names.push_back(ofSplitString(dir.getName(i), ".").front());
-            }
-            
-            sort (names.begin(), names.end(), myfunction); 
-
-            
-            cout << "list" << endl;
-            for (vector<string>::iterator iter= names.begin(); iter!=names.end();iter++) {
-                ofxOscMessage m;
-                m.setAddress("/add");
-                m.addStringArg(*iter);
-                sender->sendMessage(m);
-                cout << "\t" << *iter << endl;
-            }
-
-		}
+		}  
 
     }
 
 
     if (ofGetElapsedTimeMillis()-processTimer>PROCESS_DELAY) {
-        cout << "processing" << endl;
+        
+        time_t rawtime;
+        time ( &rawtime );
+        cout << ctime (&rawtime) << endl;
         processTimer = ofGetElapsedTimeMillis();
 
         ofDirectory dir(ofToDataPath("photos"));
         dir.listDir();
         for (int i=0;i<dir.size();i++) {
             float diff = difftime(time(NULL),dir.getFile(i).getPocoFile().getLastModified().epochTime()) / 60;
-            cout << dir.getName(i) << "\tdiff: " << diff << "\t" << endl ;
+            //cout << dir.getName(i) << "\tdiff: " << diff << "\t" << endl ;
             if (diff>lifetime) {
+                cout << "deleting " << dir.getName(i) << endl;
                 dir.getFile(i).remove();
 
                 ofFile file(ofToDataPath("thumbs/"+dir.getName(i)));
@@ -286,7 +282,26 @@ void testApp::update(){
     }
 }
 
+void testApp::list(ofxOscSender *sender) {
+    ofDirectory dir(ofToDataPath("photos"));
+    dir.listDir();
+    vector<string> names;
+    
+    for (int i=0;i<dir.size();i++) {
+        names.push_back(ofSplitString(dir.getName(i), ".").front());
+    }
+    sort (names.begin(), names.end(), myfunction);
 
+    for (vector<string>::iterator iter= names.begin(); iter!=names.end();iter++) {
+        ofxOscMessage m;
+        m.setAddress("/add");
+        m.addStringArg(*iter);
+        sender->sendMessage(m);
+        cout << "\t" << *iter ;
+    }
+    cout << endl;
+
+}
 
 //--------------------------------------------------------------
 void testApp::draw(){
@@ -319,11 +334,46 @@ void testApp::exit() {
 }
 
 void testApp::trigger() {
+    cout << "triggered...\t";
     delayTimer = ofGetElapsedTimeMillis()+3000;
     bTrigger = true;
     sound.play();
     blinkCounter = 4;
     blinkTimer = ofGetElapsedTimeMillis();
+}
+
+void testApp::mailAlert(string subject) {
+    cout << "sending mail alert" << endl;
+    
+    SMTPClientSession * session;
+    
+    try{
+        
+        session=new Poco::Net::SMTPClientSession("192.168.10.120",OFX_SMTP_PORT);
+        session->login();
+        
+        
+        Poco::Net::MailMessage message;
+        message.setDate(Poco::Timestamp());
+        message.setSender("noreply@towerofdavid.org.il");
+        message.setSubject(subject);
+        
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"roikr75@gmail.com"));
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"lofipeople@gmail.com"));
+        session->sendMessage(message);
+                
+        if (session) {
+            session->close();
+            session = 0;
+        }
+    }catch(Poco::Exception e){
+        ofLog(OF_LOG_ERROR,"cannot connect to the server");
+        
+        if (session) {
+            session->close();
+        }
+    }
+    
 }
 
 //--------------------------------------------------------------
