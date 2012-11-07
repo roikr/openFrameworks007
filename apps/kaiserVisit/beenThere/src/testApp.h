@@ -32,6 +32,7 @@ public:
     void share();
     void sendMail();
     void done(bool bDelete);
+    void mailAlert(string subject);
     void exit();
 	
 	void touchDown(ofTouchEventArgs &touch);

@@ -232,6 +232,8 @@ void testApp::setup(){
     heartbeatTimer = ofGetElapsedTimeMillis();
     
     list(); // if we are already register at the server plz list (else, will list in the first heartbeat)
+    
+    
 }
 
 void testApp::list() {
@@ -623,7 +625,7 @@ void testApp::refresh() {
             }
             
             success.getChild("T_SUCCESSFULLY_"+lang)->bVisible = bSuccess;
-//            shareInterface->getChild("B_FACEBOOK_"+lang)->bVisible = true; // roikr
+            shareInterface->getChild("B_FACEBOOK_"+lang)->bVisible = true;
             shareInterface->getChild("B_MAIL_"+lang)->bVisible = true;
             shareInterface->getChild("B_FINISH_"+lang)->bVisible = true;
                     
@@ -1098,6 +1100,41 @@ void testApp::mailComposer(int &result) {
 }
 */
 
+void testApp::mailAlert(string subject) {
+    cout << "sending mail alert" << endl;
+    
+    SMTPClientSession * session;
+    
+    try{
+        
+        session=new Poco::Net::SMTPClientSession("192.168.10.120",OFX_SMTP_PORT);
+        session->login();
+        
+        
+        Poco::Net::MailMessage message;
+        message.setDate(Poco::Timestamp());
+        message.setSender("noreply@towerofdavid.org.il");
+        message.setSubject(subject);
+        
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"roikr75@gmail.com"));
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"lofipeople@gmail.com"));
+        session->sendMessage(message);
+        
+        if (session) {
+            session->close();
+            session = 0;
+        }
+    }catch(Poco::Exception e){
+        ofLog(OF_LOG_ERROR,"cannot connect to the server");
+        
+        if (session) {
+            session->close();
+        }
+    }
+    
+}
+
+
 void testApp::facebookEvent(ofxFBEventArgs &args) {
     cout << "facebookEvent, action: " << args.action << ", status: " << args.status << endl << "message: " << args.message << endl;
     //    ofBuffer buffer;
@@ -1114,26 +1151,52 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
             switch (args.status) {
                 case FACEBOOK_SUCCEEDED:
                     if (fbState == FB_STATE_LOGIN) {
-                        fbState = FB_STATE_UPLOAD;
-                        if (state == STATE_SHARE) {
-                            bSuccess = true;
-                        }
-                        fb.postImage(shareImage,defaultTexts["FACEBOOK_"+lang]);
+                        fb.getMe();
                     }
-                    
-                    
-                    
-                    
                     break;
                 case FACEBOOK_FAILED:
-                   
                     fbState = FB_STATE_IDLE;
                     break;
-                    
                 default:
                     break;
             }
 
+            break;
+        case FACEBOOK_ACTION_GET_ME:
+            switch (args.status) {
+                case FACEBOOK_SUCCEEDED:
+                    
+                    if (fbState == FB_STATE_LOGIN) {
+                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                        NSString *fbid = [defaults objectForKey:@"fbid"];
+                        
+                        if (!fbid || args.message!=ofxNSStringToString(fbid)) {
+                            [defaults setValue:ofxStringToNSString(args.message) forKey:@"fbid"];
+                            [defaults synchronize];
+                            fbState = FB_STATE_UPLOAD;
+                            if (state == STATE_SHARE) {
+                                bSuccess = true;
+                            }
+                            fb.postImage(shareImage,defaultTexts["FACEBOOK_"+lang]);
+                        } else {
+                            /* open an alert with an OK button */
+                            NSString *message = @"Only one Facebook upload per account is allowed.You can still send your photos by e-mail.";
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops." message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                            [alert show];
+                            [alert release];
+                            mailAlert(args.message+" is trying to login into facebook repeatedly");
+                            fbState = FB_STATE_IDLE;
+                        }
+                        
+                    }
+                    break;
+                case FACEBOOK_FAILED:
+                    fbState = FB_STATE_IDLE;
+                    break;
+                default:
+                    break;
+            }
+            
             break;
         case FACEBOOK_ACTION_POST_IMAGE:
             switch (args.status) {
