@@ -16,6 +16,11 @@ using Poco::Exception;
 
 #define OFX_SMTP_PORT 25
 
+string getTime() {
+    time_t rawtime;
+    time ( &rawtime );
+    return string(ctime (&rawtime));
+}
 
 
 //--------------------------------------------------------------
@@ -76,6 +81,12 @@ void testApp::update(){
 	ofBackground(100,100,100);
     vidGrabber.grabFrame();
     
+    for (map<string,sender>::iterator iter = senders.begin();iter!=senders.end();iter++) {
+        if (iter->second.bConnected && ofGetElapsedTimeMillis() > iter->second.timer+60000) {
+            iter->second.bConnected = false;
+            cout << getTime() << iter->first << " is disconnected" << endl;
+        }
+    }
     
     if (!bConnected) {
         if (ofGetElapsedTimeMillis()>serialTimer) {
@@ -176,8 +187,8 @@ void testApp::update(){
         ofxOscMessage m;
         m.setAddress("/new");
         m.addStringArg(imageName);
-        for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
-            iter->second->sendMessage(m);
+        for (map<string,sender>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+            iter->second.osc->sendMessage(m);
         }
 
     }
@@ -201,25 +212,39 @@ void testApp::update(){
 		
         if ( m.getAddress() == "/heartbeat" ) {
             string host = m.getRemoteIp();
-            if (senders.find(host)==senders.end()) {
+            map<string,sender>::iterator iter = senders.find(host);
+            if (iter==senders.end()) {
                 
                 int port = m.getArgAsInt32(0);
-                ofxOscSender *sender = new ofxOscSender();
-                sender->setup(host,port);
                 
-                senders[host]=sender;
+                sender s;
                 
-                cout <<"list for new client: " << host << "\t" << port << endl;
-                list(sender);
-            } 
+                s.osc = new ofxOscSender();
+                s.osc->setup(host,port);
+                s.timer=ofGetElapsedTimeMillis();
+                s.bConnected = true;
+                
+                senders[host]=s;
+               
+                
+                cout << getTime() <<"list for new client: " << host << "\t" << port << "\t";
+                list(s.osc);
+            } else {
+                if (!iter->second.bConnected) {
+                    iter->second.bConnected = true;
+                    cout << getTime() << iter->first << " reconnected" << endl;
+                }
+                iter->second.timer = ofGetElapsedTimeMillis();
+                
+            }
 		} else if ( m.getAddress() == "/list" ) {
             
             
             string host = m.getRemoteIp();
-            map<string,ofxOscSender*>::iterator iter = senders.find(host);
+            map<string,sender>::iterator iter = senders.find(host);
             if (iter!=senders.end()) {
-                cout <<"list for existing client: " << host << endl;
-                list(iter->second);
+                cout << getTime() <<"list for existing client: " << host << "\t";
+                list(iter->second.osc);
             }
             
 		} else if ( m.getAddress() == "/delete" ) {
@@ -238,8 +263,8 @@ void testApp::update(){
             m.clear();
             m.setAddress("/remove");
             m.addStringArg(name);
-            for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
-                iter->second->sendMessage(m);
+            for (map<string,sender>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+                iter->second.osc->sendMessage(m);
             }
 
 		}  
@@ -249,9 +274,7 @@ void testApp::update(){
 
     if (ofGetElapsedTimeMillis()-processTimer>PROCESS_DELAY) {
         
-        time_t rawtime;
-        time ( &rawtime );
-        cout << ctime (&rawtime) << endl;
+        
         processTimer = ofGetElapsedTimeMillis();
 
         ofDirectory dir(ofToDataPath("photos"));
@@ -260,7 +283,7 @@ void testApp::update(){
             float diff = difftime(time(NULL),dir.getFile(i).getPocoFile().getLastModified().epochTime()) / 60;
             //cout << dir.getName(i) << "\tdiff: " << diff << "\t" << endl ;
             if (diff>lifetime) {
-                cout << "deleting " << dir.getName(i) << endl;
+                cout << getTime() << "deleting " << dir.getName(i) << endl;
                 dir.getFile(i).remove();
 
                 ofFile file(ofToDataPath("thumbs/"+dir.getName(i)));
@@ -272,8 +295,8 @@ void testApp::update(){
 
                 m.setAddress("/remove");
                 m.addStringArg(ofSplitString(dir.getName(i), ".").front());
-                for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
-                    iter->second->sendMessage(m);
+                for (map<string,sender>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+                    iter->second.osc->sendMessage(m);
                 }
 
             }
@@ -326,15 +349,15 @@ void testApp::draw(){
 
 void testApp::exit() {
     vidGrabber.close();
-    for (map<string,ofxOscSender*>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
-        delete iter->second;
+    for (map<string,sender>::iterator iter=senders.begin(); iter!=senders.end(); iter++) {
+        delete iter->second.osc;
     }
     
     
 }
 
 void testApp::trigger() {
-    cout << "triggered...\t";
+    cout << getTime() << "triggered...\t";
     delayTimer = ofGetElapsedTimeMillis()+3000;
     bTrigger = true;
     sound.play();
@@ -343,7 +366,7 @@ void testApp::trigger() {
 }
 
 void testApp::mailAlert(string subject) {
-    cout << "sending mail alert" << endl;
+    cout << getTime() << "sending mail alert" << endl;
     
     SMTPClientSession * session;
     
@@ -360,6 +383,7 @@ void testApp::mailAlert(string subject) {
         
         message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"roikr75@gmail.com"));
         message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"lofipeople@gmail.com"));
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"yaal@roth-tevet.com"));
         session->sendMessage(message);
                 
         if (session) {

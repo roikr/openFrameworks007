@@ -5,6 +5,13 @@
 #include "ofxHTTPServer.h"
 #include "ofxSerial.h"
 
+struct sender {
+    ofxOscSender* osc;
+    int timer;
+    bool bConnected;
+    
+};
+
 
 class testApp : public ofBaseApp{
 
@@ -39,7 +46,7 @@ class testApp : public ofBaseApp{
 		float thumbHeight;
 
 
-    map<string,ofxOscSender*> senders;
+    map<string,sender> senders;
     ofxOscReceiver receiver;
 
     int delayTimer;
