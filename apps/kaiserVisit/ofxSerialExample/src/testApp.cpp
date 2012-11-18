@@ -1,5 +1,9 @@
 #include "testApp.h"
 
+#include <sys/ioctl.h>
+#include <getopt.h>
+#include <dirent.h>
+
 //--------------------------------------------------------------
 void testApp::setup(){	 
 
@@ -11,33 +15,36 @@ void testApp::setup(){
 
 	
 			
-	serial = 0;
+	
     pin = 0;
 	
 	serialTimer = ofGetElapsedTimeMillis();
-    
+    bConnected = false;
 	    
    
 }
+
 
 //--------------------------------------------------------------
 void testApp::update(){
 	
     string s;
-    if (!serial) {
-        cout << "\nconnecting" << endl;
-//        serial = new ofxSerial("/dev/tty.usbmodemfd121", 9600);
-        serial = new ofxSerial("/dev/tty.usbserial-A6006kiO", 9600);
-        serialTimer = ofGetElapsedTimeMillis()+5000;
-    } else {
-        if (serial->readUntil(s, 'e')) {
-            cout << s ;
+    if (!bConnected) {
+        if (ofGetElapsedTimeMillis()>serialTimer) {
+            cout << "\nconnecting" << endl;
+            bConnected=serial.connect(9600);
             serialTimer = ofGetElapsedTimeMillis()+5000;
+        }
+    } else {
+        if (serial.readUntil(s, 'e')) {
+            cout << s ;
+            serialTimer = ofGetElapsedTimeMillis()+1000;
             pin = s[s.length()-2]-'0';
         } else {
             cout << ".";
             if (ofGetElapsedTimeMillis()>serialTimer) {
-                serial = 0;
+                bConnected = false;
+                serial.close();
             }
         }
         
@@ -64,11 +71,19 @@ void testApp::draw(){
 
 }
 
+
+    
+    
+
+
+
+
+
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){
-    if (serial) {
+    if (bConnected) {
         const char s = key;
-        serial->writeBytes(&s, 1);
+        serial.writeBytes(&s, 1);
     }
 }
 
