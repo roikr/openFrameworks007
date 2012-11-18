@@ -51,6 +51,7 @@
 		E4764B7B161A53A6003E6BCB /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B78161A53A6003E6BCB /* Icon-72.png */; };
 		E4764B7C161A53A6003E6BCB /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B79161A53A6003E6BCB /* Icon-Small-50.png */; };
 		E4A39D9215DE1AE8008ACE7E /* ofxDraggable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */; };
+		E4D025E0164C09C60051FC65 /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E4D025DF164C09C60051FC65 /* FacebookSDKResources.bundle */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -84,13 +85,6 @@
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E402A9A216428DB800C10889 /* ofxiOffScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiOffScreen.h; sourceTree = "<group>"; };
 		E402A9A316428DB800C10889 /* ofxiOffScreen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiOffScreen.mm; sourceTree = "<group>"; };
-		E403781715E15FCA00789BC6 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
-		E403781815E15FCA00789BC6 /* testApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
-		E403781915E15FCA00789BC6 /* testApp.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
-		E403781E15E15FCA00789BC6 /* ofxiStillCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxiStillCamera.h; sourceTree = "<group>"; };
-		E403781F15E15FCA00789BC6 /* ofxiStillCamera.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiStillCamera.mm; sourceTree = "<group>"; };
-		E403782015E15FCA00789BC6 /* StillCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StillCamera.h; sourceTree = "<group>"; };
-		E403782115E15FCA00789BC6 /* StillCamera.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
 		E403782915E15FE000789BC6 /* ofxiMail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxiMail.h; sourceTree = "<group>"; };
 		E403782A15E1600200789BC6 /* ofxiMail.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiMail.mm; sourceTree = "<group>"; };
 		E403784615E16F8000789BC6 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
@@ -158,6 +152,7 @@
 		E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDraggable.cpp; sourceTree = "<group>"; };
 		E4A39D9115DE1AE8008ACE7E /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		E4D025DF164C09C60051FC65 /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../../../FacebookSDK/build/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
@@ -253,7 +248,6 @@
 			children = (
 				E450930915EF543400FD0F4C /* ofxiFacebook */,
 				E409644D15E36AE600A30BF8 /* ofxSettings */,
-				E40377D415E15FC900789BC6 /* ofxiStillCamera */,
 				E40ED88915D15E6300556B9C /* ofxOsc */,
 				E44BC7E115B2D84F00CD7BBD /* ofxXmlSettings */,
 				E44BC7DC15B2D70400CD7BBD /* ofxiTexture */,
@@ -294,48 +288,10 @@
 			name = core;
 			sourceTree = "<group>";
 		};
-		E40377D415E15FC900789BC6 /* ofxiStillCamera */ = {
-			isa = PBXGroup;
-			children = (
-				E40377D515E15FC900789BC6 /* example */,
-				E403781D15E15FCA00789BC6 /* src */,
-			);
-			name = ofxiStillCamera;
-			path = "../../../My Addons/ofxiStillCamera";
-			sourceTree = "<group>";
-		};
-		E40377D515E15FC900789BC6 /* example */ = {
-			isa = PBXGroup;
-			children = (
-				E403781615E15FCA00789BC6 /* src */,
-			);
-			path = example;
-			sourceTree = "<group>";
-		};
-		E403781615E15FCA00789BC6 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E403781715E15FCA00789BC6 /* main.mm */,
-				E403781815E15FCA00789BC6 /* testApp.h */,
-				E403781915E15FCA00789BC6 /* testApp.mm */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E403781D15E15FCA00789BC6 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E403781E15E15FCA00789BC6 /* ofxiStillCamera.h */,
-				E403781F15E15FCA00789BC6 /* ofxiStillCamera.mm */,
-				E403782015E15FCA00789BC6 /* StillCamera.h */,
-				E403782115E15FCA00789BC6 /* StillCamera.m */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		E403B30B15F73FB6000A3535 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E4D025DF164C09C60051FC65 /* FacebookSDKResources.bundle */,
 				E43A82CB1641A1C8002A54B0 /* FBUserSettingsViewResources.bundle */,
 			);
 			name = Resources;
@@ -664,6 +620,7 @@
 				E4764B7B161A53A6003E6BCB /* Icon-72.png in Resources */,
 				E4764B7C161A53A6003E6BCB /* Icon-Small-50.png in Resources */,
 				E43A82CC1641A1C8002A54B0 /* FBUserSettingsViewResources.bundle in Resources */,
+				E4D025E0164C09C60051FC65 /* FacebookSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -784,10 +741,10 @@
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
 				GCC_WARN_PROTOTYPE_CONVERSION = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
@@ -811,9 +768,9 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
@@ -837,10 +794,10 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AA0197A7-8770-4682-A1F5-F792FF42B8E9";
-				SDKROOT = iphoneos;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EAB02B79-83BD-4A3F-B553-1099C19A246E";
+				SDKROOT = iphoneos6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";

@@ -53,7 +53,10 @@ void testApp::setup(){
 	// register touch events
 	ofRegisterTouchEvents(this);
 
-	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+	// hacking of ofxiPhoneAppDelegate.mm - flip frame buffer width and height
+    ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_PORTRAIT);
+    //[[UIApplication sharedApplication]  setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:NO];
+    
     
     ofRegisterURLNotification(this);
     ofEnableAlphaBlending();
@@ -1118,6 +1121,7 @@ void testApp::mailAlert(string subject) {
         
         message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"roikr75@gmail.com"));
         message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"lofipeople@gmail.com"));
+        message.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,"yaal@roth-tevet.com"));
         session->sendMessage(message);
         
         if (session) {
@@ -1179,13 +1183,15 @@ void testApp::facebookEvent(ofxFBEventArgs &args) {
                             }
                             fb.postImage(shareImage,defaultTexts["FACEBOOK_"+lang]);
                         } else {
+                             mailAlert(args.message+" is trying to login into facebook repeatedly");
                             /* open an alert with an OK button */
-                            NSString *message = @"Only one Facebook upload per account is allowed.You can still send your photos by e-mail.";
+                            NSString *message = @"Only one Facebook upload per account is allowed. You can still send your photos by e-mail.";
                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops." message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                             [alert show];
                             [alert release];
-                            mailAlert(args.message+" is trying to login into facebook repeatedly");
+                           
                             fbState = FB_STATE_IDLE;
+                            
                         }
                         
                     }

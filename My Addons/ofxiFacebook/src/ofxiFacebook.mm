@@ -32,6 +32,19 @@ void ofxiFacebook::login(vector<string> permissions) {
 
     [[FBSession activeSession] closeAndClearTokenInformation];
     
+    NSLog(@"Logged out of facebook");
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (cookie in [storage cookies])
+    {
+        NSString* domainName = [cookie domain];
+        NSRange domainRange = [domainName rangeOfString:@"facebook"];
+        if(domainRange.length > 0)
+        {
+            [storage deleteCookie:cookie];
+        }
+    }
+    
     
     [FBSession setActiveSession:[[FBSession alloc] initWithPermissions:convertPermissions(permissions)]];
 
