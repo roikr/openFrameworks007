@@ -24,6 +24,18 @@ void testApp::setup(){
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops." message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
     [alert release];
+    
+    int sscale = [[UIScreen mainScreen] scale];
+    ofRectangle rect(0,0,200,50) ;
+    
+    keyboard = new ofxiPhoneKeyboard(rect.x/sscale,rect.y/sscale,rect.width/sscale,rect.height/sscale);
+	keyboard->setVisible(false);
+    //	keyboard->setBgColor(255, 255, 255, 0);
+	keyboard->setFontColor(255,255,255, 255);
+	keyboard->setFontSize(52);
+    //    keyboard->setText("roikr75@gmail.com");
+    [keyboard->getTextField() setKeyboardType:UIKeyboardTypeEmailAddress];
+    bKeyboard = false;
 
 }
 
@@ -62,7 +74,16 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-
+    if (bKeyboard) {    
+        keyboard->setVisible(false);
+        cout << keyboard->getText();
+    } else {
+        keyboard->setText("");
+        keyboard->setVisible(true);
+        keyboard->openKeyboard();
+    }
+    bKeyboard =!bKeyboard;
+    
 }
 
 //--------------------------------------------------------------

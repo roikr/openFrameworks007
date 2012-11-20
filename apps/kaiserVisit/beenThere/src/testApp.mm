@@ -189,6 +189,7 @@ void testApp::setup(){
     ofRectangle rect = mailInterface.getChild("EMAIL_BOX")->getBoundingBox(mailInterface.mat) ;
     cout << rect.x << "\t" << rect.y << "\t" << rect.width << "\t" << rect.height << endl;
     
+    // hacking of ofxiPhoneKeyboard.mm - init and setFrame - for ios6
     keyboard = new ofxiPhoneKeyboard(rect.x/sscale,rect.y/sscale,rect.width/sscale,rect.height/sscale);
 	keyboard->setVisible(false);
 //	keyboard->setBgColor(255, 255, 255, 0);
@@ -903,6 +904,7 @@ void testApp::touchDown(ofTouchEventArgs &touch){
                     state = STATE_MAIL;
                     bSuccess = false;
                     actionTime = ofGetElapsedTimeMillis();
+                    keyboard->setText("");
                     keyboard->setVisible(true);
                     keyboard->openKeyboard();
                     

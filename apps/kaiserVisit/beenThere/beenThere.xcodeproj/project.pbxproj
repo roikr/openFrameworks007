@@ -22,7 +22,6 @@
 		E409645315E36AE600A30BF8 /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = E409645115E36AE600A30BF8 /* Settings.mm */; };
 		E409645515E36B6200A30BF8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E409645415E36B6200A30BF8 /* Settings.bundle */; };
 		E40ED8AD15D15E6300556B9C /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E40ED88A15D15E6300556B9C /* install.xml */; };
-		E40ED8AE15D15E6300556B9C /* osc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E40ED89F15D15E6300556B9C /* osc.a */; };
 		E40ED8B015D15E6300556B9C /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E40ED8A515D15E6300556B9C /* ofxOscBundle.cpp */; };
 		E40ED8B115D15E6300556B9C /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E40ED8A715D15E6300556B9C /* ofxOscMessage.cpp */; };
 		E40ED8B215D15E6300556B9C /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E40ED8A915D15E6300556B9C /* ofxOscReceiver.cpp */; };
@@ -43,13 +42,14 @@
 		E44BC7ED15B2D84F00CD7BBD /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E615B2D84F00CD7BBD /* tinyxmlerror.cpp */; };
 		E44BC7EE15B2D84F00CD7BBD /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */; };
 		E44BC7EF15B2D84F00CD7BBD /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */; };
+		E44E3C8B165A3F1C00241E14 /* osc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E44E3C8A165A3F1C00241E14 /* osc.a */; };
 		E450930E15EF543400FD0F4C /* FACEBOOK in Resources */ = {isa = PBXBuildFile; fileRef = E450930A15EF543400FD0F4C /* FACEBOOK */; };
 		E450930F15EF543400FD0F4C /* ofxiFacebook.mm in Sources */ = {isa = PBXBuildFile; fileRef = E450930D15EF543400FD0F4C /* ofxiFacebook.mm */; };
 		E468E3C515E20EF7001A0F14 /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E468E3C215E20E5D001A0F14 /* libofxiPhone_iphoneos_Debug.a */; };
 		E46C1A311590C97C006C1C65 /* ofxScrollCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */; };
-		E4764B7A161A53A6003E6BCB /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B77161A53A6003E6BCB /* Default-Portrait.png */; };
 		E4764B7B161A53A6003E6BCB /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B78161A53A6003E6BCB /* Icon-72.png */; };
 		E4764B7C161A53A6003E6BCB /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = E4764B79161A53A6003E6BCB /* Icon-Small-50.png */; };
+		E4A2D782165AD07B00BE6481 /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = E4A2D781165AD07B00BE6481 /* Default-Landscape.png */; };
 		E4A39D9215DE1AE8008ACE7E /* ofxDraggable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */; };
 		E4D025E0164C09C60051FC65 /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E4D025DF164C09C60051FC65 /* FacebookSDKResources.bundle */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
@@ -109,7 +109,6 @@
 		E40ED89A15D15E6300556B9C /* OscPrintReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OscPrintReceivedElements.h; sourceTree = "<group>"; };
 		E40ED89B15D15E6300556B9C /* OscReceivedElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OscReceivedElements.h; sourceTree = "<group>"; };
 		E40ED89C15D15E6300556B9C /* OscTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OscTypes.h; sourceTree = "<group>"; };
-		E40ED89F15D15E6300556B9C /* osc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = osc.a; sourceTree = "<group>"; };
 		E40ED8A315D15E6300556B9C /* ofxOsc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOsc.h; sourceTree = "<group>"; };
 		E40ED8A415D15E6300556B9C /* ofxOscArg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOscArg.h; sourceTree = "<group>"; };
 		E40ED8A515D15E6300556B9C /* ofxOscBundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOscBundle.cpp; sourceTree = "<group>"; };
@@ -140,15 +139,16 @@
 		E44BC7E715B2D84F00CD7BBD /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E44BC7E915B2D84F00CD7BBD /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E44BC7EA15B2D84F00CD7BBD /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		E44E3C8A165A3F1C00241E14 /* osc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = osc.a; sourceTree = "<group>"; };
 		E450930A15EF543400FD0F4C /* FACEBOOK */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FACEBOOK; sourceTree = "<group>"; };
 		E450930C15EF543400FD0F4C /* ofxiFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiFacebook.h; sourceTree = "<group>"; };
 		E450930D15EF543400FD0F4C /* ofxiFacebook.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiFacebook.mm; sourceTree = "<group>"; };
 		E468E3BA15E20E5D001A0F14 /* iOS+OFLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iOS+OFLib.xcodeproj"; path = "../../openFrameworks/libs/openFrameworksCompiled/project/ios/iOS+OFLib.xcodeproj"; sourceTree = "<group>"; };
 		E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxScrollCollection.h; sourceTree = "<group>"; };
 		E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxScrollCollection.cpp; sourceTree = "<group>"; };
-		E4764B77161A53A6003E6BCB /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
 		E4764B78161A53A6003E6BCB /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		E4764B79161A53A6003E6BCB /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50.png"; sourceTree = "<group>"; };
+		E4A2D781165AD07B00BE6481 /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape.png"; sourceTree = "<group>"; };
 		E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDraggable.cpp; sourceTree = "<group>"; };
 		E4A39D9115DE1AE8008ACE7E /* ofxDraggable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDraggable.h; sourceTree = "<group>"; };
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -180,8 +180,8 @@
 				E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */,
 				E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */,
 				E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */,
-				E40ED8AE15D15E6300556B9C /* osc.a in Frameworks */,
 				E43A82CA1641A1B8002A54B0 /* FacebookSDK.framework in Frameworks */,
+				E44E3C8B165A3F1C00241E14 /* osc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +260,7 @@
 		BB24DD8B10DA77E000E9C588 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				E4764B77161A53A6003E6BCB /* Default-Portrait.png */,
+				E4A2D781165AD07B00BE6481 /* Default-Landscape.png */,
 				E4764B78161A53A6003E6BCB /* Icon-72.png */,
 				E4764B79161A53A6003E6BCB /* Icon-Small-50.png */,
 				E409645415E36B6200A30BF8 /* Settings.bundle */,
@@ -392,6 +392,7 @@
 		E40ED89415D15E6300556B9C /* osc */ = {
 			isa = PBXGroup;
 			children = (
+				E44E3C89165A3F1C00241E14 /* iphone */,
 				E40ED89515D15E6300556B9C /* MessageMappingOscPacketListener.h */,
 				E40ED89615D15E6300556B9C /* OscException.h */,
 				E40ED89715D15E6300556B9C /* OscHostEndianness.h */,
@@ -407,17 +408,8 @@
 		E40ED89D15D15E6300556B9C /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				E40ED89E15D15E6300556B9C /* iphone */,
 			);
 			path = lib;
-			sourceTree = "<group>";
-		};
-		E40ED89E15D15E6300556B9C /* iphone */ = {
-			isa = PBXGroup;
-			children = (
-				E40ED89F15D15E6300556B9C /* osc.a */,
-			);
-			path = iphone;
 			sourceTree = "<group>";
 		};
 		E40ED8A215D15E6300556B9C /* src */ = {
@@ -502,6 +494,15 @@
 				E44BC7EA15B2D84F00CD7BBD /* ofxXmlSettings.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		E44E3C89165A3F1C00241E14 /* iphone */ = {
+			isa = PBXGroup;
+			children = (
+				E44E3C8A165A3F1C00241E14 /* osc.a */,
+			);
+			name = iphone;
+			path = ../../lib/iphone;
 			sourceTree = "<group>";
 		};
 		E450930915EF543400FD0F4C /* ofxiFacebook */ = {
@@ -616,11 +617,11 @@
 				E409645215E36AE600A30BF8 /* README.md in Resources */,
 				E409645515E36B6200A30BF8 /* Settings.bundle in Resources */,
 				E450930E15EF543400FD0F4C /* FACEBOOK in Resources */,
-				E4764B7A161A53A6003E6BCB /* Default-Portrait.png in Resources */,
 				E4764B7B161A53A6003E6BCB /* Icon-72.png in Resources */,
 				E4764B7C161A53A6003E6BCB /* Icon-Small-50.png in Resources */,
 				E43A82CC1641A1C8002A54B0 /* FBUserSettingsViewResources.bundle in Resources */,
 				E4D025E0164C09C60051FC65 /* FacebookSDKResources.bundle in Resources */,
+				E4A2D782165AD07B00BE6481 /* Default-Landscape.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -744,7 +745,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos6.0;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
@@ -770,7 +771,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = iphoneos6.0;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
@@ -797,7 +798,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EAB02B79-83BD-4A3F-B553-1099C19A246E";
-				SDKROOT = iphoneos6.0;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";

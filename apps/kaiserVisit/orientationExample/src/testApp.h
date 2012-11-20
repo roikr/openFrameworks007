@@ -22,6 +22,9 @@ public:
 	void gotFocus();
 	void gotMemoryWarning();
 	void deviceOrientationChanged(int newOrientation);
+    
+    ofxiPhoneKeyboard *keyboard;
+    bool bKeyboard;
 
 };
 
