@@ -177,10 +177,10 @@
 		<Unit filename="src\testApp.h">
 			<Option virtualFolder="src" />
 		</Unit>
-		<Unit filename="src\ofxBrush.cpp">
+		<Unit filename="src\ofxPencil.cpp">
 			<Option virtualFolder="src" />
 		</Unit>
-		<Unit filename="src\ofxBrush.h">
+		<Unit filename="src\ofxPencil.h">
 			<Option virtualFolder="src" />
 		</Unit>
 		<Unit filename="src\ofxSimpleBrush.cpp">

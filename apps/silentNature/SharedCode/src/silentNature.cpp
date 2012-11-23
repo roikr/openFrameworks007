@@ -36,6 +36,10 @@ void silentNature::setup(){
             ofHideCursor();
         }
         
+        if (xml.getNumTags("window")) {
+            ofToggleFullscreen();
+        }
+        
         if (xml.tagExists("video")) {
             idle = xml.getAttribute("video", "idle", 1);
             video.loadMovie(xml.getAttribute("video", "filename", ""));
@@ -84,12 +88,12 @@ void silentNature::setup(){
 //    cout << rect.width << "\t" << rect.height << endl;
     fbo.allocate(rect.width, rect.height);
     
-    ofImage texture;
-    texture.loadImage("crayola_256.png");
+//    ofImage texture;
+//    texture.loadImage("crayola_256.png");
     ofImage tip;
     tip.loadImage("crayonTip.png");
     
-    crayon.setup(tip,CRAYON_THICKNESS,texture,rect.width,rect.height);
+    crayon.setup(tip,CRAYON_THICKNESS,rect.width,rect.height);
     
     ofImage brushTip;
     brushTip.loadImage("brush_256.png");

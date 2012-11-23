@@ -17,7 +17,7 @@
 #include "ofxHttpUtils.h"
 
 #include "ofxEraser.h"
-#include "ofxBrush.h"
+#include "ofxPencil.h"
 #include "ofxSimpleBrush.h"
 
 enum {
@@ -84,7 +84,7 @@ public:
     
     int state;
     
-    ofxBrush crayon;
+    ofxPencil crayon;
     ofxSimpleBrush brush;
     ofxEraser eraser;
     
