@@ -54,8 +54,12 @@ void testApp::setup(){
 	ofRegisterTouchEvents(this);
 
 	// hacking of ofxiPhoneAppDelegate.mm - flip frame buffer width and height
-    ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_PORTRAIT);
-    //[[UIApplication sharedApplication]  setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:NO];
+    if ([[UIDevice currentDevice].systemVersion floatValue] < 6.0) {
+        ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+    } else {
+        ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_PORTRAIT);
+    }
+     // 
     
     
     ofRegisterURLNotification(this);
