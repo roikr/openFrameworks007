@@ -19,7 +19,7 @@ void ofxiStillCamera::preview() {
     
     
     //-- Create CVOpenGLESTextureCacheRef for optimal CVImageBufferRef to GLES texture conversion.
-    CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)[ofxiPhoneGetGLView() context], NULL, &videoTextureCache);
+    CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (CVEAGLContext)[ofxiPhoneGetGLView() context], NULL, &videoTextureCache);
     if (err) 
     {
         NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", err);
