@@ -17,11 +17,14 @@ void testApp::setup(){
     }
     //
     
+    action_url = "http://192.168.10.97:8888/postImage.of";
+	ofAddListener(upload.newResponseEvent,this,&testApp::newResponse);
+	upload.start();
+    counter = 0;
+    
     ofxRegisterStillCameraNotification(this);
     ofxRegisterVolumeButtonsNotification(this);
     buttons.start();
-    ofxRegisterMailNotification(this);
-    mail.setup();
     cout << ofGetWidth() << "x" << ofGetHeight() << endl;
     offscreen.setup(ofGetWidth(),ofGetHeight());
     pixels.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
@@ -44,7 +47,8 @@ void testApp::setup(){
     for (int i=0; i<dir.numFiles(); i++) {
         cout << "loading " << dir.getName(i) << endl;
 		card c;
-		c.mask.loadImage(dir.getPath(i));
+        c.state = STATE_MEMORY_UNLOADED;
+        c.filename = dir.getPath(i);
 		cards.push_back(c);
 		prefs.pages.push_back(ofPoint(0,ofGetHeight()*i));
 		
@@ -57,6 +61,8 @@ void testApp::setup(){
     
     cam.preview();
     
+    startThread();
+    
 }
 
 //--------------------------------------------------------------
@@ -65,13 +71,74 @@ void testApp::update(){
    
     cam.update();
     slider.update();
+    
+    
+    int j=0;
+    int i=slider.getCurrentPage()-2;
+    
+    for (;j<5;i++,j++) {
+        int k = (i+cards.size())%cards.size();
+        if (cards[k].state==STATE_MEMORY_LOADED) {
+            cards[k].mask.setUseTexture(true);
+            cards[k].mask.update();
+            cards[k].state=STATE_TEXTURE_LOADED;
+             cout << "load texture " << k << endl;
+            
+        }
+    }
+    for (;j<cards.size();i++,j++) {
+        int k = (i+cards.size())%cards.size();
+        if (cards[k].state==STATE_TEXTURE_LOADED) {
+            cards[k].mask.getTextureReference().clear();
+            cards[k].state = STATE_TEXTURE_UNLOADED;
+             cout << "unload texture " << k << endl;
+        }
+    }
+    
+    
+    
+}
+
+void testApp::threadedFunction() {
+    
+    while( isThreadRunning() != 0 ){
+        
+        int j=0;
+        int i=slider.getCurrentPage()-2;
+        
+        for (;j<5;i++,j++) {
+            int k = (i+cards.size())%cards.size();
+            if (cards[k].state==STATE_MEMORY_UNLOADED) {
+                cards[k].mask.setUseTexture(false);
+                cards[k].mask.loadImage(cards[k].filename);
+                cards[k].state=STATE_MEMORY_LOADED;
+                cout << "load memory " << k << endl;
+            }
+        }
+        for (;j<cards.size();i++,j++) {
+            int k = (i+cards.size())%cards.size();
+            if (cards[k].state==STATE_TEXTURE_UNLOADED) {
+                cards[k].mask.clear();
+                cards[k].state=STATE_MEMORY_UNLOADED;
+                cout << "unload memory " << k << endl;
+            }
+        }
+        ofSleepMillis(10);
+        
+        
+    }
+    
+    
+    
 }
 
 void testApp::drawCard(card &c) {
-    if (c.photo.bAllocated()) {
-        c.photo.draw(0, 0);
+    if (photo.isAllocated()) {
+        photo.draw(0, 0);
     } else {
-        c.mask.draw(0, 0);
+        if (c.state==STATE_TEXTURE_LOADED) {
+            c.mask.draw(0, 0);
+        }
     }
 }
 
@@ -97,10 +164,12 @@ void testApp::draw(){
     ofPopMatrix();
     
     for (vector<card>::iterator iter=cards.begin(); iter!=cards.end(); iter++) {
+        
         ofPushMatrix();
         ofTranslate(0, distance(cards.begin(), iter) *ofGetHeight(), 0);
         drawCard(*iter);
         ofPopMatrix();
+       
     }
     
     ofPushMatrix();
@@ -117,9 +186,7 @@ void testApp::exit() {
     ofxUnregisterVolumeButtonsNotification(this);
      buttons.stop();
     ofxUnregisterStillCameraNotification(this);
-    ofxUnregisterMailNotification(this);
-    mail.exit();
-   
+       
 }
 
 //--------------------------------------------------------------
@@ -139,14 +206,20 @@ void testApp::touchUp(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs &touch){
-    mailStruct m;
-    m.subject = "Hindsight, first prototype";
-    for (vector<card>::iterator iter=cards.begin(); iter!=cards.end(); iter++) {
-        if (iter->photo.isAllocated()) {
-            m.attachments.push_back(attachmentStruct(iter->buf,"image/jpeg", "CARD_"+ofToString(distance(cards.begin(), iter))+".jpg"));
-        }
-    }
-    mail.sendMail(m);
+//    mailStruct m;
+//    m.subject = "Hindsight, first prototype";
+//    for (vector<card>::iterator iter=cards.begin(); iter!=cards.end(); iter++) {
+//        if (iter->photo.isAllocated()) {
+//            m.attachments.push_back(attachmentStruct(iter->buf,"image/jpeg", "CARD_"+ofToString(distance(cards.begin(), iter))+".jpg"));
+//        }
+//    }
+//    mail.sendMail(m);
+    
+
+    upload.upload(ofxFile("card_"+ofToString(counter)+".jpg", ofxiPhoneGetDocumentsDirectory()+"temp.jpg",action_url));
+	counter++;
+    
+ 
 }
 
 //--------------------------------------------------------------
@@ -157,7 +230,7 @@ void testApp::touchCancelled(ofTouchEventArgs& args){
 void testApp::pictureTaken(ofPixels &pixels) {
     card &c = cards[slider.getCurrentPage()];
     pixels.crop(cam.getWidth()-ofGetWidth(), cam.getHeight()-ofGetHeight(), ofGetWidth(), ofGetHeight());
-    ofImage photo;
+    
     photo.setFromPixels(pixels);
     
     
@@ -169,10 +242,10 @@ void testApp::pictureTaken(ofPixels &pixels) {
     glReadPixels(0, 0, this->pixels.getWidth(), this->pixels.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, this->pixels.getPixels());
     
     offscreen.end();
-    c.photo.setFromPixels(this->pixels);
-    c.photo.setImageType(OF_IMAGE_COLOR);
-    c.photo.saveImage(ofxiPhoneGetDocumentsDirectory()+"temp.jpg",OF_IMAGE_QUALITY_MEDIUM); //
-    c.buf=ofBufferFromFile(ofxiPhoneGetDocumentsDirectory()+"temp.jpg");
+    photo.setFromPixels(this->pixels);
+    photo.setImageType(OF_IMAGE_COLOR);
+    photo.saveImage(ofxiPhoneGetDocumentsDirectory()+"temp.jpg",OF_IMAGE_QUALITY_MEDIUM); //
+    //c.buf=ofBufferFromFile(ofxiPhoneGetDocumentsDirectory()+"temp.jpg");
     
     
 }
@@ -183,7 +256,7 @@ void testApp::volumeButtonPressed(int &button) {
             cam.snap();
             break;
         case VOLUME_BUTTON_DOWN:
-            cards[slider.getCurrentPage()].photo.clear();
+            photo.clear();
             break;
         default:
             break;
@@ -191,7 +264,9 @@ void testApp::volumeButtonPressed(int &button) {
     
 }
 
-void testApp::mailComposer(int &result) {
-    cout << "mailComposer: " << result << endl;
+//--------------------------------------------------------------
+void testApp::newResponse(ofxHttpResponse & response){
+	//responseStr = ofToString(response.status) + ": " + (string)response.responseBody;
 }
+
 

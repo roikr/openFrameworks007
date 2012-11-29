@@ -25,14 +25,12 @@
 		E425351216613F3B00C4BEA1 /* ofxiVolumeButtons.mm in Sources */ = {isa = PBXBuildFile; fileRef = E425350F16613F3B00C4BEA1 /* ofxiVolumeButtons.mm */; };
 		E425351316613F3B00C4BEA1 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = E425351116613F3B00C4BEA1 /* RBVolumeButtons.m */; };
 		E4253515166140ED00C4BEA1 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4253514166140ED00C4BEA1 /* MediaPlayer.framework */; };
-		E42535821661453300C4BEA1 /* ofxiMail.mm in Sources */ = {isa = PBXBuildFile; fileRef = E42535541661453200C4BEA1 /* ofxiMail.mm */; };
 		E42535911661460600C4BEA1 /* CoreOF.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E42535901661460600C4BEA1 /* CoreOF.xcconfig */; };
 		E42535941661483D00C4BEA1 /* libofxiPhone_iphoneos_Debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E425358F166145FB00C4BEA1 /* libofxiPhone_iphoneos_Debug.a */; };
 		E425359D16614BCC00C4BEA1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E425359C16614BCC00C4BEA1 /* MessageUI.framework */; };
 		E42535B216615AC300C4BEA1 /* ofxiOffScreen.mm in Sources */ = {isa = PBXBuildFile; fileRef = E42535B116615AC300C4BEA1 /* ofxiOffScreen.mm */; };
 		E44BC5C015B2CF2600CD7BBD /* ofxiStillCamera.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC58615B2CF2500CD7BBD /* ofxiStillCamera.mm */; };
 		E44BC5C115B2CF2600CD7BBD /* StillCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = E44BC58815B2CF2500CD7BBD /* StillCamera.m */; };
-		E44BC7E015B2D70400CD7BBD /* ofxiTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7DF15B2D70400CD7BBD /* ofxiTexture.mm */; };
 		E44BC7EB15B2D84F00CD7BBD /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = E44BC7E215B2D84F00CD7BBD /* install.xml */; };
 		E44BC7EC15B2D84F00CD7BBD /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E415B2D84F00CD7BBD /* tinyxml.cpp */; };
 		E44BC7ED15B2D84F00CD7BBD /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E44BC7E615B2D84F00CD7BBD /* tinyxmlerror.cpp */; };
@@ -42,6 +40,12 @@
 		E4B7C8BF1661704400DCE424 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4B7C8BE1661704400DCE424 /* Default@2x.png */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
+		E4EBD2E316675871001DB574 /* .cproject in Resources */ = {isa = PBXBuildFile; fileRef = E4EBD2DB16675871001DB574 /* .cproject */; };
+		E4EBD2E416675871001DB574 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E4EBD2DC16675871001DB574 /* .gitignore */; };
+		E4EBD2E516675871001DB574 /* .project in Resources */ = {isa = PBXBuildFile; fileRef = E4EBD2DD16675871001DB574 /* .project */; };
+		E4EBD2E616675871001DB574 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = E4EBD2DE16675871001DB574 /* index.html */; };
+		E4EBD2E716675871001DB574 /* ofxHttpUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EBD2E116675871001DB574 /* ofxHttpUtils.cpp */; };
+		E4EBD2EF16676291001DB574 /* ofxUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EBD2ED16676291001DB574 /* ofxUpload.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,8 +93,6 @@
 		E425351016613F3B00C4BEA1 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
 		E425351116613F3B00C4BEA1 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		E4253514166140ED00C4BEA1 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		E42535531661453200C4BEA1 /* ofxiMail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiMail.h; sourceTree = "<group>"; };
-		E42535541661453200C4BEA1 /* ofxiMail.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiMail.mm; sourceTree = "<group>"; };
 		E4253587166145FB00C4BEA1 /* iOS+OFLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "iOS+OFLib.xcodeproj"; path = "../../openFrameworks/libs/openFrameworksCompiled/project/ios/iOS+OFLib.xcodeproj"; sourceTree = "<group>"; };
 		E42535901661460600C4BEA1 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../openFrameworks/libs/openFrameworksCompiled/project/ios/CoreOF.xcconfig; sourceTree = "<group>"; };
 		E425359C16614BCC00C4BEA1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -100,8 +102,6 @@
 		E44BC58615B2CF2500CD7BBD /* ofxiStillCamera.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiStillCamera.mm; sourceTree = "<group>"; };
 		E44BC58715B2CF2500CD7BBD /* StillCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillCamera.h; sourceTree = "<group>"; };
 		E44BC58815B2CF2500CD7BBD /* StillCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillCamera.m; sourceTree = "<group>"; };
-		E44BC7DE15B2D70400CD7BBD /* ofxiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiTexture.h; sourceTree = "<group>"; };
-		E44BC7DF15B2D70400CD7BBD /* ofxiTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiTexture.mm; sourceTree = "<group>"; };
 		E44BC7E215B2D84F00CD7BBD /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E44BC7E415B2D84F00CD7BBD /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		E44BC7E515B2D84F00CD7BBD /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -115,6 +115,16 @@
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4D8936D11527B74007E1F53 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = src/testApp.mm; sourceTree = SOURCE_ROOT; };
+		E4EBD2DB16675871001DB574 /* .cproject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .cproject; sourceTree = "<group>"; };
+		E4EBD2DC16675871001DB574 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		E4EBD2DD16675871001DB574 /* .project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .project; sourceTree = "<group>"; };
+		E4EBD2DE16675871001DB574 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		E4EBD2E016675871001DB574 /* ofxHttpTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHttpTypes.h; sourceTree = "<group>"; };
+		E4EBD2E116675871001DB574 /* ofxHttpUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxHttpUtils.cpp; sourceTree = "<group>"; };
+		E4EBD2E216675871001DB574 /* ofxHttpUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHttpUtils.h; sourceTree = "<group>"; };
+		E4EBD2EA16675F64001DB574 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxThread.h; sourceTree = "<group>"; };
+		E4EBD2ED16676291001DB574 /* ofxUpload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUpload.cpp; sourceTree = "<group>"; };
+		E4EBD2EE16676291001DB574 /* ofxUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUpload.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,14 +207,15 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4EBD2EB16676278001DB574 /* ofxUpload */,
+				E4EBD2DA16675871001DB574 /* ofxHttpUtils */,
 				E42535AE16615AC300C4BEA1 /* ofxiOffScreen */,
-				E42535161661453200C4BEA1 /* ofxiMail */,
 				E4253505165FF7D300C4BEA1 /* common */,
 				E4253500165FE76B00C4BEA1 /* ofxSlider */,
 				E44BC7E115B2D84F00CD7BBD /* ofxXmlSettings */,
-				E44BC7DC15B2D70400CD7BBD /* ofxiTexture */,
 				E425350C16613F3B00C4BEA1 /* ofxiVolumeButtons */,
 				E44BC53B15B2CF2500CD7BBD /* ofxiStillCamera */,
+				E4EBD2E816675F64001DB574 /* ofxThread */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -289,24 +300,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		E42535161661453200C4BEA1 /* ofxiMail */ = {
-			isa = PBXGroup;
-			children = (
-				E42535521661453200C4BEA1 /* src */,
-			);
-			name = ofxiMail;
-			path = "../../../My Addons/ofxiMail";
-			sourceTree = "<group>";
-		};
-		E42535521661453200C4BEA1 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E42535531661453200C4BEA1 /* ofxiMail.h */,
-				E42535541661453200C4BEA1 /* ofxiMail.mm */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		E4253588166145FB00C4BEA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -353,24 +346,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		E44BC7DC15B2D70400CD7BBD /* ofxiTexture */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC7DD15B2D70400CD7BBD /* src */,
-			);
-			name = ofxiTexture;
-			path = "../../../My Addons/ofxiTexture";
-			sourceTree = "<group>";
-		};
-		E44BC7DD15B2D70400CD7BBD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E44BC7DE15B2D70400CD7BBD /* ofxiTexture.h */,
-				E44BC7DF15B2D70400CD7BBD /* ofxiTexture.mm */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		E44BC7E115B2D84F00CD7BBD /* ofxXmlSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -411,6 +386,64 @@
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
+		};
+		E4EBD2DA16675871001DB574 /* ofxHttpUtils */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBD2DB16675871001DB574 /* .cproject */,
+				E4EBD2DC16675871001DB574 /* .gitignore */,
+				E4EBD2DD16675871001DB574 /* .project */,
+				E4EBD2DE16675871001DB574 /* index.html */,
+				E4EBD2DF16675871001DB574 /* src */,
+			);
+			name = ofxHttpUtils;
+			path = ../../../addons/ofxHttpUtils;
+			sourceTree = "<group>";
+		};
+		E4EBD2DF16675871001DB574 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBD2E016675871001DB574 /* ofxHttpTypes.h */,
+				E4EBD2E116675871001DB574 /* ofxHttpUtils.cpp */,
+				E4EBD2E216675871001DB574 /* ofxHttpUtils.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4EBD2E816675F64001DB574 /* ofxThread */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBD2E916675F64001DB574 /* src */,
+			);
+			name = ofxThread;
+			path = ../../../addons/ofxThread;
+			sourceTree = "<group>";
+		};
+		E4EBD2E916675F64001DB574 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBD2EA16675F64001DB574 /* ofxThread.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E4EBD2EB16676278001DB574 /* ofxUpload */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBD2EC16676278001DB574 /* src */,
+			);
+			name = ofxUpload;
+			path = "../../../My Addons/ofxUpload";
+			sourceTree = "<group>";
+		};
+		E4EBD2EC16676278001DB574 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4EBD2ED16676291001DB574 /* ofxUpload.cpp */,
+				E4EBD2EE16676291001DB574 /* ofxUpload.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -486,6 +519,10 @@
 				E42535911661460600C4BEA1 /* CoreOF.xcconfig in Resources */,
 				E4B7C8BD1661700A00DCE424 /* Icon@2x.png in Resources */,
 				E4B7C8BF1661704400DCE424 /* Default@2x.png in Resources */,
+				E4EBD2E316675871001DB574 /* .cproject in Resources */,
+				E4EBD2E416675871001DB574 /* .gitignore in Resources */,
+				E4EBD2E516675871001DB574 /* .project in Resources */,
+				E4EBD2E616675871001DB574 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,7 +553,6 @@
 				E4D8936F11527B74007E1F53 /* testApp.mm in Sources */,
 				E44BC5C015B2CF2600CD7BBD /* ofxiStillCamera.mm in Sources */,
 				E44BC5C115B2CF2600CD7BBD /* StillCamera.m in Sources */,
-				E44BC7E015B2D70400CD7BBD /* ofxiTexture.mm in Sources */,
 				E44BC7EC15B2D84F00CD7BBD /* tinyxml.cpp in Sources */,
 				E44BC7ED15B2D84F00CD7BBD /* tinyxmlerror.cpp in Sources */,
 				E44BC7EE15B2D84F00CD7BBD /* tinyxmlparser.cpp in Sources */,
@@ -526,8 +562,9 @@
 				E425350B165FF7D300C4BEA1 /* ofMainExt.mm in Sources */,
 				E425351216613F3B00C4BEA1 /* ofxiVolumeButtons.mm in Sources */,
 				E425351316613F3B00C4BEA1 /* RBVolumeButtons.m in Sources */,
-				E42535821661453300C4BEA1 /* ofxiMail.mm in Sources */,
 				E42535B216615AC300C4BEA1 /* ofxiOffScreen.mm in Sources */,
+				E4EBD2E716675871001DB574 /* ofxHttpUtils.cpp in Sources */,
+				E4EBD2EF16676291001DB574 /* ofxUpload.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

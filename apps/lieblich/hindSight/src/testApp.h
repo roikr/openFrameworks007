@@ -6,16 +6,24 @@
 #include "ofxiStillCamera.h"
 #include "ofxSlider.h"
 #include "ofxiVolumeButtons.h"
-#include "ofxiMail.h"
 #include "ofxiOffScreen.h"
+#include "ofxUpload.h"
 
-struct card {
-    ofImage mask;
-    ofImage photo;
-    ofBuffer buf;
+enum {
+    STATE_MEMORY_UNLOADED,
+    STATE_MEMORY_LOADED,
+    STATE_TEXTURE_LOADED,
+    STATE_TEXTURE_UNLOADED,
 };
 
-class testApp : public ofxiPhoneApp{
+struct card {
+    string filename;
+    int state;
+    ofImage mask;
+   
+};
+
+class testApp : public ofxiPhoneApp,protected ofThread{
 	
 public:
 	void setup();
@@ -23,6 +31,8 @@ public:
     void drawCard(card &c);
 	void draw();
     void exit();
+    
+    void threadedFunction();
 	
 	void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
@@ -32,16 +42,20 @@ public:
     
     void pictureTaken(ofPixels &pixels);
     void volumeButtonPressed(int &button);
-    void mailComposer(int &result);
+    void newResponse(ofxHttpResponse & response);
     
     ofxiStillCamera cam;
     vector<card> cards;
     
     ofxSlider slider;
     ofxiVolumeButtons buttons;
-    ofxiMail mail;
     ofxiOffScreen offscreen;
     ofPixels pixels;
-  
+    
+    ofImage photo;
+    ofBuffer buf;
+    ofxUpload upload;
+    string action_url;
+    int counter;
     
 };
