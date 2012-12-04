@@ -46,6 +46,9 @@
 		E4EBD2E616675871001DB574 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = E4EBD2DE16675871001DB574 /* index.html */; };
 		E4EBD2E716675871001DB574 /* ofxHttpUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EBD2E116675871001DB574 /* ofxHttpUtils.cpp */; };
 		E4EBD2EF16676291001DB574 /* ofxUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EBD2ED16676291001DB574 /* ofxUpload.cpp */; };
+		E4F0DD68166B493B00556525 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E4F0DD64166B493B00556525 /* README.md */; };
+		E4F0DD69166B493B00556525 /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4F0DD67166B493B00556525 /* Settings.mm */; };
+		E4F0DD6F166B55F100556525 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E4F0DD6E166B55F100556525 /* Settings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,6 +128,10 @@
 		E4EBD2EA16675F64001DB574 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxThread.h; sourceTree = "<group>"; };
 		E4EBD2ED16676291001DB574 /* ofxUpload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUpload.cpp; sourceTree = "<group>"; };
 		E4EBD2EE16676291001DB574 /* ofxUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUpload.h; sourceTree = "<group>"; };
+		E4F0DD64166B493B00556525 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		E4F0DD66166B493B00556525 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		E4F0DD67166B493B00556525 /* Settings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Settings.mm; sourceTree = "<group>"; };
+		E4F0DD6E166B55F100556525 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +214,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4F0DD63166B493B00556525 /* ofxSettings */,
 				E4EBD2EB16676278001DB574 /* ofxUpload */,
 				E4EBD2DA16675871001DB574 /* ofxHttpUtils */,
 				E42535AE16615AC300C4BEA1 /* ofxiOffScreen */,
@@ -225,6 +233,7 @@
 			children = (
 				E4B7C8BE1661704400DCE424 /* Default@2x.png */,
 				E4B7C8BC1661700A00DCE424 /* Icon@2x.png */,
+				E4F0DD6E166B55F100556525 /* Settings.bundle */,
 			);
 			name = data;
 			path = bin/data;
@@ -445,6 +454,25 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E4F0DD63166B493B00556525 /* ofxSettings */ = {
+			isa = PBXGroup;
+			children = (
+				E4F0DD64166B493B00556525 /* README.md */,
+				E4F0DD65166B493B00556525 /* src */,
+			);
+			name = ofxSettings;
+			path = ../../../addons/ofxSettings;
+			sourceTree = "<group>";
+		};
+		E4F0DD65166B493B00556525 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E4F0DD66166B493B00556525 /* Settings.h */,
+				E4F0DD67166B493B00556525 /* Settings.mm */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -523,6 +551,8 @@
 				E4EBD2E416675871001DB574 /* .gitignore in Resources */,
 				E4EBD2E516675871001DB574 /* .project in Resources */,
 				E4EBD2E616675871001DB574 /* index.html in Resources */,
+				E4F0DD68166B493B00556525 /* README.md in Resources */,
+				E4F0DD6F166B55F100556525 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,6 +595,7 @@
 				E42535B216615AC300C4BEA1 /* ofxiOffScreen.mm in Sources */,
 				E4EBD2E716675871001DB574 /* ofxHttpUtils.cpp in Sources */,
 				E4EBD2EF16676291001DB574 /* ofxUpload.cpp in Sources */,
+				E4F0DD69166B493B00556525 /* Settings.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,7 +618,7 @@
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				PRODUCT_NAME = hindSight;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -598,7 +629,7 @@
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				PRODUCT_NAME = hindSight;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -674,7 +705,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9A257927-773A-4676-A406-94065033671A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "987DFEF5-BC48-4CDD-B430-C446EEF4A0D7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "-no_arch_warnings";
@@ -688,7 +719,7 @@
 				GCC_PREFIX_HEADER = iPhone_Prefix.pch;
 				INFOPLIST_FILE = "ofxiphone-Info.plist";
 				PRODUCT_NAME = hindSight;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Ad Hoc";
 		};

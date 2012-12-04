@@ -19,7 +19,9 @@ enum {
 struct card {
     string filename;
     int state;
-    ofImage mask;
+    ofImage image;
+    ofSoundPlayer audio;
+    bool bMask;
    
 };
 
@@ -28,11 +30,14 @@ class testApp : public ofxiPhoneApp,protected ofThread{
 public:
 	void setup();
 	void update();
-    void drawCard(card &c);
+   
 	void draw();
     void exit();
     
     void threadedFunction();
+    
+    void drawCard(card &c);
+    void toggleAudio();
 	
 	void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
@@ -58,4 +63,7 @@ public:
     string action_url;
     int counter;
     
+    int lastPage;
+    
+   
 };
