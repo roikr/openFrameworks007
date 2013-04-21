@@ -31,7 +31,10 @@ void testApp::setup(){
             break;
     }
 
+    ofBackground(0);
 
+    player.loadMovie("intro.m4v");
+    player.play();
 	
     
     action_url = "http://"+Settings::getString("host")+":"+Settings::getString("port")+"/postImage.of";
@@ -40,8 +43,7 @@ void testApp::setup(){
     counter = 0;
     
     ofxRegisterStillCameraNotification(this);
-    ofxRegisterVolumeButtonsNotification(this);
-    buttons.start();
+    
     cout << ofGetWidth() << "x" << ofGetHeight() << endl;
     offscreen.setup(ofGetWidth(),ofGetHeight());
     pixels.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR_ALPHA);
@@ -78,14 +80,14 @@ void testApp::setup(){
         card c;
         c.state = STATE_MEMORY_UNLOADED;
         
-        c.filename = "iphone/PG-1" + stream.str() + ".png";
+        c.filename = "PG-1" + stream.str() + ".png";
         cout << c.filename << endl;
         c.bMask = false;
-        c.audio.loadSound("iphone/AUDIO-1"+stream.str()+".caf");
+        c.audio.loadSound("AUDIO-1"+stream.str()+".caf");
 		cards.push_back(c);
 		prefs.pages.push_back(ofPoint(0,ofGetHeight()*(2*i)));
         
-        c.filename = "iphone/MASK-1" + stream.str() + ".png";
+        c.filename = "MASK-1" + stream.str() + ".png";
         cout << c.filename << endl;
 
         c.bMask = true;
@@ -98,21 +100,31 @@ void testApp::setup(){
 	prefs.lastPageSize = ofPoint(0,ofGetHeight());
 	slider.setup(1,prefs);
     
-    cam.preview();
+    
     
     startThread();
     
     lastPage = 0;
     
-    cards[0].audio.play();
+    
+    
     
 }
 
+
 //--------------------------------------------------------------
 void testApp::update(){
-	ofBackground(255,255,255);	
-   
+    
+    player.idleMovie();
     cam.update();
+    if (player.getIsMovieDone() && !buttons.getIsEnabled()) {
+        player.stop();
+        player.close();
+        startCamera();
+    }
+    
+	
+    
     slider.update();
     
     
@@ -133,6 +145,7 @@ void testApp::update(){
         int k = (i+cards.size())%cards.size();
         if (cards[k].state==STATE_TEXTURE_LOADED) {
             cards[k].image.getTextureReference().clear();
+            cards[k].image.setUseTexture(false);
             cards[k].state = STATE_TEXTURE_UNLOADED;
              cout << "unload texture " << k << endl;
         }
@@ -143,7 +156,7 @@ void testApp::update(){
     
     if ( lastAudio!=currentAudio) {
         cards[lastAudio*2].audio.stop();
-        cards[currentAudio*2].audio.play();
+//        cards[currentAudio*2].audio.play();
     }
     
     if (lastPage!=slider.getCurrentPage()) {
@@ -187,6 +200,9 @@ void testApp::threadedFunction() {
         
     }
     
+//    for(vector<card>::iterator iter=cards.begin();iter!=cards.end();iter++) {
+//        iter->image.clear();
+//    }
     
     
 }
@@ -202,8 +218,19 @@ void testApp::drawCard(card &c) {
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){	
+void testApp::draw(){
+    
+    
     ofSetHexColor(0xFFFFFF);
+    
+    if (player.isPlaying()) {
+        float s = min(ofGetWidth()/player.getWidth(),ofGetHeight()/player.getHeight());
+        ofVec2f scaled(s*ofVec2f(player.getWidth(),player.getHeight()));
+        ofVec2f offset(0.5*(ofVec2f(ofGetWidth(),ofGetHeight())-scaled));
+        player.draw(offset,scaled.x,scaled.y);
+        return;
+    }
+    
     
     if (cam.getIsPlaying() && cam.getIsFrameVisible()) {
 //        float tw = imageRect.width/imageRect.height*cam.getHeight()/cam.getWidth();
@@ -240,12 +267,20 @@ void testApp::draw(){
     ofPopMatrix();
     
     
+    
+    
 }
 
 void testApp::exit() {
+    
+    
+    
+
+    stopThread();
     ofxUnregisterVolumeButtonsNotification(this);
-     buttons.stop();
+    buttons.stop();
     ofxUnregisterStillCameraNotification(this);
+    
        
 }
 
@@ -256,6 +291,13 @@ void testApp::toggleAudio() {
     } else {
         cards[currentAudio*2].audio.play();
     }
+}
+
+void testApp::startCamera() {
+    cam.preview();
+    cam.setFocusPoint(ofVec2f(0.5,0.5));
+    ofxRegisterVolumeButtonsNotification(this);
+    buttons.start();
 }
 
 //--------------------------------------------------------------
@@ -288,8 +330,13 @@ void testApp::touchDoubleTap(ofTouchEventArgs &touch){
 //        cam.snap();
 //    }
     
-    
-    toggleAudio();
+    if (player.isPlaying()) {
+        player.stop();
+        player.close();
+        startCamera();
+    } else {
+        toggleAudio();
+    }
  
 }
 
@@ -339,10 +386,12 @@ void testApp::volumeButtonPressed(int &button) {
                 } else {
                     photo.clear();
                 }
+            } else {
+                toggleAudio();
             }
             break;
         case VOLUME_BUTTON_DOWN:
-            toggleAudio();
+            
             break;
         default:
             break;

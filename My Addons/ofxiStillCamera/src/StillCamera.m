@@ -127,8 +127,11 @@ static const NSString *AVCaptureStillImageIsCapturingStillImageContext =@"AVCapt
 	 * Create video connection
 	 */
     AVCaptureDeviceInput *videoIn = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:AVCaptureDevicePositionBack] error:nil];
-    if ([captureSession canAddInput:videoIn])
+    if ([captureSession canAddInput:videoIn]) {
         [captureSession addInput:videoIn];
+        self.inputDevice = videoIn;
+    }
+        
 	[videoIn release];
     
 	AVCaptureVideoDataOutput *videoOut = [[AVCaptureVideoDataOutput alloc] init];

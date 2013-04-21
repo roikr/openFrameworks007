@@ -40,8 +40,10 @@ void testApp::setup(){
     
     for (int i=0; i<16;i++) {
         button b;
-        string filename = "beep"+ofToString(i)+".caf";
-        cout << filename << ": " << b.audio.load(ofToDataPath(filename), bufferSize) << endl;
+//        string filename = "beep"+ofToString(i)+".caf";
+        std::ostringstream filename;
+        filename << "HFBEEP_" << std::setw( 3 ) << std::setfill( '0' ) << i << ".caf";
+        cout << filename << ": " << b.audio.load(ofToDataPath(filename.str()), bufferSize) << endl;
         b.rect = ofRectangle(i%4*size,floor(i/4)*size+(ofGetHeight()-ofGetWidth())/2,size,size);
         b.text = ofToString(i+1);
         buttons.push_back(b);
@@ -66,7 +68,7 @@ void testApp::setup(){
     
 	
     
-	ofSoundStreamSetup(2, 0, this, 44100, bufferSize, 2);
+	ofSoundStreamSetup(2, 0, this, 44100, bufferSize, 4);
 	
     ofBackground(75);
     ofSetColor(150);

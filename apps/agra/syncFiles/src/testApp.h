@@ -20,7 +20,7 @@ class testApp : public ofBaseApp{
 		void update();
         void draw();
     
-        void setURL(string host,string root);
+//        void setURL(string host,string root);
         void start();
 		
         void gotMessage(ofMessage msg);

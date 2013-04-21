@@ -25,15 +25,11 @@ void ofxiStillCamera::preview() {
         NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", err);
     }
     
-    videoTexture = NULL;
+    
     width = 0;
     height = 0;
     
     stillCamera = [[StillCamera alloc] init]; 
-    
-    
-    bPlaying = false;
-    bSnap = false;
     
 }
 
@@ -76,17 +72,29 @@ void ofxiStillCamera::stop() {
 }
 
 
+void ofxiStillCamera::setFocusPoint(ofVec2f p) {
+    
+
+    AVCaptureDevice *device = stillCamera.inputDevice.device ;
+
+    if ([device isFocusPointOfInterestSupported] && [device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+        NSError *error;
+        if ([device lockForConfiguration:&error]) {
+            [device setFocusPointOfInterest:CGPointMake(p.x, p.y)];
+            [device setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+            [device unlockForConfiguration];
+        } else {
+            NSLog(@"lockForConfiguration error:%@",[error localizedDescription]);
+        }
+    }
+}
+
 
 
 void ofxiStillCamera::update() {
 	
-    if (stillCamera == NULL) {
-        return;
-    }
-	
-    
 	if (!bPlaying) {
-		if (stillCamera.state == STILL_CAMERA_STATE_PLAYING) {
+		if (stillCamera != NULL && stillCamera.state == STILL_CAMERA_STATE_PLAYING) {
 			bPlaying = true;
         }
 	} else {

@@ -15,8 +15,6 @@
 		BB16EBD20F2B2A9500518274 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
 		BB16EBD90F2B2AB500518274 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
-		E402A9A416428DB800C10889 /* ofxiOffScreen.mm in Sources */ = {isa = PBXBuildFile; fileRef = E402A9A316428DB800C10889 /* ofxiOffScreen.mm */; };
-		E403782B15E1600200789BC6 /* ofxiMail.mm in Sources */ = {isa = PBXBuildFile; fileRef = E403782A15E1600200789BC6 /* ofxiMail.mm */; };
 		E403784B15E170A800789BC6 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E403784A15E170A800789BC6 /* MessageUI.framework */; };
 		E409645215E36AE600A30BF8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E409644E15E36AE600A30BF8 /* README.md */; };
 		E409645315E36AE600A30BF8 /* Settings.mm in Sources */ = {isa = PBXBuildFile; fileRef = E409645115E36AE600A30BF8 /* Settings.mm */; };
@@ -30,6 +28,7 @@
 		E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
 		E41D400E13B39D2100A75A5D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400913B39D2100A75A5D /* MapKit.framework */; };
+		E42535AD16615A8C00C4BEA1 /* ofxiOffScreen.mm in Sources */ = {isa = PBXBuildFile; fileRef = E42535AC16615A8C00C4BEA1 /* ofxiOffScreen.mm */; };
 		E42827DC163DC71C00FA8CB8 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E42827DB163DC71C00FA8CB8 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E42827E0163DC7A900FA8CB8 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E42827DF163DC7A900FA8CB8 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E42827E6163DC9BD00FA8CB8 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E42827E5163DC9BD00FA8CB8 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -83,10 +82,6 @@
 		BB16EBD10F2B2A9500518274 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BB16EBD80F2B2AB500518274 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		E402A9A216428DB800C10889 /* ofxiOffScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiOffScreen.h; sourceTree = "<group>"; };
-		E402A9A316428DB800C10889 /* ofxiOffScreen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiOffScreen.mm; sourceTree = "<group>"; };
-		E403782915E15FE000789BC6 /* ofxiMail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxiMail.h; sourceTree = "<group>"; };
-		E403782A15E1600200789BC6 /* ofxiMail.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiMail.mm; sourceTree = "<group>"; };
 		E403784615E16F8000789BC6 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E403784A15E170A800789BC6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		E409644E15E36AE600A30BF8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -123,6 +118,8 @@
 		E41D400713B39D2100A75A5D /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		E41D400813B39D2100A75A5D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		E41D400913B39D2100A75A5D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		E42535AB16615A8C00C4BEA1 /* ofxiOffScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiOffScreen.h; sourceTree = "<group>"; };
+		E42535AC16615A8C00C4BEA1 /* ofxiOffScreen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiOffScreen.mm; sourceTree = "<group>"; };
 		E42827DB163DC71C00FA8CB8 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		E42827DF163DC7A900FA8CB8 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		E42827E5163DC9BD00FA8CB8 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -252,6 +249,7 @@
 				E44BC7E115B2D84F00CD7BBD /* ofxXmlSettings */,
 				E44BC7DC15B2D70400CD7BBD /* ofxiTexture */,
 				E44BC5CC15B2D6B700CD7BBD /* ofxFlash */,
+				E42535A916615A8C00C4BEA1 /* ofxiOffScreen */,
 				E40A07AE1589DED10033811A /* SharedCode */,
 			);
 			name = addons;
@@ -328,14 +326,10 @@
 		E40A07AF1589DED10033811A /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E402A9A216428DB800C10889 /* ofxiOffScreen.h */,
-				E402A9A316428DB800C10889 /* ofxiOffScreen.mm */,
 				E4A39D9015DE1AE8008ACE7E /* ofxDraggable.cpp */,
 				E4A39D9115DE1AE8008ACE7E /* ofxDraggable.h */,
 				E46C1A2F1590C952006C1C65 /* ofxScrollCollection.h */,
 				E46C1A301590C97C006C1C65 /* ofxScrollCollection.cpp */,
-				E403782915E15FE000789BC6 /* ofxiMail.h */,
-				E403782A15E1600200789BC6 /* ofxiMail.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -425,6 +419,24 @@
 				E40ED8AA15D15E6300556B9C /* ofxOscReceiver.h */,
 				E40ED8AB15D15E6300556B9C /* ofxOscSender.cpp */,
 				E40ED8AC15D15E6300556B9C /* ofxOscSender.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E42535A916615A8C00C4BEA1 /* ofxiOffScreen */ = {
+			isa = PBXGroup;
+			children = (
+				E42535AA16615A8C00C4BEA1 /* src */,
+			);
+			name = ofxiOffScreen;
+			path = "../../../My Addons/ofxiOffScreen";
+			sourceTree = "<group>";
+		};
+		E42535AA16615A8C00C4BEA1 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E42535AB16615A8C00C4BEA1 /* ofxiOffScreen.h */,
+				E42535AC16615A8C00C4BEA1 /* ofxiOffScreen.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -662,10 +674,9 @@
 				E40ED8B215D15E6300556B9C /* ofxOscReceiver.cpp in Sources */,
 				E40ED8B315D15E6300556B9C /* ofxOscSender.cpp in Sources */,
 				E4A39D9215DE1AE8008ACE7E /* ofxDraggable.cpp in Sources */,
-				E403782B15E1600200789BC6 /* ofxiMail.mm in Sources */,
 				E409645315E36AE600A30BF8 /* Settings.mm in Sources */,
 				E450930F15EF543400FD0F4C /* ofxiFacebook.mm in Sources */,
-				E402A9A416428DB800C10889 /* ofxiOffScreen.mm in Sources */,
+				E42535AD16615A8C00C4BEA1 /* ofxiOffScreen.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

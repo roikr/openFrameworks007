@@ -15,6 +15,10 @@
 		BB16EBD20F2B2A9500518274 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
 		BB16EBD90F2B2AB500518274 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
 		BBE5EAB80F49AD8400F28951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */; };
+		E413EF0716F0C35F007F5CA3 /* ofxiVolumeButtons.mm in Sources */ = {isa = PBXBuildFile; fileRef = E413EF0416F0C35F007F5CA3 /* ofxiVolumeButtons.mm */; };
+		E413EF0816F0C35F007F5CA3 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = E413EF0616F0C35F007F5CA3 /* RBVolumeButtons.m */; };
+		E413EF0D16F0C39E007F5CA3 /* ofxTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E413EF0B16F0C39E007F5CA3 /* ofxTransform.cpp */; };
+		E413EF1216F0C3AC007F5CA3 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E413EF1016F0C3AC007F5CA3 /* ofxPenner.cpp */; };
 		E41D400B13B39D2100A75A5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400613B39D2100A75A5D /* AVFoundation.framework */; };
 		E41D400C13B39D2100A75A5D /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400713B39D2100A75A5D /* CoreMedia.framework */; };
 		E41D400D13B39D2100A75A5D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41D400813B39D2100A75A5D /* CoreVideo.framework */; };
@@ -38,8 +42,6 @@
 		E43D40DB15BFCCA80093A973 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40D315BFCCA80093A973 /* Icon.png */; };
 		E43D40DC15BFCCA80093A973 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E43D40D415BFCCA80093A973 /* Icon@2x.png */; };
 		E4CB4F6315BEEB8400CBBCD1 /* ofxVolumeSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CB4F6115BEEB8400CBBCD1 /* ofxVolumeSlider.cpp */; };
-		E4CB4F7715BEEC7200CBBCD1 /* ofxPenner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CB4F6C15BEEC7200CBBCD1 /* ofxPenner.cpp */; };
-		E4CB4F7815BEEC7200CBBCD1 /* ofxTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4CB4F6E15BEEC7200CBBCD1 /* ofxTransform.cpp */; };
 		E4CB4F7C15BF01F300CBBCD1 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4CB4F7B15BF01F300CBBCD1 /* MediaPlayer.framework */; };
 		E4D8936E11527B74007E1F53 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936B11527B74007E1F53 /* main.mm */; };
 		E4D8936F11527B74007E1F53 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4D8936D11527B74007E1F53 /* testApp.mm */; };
@@ -74,6 +76,14 @@
 		BB16EBD80F2B2AB500518274 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E413EF0316F0C35F007F5CA3 /* ofxiVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVolumeButtons.h; sourceTree = "<group>"; };
+		E413EF0416F0C35F007F5CA3 /* ofxiVolumeButtons.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVolumeButtons.mm; sourceTree = "<group>"; };
+		E413EF0516F0C35F007F5CA3 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
+		E413EF0616F0C35F007F5CA3 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
+		E413EF0B16F0C39E007F5CA3 /* ofxTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTransform.cpp; sourceTree = "<group>"; };
+		E413EF0C16F0C39E007F5CA3 /* ofxTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTransform.h; sourceTree = "<group>"; };
+		E413EF1016F0C3AC007F5CA3 /* ofxPenner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPenner.cpp; sourceTree = "<group>"; };
+		E413EF1116F0C3AC007F5CA3 /* ofxPenner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPenner.h; sourceTree = "<group>"; };
 		E41D3ED613B38FB500A75A5D /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		E41D3EE513B3906D00A75A5D /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/iphone/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E41D400613B39D2100A75A5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -108,14 +118,6 @@
 		E4A823A312561BE3002F86A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E4CB4F6115BEEB8400CBBCD1 /* ofxVolumeSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVolumeSlider.cpp; sourceTree = "<group>"; };
 		E4CB4F6215BEEB8400CBBCD1 /* ofxVolumeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxVolumeSlider.h; sourceTree = "<group>"; };
-		E4CB4F6A15BEEC7200CBBCD1 /* ofxiVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxiVolumeButtons.h; sourceTree = "<group>"; };
-		E4CB4F6B15BEEC7200CBBCD1 /* ofxiVolumeButtons.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxiVolumeButtons.mm; sourceTree = "<group>"; };
-		E4CB4F6C15BEEC7200CBBCD1 /* ofxPenner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPenner.cpp; sourceTree = "<group>"; };
-		E4CB4F6D15BEEC7200CBBCD1 /* ofxPenner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxPenner.h; sourceTree = "<group>"; };
-		E4CB4F6E15BEEC7200CBBCD1 /* ofxTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTransform.cpp; sourceTree = "<group>"; };
-		E4CB4F6F15BEEC7200CBBCD1 /* ofxTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTransform.h; sourceTree = "<group>"; };
-		E4CB4F7215BEEC7200CBBCD1 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
-		E4CB4F7315BEEC7200CBBCD1 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		E4CB4F7B15BF01F300CBBCD1 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		E4D8936B11527B74007E1F53 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = src/main.mm; sourceTree = SOURCE_ROOT; };
 		E4D8936C11527B74007E1F53 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -200,7 +202,9 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				E4CB4F6415BEEC7200CBBCD1 /* RomprSharedCode */,
+				E413EF0E16F0C3AC007F5CA3 /* ofxPenner */,
+				E413EF0916F0C39E007F5CA3 /* ofxTransform */,
+				E413EF0116F0C35F007F5CA3 /* ofxiVolumeButtons */,
 				E4CB4F5F15BEEB8400CBBCD1 /* SharedCode */,
 				E428D61D15BC8B2800A8BDC2 /* ofxXmlSettings */,
 				E428D60815BC55C200A8BDC2 /* ofxAudio */,
@@ -226,6 +230,62 @@
 				29B97323FDCFA39411CA2CEA /* core frameworks */,
 			);
 			name = core;
+			sourceTree = "<group>";
+		};
+		E413EF0116F0C35F007F5CA3 /* ofxiVolumeButtons */ = {
+			isa = PBXGroup;
+			children = (
+				E413EF0216F0C35F007F5CA3 /* src */,
+			);
+			name = ofxiVolumeButtons;
+			path = "../../../My Addons/ofxiVolumeButtons";
+			sourceTree = "<group>";
+		};
+		E413EF0216F0C35F007F5CA3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E413EF0316F0C35F007F5CA3 /* ofxiVolumeButtons.h */,
+				E413EF0416F0C35F007F5CA3 /* ofxiVolumeButtons.mm */,
+				E413EF0516F0C35F007F5CA3 /* RBVolumeButtons.h */,
+				E413EF0616F0C35F007F5CA3 /* RBVolumeButtons.m */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E413EF0916F0C39E007F5CA3 /* ofxTransform */ = {
+			isa = PBXGroup;
+			children = (
+				E413EF0A16F0C39E007F5CA3 /* src */,
+			);
+			name = ofxTransform;
+			path = "../../../My Addons/ofxTransform";
+			sourceTree = "<group>";
+		};
+		E413EF0A16F0C39E007F5CA3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E413EF0B16F0C39E007F5CA3 /* ofxTransform.cpp */,
+				E413EF0C16F0C39E007F5CA3 /* ofxTransform.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E413EF0E16F0C3AC007F5CA3 /* ofxPenner */ = {
+			isa = PBXGroup;
+			children = (
+				E413EF0F16F0C3AC007F5CA3 /* src */,
+			);
+			name = ofxPenner;
+			path = "../../../My Addons/ofxPenner";
+			sourceTree = "<group>";
+		};
+		E413EF0F16F0C3AC007F5CA3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E413EF1016F0C3AC007F5CA3 /* ofxPenner.cpp */,
+				E413EF1116F0C3AC007F5CA3 /* ofxPenner.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		E41D40FE13B3A0D800A75A5D /* Products */ = {
@@ -329,30 +389,6 @@
 			children = (
 				E4CB4F6115BEEB8400CBBCD1 /* ofxVolumeSlider.cpp */,
 				E4CB4F6215BEEB8400CBBCD1 /* ofxVolumeSlider.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		E4CB4F6415BEEC7200CBBCD1 /* RomprSharedCode */ = {
-			isa = PBXGroup;
-			children = (
-				E4CB4F6515BEEC7200CBBCD1 /* src */,
-			);
-			name = RomprSharedCode;
-			path = ../../rompr/SharedCode;
-			sourceTree = "<group>";
-		};
-		E4CB4F6515BEEC7200CBBCD1 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E4CB4F6A15BEEC7200CBBCD1 /* ofxiVolumeButtons.h */,
-				E4CB4F6B15BEEC7200CBBCD1 /* ofxiVolumeButtons.mm */,
-				E4CB4F6C15BEEC7200CBBCD1 /* ofxPenner.cpp */,
-				E4CB4F6D15BEEC7200CBBCD1 /* ofxPenner.h */,
-				E4CB4F6E15BEEC7200CBBCD1 /* ofxTransform.cpp */,
-				E4CB4F6F15BEEC7200CBBCD1 /* ofxTransform.h */,
-				E4CB4F7215BEEC7200CBBCD1 /* RBVolumeButtons.h */,
-				E4CB4F7315BEEC7200CBBCD1 /* RBVolumeButtons.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -483,8 +519,10 @@
 				E428D62A15BC8B2800A8BDC2 /* tinyxmlparser.cpp in Sources */,
 				E428D62B15BC8B2800A8BDC2 /* ofxXmlSettings.cpp in Sources */,
 				E4CB4F6315BEEB8400CBBCD1 /* ofxVolumeSlider.cpp in Sources */,
-				E4CB4F7715BEEC7200CBBCD1 /* ofxPenner.cpp in Sources */,
-				E4CB4F7815BEEC7200CBBCD1 /* ofxTransform.cpp in Sources */,
+				E413EF0716F0C35F007F5CA3 /* ofxiVolumeButtons.mm in Sources */,
+				E413EF0816F0C35F007F5CA3 /* RBVolumeButtons.m in Sources */,
+				E413EF0D16F0C39E007F5CA3 /* ofxTransform.cpp in Sources */,
+				E413EF1216F0C3AC007F5CA3 /* ofxPenner.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,6 +586,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Debug;
@@ -573,6 +612,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Release;
@@ -584,7 +624,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Roee Kremer";
 				COMPRESS_PNG_FILES = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = YES;
@@ -596,9 +636,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				ONLY_ACTIVE_ARCH = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BA4B48E8-636D-4797-AE87-E0887AA9BAB4";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = "Ad Hoc";
@@ -637,6 +678,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A5577186-1416-408F-AB3C-00A37198E503";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				WARNING_LDFLAGS = "-no_arch_warnings";
 			};
 			name = Distribution;

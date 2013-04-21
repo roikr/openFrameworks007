@@ -29,14 +29,15 @@ void ofxUnregisterStillCameraNotification(T * obj){
 class ofxiStillCamera {
 	
 public:
-	ofxiStillCamera() : videoTexture(NULL) {};
-	void setup();
+	ofxiStillCamera() : videoTexture(NULL),stillCamera(NULL),bPlaying(false) {};
 	void update();
 	void draw(ofRectangle rect,ofRectangle tex);
 	
     void preview();
     void snap();
     void stop();
+    
+    void setFocusPoint(ofVec2f p);
     
 	
     float getFrameRate();
@@ -50,9 +51,7 @@ public:
     void bind();
     void unbind();
     
-//    ofImage image;
-    bool bSnap;
-	
+    
 protected:
     void cleanUpTextures();
     

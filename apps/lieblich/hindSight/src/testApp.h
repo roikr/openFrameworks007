@@ -38,6 +38,7 @@ public:
     
     void drawCard(card &c);
     void toggleAudio();
+    void startCamera();
 	
 	void touchDown(ofTouchEventArgs &touch);
 	void touchMoved(ofTouchEventArgs &touch);
@@ -65,5 +66,6 @@ public:
     
     int lastPage;
     
+    ofVideoPlayer player;
    
 };

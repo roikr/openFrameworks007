@@ -53,6 +53,7 @@ enum {
 @property (readonly) CMBufferQueueRef previewBufferQueue;
 @property (readonly) CMBufferQueueRef imagesBufferQueue;
 
+@property (strong,nonatomic) AVCaptureDeviceInput *inputDevice;
 
 - (id)init;
 - (void)takePicture;

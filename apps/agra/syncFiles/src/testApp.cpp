@@ -20,8 +20,11 @@ void testApp::setup(){
     
     ofRegisterURLNotification(this);
     bStarted = false;
+    iteration = 0;
+    start();
 }
 
+/*
 void testApp::setURL(string host,string root) {
     this->host = host;
     this->root = root;
@@ -33,7 +36,7 @@ void testApp::setURL(string host,string root) {
     start();
     
 }
-
+*/
 void testApp::start() {
     
     list.push_back(file(root,std::time(0),0,true));
@@ -76,7 +79,7 @@ void testApp::update(){
         while (iter!=list.end() && queue.size()<SIMULTANEOUS_CONNECTIONS) {
            
             if (!iter->directory) { 
-                ofLoadURLAsync(host+iter->path);
+                ofLoadURLAsync("http://"+host+"/"+iter->path);
                 queue.push_back(*iter);
 
                 list.erase(iter);
@@ -88,7 +91,7 @@ void testApp::update(){
         
         iter = list.begin();
         while (iter!=list.end() && queue.size()<SIMULTANEOUS_CONNECTIONS) {
-            ofLoadURLAsync(host+iter->path+"/files.xml");
+            ofLoadURLAsync("http://"+host+"/"+iter->path+"/files.xml");
             queue.push_back(*iter);
 
             list.erase(iter);
@@ -164,7 +167,8 @@ void testApp::urlResponse(ofHttpResponse &response) {
     status = response.status;
     
    
-    string path = url.substr(host.length(),url.length());
+    string path = url.substr(("http://"+host+"/").length(),url.length());
+    
     
     bool bFilesXml = false;
     string lastComp = ofSplitString(path, "/").back();
