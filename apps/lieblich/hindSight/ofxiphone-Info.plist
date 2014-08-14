@@ -11,7 +11,7 @@
 	<key>CFBundleIconFile</key>
 	<string>Icon@2x.png</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.lofipeople.${PRODUCT_NAME:identifier}</string>
+	<string>com.roeekremer.${PRODUCT_NAME:identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
